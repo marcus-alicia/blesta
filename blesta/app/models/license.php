@@ -60,28 +60,12 @@ class License extends AppModel
     }
     public function updateLicenseKey($license_key)
     {
-        $this->load();
-        return true;
         try {
             $this->load();
-            /**
-            * $this->public_key = NULL;
-            * $this->license_key = $license_key;
-            * $this->setKeys();
-            * $this->public_key = $this->LicenseManager->requestKey();
-            * $this->setKeys();
-            * $result = $this->processLicenseData($license_data);
-            * if ($result["status"] == "valid") {
-            */
-            $license_data = $this->getLicenseData();
-            if (true == true) {
-                $this->Settings->setSetting("license_public_key", $this->public_key);
-                $this->Settings->setSetting("license_key", $this->license_key);
-                $this->Settings->setSetting("license_data", $license_data);
-                return true;
-            }
+            $this->license_key = $license_key;
+            $this->Settings->setSetting("license_key", $this->license_key);
+            return true;
 
-            $this->setError(isset($result["status"]) ? $result["status"] : NULL);
         } catch (Exception $e) {
         }
         $this->unload();
@@ -91,33 +75,6 @@ class License extends AppModel
     {
         $this->load();
         return true;
-        try {
-            $this->load();
-            $license_data = $this->Settings->getSetting("license_data");
-            if ($license_data) {
-                $license_data = $license_data->value;
-            }
-            $result = $this->processLicenseData($license_data);
-            if ($result["status"] == "valid") {
-                return true;
-            }
-            if ($revalidate) {
-                $this->fetchKey();
-                $license_data = $this->getLicenseData();
-                $result = $this->processLicenseData($license_data);
-                /** 
-                * if ($result["status"] == "valid") {
-                */
-                if (true) {
-                    $this->Settings->setSetting("license_data", $license_data);
-                    return true;
-                }
-            }
-        } catch (Exception $e) {
-        }
-        $this->unload();
-        $this->setError(isset($result["status"]) ? $result["status"] : NULL);
-        return false;
     }
     public function fetchLicense()
     {
@@ -127,7 +84,9 @@ class License extends AppModel
                 $this->fetchKey();
             }
             $license_data = $this->getLicenseData();
+            throw new Exception($license_data);
             if ($license_data != "") {
+                echo($license_data);
                 $this->Settings->setSetting("license_data", $license_data);
             }
             return $license_data;
@@ -170,13 +129,13 @@ class License extends AppModel
         $ttl = 1209600;
         $result = $this->LicenseManager->validate($license_data, $ttl);
         echo $result;
-        $result["comp_allowed"] = 1;
-        $result["comp_total"] = 2;
+        $result["comp_allowed"] = 999;
+        $result["comp_total"] = 1;
         try {
             if (!isset($this->Companies)) {
                 Loader::loadModels($this, ["Companies"]);
             }
-            $result["comp_allowed"] = 1;
+            $result["comp_allowed"] = 999;
             $result["comp_total"] = $this->Companies->getListCount();
             if (isset($result["addons"])) {
                 foreach ($result["addons"] as $addon) {
