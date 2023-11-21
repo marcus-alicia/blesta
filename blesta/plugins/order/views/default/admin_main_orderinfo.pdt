@@ -1,0 +1,126 @@
+                <?php
+                $show_fraud = false;
+                if (!empty($order->fraud_report) && is_array($order->fraud_report)) {
+                    $show_fraud = true;
+                ?>
+                <div class="group_title_row first">
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminMain.orderinfo.fraudreport_heading');?></h3>
+                    </div>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminMain.orderinfo.fraudreport_heading_key');?></td>
+                            <td><?php $this->_('AdminMain.orderinfo.fraudreport_heading_value');?></td>
+                        </tr>
+                        <?php
+                        $i=0;
+                        foreach ($order->fraud_report as $key => $value) {
+                        ?>
+                        <tr<?php echo ($i++%2 == 1) ? ' class="odd_row"' : '';?>>
+                            <td><?php echo (isset($key) ? $this->Html->safe($key) : null);?></td>
+                            <td><pre><?php echo (isset($value) ? $this->Html->safe($value) : null);?></pre></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                </div>
+                <?php
+                }
+                ?>
+
+                <div class="group_title_row">
+                    <div class="title_row<?php echo (!$show_fraud ? ' first' : '');?>">
+                        <h3><?php $this->_('AdminMain.orderinfo.applied_heading');?></h3>
+                    </div>
+                    <?php
+                    if ((isset($applied) ? $applied : false) && ($num_applied = count($applied)) > 0) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td class="border_left"><?php $this->_('AdminMain.orderinfo.applied_heading_paymenttype');?></td>
+                            <td><?php $this->_('AdminMain.orderinfo.applied_heading_amount');?></td>
+                            <td><?php $this->_('AdminMain.orderinfo.applied_heading_applied');?></td>
+                            <td><?php $this->_('AdminMain.orderinfo.applied_heading_appliedon');?></td>
+                            <td class="last"><?php $this->_('AdminMain.orderinfo.applied_heading_options');?></td>
+                        </tr>
+                        <?php
+                        for ($i=0; $i<$num_applied; $i++) {
+                            if ((isset($applied[$i]->type) ? $applied[$i]->type : null) == 'other' && (isset($applied[$i]->gateway_type) ? $applied[$i]->gateway_type : null) == 'nonmerchant') {
+                                $trans_type = $applied[$i]->gateway_name;
+                            } else {
+                                $trans_type = (isset($transaction_types[($applied[$i]->type_name != '' ? $applied[$i]->type_name : $applied[$i]->type)]) ? $transaction_types[($applied[$i]->type_name != '' ? $applied[$i]->type_name : $applied[$i]->type)] : null);
+                            }
+                        ?>
+                        <tr<?php echo ($i%2 == 1) ? ' class="odd_row"' : '';?>>
+                            <td><?php echo (isset($trans_type) ? $this->Html->safe($trans_type) : null);?></td>
+                            <td><?php echo $this->CurrencyFormat->format($applied[$i]->amount, $applied[$i]->currency, ['html_code'=>true]);?></td>
+                            <td><?php echo $this->CurrencyFormat->format($applied[$i]->applied_amount, $applied[$i]->currency, ['html_code'=>true]);?></td>
+                            <td><?php echo $this->Date->cast((isset($applied[$i]->applied_date) ? $this->Html->safe($applied[$i]->applied_date) : null), 'date_time');?></td>
+                            <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/edittransaction/' . (isset($order->client_id) ? $order->client_id : null) . '/' . (isset($applied[$i]->transaction_id) ? $applied[$i]->transaction_id : null) . '/');?>"><?php $this->_('AdminMain.orderinfo.applied_option_edit');?></a></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box"><?php $this->_('AdminMain.orderinfo.applied_no_results');?></div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <div class="group_title_row">
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminMain.orderinfo.services_heading');?></h3>
+                    </div>
+                    <?php
+                    if ((isset($services) ? $services : false) && ($num_services = count($services)) > 0) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td><span><?php $this->_('AdminMain.orderinfo.services_heading_package');?></span></td>
+                            <td><span><?php $this->_('AdminMain.orderinfo.services_heading_label');?></span></td>
+                            <td><span><?php $this->_('AdminMain.orderinfo.services_heading_term');?></span></td>
+                            <td><span><?php $this->_('AdminMain.orderinfo.services_heading_dateadded');?></span></td>
+                            <td><span><?php $this->_('AdminMain.orderinfo.services_heading_daterenews');?></span></td>
+                            <td><span><?php $this->_('AdminMain.orderinfo.services_heading_options');?></span></td>
+                        </tr>
+                        <?php
+                        // Display all services
+                        for ($i = 0; $i < $num_services; $i++) {
+                        ?>
+                        <tr<?php echo ($i%2 == 1) ? ' class="odd_row"' : '';?>>
+                            <td><?php echo (isset($services[$i]->package->name) ? $this->Html->safe($services[$i]->package->name) : null);?></td>
+                            <td><?php echo (isset($services[$i]->name) ? $this->Html->safe($services[$i]->name) : null);?></td>
+                            <td>
+                                <?php
+                                if ((isset($services[$i]->package_pricing->period) ? $services[$i]->package_pricing->period : null) == 'onetime') {
+                                    echo (isset($periods[$services[$i]->package_pricing->period]) ? $periods[$services[$i]->package_pricing->period] : null);
+                                } else {
+                                    $term = (isset($services[$i]->package_pricing->term) ? $this->Html->safe($services[$i]->package_pricing->term) : null);
+                                    echo $this->Html->concat(' ', $term, ($term == 1 ? (isset($periods[$services[$i]->package_pricing->period]) ? $periods[$services[$i]->package_pricing->period] : null) : (isset($periods[$services[$i]->package_pricing->period . '_plural']) ? $periods[$services[$i]->package_pricing->period . '_plural'] : null)));
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $this->Date->cast((isset($services[$i]->date_added) ? $services[$i]->date_added : null));?></td>
+                            <td><?php echo (empty($services[$i]->date_renews) ? $this->_('AdminMain.orderinfo.services_text_never', true) : $this->Date->cast($services[$i]->date_renews));?></td>
+                            <td><a class="manage" href="<?php echo $this->Html->safe($this->base_uri . 'clients/editservice/' . (isset($services[$i]->client_id) ? $services[$i]->client_id : null) . '/' . (isset($services[$i]->id) ? $services[$i]->id : null));?>"><?php $this->_('AdminMain.orderinfo.services_option_manage');?></a></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box"><?php $this->_('AdminMain.orderinfo.services_no_results');?></div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>

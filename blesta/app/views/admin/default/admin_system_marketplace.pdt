@@ -1,0 +1,73 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $links = [
+                    ['name' => $this->_('AdminSystem.marketplace.category_all', true), 'current' => ((isset($category) ? $category : null) == 'all' ? true : false), 'attributes' => ['href' => $this->base_uri . 'system/marketplace/', 'class' => 'ajax']]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinks($links);
+                $this->Widget->create($this->_('AdminSystemMarketplace.index.boxtitle_marketplace', true, (isset($extension->name) ? $extension->name : null)), ['id' => 'admin_system_marketplace'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($marketplace) ? $marketplace : false) && !empty($marketplace->extensions)) {
+                ?>
+                <div id="marketplace">
+                    <?php
+                    foreach ($marketplace->extensions as $i => $extension) {
+                    ?>
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/marketplace/listing/' . (isset($extension->id) ? $extension->id : null) . '/');?>">
+                        <div class="itemlist<?php echo !isset($marketplace->extensions[$i + 1]) ? ' last' : '';?>">
+                            <div class="logo" style="background:url('<?php echo $this->Html->safe((isset($extension->home) ? $extension->home : null) . (isset($extension->icon) ? $extension->icon : null));?>');?> no-repeat 0 0; background-position: 0% 50%;"></div>
+                            <ul>
+                                <li><strong><?php (print (isset($extension->name) ? $this->Html->safe($extension->name) : null));?></strong> (ver <?php (print (isset($extension->version) ? $this->Html->safe($extension->version) : null));?>)</li>
+                                <li>Author: <?php (print (isset($extension->author->name) ? $this->Html->safe($extension->author->name) : null));?></li>
+                                <li>Last Updated: <?php echo $this->Date->cast($extension->updated);?></li>
+                                <li id="<?php echo $this->Html->concat('_', (print (isset($extension->rating) ? $this->Html->safe($extension->rating) : null)), (isset($extension->id) ? $this->Html->safe($extension->id) : null));?>" class="rating"></li>
+                                <li>Type: <?php (print (isset($extension->type) ? $this->Html->safe($extension->type) : null));?> <?php (print (isset($extension->price) ? $this->Html->safe($extension->price) : null));?></li>
+                                <li class="description"><?php (print (isset($extension->desc) ? $this->Html->safe($extension->desc) : null));?></li>
+                            </ul>
+                        </div>
+                    </a>
+                        <?php
+                        if (($i > 0 && ($i % 2 == 1)) || !isset($marketplace->extensions[$i + 1])) {
+                        ?>
+                    <div class="clear"></div>
+                        <?php
+                        }
+                    }
+                    ?>
+                </div>
+                <?php
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminSystemMarketplace.index.text_unavailable');?>
+                    </div>
+                </div>
+                <?php
+                }
+
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        $('#marketplace .rating').jRating({
+            step:true,
+            type:'big',
+            bigStarsPath:'" . $this->Html->safe($this->view_dir . 'images/jrating/stars.png') . "',
+            length:5,
+            showRateInfo:false,
+            rateMax:5,
+            phpPath:''
+        });
+    });
+");
+?>

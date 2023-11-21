@@ -1,0 +1,35 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyFeeds.index.boxtitle_data_feeds', true));
+                $this->Form->create();
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <p><?php $this->_('AdminCompanyFeeds.index.data_feeds_description');?></p>
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('enable_data_feeds', '1', ($vars['enable_data_feeds'] ?? '0') == '1', ['id' => 'enable_data_feeds', 'class' => 'inline']);
+                                $this->Form->label($this->_('AdminCompanyFeeds.index.field_enable_data_feeds', true), 'enable_data_feeds', ['class' => 'inline']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyFeeds.index.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

@@ -1,0 +1,11 @@
+{
+    "version": "1.7.0",
+    "name": "MassMailerPlugin.name",
+    "description": "MassMailerPlugin.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com/"
+        }
+    ]
+}

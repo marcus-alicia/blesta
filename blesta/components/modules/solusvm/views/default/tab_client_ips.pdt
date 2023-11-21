@@ -1,0 +1,82 @@
+
+    <div class="panel-pad">
+        <div class="row">
+            <div class="col-md-12">
+                <?php $this->Form->label($this->_('Solusvm.tab_client_ips.primary_ip', true));?>
+                <h4><?php echo (isset($ips->main) ? $this->Html->safe($ips->main) : null);?></h4>
+            </div>
+        </div>
+    </div>
+
+    <?php
+    if (!empty($ips->extra) || !empty($ips->base)) {
+        $this->Form->create($this->base_uri . 'services/manage/' . (isset($service_id) ? $service_id : null) . '/tabClientIps/');
+        $this->Form->fieldHidden('ip_address', '', ['id' => 'ip_address']);
+    ?>
+        <hr />
+        <h4><?php $this->_('Solusvm.tab_client_ips.heading_extra');?></h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tbody>
+                    <?php
+                    // Set all base IPs, which may not be removed
+                    foreach ((isset($ips->base) ? $ips->base : []) as $ip) {
+                    ?>
+                    <tr>
+                        <td><strong><?php echo (isset($ip) ? $this->Html->safe($ip) : null);?></strong></td>
+                        <td></td>
+                    </tr>
+                    <?php
+                    }
+                    // Set all extra IPs
+                    foreach ((isset($ips->extra) ? $ips->extra : []) as $i => $ip) {
+                    ?>
+                    <tr>
+                        <td><strong><?php echo (isset($ip) ? $this->Html->safe($ip) : null);?></strong></td>
+                        <td>
+                            <?php
+                            if ((isset($ips->editable) ? $ips->editable : null)) {
+                            ?>
+                            <a class="btn btn-xs btn-danger remove-ip" href="#" data-ip="<?php echo (isset($ip) ? $this->Html->safe($ip) : null);?>" data-toggle="modal" data-target="#remove-ip<?php echo $i;?>">
+                                <i class="fas fa-ban fa-fw"></i>
+                                <?php $this->_('Solusvm.tab_client_ips.remove_ip');?>
+                            </a>
+                            <div id="remove-ip<?php echo $i;?>" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="global_modal_title"><?php $this->_('Solusvm.tab_client_ips.heading_remove_ip', false, (isset($ip) ? $ip : null));?></h4>
+                                        </div>
+                                        <div class="modal-body"><?php $this->_('Solusvm.tab_client_ips.confirm_remove_ip');?></div>
+                                        <div class="modal-footer">
+                                            <?php
+                                            $this->Form->fieldButton('cancel', $this->_('Solusvm.tab_client_ips.cancel', true), ['class' => 'btn btn-light', 'data-dismiss' => 'modal']);
+                                            $this->Form->fieldButton('submit', $this->_('Solusvm.tab_client_ips.remove_ip', true), ['class' => 'btn btn-primary', 'type' => 'submit']);
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('a.remove-ip').on('click', function() {
+                    $('#ip_address').val($(this).attr('data-ip'));
+                });
+            });
+        </script>
+        <?php
+        $this->Form->end();
+    }
+    ?>

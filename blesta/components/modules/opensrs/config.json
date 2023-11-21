@@ -1,0 +1,34 @@
+{
+    "version": "1.0.2",
+    "type": "registrar",
+    "name": "Opensrs.name",
+    "description": "Opensrs.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "domain"
+    },
+    "service": {
+        "name_key": "domain"
+    },
+    "module": {
+        "row": "Opensrs.module_row",
+        "rows": "Opensrs.module_row_plural",
+        "row_key": "user"
+    },
+    "email_tags": {
+        "module": [],
+        "package": [],
+        "service": ["domain"]
+    },
+    "features": {
+        "dns_management": 1,
+        "email_forwarding": 0,
+        "id_protection": 1,
+        "epp_code": 1
+    }
+}

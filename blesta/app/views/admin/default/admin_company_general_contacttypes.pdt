@@ -1,0 +1,84 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminCompanyGeneral.contacttypes.categorylink_addtype', true),
+                            'href' => $this->base_uri . 'settings/company/general/addcontacttype/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminCompanyGeneral.contacttypes.boxtitle_types', true), ['id' => 'admin_company_general_contacttypes'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($contact_types) ? $contact_types : false) && ($num_types = count($contact_types)) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><span><?php $this->_('AdminCompanyGeneral.contacttypes.heading_name');?></span></td>
+                        <td><span><?php $this->_('AdminCompanyGeneral.contacttypes.heading_define');?></span></td>
+                        <td class="last"><span><?php $this->_('AdminCompanyGeneral.contacttypes.heading_options');?></span></td>
+                    </tr>
+                    <?php
+                    // Display each contact type
+                    for ($i = 0; $i < $num_types; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($contact_types[$i]->real_name) ? $this->Html->safe($contact_types[$i]->real_name) : null));?></td>
+                        <td><?php echo ((isset($contact_types[$i]->is_lang) ? $this->Html->safe($contact_types[$i]->is_lang) : null) == '1' ? $this->_('AdminCompanyGeneral.contacttypes.text_yes', true) : $this->_('AdminCompanyGeneral.contacttypes.text_no', true));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'settings/company/general/editcontacttype/' . (isset($contact_types[$i]->id) ? $this->Html->safe($contact_types[$i]->id) : null) . '/';?>"><?php $this->_('AdminCompanyGeneral.contacttypes.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'settings/company/general/deletecontacttype/');
+                            $this->Form->fieldHidden('id', (isset($contact_types[$i]->id) ? $this->Html->safe($contact_types[$i]->id) : null));
+                            ?>
+                            <a class="manage" href="<?php echo $this->base_uri . 'settings/company/general/deletecontacttype/' . (isset($contact_types[$i]->id) ? $this->Html->safe($contact_types[$i]->id) : null) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminCompanyGeneral.contacttypes.modal_delete', true));?>"><?php $this->_('AdminCompanyGeneral.contacttypes.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminCompanyGeneral.contacttypes.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#admin_company_general_contacttypes a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

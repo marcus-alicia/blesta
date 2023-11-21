@@ -1,0 +1,99 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminSystemCompanies.index.categorylink_addcompany', true),
+                            'href' => $this->base_uri . 'settings/system/companies/add/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinks([['name' => ''], 'attributes' => ['href' => '']]);
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminSystemCompanies.index.boxtitle_companies', true), ['id' => 'admin_system_companies'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($companies) ? $companies : false) && ($num_companies = count($companies)) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/companies/index/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemCompanies.index.text_name');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/companies/index/?sort=hostname&order=' . ($sort == 'hostname' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'hostname' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemCompanies.index.text_hostname');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/companies/index/?sort=address&order=' . ($sort == 'address' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'address' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemCompanies.index.text_address');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/companies/index/?sort=phone&order=' . ($sort == 'phone' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'phone' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemCompanies.index.text_phone');?></a></span></td>
+                        <td><span><?php $this->_('AdminSystemCompanies.index.text_options');?></span></td>
+                    </tr>
+                    <?php
+                    // Display each company
+                    for ($i = 0; $i < $num_companies; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($companies[$i]->name) ? $this->Html->safe($companies[$i]->name) : null));?></td>
+                        <td><?php (print (isset($companies[$i]->hostname) ? $this->Html->safe($companies[$i]->hostname) : null));?></td>
+                        <td><?php (print (isset($companies[$i]->address) ? $this->Html->safe($companies[$i]->address) : null));?></td>
+                        <td><?php (print (isset($companies[$i]->phone) ? $this->Html->safe($companies[$i]->phone) : null));?></td>
+                        <td>
+                            <a href="<?php echo $this->base_uri . 'settings/system/companies/edit/' . (isset($companies[$i]->id) ? $this->Html->safe($companies[$i]->id) : null) . '/';?>"><?php $this->_('AdminSystemCompanies.index.option_edit');?></a><?php echo ((isset($companies[$i]->id) ? $companies[$i]->id : null) != Configure::get('Blesta.company_id')) ? ',' : '';?>
+                            <?php
+                            if ((isset($companies[$i]->id) ? $companies[$i]->id : null) != Configure::get('Blesta.company_id')) {
+                            ?>
+                                <?php
+                                $this->Form->create($this->base_uri . 'settings/system/companies/delete/');
+                                $this->Form->fieldHidden('id', (isset($companies[$i]->id) ? $companies[$i]->id : null));
+                                ?>
+                                <a href="<?php echo $this->base_uri . 'settings/system/companies/delete/' . (isset($companies[$i]->id) ? $this->Html->safe($companies[$i]->id) : null) . '/';?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminSystemCompanies.index.confirm_delete', true));?>"><?php $this->_('AdminSystemCompanies.index.option_delete');?></a>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                            <?php
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminSystemCompanies.index.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        // Handle confirmation on delete action
+        $('#admin_system_companies a.manage[rel]').blestaModalConfirm({base_url: '" . $this->base_uri . "', close: '" . $this->_('AppController.modal.text_close', true) . "', submit: true});
+    });
+");
+?>

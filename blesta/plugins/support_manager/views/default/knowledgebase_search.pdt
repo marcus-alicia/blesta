@@ -1,0 +1,46 @@
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            echo (isset($search_bar) ? $search_bar : null);
+                            echo (isset($bread_crumbs) ? $bread_crumbs : null);
+                            ?>
+                        </div>
+                    </div>
+                    <div class="section-title">
+                        <h3>
+                            <i class="fas fa-file-alt"></i>
+                            <?php $this->_('Knowledgebase.search.heading_articles', false, (isset($vars->search) ? $this->Html->safe($vars->search) : null));?>
+                        </h3>
+                    </div>
+                    <div class="categories">
+                        <?php
+                        if (!empty($articles)) {
+                            foreach ((isset($articles) ? $articles : []) as $article) {
+                            ?>
+                        <div class="col-md-12">
+                            <i class="fas fa-file"></i>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/knowledgebase/view/' . (isset($article->id) ? $article->id : null) . '/' . (isset($article->uri_title) ? $article->uri_title : null) . '/');?>">
+                                <?php echo (isset($article->title) ? $this->Html->safe($article->title) : null);?>
+                            </a>
+                        </div>
+                            <?php
+                            }
+                        } else {
+                        ?>
+                        <div class="alert alert-info">
+                            <p><?php $this->_('Knowledgebase.search.articles_no_results');?></p>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php $this->Pagination->build();?>
+                        </div>
+                    </div>
+                </div>

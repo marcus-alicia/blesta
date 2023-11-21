@@ -1,0 +1,18 @@
+    <table class="table">
+        <tr class="heading_row">
+            <td class="fixed_small center border_none"><i class="fas fa-level-up-alt fa-rotate-90"></i></td>
+            <td class="border_left"><?php $this->_('Vultr.service_info.hostname'); ?></td>
+            <td><?php $this->_('Vultr.service_info.os'); ?></td>
+            <td><?php $this->_('Vultr.service_info.location'); ?></td>
+            <td><?php $this->_('Vultr.service_info.main_ip'); ?></td>
+            <td class="last"><?php $this->_('Vultr.service_info.default_password'); ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><?php echo (isset($service_fields->vultr_hostname) ? $this->Html->safe($service_fields->vultr_hostname) : null); ?></td>
+            <td><?php echo (isset($server_details->os) ? $this->Html->safe($server_details->os) : null); ?></td>
+            <td><?php echo (isset($locations[$server_details->region]) ? $this->Html->safe($locations[$server_details->region]) : null); ?></td>
+            <td><?php echo (isset($server_details->main_ip) ? $this->Html->safe($server_details->main_ip) : null); ?></td>
+            <td><?php echo (isset($service_fields->vultr_password) ? $this->Html->safe($service_fields->vultr_password) : '*****');?></td>
+        </tr>
+    </table>

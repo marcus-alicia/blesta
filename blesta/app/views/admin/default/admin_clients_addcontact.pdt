@@ -1,0 +1,197 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.addcontact.boxtitle_newcontact', true));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+
+        <div class="inner">
+            <div class="title_row first">
+                <h3><?php $this->_('AdminClients.addcontact.heading_contact');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_firstname', true), 'first_name');
+                        $this->Form->fieldText('first_name', (isset($vars->first_name) ? $vars->first_name : null), ['id' => 'first_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_lastname', true), 'last_name');
+                        $this->Form->fieldText('last_name', (isset($vars->last_name) ? $vars->last_name : null), ['id' => 'last_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_company', true), 'company');
+                        $this->Form->fieldText('company', (isset($vars->company) ? $vars->company : null), ['id' => 'company']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_title', true), 'title');
+                        $this->Form->fieldText('title', (isset($vars->title) ? $vars->title : null), ['id' => 'title']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_address1', true), 'address1');
+                        $this->Form->fieldText('address1', (isset($vars->address1) ? $vars->address1 : null), ['id' => 'address1']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_address2', true), 'address2');
+                        $this->Form->fieldText('address2', (isset($vars->address2) ? $vars->address2 : null), ['id' => 'address2']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_city', true), 'city');
+                        $this->Form->fieldText('city', (isset($vars->city) ? $vars->city : null), ['id' => 'city']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_country', true), 'country');
+                        $this->Form->fieldSelect('country', (isset($countries) ? $countries : null), (isset($vars->country) ? $vars->country : null), ['id' => 'country']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_state', true), 'State');
+                        $this->Form->fieldSelect('state', (isset($states) ? $states : null), (isset($vars->state) ? $vars->state : null), ['id' => 'state']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_zip', true), 'zip');
+                        $this->Form->fieldText('zip', (isset($vars->zip) ? $vars->zip : null), ['id' => 'zip']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_email', true), 'email');
+                        $this->Form->fieldText('email', (isset($vars->email) ? $vars->email : null), ['id' => 'email']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <?php
+            // Set phones section
+            echo (isset($partial_phones) ? $partial_phones : null);
+            ?>
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.addcontact.heading_authentication');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('enable_login', 'true', (isset($vars->enable_login) ? $vars->enable_login : false), ['id' => 'enable_login']);
+                        $this->Form->label($this->_('AdminClients.addcontact.field_enable_login', true), 'enable_login', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li class="username login_fields">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_username', true), 'username');
+                        $this->Form->fieldText('username', (isset($vars->username) ? $vars->username : (isset($vars->email) ? $vars->email : null)), ['id' => 'username']);
+                        ?>
+                    </li>
+                    <li class="login_fields">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_newpassword', true), 'new_password');
+                        $this->Form->fieldPassword('new_password', ['id' => 'new_password', 'class' => 'new_password']);
+                        ?>
+                        <a class="generate-password" href="#" data-options="<?php (print (isset($password_options) ? $this->Html->safe($password_options) : null));?>" data-length="10" data-base-url="<?php (print (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null));?>" data-for-class="new_password">
+                            <i class="fas fa-sync-alt"></i> <?php $this->_('AdminClients.addcontact.text_generate_password');?>
+                        </a>
+                    </li>
+                    <li class="login_fields">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_permissions', true));
+                        ?>
+                        <dl>
+                            <?php
+                            foreach ((array)(isset($permissions) ? $permissions : null) as $area => $name) {
+                            ?>
+                                <dd>
+                                    <label>
+                                        <?php
+                                        $this->Form->fieldCheckbox('permissions[area][]', $area, in_array($area, (array)(isset($vars->permissions['area']) ? $vars->permissions['area'] : null)));
+                                        (print (isset($name) ? $this->Html->safe($name) : null));
+                                        ?>
+                                    </label>
+                                </dd>
+                            <?php
+                            }
+                            ?>
+                        </dl>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.addcontact.heading_settings');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addcontact.field_accounttype', true), 'contact_type');
+                        $this->Form->fieldSelect('contact_type', (isset($contact_types) ? $contact_types : null), (isset($vars->contact_type) ? $vars->contact_type : null), ['id' => 'contact_type']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.addcontact.field_contactsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline('
+    $(document).ready(function() {
+        $("#country").change(function() {
+            $(this).blestaRequest("get", "' . $this->Html->safe($this->base_uri . 'clients/getstates/') . '" + $(this).val(), null, function(data) {
+                    // Remove all existing items
+                    $("option", "#state").remove();
+
+                    // Append all new items
+                    $.each($(this).blestaSortObject(data), function(index, item) {
+                        $("#state").append( new Option(item.value, item.key));
+                    });
+                },
+                null,
+                {dataType: "json"}
+            );
+        });
+
+        toggleLoginFields();
+
+        $("#enable_login").click(function() {
+            toggleLoginFields();
+        });
+
+        function toggleLoginFields() {
+            if ($("#enable_login").is(":checked")) {
+                $("li.login_fields").show();
+            }
+            else {
+                $("li.login_fields").hide();
+            }
+        }
+    });
+');

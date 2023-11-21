@@ -1,0 +1,31 @@
+
+	<ul>
+        <li>
+            <?php
+            $this->Form->label($this->_('Ccavenue.merchant_id', true), 'merchant_id');
+            $this->Form->fieldText('merchant_id', (isset($meta['merchant_id']) ? $meta['merchant_id'] : null), ['id'=>'merchant_id']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Ccavenue.merchant_id_note');?></div></span>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Ccavenue.encryption_key', true), 'encryption_key');
+            $this->Form->fieldText('encryption_key', (isset($meta['encryption_key']) ? $meta['encryption_key'] : null), ['id'=>'encryption_key']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Ccavenue.encryption_key_note');?></div></span>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Ccavenue.access_code', true), 'access_code');
+            $this->Form->fieldText('access_code', (isset($meta['access_code']) ? $meta['access_code'] : null), ['id'=>'access_code']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Ccavenue.access_code_note');?></div></span>
+        </li>
+		<li>
+            <?php
+            $this->Form->fieldCheckbox('test_mode', 'true', ((isset($meta['test_mode']) ? $meta['test_mode'] : 'false') == 'true'), ['id'=>'test_mode']);
+            $this->Form->label($this->_('Ccavenue.test_mode', true), 'test_mode', ['class'=>'inline']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Ccavenue.test_mode_note'); ?></div></span>
+        </li>
+	</ul>

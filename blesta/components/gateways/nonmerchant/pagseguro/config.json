@@ -1,0 +1,17 @@
+{
+	"version": "1.4.0",
+	"name": "Pagseguro.name",
+	"description": "Pagseguro.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		},
+        {
+            "name": "Nirays Technologies",
+            "url": "http://nirays.com"
+        }
+	],
+	"currencies": ["BRL"],
+	"signup_url": "https://cadastro.pagseguro.uol.com.br/"
+}

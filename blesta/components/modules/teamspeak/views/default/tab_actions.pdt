@@ -1,0 +1,133 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Teamspeak.tab_actions.status_title'); ?></h3>
+    </div>
+    <div class="pad">
+        <?php
+        if ($server_info->state == 'online') {
+            $status_class = 'success';
+            $status = 'online';
+        } elseif ($server_info->state == 'offline') {
+            $status_class = 'danger';
+            $status = 'offline';
+        }
+        ?>
+
+        <span class="btn btn-sm btn-<?php echo (isset($status_class) ? $this->Html->safe($status_class) : null); ?>" style="padding: 2px 4px;" disabled="disabled">
+            <i class="fas fa-lightbulb"></i> <?php $this->_('Teamspeak.tab_actions.status_' . (isset($status) ? $this->Html->safe($status) : null)); ?>
+        </span>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Teamspeak.tab_actions.server_title'); ?></h3>
+    </div>
+    <div class="pad">
+        <div class="row options">
+            <div class="col-md-4">
+                <?php
+                    $this->Form->create();
+                    $this->Form->fieldHidden('action', 'restart');
+                ?>
+                <button<?php echo (isset($status) ? $status : null) != 'online' ? ' disabled="disabled"' : ''; ?> class="btn btn-success btn-block">
+                    <i class="fas fa-sync-alt"></i> <?php $this->_('Teamspeak.tab_actions.action_restart'); ?>
+                </button>
+                <?php
+                    $this->Form->end();
+                ?>
+
+                <?php
+                    $this->Form->create();
+                    $this->Form->fieldHidden('action', 'change_name');
+                ?>
+                <button class="name btn btn-default btn-block" style="margin-top: 5px;">
+                    <i class="fas fa-edit"></i> <?php $this->_('Teamspeak.tab_actions.action_edit_name'); ?>
+                </button>
+                <?php
+                    $this->Form->end();
+                ?>
+            </div>
+            <div class="col-md-4">
+                <?php
+                    $this->Form->create();
+                    $this->Form->fieldHidden('action', 'stop');
+                ?>
+                <button<?php echo (isset($status) ? $status : null) != 'online' ? ' disabled="disabled"' : ''; ?> class="btn btn-danger btn-block">
+                    <i class="fas fa-stop"></i> <?php $this->_('Teamspeak.tab_actions.action_stop'); ?>
+                </button>
+                <?php
+                    $this->Form->end();
+                ?>
+
+                <?php
+                    $this->Form->create();
+                    $this->Form->fieldHidden('action', 'remove_ban');
+                ?>
+                <button class="btn btn-default btn-block" style="margin-top: 5px;">
+                    <i class="fas fa-ban"></i> <?php $this->_('Teamspeak.tab_actions.action_remove_ban'); ?>
+                </button>
+                <?php
+                    $this->Form->end();
+                ?>
+            </div>
+            <div class="col-md-4">
+                <?php
+                    $this->Form->create();
+                    $this->Form->fieldHidden('action', 'start');
+                ?>
+                <button<?php echo (isset($status) ? $status : null) != 'offline' ? ' disabled="disabled"' : ''; ?> class="btn btn-default btn-block">
+                    <i class="fas fa-play"></i> <?php $this->_('Teamspeak.tab_actions.action_start'); ?>
+                </button>
+                <?php
+                    $this->Form->end();
+                ?>
+
+                <?php
+                    $this->Form->create();
+                    $this->Form->fieldHidden('action', 'reset_permissions');
+                ?>
+                <button class="btn btn-default btn-block" style="margin-top: 5px;">
+                    <i class="fas fa-sync-alt"></i> <?php $this->_('Teamspeak.tab_actions.action_reset_permissions'); ?>
+                </button>
+                <?php
+                    $this->Form->end();
+                ?>
+            </div>
+        </div>
+    </div>
+
+    <div id="change_name" style="display:none;">
+        <div class="title_row">
+            <h3><?php $this->_('Teamspeak.tab_actions.heading_change_name'); ?></h3>
+        </div>
+        <?php
+            $this->Form->create();
+        ?>
+        <div class="pad">
+            <ul>
+                <li>
+                    <?php
+                        $this->Form->label($this->_('Teamspeak.tab_actions.field_name', true), 'name');
+                        $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name', 'placeholder' => $this->_('Teamspeak.tab_actions.field_name', true)]);
+                        $this->Form->fieldHidden('action', 'change_name');
+                    ?>
+                </li>
+            </ul>
+        </div>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('Teamspeak.tab_actions.field_name_submit', true), ['class' => 'btn btn-primary float-right']);
+            ?>
+        </div>
+        <?php
+            $this->Form->end();
+        ?>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.options button.name').click(function() {
+        $('#change_name').toggle();
+        return false;
+    });
+});
+</script>

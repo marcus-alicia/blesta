@@ -1,0 +1,9 @@
+{
+    "name": "blesta/auto_cancel",
+    "description": "Automatically Cancel Services",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

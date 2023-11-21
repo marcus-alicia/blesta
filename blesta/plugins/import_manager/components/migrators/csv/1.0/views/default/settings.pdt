@@ -1,0 +1,15 @@
+    <ul>
+        <li>
+            <?php
+            $this->Form->fieldHidden('step', 'settings');
+            $this->Form->label($this->_('Csv1_0.settings.csv_data', true), 'csv_data');
+            $this->Form->fieldTextarea('csv_data', (isset($vars->csv_data) ? $vars->csv_data : null), ['id' => 'csv_data']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->fieldCheckbox('enable_debug', 'true', (isset($vars->enable_debug) ? $vars->enable_debug : null) == 'true', ['id' => 'enable_debug']);
+            $this->Form->label($this->_('Csv1_0.settings.enable_debug', true), 'enable_debug', ['class' => 'inline']);
+            ?>
+        </li>
+    </ul>

@@ -1,0 +1,103 @@
+
+<div class="pad">
+    <ul>
+        <li>
+            <?php
+            $this->Form->label($group_name, 'module_group');
+            $this->Form->fieldSelect('module_group', ['select' => $this->_('AppController.select.please', true)] + ['' => $this->_('AdminPackages.add.field_modulegroup_any', true)] + (isset($groups) ? $groups : []), (isset($vars->module_group) ? $vars->module_group : null), ['id' => 'module_group']);
+            ?>
+        </li>
+
+
+        <?php
+        if (!empty($groups)) {
+        ?>
+        <li class="module_group_client_field">
+            <?php
+            $this->Form->fieldCheckbox('module_group_client', '1', ($vars->module_group_client ?? '0') == '1', ['id' => 'module_group_client']);
+            $this->Form->label($this->_('AdminPackages.moduleoptions.field_module_group_client', true, $group_name), 'module_group_client', ['class' => 'inline']);
+            ?>
+            <span class="tooltip hidden"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.!tooltip.taxexempt');?></div></span>
+        </li>
+        <li class="module_groups_field">
+            <?php
+            $this->Form->label($this->_('AdminPackages.moduleoptions.field_module_groups', true, $group_name), 'module_groups');
+            $this->Form->fieldMultiSelect('module_groups[]', ($groups ?? []), ($vars->module_groups ?? []));
+            ?>
+        </li>
+        <?php
+        }
+        ?>
+
+        <?php
+        if (!empty($rows)) {
+        ?>
+        <li class="module_row_field">
+            <?php
+            $this->Form->label($row_name, 'module_row');
+            $this->Form->fieldSelect('module_row', $rows, ($vars->module_row ?? 0), ['id' => 'module_row']);
+            ?>
+        </li>
+        <?php
+        } else {
+            $this->Form->fieldHidden('module_row', ($vars->module_row ?? 0), ['id' => 'module_row']);
+        }
+
+        // Show module fields
+        if (isset($input_html) && ($module_field_html = $input_html->generate(null, $this->view))) {
+        ?>
+        <li>
+            <?php
+            echo $module_field_html;
+            ?>
+        </li>
+        <?php
+        }
+        ?>
+    </ul>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Bind tooltips for this content
+            $('#module_group').closest('ul').blestaBindToolTips();
+
+            // If no group selected hide row listing
+            <?php
+            if (!empty($groups)) {
+            ?>
+            if ($('#module_group').val() != "") {
+                $('li.module_row_field').hide();
+                $('li.module_group_client_field').hide();
+            }
+            if ($('#module_group_client').is(":checked")) {
+                $('li.module_row_field').hide();
+            }
+            <?php
+            }
+            ?>
+
+            // If group changes, determine if row listing should be shown
+            $('#module_group').change(function() {
+                if ($('#module_group').val() != "") {
+                    $('li.module_row_field').hide();
+                    $('li.module_group_client_field').hide();
+                } else {
+                    $('li.module_row_field').show();
+                    $('li.module_group_client_field').show();
+                }
+            });
+
+            // Hide row fields if client can select the module group
+            $('#module_group_client').change(function() {
+                if ($('#module_group_client').is(":checked")) {
+                    $('li.module_row_field').hide();
+                    $('li.module_groups_field').show();
+                } else {
+                    $('li.module_row_field').show();
+                    $('li.module_groups_field').hide();
+                }
+            });
+            $('#module_group_client').change();
+        });
+    </script>
+</div>

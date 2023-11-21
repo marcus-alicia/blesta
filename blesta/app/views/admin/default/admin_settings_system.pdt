@@ -1,0 +1,67 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $tabs = [
+            ['name' => $this->_('AdminSettings.system.category_company', true), 'attributes' => ['href' => $this->base_uri . 'settings/company/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminSettings.system.category_system', true), 'current' => true, 'attributes' => ['href' => $this->base_uri . 'settings/system/', 'class' => 'ajax']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('AdminSettings.system.boxtitle_settings', true), ['id' => 'admin_settings_system'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="settings">
+            <div class="left">
+                <div class="section general icon-line fa-2x">
+                    <i class="fas fa-tools fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/system/general/"><?php $this->_('AdminSettings.system.heading_general');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_general');?></p>
+                </div>
+                <div class="section companies icon-line fa-2x">
+                    <i class="fas fa-building fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/system/companies/"><?php $this->_('AdminSettings.system.heading_companies');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_companies');?></p>
+                </div>
+                <div class="section backup icon-line fa-2x">
+                    <i class="fas fa-hdd fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/system/backup/"><?php $this->_('AdminSettings.system.heading_backup');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_backup');?></p>
+                </div>
+                <div class="section api icon-line fa-2x">
+                    <i class="fas fa-code fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/system/api/"><?php $this->_('AdminSettings.system.heading_api');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_api');?></p>
+                </div>
+                <div class="section marketplace icon-line fa-2x">
+                    <i class="fas fa-shopping-cart fa-fw"></i>
+                    <h1><a href="<?php echo $this->Html->safe(Configure::get('Blesta.marketplace_url'));?>" target="_blank"><?php $this->_('AdminSettings.system.heading_marketplace');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_marketplace');?></p>
+                </div>
+            </div>
+            <div class="right">
+                <div class="section automation icon-line fa-2x">
+                    <i class="fas fa-clock fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/system/automation/"><?php $this->_('AdminSettings.system.heading_automation');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_automation');?></p>
+                </div>
+                <div class="section staff icon-line fa-2x">
+                    <i class="fas fa-user-tie fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/system/staff/"><?php $this->_('AdminSettings.system.heading_staff');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_staff');?></p>
+                </div>
+                <div class="section upgrade icon-line fa-2x">
+                    <i class="fas fa-cloud-download-alt fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/system/upgrade/"><?php $this->_('AdminSettings.system.heading_upgrade');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_upgrade');?></p>
+                </div>
+                <div class="section help icon-line fa-2x">
+                    <i class="fas fa-life-ring fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/system/help/"><?php $this->_('AdminSettings.system.heading_help');?></a></h1>
+                    <p><?php $this->_('AdminSettings.system.text_help');?></p>
+                </div>
+            </div>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

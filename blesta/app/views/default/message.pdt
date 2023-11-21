@@ -1,0 +1,47 @@
+<?php
+$types = [
+    'success' => [
+        'show' => (isset($success) || isset($message)),
+        'message' => (isset($success) ? $success : (isset($message) ? $message : '')),
+    ],
+    'danger' => [
+        'show' => isset($error),
+        'message' => (isset($error) ? $error : ''),
+    ],
+    'warning' => [
+        'show' => isset($notice),
+        'message' => (isset($notice) ? $notice : ''),
+    ],
+    'info' => [
+        'show' => isset($info),
+        'message' => (isset($info) ? $info : ''),
+    ]
+];
+
+foreach ($types as $type => $content) {
+    if (!$content['show']) {
+        continue;
+    }
+
+    $message = $content['message'];
+?>
+<div class="alert alert-<?php (print (isset($type) ? $this->Html->safe($type) : null));?>">
+    <?php
+    if (is_array($message)) {
+        foreach ($message as $field => $messages) {
+            foreach ($messages as $key => $message_text) {
+            ?>
+            <p><?php echo (isset($message_text) ? $this->Html->safe($message_text, (isset($preserve_tags) ? $preserve_tags : false)) : null);?></p>
+            <?php
+            }
+        }
+    } else {
+    ?>
+    <p><?php echo (isset($message) ? $this->Html->safe($message, (isset($preserve_tags) ? $preserve_tags : false)) : null);?></p>
+    <?php
+    }
+    ?>
+</div>
+<?php
+}
+?>

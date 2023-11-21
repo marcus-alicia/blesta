@@ -1,0 +1,100 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            ['name' => $this->_('AdminReports.index.reports', true), 'current' => true, 'attributes' => ['href' => $this->base_uri . 'reports/']],
+            ['name' => $this->_('AdminReports.index.customize', true), 'current' => false, 'attributes' => ['href' => $this->base_uri . 'reports_customize']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($links);
+        $this->Widget->create($this->_('AdminReports.index.box_title', true), ['id' => 'admin_reports'], (isset($render_section) ? $render_section : null));
+        $this->Form->create(null, ['id' => 'report_form']);
+        ?>
+
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminReports.index.field_format', true), 'format');
+                        $this->Form->fieldSelect('format', (isset($formats) ? $formats : null), (isset($vars->format) ? $vars->format : null), ['id' => 'format']);
+                        ?>
+                    </li>
+                    <li>
+                        <div id="type_div">
+                        <?php
+                        $this->Form->label($this->_('AdminReports.index.field_report_type', true), 'type');
+                        $this->Form->fieldSelect('type', (isset($types) ? $types : null), (isset($vars->type) ? $vars->type : null), ['id' => 'type']);
+                        ?>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div id="report_options">
+                <?php echo (isset($report_fields) ? $report_fields : null);?>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminReports.index.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+
+        $this->Javascript->setInline("
+        $(document).ready(function() {
+            $('#format').change(function() {
+                getReportTypes();
+                return false;
+            });
+
+            $('#admin_reports').on('change', '#type', function() {
+                getReportFields();
+                return false;
+            });
+        });
+
+        function getReportTypes() {
+            $(this).blestaRequest(
+                'get',
+                '" .  $this->Html->safe($this->base_uri . 'reports/getReportTypes/') . "',
+                $('#report_form').serialize(),
+                function(data) {
+                    if (data.types) {
+                        $('#type_div').html(data.types);
+                    }
+
+                    getReportFields();
+                },
+                function(data) { },
+                {dataType:'json'}
+            );
+        }
+
+        function getReportFields() {
+            if ($('#type').val() != '') {
+                $(this).blestaRequest(
+                    'get',
+                    '" .  $this->Html->safe($this->base_uri . 'reports/getreportfields/') . "',
+                    $('#report_form').serialize(),
+                    function(data) {
+                        if (data.fields) {
+                            $('#report_options').html(data.fields);
+                        }
+
+                        $('#admin_reports').blestaBindToolTips();
+                    },
+                    function(data) { },
+                    {dataType:'json'}
+                );
+            } else {
+                $('#report_options').html('');
+            }
+        }
+
+        ");
+?>

@@ -1,0 +1,10 @@
+{
+    "name": "blesta/domains",
+    "description": "Used to handle various aspects of domain management and sales",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "io-developer/php-whois": "^4.0"
+    }
+}

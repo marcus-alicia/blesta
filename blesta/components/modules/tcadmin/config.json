@@ -1,0 +1,35 @@
+{
+    "version": "1.9.0",
+    "name": "Tcadmin.name",
+    "description": "Tcadmin.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "hostname"
+    },
+    "service": {
+        "name_key": "hostname"
+    },
+    "module": {
+        "row": "Tcadmin.module_row",
+        "rows": "Tcadmin.module_row_plural",
+        "row_key": "server_name",
+        "group": "Tcadmin.module_group"
+    },
+    "email_tags": {
+        "module": ["host_name", "port"],
+        "package": ["supported_servers", "server_type", "start", "priority", "startup"],
+        "service": [
+            "client_package_id",
+            "hostname",
+            "rcon_password",
+            "private_password",
+            "user_name",
+            "user_password"
+        ]
+    }
+}

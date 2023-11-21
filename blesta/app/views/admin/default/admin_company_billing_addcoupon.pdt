@@ -1,0 +1,286 @@
+
+        <?php
+        echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminCompanyBilling.addcoupon.boxtitle_new', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['id' => 'coupon', 'class' => 'disable-on-submit']);?>
+                    <div class="title_row first"><h3><?php $this->_('AdminCompanyBilling.addcoupon.heading_basic');?></h3></div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('status', 'active', ((isset($vars->status) ? $vars->status : 'active') == 'active'), ['id' => 'status']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_status', true), 'status', ['class' => 'inline']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldRadio('recurring', '0', (isset($vars->recurring) ? $vars->recurring : '0') == '0', ['id' => 'recurring_no', 'class' => 'recurring inline']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_recurring_no', true), 'recurring_no', ['class' => 'inline']);?>
+                                <?php $this->Form->fieldRadio('recurring', '1', (isset($vars->recurring) ? $vars->recurring : '0') == '1', ['id' => 'recurring_yes', 'class' => 'recurring inline']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_recurring_yes', true), 'recurring_yes', ['class' => 'inline']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('apply_package_options', '1', (isset($vars->apply_package_options) ? $vars->apply_package_options : '1') == '1', ['id' => 'apply_package_options', 'class' => 'inline']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.editcoupon.field_apply_package_options', true), 'apply_package_options', ['class' => 'inline']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('internal_use_only', '1', (isset($vars->internal_use_only) ? $vars->internal_use_only : null) == '1', ['id' => 'internal_use_only', 'class' => 'inline']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_internal_use_only', true), 'internal_use_only', ['class' => 'inline']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_code', true), 'code');?>
+                                <?php $this->Form->fieldText('code', (isset($vars->code) ? $vars->code : null), ['id' => 'code']);?>
+                                <a href="#" class="generate_code"><i class="fas fa-sync-alt"></i> <?php $this->_('AdminCompanyBilling.addcoupon.text_generate_code');?></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row"><h3><?php $this->_('AdminCompanyBilling.addcoupon.heading_limitations');?></h3></div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_start_date', true), 'start_date');?>
+                                <?php $this->Form->fieldText('start_date', (isset($vars->start_date) ? $vars->start_date : null), ['id' => 'start_date', 'class' => 'date']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_end_date', true), 'end_date');?>
+                                <?php $this->Form->fieldText('end_date', (isset($vars->end_date) ? $vars->end_date : null), ['id' => 'end_date', 'class' => 'date']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_max_qty', true), 'max_qty', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.coupon_quantity');?></div></span>
+                                <?php $this->Form->fieldText('max_qty', (isset($vars->max_qty) ? $vars->max_qty : null), ['id' => 'max_qty', 'class' => 'small block']);?>
+                            </li>
+                            <li id="renew_limitation" style="display:none;">
+                                <?php $this->Form->fieldRadio('limit_recurring', '0', (isset($vars->limit_recurring) ? $vars->limit_recurring : '0') == '0', ['id' => 'limit_recurring_no', 'class' => 'inline']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_limit_recurring_no', true), 'limit_recurring_no', ['class' => 'inline']);?>
+                                <?php $this->Form->fieldRadio('limit_recurring', '1', (isset($vars->limit_recurring) ? $vars->limit_recurring : '0') == '1', ['id' => 'limit_recurring_yes', 'class' => 'inline']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_limit_recurring_yes', true), 'limit_recurring_yes', ['class' => 'inline']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row"><h3><?php $this->_('AdminCompanyBilling.addcoupon.heading_terms');?></h3></div>
+                    <div class="pad">
+                        <p><?php $this->_('AdminCompanyBilling.addcoupon.description_terms');?></p>
+                        <table class="table">
+                            <thead>
+                                <tr class="heading_row">
+                                    <td class="fixed_small center"><?php $this->_('AdminCompanyBilling.addcoupon.text_enabled');?></td>
+                                    <td><?php $this->_('AdminCompanyBilling.addcoupon.text_period');?></td>
+                                    <td><?php $this->_('AdminCompanyBilling.addcoupon.text_terms');?><span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.coupon_term_value', false);?></div></span></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $i = 0;
+                                foreach ((isset($periods) ? $periods : []) as $key => $period) {
+                                ?>
+                                <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                                    <td class="fixed_small center">
+                                        <?php $this->Form->fieldCheckbox('terms[' . $i . '][period]', $key, (isset($vars->terms[$i]['period']) ? $vars->terms[$i]['period'] : null), ['id' => 'enabled_' . $i]);?>
+                                    </td>
+                                    <td>
+                                        <?php $this->Form->label($period, 'terms', ['class' => 'inline']);?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $attributes = array_merge(['class' => 'stretch terms', 'id' => 'terms_' . $i], ($key == 'onetime' ? ['disabled' => 'disabled'] : []));
+                                        $value = ($key == 'onetime' ? $this->_('AdminCompanyBilling.addcoupon.not_applicable', true) : (isset($vars->terms[$i]['term']) ? $vars->terms[$i]['term'] : null));
+                                        $this->Form->fieldText('terms[' . $i . '][term]', $value, $attributes);
+                                        ?>
+                                    </td>
+                                </tr>
+                                <?php
+                                    $i++;
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="title_row"><h3><?php $this->_('AdminCompanyBilling.addcoupon.heading_discount');?></h3></div>
+                    <div class="pad">
+                        <div class="links_row">
+                            <a class="btn btn-default pull-right btn-sm currency_row_add" href="#"><span><?php $this->_('AdminCompanyBilling.addcoupon.categorylink_addcurrency');?></span></a>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr class="heading_row">
+                                    <td><?php $this->_('AdminCompanyBilling.addcoupon.text_currency');?></td>
+                                    <td><?php $this->_('AdminCompanyBilling.addcoupon.text_type');?></td>
+                                    <td><?php $this->_('AdminCompanyBilling.addcoupon.text_value');?></td>
+                                    <td class="last"></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $num_amounts = count((isset($vars->amounts['currency']) ? $vars->amounts['currency'] : []));
+                                for ($i = 0; $i < $num_amounts; $i++) {
+                                ?>
+                                <tr class="currency_row<?php echo ($i % 2 == 1) ? ' odd_row' : '';?>">
+                                    <td><?php $this->Form->fieldSelect('amounts[currency][]', (isset($currencies) ? $currencies : null), (isset($vars->amounts['currency'][$i]) ? $vars->amounts['currency'][$i] : null));?></td>
+                                    <td><?php $this->Form->fieldSelect('amounts[type][]', (isset($types) ? $types : null), (isset($vars->amounts['type'][$i]) ? $vars->amounts['type'][$i] : null));?></td>
+                                    <td><?php $this->Form->fieldText('amounts[amount][]', (isset($vars->amounts['amount'][$i]) ? $vars->amounts['amount'][$i] : null), ['class' => 'stretch']);?></td>
+                                    <td><a href="#" class="manage currency_row_remove"><?php $this->_('AdminCompanyBilling.addcoupon.option_remove');?></a></td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="title_row"><h3><?php $this->_('AdminCompanyBilling.addcoupon.heading_packages');?></h3></div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyBilling.addcoupon.field_package_group_id', true), 'package_group_id');
+                                $this->Form->fieldSelect('package_group_id', (isset($package_groups) ? $package_groups : null), (isset($vars->package_group_id) ? $vars->package_group_id : null), ['id' => 'package_group_id']);
+                                ?>
+                            </li>
+                        </ul>
+                        <table>
+                            <tr>
+                                <td><?php $this->_('AdminCompanyBilling.addcoupon.text_assigned_packages');?></td>
+                                <td></td>
+                                <td><?php $this->_('AdminCompanyBilling.addcoupon.text_available_packages');?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('packages[]', (isset($vars->packages) ? $vars->packages : null), [], ['id' => 'assigned']);?>
+                                </td>
+                                <td><a href="#" class="move_left">&nbsp;</a> &nbsp; <a href="#" class="move_right">&nbsp;</a></td>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('available[]', [], [], ['id' => 'available']);?>
+                                    <?php $this->Form->fieldMultiSelect('pool[]', (isset($packages) ? $packages : null), [], ['id' => 'pool', 'style' => 'display:none;'], (isset($package_attributes) ? $package_attributes : null));?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyBilling.addcoupon.field_couponsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    showRenewLimitation();
+
+    // Select all assigned packages on submit
+    $('#coupon').submit(function() {
+        $('#assigned option').prop('selected', true);
+    });
+
+    $('.currency_row_add').click(function() {
+        var fields = $('tr.currency_row:first').clone(true);
+        fields.find('select,input').each(function() {
+            $(this).val('');
+        });
+        $('tr.currency_row:last').after(fields);
+
+        updateCurrencyRows();
+        return false;
+    });
+
+    $('.currency_row_remove').click(function() {
+        if ($('tr.currency_row').length > 1)
+            $(this).closest('tr').remove();
+
+        updateCurrencyRows();
+        return false;
+    });
+
+    $('.generate_code').click(function() {
+        $('#code').attr('value', $(this).blestaRandomString(8));
+        return false;
+    });
+
+    // Show/hide renew limitation
+    $('.recurring').change(function() {
+        showRenewLimitation();
+    });
+
+    setAvailablePackages();
+
+    $('#package_group_id').change(function() {
+        // Remove all available packages
+        $('#pool').append($('#available option'));
+
+        setAvailablePackages();
+    });
+
+    // Move packages from right to left
+    $('.move_left').click(function() {
+        // Move right to left
+        $('#available option:selected').appendTo($('#assigned'));
+        return false;
+    });
+    // Move packages from left to right
+    $('.move_right').click(function() {
+        $('#assigned option:selected').appendTo($('#available'));
+        return false;
+    });
+
+    $('.terms').on('input', function() {
+        var index = $(this).attr('id').replace('terms_', '');
+        if ($(this).val() === '') {
+            $('#enabled_' + index).prop('checked', false);
+        } else {
+            $('#enabled_' + index).prop('checked', true);
+        }
+    });
+});
+
+// Shows/hides renew limitation options
+function showRenewLimitation() {
+    if ($('#recurring_yes').prop('checked'))
+        $('#renew_limitation').show();
+    else {
+        $('#renew_limitation').hide();
+        // Reset limit recurring value
+        $('#limit_recurring_no').prop('checked', true);
+    }
+}
+
+// Set the available packages
+function setAvailablePackages() {
+    // Show the available items for this group
+    var selected_group_id = $('#package_group_id option:selected').val();
+
+    // Select all packages
+    if (selected_group_id == '')
+        $('#available').append($('#pool option'));
+    // Select specific group packages
+    else
+        $('#available').append($('#pool option.group_' + selected_group_id));
+}
+
+// Zebra-stripe pricing rows
+function updateCurrencyRows() {
+    var i = 0;
+    $('tr.currency_row').each(function() {
+        if (i++%2 == 1)
+            $(this).addClass('odd_row');
+        else
+            $(this).removeClass('odd_row');
+    });
+}
+");
+?>

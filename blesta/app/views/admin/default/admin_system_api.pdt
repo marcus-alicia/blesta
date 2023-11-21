@@ -1,0 +1,88 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminSystemApi.index.categorylink_keyadd', true),
+                            'href' => $this->base_uri . 'settings/system/api/add/'
+                        ]
+                    ]
+                ];
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminSystemApi.index.boxtitle_api', true), ['id' => 'admin_system_api'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($keys) ? $keys : false) && ($num_keys = count($keys)) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/api/index/?sort=user&order=' . ($sort == 'user' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'user' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemApi.index.heading_user');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/api/index/?sort=key&order=' . ($sort == 'key' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'key' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemApi.index.heading_key');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/api/index/?sort=company_id&order=' . ($sort == 'company_id' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'company_id' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemApi.index.heading_company');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/api/index/?sort=date_created&order=' . ($sort == 'date_created' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_created' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemApi.index.heading_date');?></a></span></td>
+                        <td class="last"><span><?php $this->_('AdminSystemApi.index.heading_options');?></span></td>
+                    </tr>
+                    <?php
+                    // List API keys
+                    for ($i = 0; $i < $num_keys; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($keys[$i]->user) ? $this->Html->safe($keys[$i]->user) : null));?></td>
+                        <td><?php (print (isset($keys[$i]->key) ? $this->Html->safe($keys[$i]->key) : null));?></td>
+                        <td><?php (print (isset($keys[$i]->company_name) ? $this->Html->safe($keys[$i]->company_name) : null));?></td>
+                        <td><?php echo $this->Date->cast((isset($keys[$i]->date_created) ? $keys[$i]->date_created : null), 'date_time');?></td>
+                        <td>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/api/edit/' . (isset($keys[$i]->id) ? $keys[$i]->id : null) . '/');?>"><?php $this->_('AdminSystemApi.index.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'settings/system/api/delete/');
+                            $this->Form->fieldHidden('id', (isset($keys[$i]->id) ? $keys[$i]->id : null));
+                            ?>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/api/delete/' . (isset($keys[$i]->id) ? $keys[$i]->id : null) . '/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminSystemApi.index.confirm_delete', true));?>"><?php $this->_('AdminSystemApi.index.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminSystemApi.index.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+                <?php $this->Widget->end();?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Handle confirmation
+                $('#admin_system_api a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', submit: true, close: '<?php $this->_('AppController.modal.text_close');?>'});
+            });
+        </script>

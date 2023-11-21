@@ -1,0 +1,8 @@
+
+    <div class="box">
+        <h3>Oh noes!</h3>
+
+        <div class="contents">
+            <p><?php echo $error;?></p>
+        </div>
+    </div>

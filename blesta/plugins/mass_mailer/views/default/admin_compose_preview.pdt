@@ -1,0 +1,79 @@
+<?php
+echo (isset($message) ? $message : null);
+
+$this->Widget->clear();
+$this->Widget->create($this->_('AdminCompose.preview.boxtitle', true), ['id' => 'admin_compose_preview'], (isset($render_section) ? $render_section : null));
+?>
+    <div class="inner">
+        <?php
+        $this->Form->create(null, ['id' => 'mass_mailer_preview']);
+        ?>
+        <div class="pad">
+            <p><?php $this->_('AdminCompose.preview.email_total', false, (isset($total) ? $this->Html->safe($total) : null));?></p>
+        </div>
+
+        <?php
+        if ((isset($total) ? $total : 0) > 0) {
+        ?>
+        <div class="title_row">
+            <h3><?php $this->_('AdminCompose.preview.heading.email_sample');?></h3>
+        </div>
+        <div class="clear"></div>
+        <div id="email" class="pad">
+            <ul>
+                <li>
+                    <?php
+                    $this->_(
+                        'AdminCompose.preview.text_name',
+                        false,
+                        (isset($sample->from_name) ? $this->Html->safe($sample->from_name) : null),
+                        $this->Html->safe('<' . (isset($sample->from_address) ? $sample->from_address : null) . '>')
+                    );
+                    ?>
+                </li>
+                <li>
+                    <?php
+                    $this->_(
+                        'AdminCompose.preview.text_subject',
+                        false,
+                        (isset($sample->subject) ? $this->Html->safe($sample->subject) : null)
+                    );
+                    ?>
+                </li>
+            </ul>
+            <div class="tab_content">
+                <ul class="tabs">
+                    <li class="current">
+                        <a href="#"><?php $this->_('AdminCompose.index.form.html');?></a>
+                    </li>
+                    <li>
+                        <a href="#"><?php $this->_('AdminCompose.index.form.text');?></a>
+                    </li>
+                </ul>
+                <div class="inner_content">
+                    <?php
+                    $html_lines = explode("\n", (isset($sample->html) ? $sample->html : null));
+                    ?>
+                    <div><iframe style="background:#fff; width:100%; height:<?php echo $this->Html->safe(max(60, 18 * count($html_lines)));?>px; border:none;" src="<?php echo $this->Html->safe($this->base_uri . 'plugin/mass_mailer/admin_compose/sample/');?>"></iframe></div>
+                    <div style="background:#fff; padding:15px; min-height:20px;"><?php echo nl2br((isset($sample->text) ? $this->Html->safe($sample->text) : ''));?></div>
+                </div>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('preview', $this->_('AdminCompose.preview.form.send', true), ['class' => 'btn btn-primary pull-right']);
+            ?>
+            <a class="btn btn-default pull-right" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/mass_mailer/admin_compose/');?>"><?php $this->_('AdminCompose.preview.link_back');?></a>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>
+
+<script type="text/javascript" src="<?php echo $this->Html->safe($this->view_dir . 'js/mass_mailer.js');?>"></script>
+<?php
+$this->Widget->end();

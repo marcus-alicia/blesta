@@ -1,0 +1,45 @@
+
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="title_row first">
+        <h3><?php $this->_('OvhDomains.tab_whois.heading');?></h3>
+    </div>
+
+    <div class="pad">
+        <ul>
+            <?php
+            foreach ($whois_fields ?? [] as $name => $field) {
+            ?>
+            <li>
+                <?php
+                $this->Form->label($field['label'], $name);
+
+                if ($field['type'] == 'select') {
+                    $options = [];
+                    if (!is_array($field['options'])) {
+                        $options = ${$field['options']} ?? [];
+                    } else {
+                        $options = $field['options'] ?? [];
+                    }
+
+                    $this->Form->fieldSelect($name, $options, ($vars->{$name} ?? ''), ['id' => $name]);
+                } else {
+                    $this->Form->fieldText($name, ($vars->{$name} ?? ''), ['id' => $name]);
+                }
+                ?>
+            </li>
+            <?php
+            }
+            ?>
+        </ul>
+    </div>
+
+    <div class="button_row">
+        <?php
+        $this->Form->fieldSubmit(null, $this->_('OvhDomains.tab_whois.field_submit', true), ['class' => 'btn btn-primary float-right']);
+        ?>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>

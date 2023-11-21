@@ -1,0 +1,30 @@
+{
+    "name": "minphp/acl",
+    "description": "Generic ACL Library",
+    "homepage": "http://github.com/phillipsdata/minphp-acl",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Cody Phillips",
+            "email": "therealclphillips@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "minphp/record": "~3.0"
+    },
+    "require-dev": {
+        "php": ">=5.4.0",
+        "phpunit/phpunit": "~4.0",
+        "squizlabs/php_codesniffer": "~2.2",
+        "satooshi/php-coveralls": "dev-master",
+        "seedling/seedling": "~1.4.2"
+    },
+    "autoload": {
+        "psr-4": {"Minphp\\Acl\\": "src"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Minphp\\Acl\\Tests\\": "tests"}
+    }
+}

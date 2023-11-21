@@ -1,0 +1,31 @@
+
+        <?php
+        $link_buttons = [
+            ['name' => $this->_('AdminClients.accounts.categorylink_cc', true), 'attributes' => ['href' => $this->base_uri . 'clients/addccaccount/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/']],
+            ['name' => $this->_('AdminClients.accounts.categorylink_ach', true), 'attributes' => ['href' => $this->base_uri . 'clients/addachaccount/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons($link_buttons);
+
+        $this->Widget->setWidgetButton(['href' => $this->base_uri . 'clients/accounttypes/' . (isset($client->id) ? $client->id : null), 'class' => 'ajax setting']);
+        $this->Widget->create($this->_('AdminClients.accounts.boxtitle_accounts', true), ['id' => 'clients_accounts'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div>
+            <?php echo (isset($content) ? $content : null);?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        $('#accounts input[name=\'account_id\']').click(function() {
+            $('#account_type').val($('input[name=\'account_type\']', $(this).parent()).val());
+        });
+
+        // Handle confirmation on delete action
+        $('#accounts a.manage[rel]').blestaModalConfirm({base_url: '" . $this->base_uri . "', close: '" . $this->_('AppController.modal.text_close', true) . "'});
+    });
+");
+?>

@@ -1,0 +1,18 @@
+                <div class="navfix"></div>
+                <div class="col-md-12">
+                    <?php
+                    if ((isset($order_form->template_style) ? $order_form->template_style : null) != 'list') {
+                    ?>
+                    <div class="section-title">
+                        <h3><?php $this->_('Main.index.heading');?></h3>
+                        <p><?php $this->_('Main.index.subheading');?></p>
+                    </div>
+                    <?php
+                    }
+                    ?>
+
+                    <?php
+                    echo (isset($message) ? $message : null);
+                    echo (isset($package_group_partial) ? $package_group_partial : null);
+                    ?>
+                </div>

@@ -1,0 +1,56 @@
+    <div class="list-group">
+        <?php
+        // Affiliate information tab
+        $tabs = [
+            [
+                'name' => Language::_('Affiliates.tabs.tab_overview', true),
+                'attributes' => [
+                    'href' => $this->base_uri . 'order/affiliates/',
+                    'class' => 'list-group-item list-group-item-action ajax'
+                ],
+                'current' => ($current_tab === 'affiliates'),
+                'icon' => 'fas fa-info-circle'
+            ],
+            [
+                'name' => Language::_('Affiliates.tabs.tab_payouts', true),
+                'attributes' => [
+                    'href' => $this->base_uri . 'order/payouts/',
+                    'class' => 'list-group-item list-group-item-action ajax'
+                ],
+                'current' => ($current_tab === 'payouts'),
+                'icon' => 'fas fa-dollar-sign'
+            ],
+            [
+                'name' => Language::_('Affiliates.tabs.tab_referrals', true),
+                'attributes' => [
+                    'href' => $this->base_uri . 'order/referrals/',
+                    'class' => 'list-group-item list-group-item-action ajax'
+                ],
+                'current' => ($current_tab === 'referrals'),
+                'icon' => 'fas fa-chart-bar'
+            ],
+            [
+                'name' => Language::_('Affiliates.tabs.tab_dashboard', true),
+                'attributes' => [
+                    'href' => $this->base_uri . 'client/',
+                    'class' => 'list-group-item list-group-item-action ajax'
+                ],
+                'current' => false,
+                'icon' => 'fas fa-arrow-left'
+            ]
+        ];
+
+        foreach ($tabs as $tab) {
+            $attributes = (isset($tab['attributes']) ? $tab['attributes'] : []);
+            $attributes['class'] = 'list-group-item borderless left-nav' . (isset($attributes['class']) ? ' ' . $attributes['class'] : '');
+            if ((isset($tab['current']) ? $tab['current'] : null)) {
+                $attributes['class'] .= ' active';
+            }
+        ?>
+        <a<?php echo $this->Html->buildAttributes($attributes);?>>
+            <i class="<?php echo (isset($tab['icon']) ? $this->Html->safe($tab['icon']) : null);?>"></i> <?php echo (isset($tab['name']) ? $this->Html->safe($tab['name']) : null);?>
+        </a>
+        <?php
+        }
+        ?>
+    </div>

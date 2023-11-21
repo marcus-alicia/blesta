@@ -1,0 +1,19 @@
+{
+    "name": "blesta/h2o",
+    "description": "H2O is a markup language for PHP",
+    "type": "library",
+    "homepage": "https://github.com/blesta/h2o",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Taylor Luk"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "symfony/polyfill-php80": "~1.0"
+    },
+    "autoload": {
+        "classmap": ["h2o.php"]
+    }
+}

@@ -1,0 +1,66 @@
+
+        <?php
+        $link_buttons = [
+            [
+                'icon' => 'fas fa-plus',
+                'name' => '',
+                'attributes' => [
+                    'title' => $this->_('FeedReaderManagePlugin.index.add_feed', true),
+                    'href' => $this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $this->Html->safe($plugin_id) : null) . '/?action=add',
+                    'class' => 'add_feed'
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons($link_buttons);
+        $this->Widget->create($this->_('FeedReaderManagePlugin.index.boxtitle_feedreader', true));
+
+        if (($num_feeds = count((isset($feeds) ? $feeds : []))) > 0) {
+        ?>
+            <table class="table">
+                <tr class="heading_row">
+                    <td><span><?php $this->_('FeedReaderManagePlugin.index.heading_url');?></span></td>
+                    <td><span><?php $this->_('FeedReaderManagePlugin.index.heading_lastupdated');?></span></td>
+                    <td class="last"><span><?php $this->_('FeedReaderManagePlugin.index.heading_options');?></span></td>
+                </tr>
+                <?php
+                for ($i = 0; $i < $num_feeds; $i++) {
+                ?>
+                <tr class="<?php echo $this->Html->concat(' ', ($i%2 == 1) ? 'odd_row' : '');?>">
+                    <td>
+                        <a href="<?php echo (isset($feeds[$i]->url) ? $this->Html->safe($feeds[$i]->url) : null);?>" target="_blank"><?php echo (isset($feeds[$i]->url) ? $this->Html->safe($feeds[$i]->url) : null);?></a>
+                    </td>
+                    <td><?php echo $this->Date->cast((isset($feeds[$i]->updated) ? $this->Html->safe($feeds[$i]->updated) : null), 'date_time');?></td>
+                    <td>
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $plugin_id : null) . '/?feed_id=' . (isset($feeds[$i]->id) ? $feeds[$i]->id : null) . '&action=refresh');?>"><?php $this->_('FeedReaderManagePlugin.index.option_refresh');?></a>,
+                        <?php
+                        $this->Form->create($this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $plugin_id : null) . '/?action=remove');
+                        $this->Form->fieldHidden('feed_id', (isset($feeds[$i]->id) ? $feeds[$i]->id : null));
+                        ?>
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $plugin_id : null) . '/?feed_id=' . (isset($feeds[$i]->id) ? $feeds[$i]->id : null) . '&action=remove');?>" class="manage" rel="<?php $this->_('FeedReaderManagePlugin.index.text_confirm_delete');?>"><?php $this->_('FeedReaderManagePlugin.index.option_remove');?></a>
+                        <?php
+                        $this->Form->end();
+                        ?>
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+        <?php
+        } else {
+        ?>
+            <div class="empty_section">
+                <div class="empty_box"><?php $this->_('FeedReaderManagePlugin.index.no_feeds');?></div>
+            </div>
+        <?php
+        }
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->Html->safe($this->base_uri);?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+    });
+</script>

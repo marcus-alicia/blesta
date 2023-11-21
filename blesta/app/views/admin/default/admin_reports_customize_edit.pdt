@@ -1,0 +1,133 @@
+<?php
+echo (isset($message) ? $message : null);
+
+$links = [
+    ['name' => $this->_('AdminReportsCustomize.index.reports', true), 'current' => false, 'attributes' => ['href' => $this->base_uri . 'reports/']],
+    ['name' => $this->_('AdminReportsCustomize.index.customize', true), 'current' => true, 'attributes' => ['href' => $this->base_uri . 'reports_customize']]
+];
+
+$this->Widget->clear();
+$this->Widget->setTabs($links);
+$this->Widget->create($this->_('AdminReportsCustomize.index.box_title', true), ['id' => 'admin_reports_edit'], (isset($render_section) ? $render_section : null));
+?>
+    <div class="inner">
+        <?php
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="pad">
+            <ul>
+                <li>
+                    <?php
+                    $this->Form->label($this->_('AdminReportsCustomize.edit.field_name', true), 'name');
+                    $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);
+                    ?>
+                </li>
+                <li>
+                    <?php
+                    $this->Form->label($this->_('AdminReportsCustomize.edit.field_query', true), 'query');
+                    $this->Form->fieldTextarea('query', (isset($vars->query) ? $vars->query : null), ['id' => 'query']);
+                    ?>
+                </li>
+            </ul>
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminReportsCustomize.edit.heading_fields');?></h3>
+            </div>
+            <div class="links_row">
+                <a class="btn btn-default pull-right btn-sm select_row_add" href="#"><span><?php $this->_('AdminReportsCustomize.edit.field_add_field');?></span></a>
+            </div>
+            <table class="table clear">
+                <thead>
+                    <tr class="heading_row">
+                        <td class="medium"><?php $this->_('AdminReportsCustomize.edit.table_label');?></td>
+                        <td class="medium"><?php $this->_('AdminReportsCustomize.edit.table_name');?></td>
+                        <td class="stretch"><?php $this->_('AdminReportsCustomize.edit.table_type');?></td>
+                        <td class="medium"><?php $this->_('AdminReportsCustomize.edit.table_required');?></td>
+                        <td class="last"><?php $this->_('AdminReportsCustomize.edit.table_options');?></td>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                // Display each select option
+                $num_fields = max(1, count((isset($vars->fields['name']) ? $vars->fields['name'] : [])));
+                for ($i = 0; $i < $num_fields; $i++) {
+                ?>
+                    <tr class="select_row">
+                        <td>
+                            <?php $this->Form->fieldHidden('fields[id][]', (isset($vars->fields['id'][$i]) ? $vars->fields['id'][$i] : null), ['class' => 'input-id']);?>
+                            <?php $this->Form->fieldText('fields[label][]', (isset($vars->fields['label'][$i]) ? $vars->fields['label'][$i] : null));?>
+                        </td>
+                        <td><?php $this->Form->fieldText('fields[name][]', (isset($vars->fields['name'][$i]) ? $vars->fields['name'][$i] : null));?></td>
+                        <td>
+                            <?php $this->Form->fieldSelect('fields[type][]', (isset($field_types) ? $field_types : null), (isset($vars->fields['type'][$i]) ? $vars->fields['type'][$i] : null), ['class' => 'collapse-trigger']);?>
+                            <div class="collapse">
+                                <?php $this->Form->label($this->_('AdminReportsCustomize.edit.field_values', true));?>
+                                <?php $this->Form->fieldTextarea('fields[values][]', (isset($vars->fields['values'][$i]) ? $vars->fields['values'][$i] : null));?>
+                            </div>
+                        </td>
+                        <td>
+                            <?php $this->Form->fieldSelect('fields[required][]', (isset($required_types) ? $required_types : null), (isset($vars->fields['required'][$i]) ? $vars->fields['required'][$i] : null), ['class' => 'collapse-trigger']);?>
+                            <div class="collapse">
+                                <?php $this->Form->label($this->_('AdminReportsCustomize.edit.field_regex', true));?>
+                                <?php $this->Form->fieldText('fields[regex][]', (isset($vars->fields['regex'][$i]) ? $vars->fields['regex'][$i] : null));?>
+                            </div>
+                        </td>
+                        <td><a href="#" class="manage remove_field"><?php $this->_('AdminReportsCustomize.edit.text_remove');?></a></td>
+                    </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('AdminReportsCustomize.edit.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+            ?>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>
+<?php
+$this->Widget->end();
+?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var widget_id = "#admin_reports_edit";
+        $(widget_id + " .select_row_add").click(function() {
+            var fields = $(widget_id + " .select_row:first").clone();
+            fields.find("input").val("");
+            $(".collapse", fields).hide();
+            $(widget_id + " .select_row").closest("table").append(fields);
+
+            return false;
+        });
+
+        $(widget_id + " .collapse").hide();
+        $(widget_id + " .collapse-trigger").each(function() {
+            toggleSelect(this, ".collapse");
+        });
+        $(widget_id).on("change", ".collapse-trigger", function() {
+            toggleSelect(this, ".collapse");
+        });
+
+        function toggleSelect(item, collapse) {
+            $(collapse, $(item).parent()).hide();
+            if ($(item).val() === "select" || $(item).val() === "custom") {
+                $(item).next(collapse).show();
+            }
+        }
+
+        $(widget_id).on("click", ".remove_field", function() {
+            var row = $(this).closest(".select_row");
+            if ($(widget_id + " .select_row").length > 1) {
+                $(this).closest("form").append($(".input-id", row));
+                row.remove();
+            }
+
+            return false;
+        });
+    });
+</script>

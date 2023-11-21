@@ -1,0 +1,14 @@
+/*
+Login
+*/
+body {
+	background-color:theme_header_bg_color_top;
+	background: -moz-linear-gradient(top,  theme_header_bg_color_top 0%, theme_header_bg_color_bottom 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,theme_header_bg_color_top), color-stop(100%,theme_header_bg_color_bottom)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  theme_header_bg_color_top 0%,theme_header_bg_color_bottom 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  theme_header_bg_color_top 0%,theme_header_bg_color_bottom 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  theme_header_bg_color_top 0%,theme_header_bg_color_bottom 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  theme_header_bg_color_top 0%,theme_header_bg_color_bottom 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='theme_header_bg_color_top', endColorstr='theme_header_bg_color_bottom',GradientType=0 ); /* IE6-9 */
+}
+a {color:theme_actions_text_color;}

@@ -1,0 +1,463 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $tabs = [
+            [
+                'name' => $this->_('AdminDomains.pricing.tab_pricing', true),
+                'current' => true,
+                'attributes' => [
+                    'class' => 'pricing',
+                    'href' => '#'
+                ]
+            ],
+            [
+                'name' => $this->_('AdminDomains.pricing.tab_nameservers', true),
+                'current' => false,
+                'attributes' => [
+                    'class' => 'nameservers',
+                    'href' => '#'
+                ]
+            ],
+            [
+                'name' => $this->_('AdminDomains.pricing.tab_welcome_email', true),
+                'current' => false,
+                'attributes' => [
+                    'class' => 'welcome_email',
+                    'href' => '#'
+                ]
+            ],
+            [
+                'name' => $this->_('AdminDomains.pricing.tab_advanced', true),
+                'current' => false,
+                'attributes' => [
+                    'class' => 'advanced',
+                    'href' => '#'
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('AdminDomains.pricing.boxtitle_edit_tld', true, (isset($tld->tld) ? $tld->tld : null)), ['id' => 'edit_tld' . str_replace('.', '_', (isset($tld->tld) ? $tld->tld : null))], (isset($render_section) ? $render_section : null));
+
+        $this->Form->create(null, ['id' => 'edit_tld_form' . $this->Html->safe(str_replace('.', '_', $tld->tld))]);
+        ?>
+
+        <div class="inner">
+            <div class="main_tab" id="tab_pricing">
+                <div class="tab_content">
+                    <ul class="tabs">
+                        <?php
+                        foreach ((isset($currencies) ? $currencies : []) as $currency) {
+                        ?>
+                        <li<?php echo ($currency->code == (isset($default_currency) ? $default_currency : '')) ? ' class="current"' : '';?>>
+                            <a href="#"><?php echo $this->Html->safe($currency->code);?></a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+                    </ul>
+                    <div class="inner_content">
+                        <?php
+                        foreach (($currencies ?? []) as $currency) {
+                        ?>
+                            <div>
+                                <?php
+                                if ($currency->automatic_currency_conversion) {
+                                ?>
+                                    <section class="error_section">
+                                        <article class="error_box alert">
+                                            <div class="icon-line fa-2x">
+                                                <i class="fas fa-exclamation-triangle fa-fw"></i>
+                                                <p class="p-0 pl-2"><?php $this->_('AdminDomains.!warning.automatic_currency_conversion', false, $default_currency);?></p>
+                                            </div>
+                                        </article>
+                                    </section>
+                                <?php
+                                }
+                                ?>
+                                <table class="table option_table">
+                                    <thead>
+                                        <tr class="heading_row">
+                                            <td class="icon center"></td>
+                                            <td><span><?php $this->_('AdminDomains.pricing.heading_term');?></span></td>
+                                            <td><span><?php $this->_('AdminDomains.pricing.heading_register_price');?></span></td>
+                                            <td><span><?php $this->_('AdminDomains.pricing.heading_renew_price');?></span></td>
+                                            <td class="last"><span><?php $this->_('AdminDomains.pricing.heading_transfer_price');?></span></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $r = 0;
+                                        for ($i = 1; $i <= 10; $i++) {
+                                            foreach ($package->pricing ?? [] as $package_pricing) {
+                                                if ($package_pricing->currency == $currency->code && $package_pricing->term == $i) {
+                                        ?>
+                                            <tr<?php echo ($r % 2 == 1) ? ' class="odd_row"' : '';?> id="tlds_<?php echo (isset($tld->package_id) ? $tld->package_id : null);?>">
+                                                <td class="icon center">
+                                                    <?php
+                                                    $this->Form->fieldCheckbox('pricing[' . $package_pricing->term . '][' . $currency->code . '][enabled]', '1', (isset($package_pricing->enabled) ? $package_pricing->enabled : false));
+                                                    ?>
+                                                </td>
+                                                <td><?php echo $package_pricing->term; ?> <?php echo $package_pricing->period; ?></td>
+                                                <td>
+                                                    <?php
+                                                    $this->Form->fieldText('pricing[' . $package_pricing->term . '][' . $currency->code . '][price]', $this->CurrencyFormat->format((isset($package_pricing->price) ? $package_pricing->price : 0), $package_pricing->currency, ['prefix' => false,'suffix' => false,'with_separator' => false,'code' => false,'decimals' => $currency->precision]), ['class' => 'stretch']);
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    $this->Form->fieldText('pricing[' . $package_pricing->term . '][' . $currency->code . '][price_renews]', $this->CurrencyFormat->format((isset($package_pricing->price_renews) ? $package_pricing->price_renews : 0), $package_pricing->currency, ['prefix' => false,'suffix' => false,'with_separator' => false,'code' => false,'decimals' => $currency->precision]), ['class' => 'stretch']);
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    $this->Form->fieldText('pricing[' . $package_pricing->term . '][' . $currency->code . '][price_transfer]', $this->CurrencyFormat->format((isset($package_pricing->price_transfer) ? $package_pricing->price_transfer : 0), $package_pricing->currency, ['prefix' => false,'suffix' => false,'with_separator' => false,'code' => false,'decimals' => $currency->precision]), ['class' => 'stretch']);
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                                    $r++;
+                                                }
+                                            }
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main_tab" id="tab_nameservers">
+                <div class="title_row first"><h3><?php $this->_('AdminDomains.pricing.heading_nameservers');?></h3></div>
+                <div class="pad">
+                    <ul>
+                        <?php
+                        for ($i = 1; $i <= 4; $i++) {
+                        ?>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminDomains.pricing.field_nameserver', true, $i), 'ns' . $i);
+                            $this->Form->fieldText('meta[ns][]', isset($package->meta->ns[$i - 1]) ? $package->meta->ns[$i - 1] : '', ['id' => 'ns' . $i, 'class' => 'block']);
+                            ?>
+                        </li>
+                        <?php
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="main_tab" id="tab_advanced">
+                <?php
+                if (!empty($package_fields['fields'])) {
+                ?>
+                <div class="title_row first"><h3><?php $this->_('AdminDomains.pricing.heading_module_options');?></h3></div>
+                <div class="pad">
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->label($package_fields['group_name'], 'module_group');
+                            $this->Form->fieldSelect('module_group', ['select' => $this->_('AppController.select.please', true)] + ['' => $this->_('AdminDomains.pricing.field_modulegroup_any', true)] + (isset($package_fields['groups']) ? $package_fields['groups'] : []), (isset($package->module_group) ? $package->module_group : ''), ['id' => 'module_group']);
+                            ?>
+                        </li>
+
+                        <?php
+                        if (!empty($package_fields['rows'])) {
+                            ?>
+                            <li class="module_row_field">
+                                <?php
+                                $this->Form->label($package_fields['row_name'], 'module_row');
+                                $this->Form->fieldSelect('module_row', $package_fields['rows'], (isset($package->module_row) ? $package->module_row : 0), ['id' => 'module_row']);
+                                ?>
+                            </li>
+                            <?php
+                        } else {
+                            $this->Form->fieldHidden('module_row', (isset($package->module_row) ? $package->module_row : 0), ['id' => 'module_row']);
+                        }
+
+                        // Show module fields
+                        if (isset($package_fields['input_html']) && ($module_field_html = $package_fields['input_html']->generate(null, $package_fields_view))) {
+                            ?>
+                            <li>
+                                <?php
+                                echo $module_field_html;
+                                ?>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                </div>
+                <?php
+                }
+                ?>
+
+                <div class="title_row<?php echo (empty($package_fields['fields']) ? ' first' : '');?>"><h3><?php $this->_('AdminDomains.pricing.heading_advanced_options');?></h3></div>
+                <div class="pad">
+                    <p><?php $this->_('AdminDomains.pricing.text_advanced_options');?></p>
+                    <a href="<?php echo $this->base_uri . 'packages/edit/' . $this->Html->safe($package->id) . '/';?>" class="btn btn-default"><?php $this->_('AdminDomains.pricing.field_edit_package');?></a>
+                </div>
+            </div>
+
+            <div class="main_tab" id="tab_welcome_email">
+                <div class="title_row first"><h3><?php $this->_('AdminDomains.pricing.heading_welcome_email');?></h3></div>
+                <div class="pad">
+                    <div class="links_row" style="">
+                        <a class="btn btn-default pull-right btn-sm load_sample_email" href="#"><span><?php $this->_('AdminDomains.pricing.field_load_sample_email');?></span></a>
+                    </div>
+
+                    <?php
+                    if (!empty($package_fields['tags'])) {
+                    ?>
+                    <ul>
+                        <li>
+                            <label for=""><?php $this->_('AdminDomains.pricing.text_tags');?></label>
+                            <div class="accent_box">
+                                <?php echo $this->Html->safe($package_fields['tags']);?>
+                            </div>
+                        </li>
+                    </ul>
+                    <?php
+                    }
+                    ?>
+
+                    <div id="email_content" class="tab_content inverse">
+                        <ul class="tabs">
+                            <?php
+                            foreach ((isset($languages) ? $languages : []) as $lang) {
+                                ?>
+                                <li<?php echo ($this->Html->ifSet($lang->code) == Configure::get('Blesta.language') ? ' class="current"' : '');?>>
+                                    <a href="#"><?php $this->Html->_($lang->name);?></a>
+                                </li>
+                                <?php
+                            }
+                            ?>
+                        </ul>
+                        <div class="inner_content">
+                            <?php
+                            foreach ($languages as $i => $lang) {
+                                $found = false;
+                                foreach ((isset($package->email_content) ? (array) $package->email_content : []) as $email_data) {
+                                    if ((isset($email_data->lang) ? $email_data->lang : '') == $lang->code) {
+                                        $found = true;
+                                        break;
+                                    }
+                                }
+                            ?>
+                                <div>
+                                    <?php
+                                    $this->Form->fieldHidden('email_content[' . $i . '][lang]', (isset($lang->code) ? $lang->code : ''));
+                                    ?>
+                                    <div id="email_content_<?php echo isset($lang->code) ? $lang->code : '';?>" class="tab_content">
+                                        <ul class="tabs">
+                                            <li class="current">
+                                                <a href="#"><?php $this->Form->label($this->_('AdminDomains.pricing.field_description_html', true));?></a>
+                                            </li>
+                                            <li>
+                                                <a href="#"><?php $this->Form->label($this->_('AdminDomains.pricing.field_description_text', true));?></a>
+                                            </li>
+                                        </ul>
+                                        <div class="inner_content">
+                                            <div class="email_content_html"><?php $this->Form->fieldTextarea('email_content[' . $i . '][html]', $found ? (isset($email_data->html) ? $email_data->html : '') : null, ['class' => 'wysiwyg']);?></div>
+                                            <div class="email_content_text"><?php $this->Form->fieldTextarea('email_content[' . $i . '][text]', $found ? (isset($email_data->text) ? $email_data->text : '') : null);?></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminDomains.pricing.field_update', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+                <a href="#" class="btn btn-default close float-right"><?php $this->_('AdminDomains.pricing.field_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Set tabs
+        function hideAllTabs() {
+            $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .main_tab').hide();
+            $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .tabs_nav').hide();
+        }
+
+        hideAllTabs();
+        $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .main_tab').first().show();
+        $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .tab_slider ul li').on('click', function() {
+            var tab = $(this).find('a').attr('class');
+
+            $('.tab_slider ul li').removeClass('current');
+            $(this).addClass('current');
+
+            hideAllTabs();
+            $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .main_tab#tab_' + tab).show();
+        });
+
+        // Set secondary tabs
+        $('div.tab_content').blestaTabbedContent();
+
+        // Set welcome email editor
+        $('.wysiwyg').blestaBindWysiwygEditor({language: '<?php echo substr(Configure::get('Blesta.language'), 0, 2);?>'});
+
+        // Close modal
+        $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .btn.close').on('click', function() {
+            $(this).closest('.qtip').find('.qtip-close').click();
+        });
+
+        // Sync Register, Renew and Transfer price
+        $('.table input[name*="[price]"]').change(function() {
+            if ($(this).parent().parent().find('input[name*="[price_renews]"]').val() == 0) {
+                $(this).parent().parent().find('input[name*="[price_renews]"]').val($(this).val());
+            }
+
+            if ($(this).parent().parent().find('input[name*="[price_transfer]"]').val() == 0) {
+                $(this).parent().parent().find('input[name*="[price_transfer]"]').val($(this).val());
+            }
+        });
+
+        // Disable pricing rows
+        function disablePricings() {
+            $('.table .icon input[name*="enabled"]').each(function () {
+                if ($(this).is(":checked")) {
+                    $(this).parent().parent().find('input[type="text"]').prop('disabled', false);
+                } else {
+                    $(this).parent().parent().find('input[type="text"]').prop('disabled', true);
+                }
+            });
+        }
+        disablePricings();
+
+        $('.table .icon input[name*="enabled"]').change(function() {
+            disablePricings();
+        });
+
+        // Move configurable options from right to left
+        $(document).on('click', '#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .move_left', function() {
+            $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .available_option_groups option:selected').appendTo(
+                $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .assigned_option_groups')
+            );
+            return false;
+        });
+
+        // Move configurable options from left to right
+        $(document).on('click', '#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .move_right', function() {
+            $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .assigned_option_groups option:selected').appendTo(
+                $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .available_option_groups')
+            );
+            return false;
+        });
+
+        // Update TLD
+        $('#edit_tld_form<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?>').on('submit', function(event) {
+            event.preventDefault();
+
+            $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> .assigned_option_groups option').prop('selected', true);
+
+            $(this).blestaRequest(
+                "POST",
+                $('#edit_tld_form<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?>').attr('action'),
+                $('#edit_tld_form<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?>').serialize("serialize"),
+                function(response) {
+                    // Show messages
+                    if (response.hasOwnProperty('message')) {
+                        var parent = $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?>').parents().find('#body_container .gap_row #right_outer');
+
+                        parent.find('.error_section').remove();
+                        parent.prepend(response.message);
+                    }
+
+                    // Update pricing table
+                    $(this).blestaRequest(
+                        "GET",
+                        '<?php echo $this->Html->safe($this->base_uri . 'plugin/domains/admin_domains/pricing/' . $tld->package_id . '/');?>',
+                        null,
+                        function(response) {
+                            $('#<?php echo $this->Html->safe('edit_tld' . str_replace('.', '_', $tld->tld));?>').parent().html(response);
+                        }
+                    );
+
+                    // Update TLD row
+                    $(this).blestaRequest(
+                        "GET",
+                        '<?php echo $this->Html->safe($this->base_uri . 'plugin/domains/admin_domains/tlds/');?>',
+                        null,
+                        function(tlds) {
+                            var parent = $('body').find('#body_container .gap_row');
+
+                            $(tlds.content).find('#tlds_<?php echo $this->Html->safe($tld->package_id);?>').find('td').each(function() {
+                                var field = $(this).find('input, select');
+
+                                if (field.length > 0) {
+                                    var field_type = field.attr('type');
+
+                                    if (field_type !== "hidden") {
+                                        if (field_type == "checkbox") {
+                                            if (field.is(':checked')) {
+                                                $(tlds.replacer).find('input[name="' + field.attr('name') + '"]').prop("checked", true);
+                                            } else {
+                                                $(tlds.replacer).find('input[name="' + field.attr('name') + '"]').prop("checked", false);
+                                            }
+                                        } else {
+                                            $(tlds.replacer).find('input[name="' + field.attr('name') + '"]').val(field.val()).trigger('change');
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    );
+                    $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?>').closest('.qtip').find('.qtip-close').click();
+                },
+                null,
+                {dataType: 'json'}
+            );
+        });
+
+        // Set the module email template as the email content
+        var templates = <?php echo json_encode($package_fields['template'], JSON_PRETTY_PRINT);?>;
+
+        if (typeof templates == 'undefined' || templates === null || templates.length == 0) {
+            $('.load_sample_email').parent().hide();
+        } else {
+            $('.load_sample_email').parent().show();
+        }
+
+        $('.load_sample_email').on('click', function() {
+            if (confirm('<?php $this->_('AdminDomains.pricing.text_confirm_load_email');?>')) {
+                <?php
+                foreach ((isset($languages) ? $languages : []) as $i => $lang) {
+                ?>
+                    $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> #email_content_<?php echo isset($lang->code) ? $lang->code : '';?> textarea').each(function() {
+                        $(this).val('');
+                    });
+
+                    $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> #email_content_<?php echo isset($lang->code) ? $lang->code : '';?> .email_content_html textarea').val(templates.<?php echo $lang->code;?>.html);
+                    $('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> #email_content_<?php echo isset($lang->code) ? $lang->code : '';?> .email_content_text textarea').val(templates.<?php echo $lang->code;?>.text);
+
+                    var ck_editor = document.querySelector('#edit_tld<?php echo $this->Html->safe(str_replace('.', '_', $tld->tld));?> #email_content_<?php echo isset($lang->code) ? $lang->code : '';?> .email_content_html .ck-editor__editable');
+                    var ck_editor_instance = ck_editor.ckeditorInstance;
+
+                    ck_editor_instance.setData(templates.<?php echo $lang->code;?>.html);
+                <?php
+                }
+                ?>
+            }
+
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,21 @@
+<?php
+
+// Disable CSRF for this form
+$this->Form->setCsrfOptions(['set_on_create' => false]);
+$this->Form->create($post_to);
+
+if ((isset($fields) ? $fields : null)) {
+    foreach ($fields as $key => $value) {
+        if (is_array($value)) {
+            foreach ($value as $sub_key => $sub_value) {
+                $this->Form->fieldHidden($key . '[' . $sub_key . ']', $sub_value);
+            }
+        } else {
+            $this->Form->fieldHidden($key, $value);
+        }
+    }
+}
+
+$this->Form->fieldButton('submit', $this->_('Razorpay.buildprocess.submit', true), ['class' => 'btn btn-default', 'type' => 'submit']);
+
+$this->Form->end();

@@ -1,0 +1,89 @@
+.cart-summary table.table tbody tr,
+.cart-summary table.table tbody td
+{
+  white-space: normal;
+}
+
+.table-curved tbody>tr>td.price-col {
+  vertical-align: bottom;
+  text-align: right;
+}
+
+.totals-box {
+  margin-top: 20px;
+}
+
+.totals-box table {
+  margin-bottom: 20px;
+  text-align: right;
+  border: none;
+}
+
+.totals-box table>tbody>tr>td {
+  border: none;
+}
+
+.whois {
+    background: rgba(0, 0, 0, 0.05);
+    background-repeat: no-repeat;
+    background-position: 110% -70px;
+    background-image: url(../images/globe.svg);
+    padding: 25px;
+}
+
+.whois div.checkbox label {
+  padding-right: 5px;
+}
+
+.whois div.tlds, div.search {
+  margin: 0 auto;
+  text-align: center;
+  display: block;
+}
+
+.whois div.tlds {
+  margin-bottom: 0;
+}
+
+.whois .show_more {
+	margin-left: 5px;
+}
+
+/* Begin for order pages */
+
+.card-steps {
+    padding: 10px;
+	background: var(--light);
+}
+
+.card-steps i {
+	opacity: 0.3;
+}
+
+.card-steps p {
+	opacity: 0.7;
+}
+
+.card-steps a.active:before {
+    content: "\f138";
+    font-family: "Font Awesome 5 Free";
+    font-style: normal;
+    font-weight: 900;
+    margin-right: 5px;
+    color: var(--success);
+}
+
+.table>tbody>tr.sub-item>td {
+  border-top: none;
+}
+
+#login_box #login_message .alert {
+	margin-top: 10px;
+}
+.pass-reset {
+    padding-top: 5px;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* End for order pages */

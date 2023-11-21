@@ -1,0 +1,68 @@
+        <?php
+        if ((isset($show_left_nav) ? $show_left_nav : null)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        }
+        ?>
+
+        <div<?php echo (isset($show_left_nav) ? $show_left_nav : null) ? ' id="right_outer"' : '';?>>
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyMessengers.configuration.boxtitle_messenger_configuration', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner" id="messenger_configuration">
+                    <?php
+                    if (!empty($messengers)) {
+                    ?>
+                    <table class="table">
+                        <thead>
+                            <tr class="heading_row">
+                                <td><?php $this->_('AdminCompanyMessengers.configuration.heading_message_type');?></td>
+                                <td class="last"><?php $this->_('AdminCompanyMessengers.configuration.heading_messenger');?></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $i = 0;
+                            foreach ($messengers as $type => $installed_messengers) {
+                            ?>
+                            <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : ''?>>
+                                <td><?php echo (isset($types[$type]) ? $types[$type] : null);?></td>
+                                <td>
+                                    <?php
+                                    $this->Form->fieldSelect('messenger_configuration[' . $type . ']', ['' => $this->_('AppController.select.please', true)] + (isset($installed_messengers) ? $installed_messengers : null), (isset($vars[$type]) ? $vars[$type] : null), ['id' => 'messenger_configuration_' . $type]);
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+                                $i++;
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyMessengers.configuration.field_update', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box">
+                            <?php $this->_('AdminCompanyMessengers.configuration.text_none');?>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

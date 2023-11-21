@@ -1,0 +1,68 @@
+        <?php
+        echo (isset($message) ? $message : null);
+        ?>
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminMain.index.boxtitle_services', true, (isset($client->id_code) ? $this->Html->safe($client->id_code) : null)), ['id'=>'reassign_services'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="inner">
+            <p><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . (isset($client->id) ? $client->id : null));?>"><?php $this->_('AdminMain.index.link_client', false, (isset($client->id_code) ? $this->Html->safe($client->id_code) : null));?></a></p>
+        <?php
+        if ((isset($services) ? $services : false) && ($num_services = count($services)) > 0) {
+        ?>
+            <table class="table" id="services">
+                <tr class="heading_row">
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/reassign_pricing/admin_main/index/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_package');?></a></span></td>
+                    <td><span><?php $this->_('AdminMain.index.heading_label');?></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/reassign_pricing/admin_main/index/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/?sort=term&order=' . ($sort == 'term' ? $negate_order : $order));?>" class="<?php echo $this->Html->safe($sort == 'term' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_term');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/reassign_pricing/admin_main/index/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/?sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_date_created');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/reassign_pricing/admin_main/index/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/?sort=date_renews&order=' . ($sort == 'date_renews' ? $negate_order : $order));?>" class="<?php echo $this->Html->safe($sort == 'date_renews' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_date_renews');?></a></span></td>
+                    <td><span><?php $this->_('AdminMain.index.heading_options');?></span></td>
+                </tr>
+                <?php
+                // List all services
+                for ($i=0; $i<$num_services; $i++) {
+                ?>
+                <tr class="<?php echo ($i%2 == 1) ? 'odd_row' : '';?>">
+                    <td><?php echo (isset($services[$i]->package->name) ? $this->Html->safe($services[$i]->package->name) : null);?></td>
+                    <td><?php echo (isset($services[$i]->name) ? $this->Html->safe($services[$i]->name) : null);?></td>
+                    <td>
+                        <?php
+                        if ((isset($services[$i]->package_pricing->period) ? $services[$i]->package_pricing->period : null) == 'onetime') {
+                            echo (isset($periods[$services[$i]->package_pricing->period]) ? $this->Html->safe($periods[$services[$i]->package_pricing->period]) : null);
+                        } else {
+                            $term = (isset($services[$i]->package_pricing->term) ? $this->Html->safe($services[$i]->package_pricing->term) : null);
+                            $period = ($term == 1 ? (isset($periods[$services[$i]->package_pricing->period]) ? $periods[$services[$i]->package_pricing->period] : null) : (isset($periods[$services[$i]->package_pricing->period . '_plural']) ? $periods[$services[$i]->package_pricing->period . '_plural'] : null));
+                            $renewal_price = $this->CurrencyFormat->format((isset($services[$i]->renewal_price) ? $services[$i]->renewal_price : null), (isset($services[$i]->override_currency) ? $services[$i]->override_currency : (isset($services[$i]->package_pricing->currency) ? $services[$i]->package_pricing->currency : null)));
+                            $this->_('AdminMain.index.recurring_term', false, $this->Html->safe($term), $this->Html->safe($period), $this->Html->safe($renewal_price));
+                        }
+                        ?>
+                    </td>
+                    <td><?php echo $this->Date->cast((isset($services[$i]->date_added) ? $this->Html->safe($services[$i]->date_added) : null));?></td>
+                    <td><?php echo (empty($services[$i]->date_renews) ? $this->_('AdminMain.index.text_never', true) : $this->Date->cast((isset($services[$i]->date_renews) ? $this->Html->safe($services[$i]->date_renews) : null)));?></td>
+                    <td><a href="<?php echo $this->base_uri . 'plugin/reassign_pricing/admin_main/service/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($services[$i]->id) ? $this->Html->safe($services[$i]->id) : null) . '/';?>"><?php $this->_('AdminMain.index.option_service');?></a></td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+            <?php
+            // Set pagination
+            $this->Pagination->build();
+            ?>
+        <?php
+        } else {
+        ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminMain.index.no_results');?>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

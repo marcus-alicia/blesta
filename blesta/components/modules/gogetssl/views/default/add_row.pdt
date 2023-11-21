@@ -1,0 +1,52 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('GoGetSSL.add_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('GoGetSSL.add_row.basic_title');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('GoGetSSL.row_meta.gogetssl_name', true), 'gogetssl_name');
+                        $this->Form->fieldText('gogetssl_name', (isset($vars->gogetssl_name) ? $vars->gogetssl_name : null), ['id' => 'gogetssl_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('GoGetSSL.row_meta.api_username', true), 'api_username');
+                        $this->Form->fieldText('api_username', (isset($vars->api_username) ? $vars->api_username : null), ['id' => 'api_username']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('GoGetSSL.row_meta.api_password', true), 'api_password');
+                        $this->Form->fieldText('api_password', (isset($vars->api_password) ? $vars->api_password : null), ['id' => 'api_password']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('sandbox', 'true', (isset($vars->sandbox) ? $vars->sandbox : null) == 'true', ['id' => 'sandbox']);
+                        $this->Form->label($this->_('GoGetSSL.row_meta.sandbox', true), 'sandbox', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('GoGetSSL.add_row.add_btn', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

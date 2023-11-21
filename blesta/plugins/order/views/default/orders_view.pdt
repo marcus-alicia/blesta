@@ -1,0 +1,199 @@
+    <div class="col-md-12">
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->WidgetClient->clear();
+        $this->WidgetClient->create($this->_('Orders.view.boxtitle_view_order', true), ['id' => 'client_orders_view', 'class' => 'w-100'], (isset($render_section) ? $render_section : null));
+        $this->WidgetClient->startBody();
+        ?>
+        <div class="marbot10">
+            <h4><?php $this->_('Orders.view.heading_invoices');?></h4>
+            <?php
+            if ((isset($invoice) ? $invoice : false)) {
+            ?>
+            <div class="table-responsive mb-2">
+                <table class="table table-curved table-striped" id="invoices">
+                    <thead>
+                        <tr>
+                            <th><span><?php $this->_('Orders.view.heading_invoice_number');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_amount');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_paid');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_date_billed');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_options');?></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><?php echo (isset($invoice->id_code) ? $this->Html->safe($invoice->id_code) : null);?></td>
+                            <td>
+                                <?php
+                                echo $this->CurrencyFormat->format(
+                                    (isset($invoice->total) ? $invoice->total : 0),
+                                    (isset($invoice->currency) ? $invoice->currency : 'USD'),
+                                    ['html_code' => true]
+                                );
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                echo $this->CurrencyFormat->format(
+                                    (isset($invoice->paid) ? $invoice->paid : 0),
+                                    (isset($invoice->currency) ? $invoice->currency : 'USD'),
+                                    ['html_code' => true]
+                                );
+                                ?>
+                            </td>
+                            <td><?php echo $this->Date->cast((isset($invoice->date_billed) ? $this->Html->safe($invoice->date_billed) : null), 'date_time');?></td>
+                            <td>
+                                <a href="<?php echo $this->Html->safe($this->client_uri . 'invoices/view/' . $invoice->id . '/');?>" class="btn btn-xs btn-light">
+                                    <i class="fas fa-file-alt fa-fw"></i> <?php $this->_('Orders.view.option_view');?>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <?php
+            } else {
+            ?>
+            <div class="alert alert-info mb-2">
+                <p>
+                    <?php $this->_('Orders.view.no_invoices');?>
+                </p>
+            </div>
+            <?php
+            }
+            ?>
+
+            <h4><?php $this->_('Orders.view.heading_services');?></h4>
+            <?php
+            if ((isset($services) ? $services : false) && count($services) > 0) {
+            ?>
+            <div class="table-responsive mb-2">
+                <table class="table table-curved table-striped" id="services">
+                    <thead>
+                        <tr>
+                            <th><span><?php $this->_('Orders.view.heading_package');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_label');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_term');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_date_created');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_date_renews');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_options');?></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($services as $service) {
+                        ?>
+                        <tr>
+                            <td><?php echo (isset($service->package->name) ? $this->Html->safe($service->package->name) : null);?></td>
+                            <td><?php echo (isset($service->name) ? $this->Html->safe($service->name) : null);?></td>
+                            <td>
+                                <?php
+                                if ((isset($service->package_pricing->period) ? $service->package_pricing->period : null) == 'onetime') {
+                                    echo (isset($periods[$service->package_pricing->period]) ? $this->Html->safe($periods[$service->package_pricing->period]) : null);
+                                } else {
+                                    $term = (isset($service->package_pricing->term) ? $this->Html->safe($service->package_pricing->term) : null);
+                                    $period = ($term == 1 ? (isset($periods[$service->package_pricing->period]) ? $periods[$service->package_pricing->period] : null) : (isset($periods[$service->package_pricing->period . '_plural']) ? $periods[$service->package_pricing->period . '_plural'] : null));
+                                    $renewal_price = $this->CurrencyFormat->format((isset($service->renewal_price) ? $service->renewal_price : null), (isset($service->override_currency) ? $service->override_currency : (isset($service->package_pricing->currency) ? $service->package_pricing->currency : null)));
+                                    $this->_('Orders.view.recurring_term', false, $this->Html->safe($term), $this->Html->safe($period), $this->Html->safe($renewal_price));
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $this->Date->cast((isset($service->date_added) ? $this->Html->safe($service->date_added) : null), 'date_time');?></td>
+                            <td><?php echo $this->Date->cast((isset($service->date_renews) ? $this->Html->safe($service->date_renews) : null), 'date_time');?></td>
+                            <td>
+                                <a href="<?php echo $this->Html->safe($this->client_uri . 'services/manage/' . $service->id . '/');?>" class="btn btn-xs btn-light">
+                                    <i class="fas fa-cog fa-fw"></i> <?php $this->_('Orders.view.option_manage');?>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php
+            } else {
+            ?>
+            <div class="alert alert-info mb-2">
+                <p>
+                    <?php $this->_('Orders.view.no_services');?>
+                </p>
+            </div>
+            <?php
+            }
+            ?>
+
+            <h4><?php $this->_('Orders.view.heading_transactions');?></h4>
+            <?php
+            if ((isset($transactions) ? $transactions : false) && count($transactions) > 0) {
+            ?>
+            <div class="table-responsive mb-2">
+                <table class="table table-curved table-striped" id="transactions">
+                    <thead>
+                        <tr>
+                            <th><span><?php $this->_('Orders.view.heading_type');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_amount');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_applied');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_status');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_number');?></span></th>
+                            <th><span><?php $this->_('Orders.view.heading_date');?></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($transactions as $transaction) {
+                        ?>
+                        <tr>
+                            <td><?php echo (isset($transaction_types[$transaction->type_name]) ? $this->Html->safe($transaction_types[$transaction->type_name]) : null);?></td>
+                            <td>
+                                <?php
+                                echo $this->CurrencyFormat->format(
+                                    (isset($transaction->amount) ? $transaction->amount : 0),
+                                    (isset($transaction->currency) ? $transaction->currency : 'USD'),
+                                    ['html_code' => true]
+                                );
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                echo $this->CurrencyFormat->format(
+                                    (isset($transaction->applied_amount) ? $transaction->applied_amount : 0),
+                                    (isset($transaction->currency) ? $transaction->currency : 'USD'),
+                                    ['html_code' => true]
+                                );
+                                ?>
+                            </td>
+                            <td><?php echo (isset($transaction_status[$transaction->status]) ? $this->Html->safe($transaction_status[$transaction->status]) : null);?></td>
+                            <td><?php echo (isset($transaction->transaction_number) ? $this->Html->safe($transaction->transaction_number) : null);?></td>
+                            <td><?php echo $this->Date->cast((isset($transaction->date_added) ? $this->Html->safe($transaction->date_added) : null), 'date_time');?></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php
+            } else {
+            ?>
+            <div class="alert alert-info mb-2">
+                <p>
+                    <?php $this->_('Orders.view.no_transactions');?>
+                </p>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+
+        <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/');?>" class="btn btn-light pull-right">
+            <i class="fas fa-arrow-circle-left"></i> <?php $this->_('Orders.view.field_back_order_history');?>
+        </a>
+        <?php
+        $this->WidgetClient->endBody();
+        $this->WidgetClient->end();
+        ?>
+    </div>

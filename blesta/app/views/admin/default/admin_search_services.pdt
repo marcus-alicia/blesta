@@ -1,0 +1,47 @@
+
+        <div class="title_row">
+            <h3><?php $this->_('AdminSearch.services.heading');?></h3>
+        </div>
+        <?php
+        if ((isset($services) ? $services : false) && ($num_services = count($services)) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><?php $this->_('AdminSearch.services.heading_client_id');?></span></td>
+                <td><span><?php $this->_('AdminSearch.services.heading_client');?></span></td>
+                <td><span><?php $this->_('AdminSearch.services.heading_package');?></span></td>
+                <td><span><?php $this->_('AdminSearch.services.heading_date_added');?></span></td>
+                <td><span><?php $this->_('AdminSearch.services.heading_date_renews');?></span></td>
+                <td class="last"><span><?php $this->_('AdminSearch.services.heading_status');?></span></td>
+            </tr>
+            <?php
+            for ($i = 0; $i < $num_services; $i++) {
+            ?>
+            <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/editservice/' . (isset($services[$i]->client_id) ? $services[$i]->client_id : null) . '/' . (isset($services[$i]->id) ? $services[$i]->id : null) . '/');?>"><?php (print (isset($services[$i]->client_id_code) ? $this->Html->safe($services[$i]->client_id_code) : null));?></a></td>
+                <td><?php echo $this->Html->concat(' ', (isset($services[$i]->client_first_name) ? $this->Html->safe($services[$i]->client_first_name) : null), (isset($services[$i]->client_last_name) ? $this->Html->safe($services[$i]->client_last_name) : null));?></td>
+                <td><?php (print (isset($services[$i]->name) ? $this->Html->safe($services[$i]->name) : null));?></td>
+                <td><?php echo $this->Date->cast((isset($services[$i]->date_added) ? $this->Html->safe($services[$i]->date_added) : null));?></td>
+                <td><?php echo (empty($services[$i]->date_renews) ? $this->_('AdminSearch.services.text_never', true) : $this->Date->cast((isset($services[$i]->date_renews) ? $this->Html->safe($services[$i]->date_renews) : null)));?></td>
+                <td class="last"><?php echo $this->Html->safe((isset($service_status[$services[$i]->status]) ? $service_status[$services[$i]->status] : null));?></td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+            <?php
+            if (isset($this->Pagination)) {
+                $this->Pagination->build();
+            }
+            ?>
+        <?php
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminSearch.services.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>

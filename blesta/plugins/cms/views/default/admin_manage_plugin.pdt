@@ -1,0 +1,92 @@
+        <?php
+        $tabs = [];
+        foreach ($languages ?? [] as $key => $language) {
+            $tabs[] = [
+                'name' => $language->name,
+                'current' => $key == 0,
+                'attributes' => [
+                    'class' => 'lang_' . $language->code,
+                    'href' => '#'
+                ]
+            ];
+        }
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->create($this->_('CmsManagePlugin.index.boxtitle_portal', true));
+
+        $this->Form->create(null, ['id' => 'portal_form']);
+        ?>
+        <div class="inner">
+            <?php
+            foreach ($languages as $language) {
+                $uri = '/';
+                $page = (object) ($vars[$uri][$language->code] ?? $pages[$uri][$language->code] ?? []);
+            ?>
+            <div class="main_tab" id="tab_lang_<?php echo $this->Html->safe($language->code);?>">
+                <div class="pad">
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('CmsManagePlugin.index.field_title', true), 'title');
+                            $this->Form->fieldText($uri . '[' . $language->code . '][title]', ($page->title ?? null), ['id' => 'title']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('CmsManagePlugin.index.field_tags', true), 'tags');
+                            ?>
+                            <div class="accent_box">
+                                <?php
+                                foreach (($tags ?? []) as $tag) {
+                                    echo $this->Html->concat(' ', (isset($tag) ? $this->Html->safe($tag) : null), ' ');
+                                }
+                                ?>
+                            </div>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('CmsManagePlugin.index.field_content', true), 'content');
+                            $this->Form->fieldTextarea($uri . '[' . $language->code . '][content]', ($page->content ?? null), ['id' => 'content', 'class'=>'wysiwyg']);
+                            ?>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+            <div class="pad">
+                <div class="button_row">
+                    <?php
+                    $this->Form->fieldSubmit('save', $this->_('CmsManagePlugin.index.field_submit', true), array('class' => 'btn btn-primary pull-right'));
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Set tabs
+        function hideAllTabs() {
+            $('#portal_form .main_tab').hide();
+        }
+
+        hideAllTabs();
+        $('#portal_form .main_tab').first().show();
+        $('.tab_slider ul li').on('click', function() {
+            var tab = $(this).find('a').attr('class');
+
+            $('.tab_slider ul li').removeClass('current');
+            $(this).addClass('current');
+
+            hideAllTabs();
+            $('#portal_form .main_tab#tab_' + tab).show();
+        });
+    });
+</script>

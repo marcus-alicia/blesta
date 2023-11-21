@@ -1,0 +1,11 @@
+{
+    "version": "1.5.3",
+    "name": "Softaculous Auto Installer",
+    "description": "Softaculous Auto Installer installs a script upon control panel account creation",
+    "authors": [
+        {
+            "name": "Softaculous Ltd",
+            "url": "https://softaculus.com"
+        }
+    ]
+}

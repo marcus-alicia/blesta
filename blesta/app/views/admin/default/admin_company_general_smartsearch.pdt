@@ -1,0 +1,39 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyGeneral.smartsearch.boxtitle_smartsearch', true));
+                $this->Form->create();
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <?php
+                            foreach ($fields as $field) {
+                            ?>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox($field, 'true', (isset($vars[$field]) ? $vars[$field] : 'true') == 'true', ['id' => $field]);
+                                $this->Form->label($this->_('AdminCompanyGeneral.smartsearch.field_' . $field, true), $field, ['class' => 'inline']);
+                                ?>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyGeneral.smartsearch.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

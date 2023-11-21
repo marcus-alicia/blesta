@@ -1,0 +1,54 @@
+        <?php
+        echo $message ?? '';
+    
+        $this->Widget->clear();
+        $this->Widget->create($this->_('ImportManagerManagePlugin.index.boxtitle_importmanager', true));
+        ?>
+        <div class="inner">
+            <?php
+            if ((isset($migrators) ? $migrators : null)) {
+            ?>
+
+            <table class="table">
+                <thead>
+                    <tr class="heading_row">
+                        <td><?php $this->_('ImportManagerManagePlugin.index.platform');?></td>
+                        <td class="last"><?php $this->_('ImportManagerManagePlugin.index.versions');?></td>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                $i=0;
+                foreach ($migrators as $type => $migrator) {
+                ?>
+                <tr<?php echo ($i++%2 == 1 ? ' class="odd_row"' : '');?>>
+                    <td><?php echo (isset($migrator->name) ? $this->Html->safe($migrator->name) : null);?></td>
+                    <td>
+                        <?php
+                        foreach ($migrator->versions as $version => $name) {
+                        ?>
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $this->Html->safe($plugin_id) : null) . '/' . $type . '/' . $version . '/?action=import');?>"><?php echo (isset($name) ? $this->Html->safe($name) : null);?></a><br />
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+            </table>
+
+            <?php
+            } else {
+            ?>
+                <div class="empty_section">
+                    <div class="empty_box"><?php $this->_('ImportManagerManagePlugin.index.no_migrators');?></div>
+                </div>
+            <?php
+            }
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

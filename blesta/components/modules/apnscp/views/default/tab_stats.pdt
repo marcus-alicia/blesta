@@ -1,0 +1,29 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Apnscp.tab_stats.info_title'); ?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Apnscp.tab_stats.info_heading.field'); ?></td>
+                    <td class="last"><?php $this->_('Apnscp.tab_stats.info_heading.value'); ?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $keys = ['disk', 'bandwidth'];
+                foreach ($keys as $i => $key) {
+                    if (isset($stats->{$key})) {
+                ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? ' class="odd_row"' : '', ''); ?>>
+                        <td><?php $this->_('Apnscp.tab_stats.info.' . $key); ?></td>
+                        <td><?php echo $this->Html->safe(round($stats->{$key}['used'], 2)) . ' MB /' . $this->Html->safe($stats->{$key}['total'] == '-1' ? '∞' : round($stats->{$key}['total'], 2) . ' MB'); ?></td>
+                    </tr>
+                <?php
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>

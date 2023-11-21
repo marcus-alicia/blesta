@@ -1,0 +1,17 @@
+
+	<?php
+    // Disable CSRF for this form
+    $this->Form->setCsrfOptions(['set_on_create' => false]);
+    $this->Form->create(($post_to ?? null));
+
+    // Set payment fields
+    if (($fields ?? null)) {
+        foreach ($fields as $key => $value) {
+            $this->Form->fieldHidden($key, $value);
+        }
+    }
+    ?>
+    <button type="submit" class="btn btn-xl btn-danger"><?php $this->_('Payfast.buildprocess.submit'); ?></button>
+    <?php
+    $this->Form->end();
+    ?>

@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 p-3">
+            <div class="card">
+                <div class="card-header p-3">
+                    <h3 class="m-0"><i class="fas fa-exclamation-triangle"></i> License Invalid</h3>
+                </div>
+                <div class="card-body">
+                    <?php
+                    if ((isset($errors) ? $errors : null)) {
+                    ?>
+                    <p>The license failed to validate for the following reasons:</p>
+                    <div class="alert alert-danger">
+                        <?php
+                        foreach ($errors as $field => $errors) {
+                            foreach ($errors as $key => $message_text) {
+                            ?>
+                            <p><?php echo (isset($message_text) ? $this->Html->safe($message_text, true) : null);?></p>
+                            <?php
+                            }
+                        }
+                        ?>
+                    </div>
+                    <?php
+                    }
+                    ?>
+
+                    <?php
+                    $this->Form->create(null, ['class' => 'disable-on-submit']);
+                    ?>
+                        <div class="form-group">
+                            <?php
+                            $this->Form->label('License Key ', 'key');
+                            $this->Form->fieldText('key', (isset($vars->key) ? $vars->key : null), ['id' => 'key', 'class' => 'form-control']);
+                            ?>
+                        </div>
+                        <?php
+                        $this->Form->fieldSubmit('update', 'Save', ['class' => 'btn btn-secondary pull-right']);
+                        ?>
+                    <?php
+                    $this->Form->end();
+                    ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

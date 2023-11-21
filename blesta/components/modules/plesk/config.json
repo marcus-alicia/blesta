@@ -1,0 +1,28 @@
+{
+    "version": "2.15.2",
+    "name": "Plesk.name",
+    "description": "Plesk.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "plesk_domain"
+    },
+    "service": {
+        "name_key": "plesk_domain"
+    },
+    "module": {
+        "row": "Plesk.module_row",
+        "rows": "Plesk.module_row_plural",
+        "row_key": "server_name",
+        "group": "Plesk.module_group"
+    },
+    "email_tags": {
+        "module": ["host_name", "ip_address", "name_servers", "port"],
+        "package": ["type", "plan", "reseller_plan"],
+        "service": ["plesk_domain", "plesk_username", "plesk_password", "plesk_webspace_id"]
+    }
+}

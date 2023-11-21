@@ -1,0 +1,60 @@
+
+        <?php
+        if (!empty($package_options)) {
+        ?>
+        <table class="table" id="package_options">
+            <tr class="heading_row">
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'package_options/index/' . (isset($type) ? $type : null) . '/?sort=label&order=' . ($sort == 'label' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'label' ? ' ' . $order : '');?>"><?php $this->_('AdminPackageOptions.index.heading_label');?></a></span></td>
+                <td class="last"><span><?php $this->_('AdminPackageOptions.index.heading_options');?></span></td>
+            </tr>
+            <?php
+            // Display all package options
+            $i = 0;
+            foreach ((isset($package_options) ? $package_options : []) as $package_option) {
+            ?>
+            <tr class="<?php echo $this->Html->concat(' ', ($i++ % 2 == 1) ? 'odd_row' : '', 'expand', 'package_option');?>">
+                <td><?php (print (isset($package_option->label) ? $this->Html->safe($package_option->label) : null));?></td>
+                <td class="last">
+                    <a href="<?php echo $this->base_uri . 'package_options/edit/' . (isset($package_option->id) ? $this->Html->safe($package_option->id) : null) . '/';?>"><?php $this->_('AdminPackageOptions.index.option_edit');?></a>,
+                    <?php
+                    $this->Form->create($this->base_uri . 'package_options/delete/');
+                    $this->Form->fieldHidden('id', (isset($package_option->id) ? $this->Html->safe($package_option->id) : null));
+                    ?>
+                    <a href="<?php echo $this->base_uri . 'package_options/delete/' . (isset($package_option->id) ? $this->Html->safe($package_option->id) : null) . '/';?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminPackageOptions.index.confirm_delete_option', true));?>"><?php $this->_('AdminPackageOptions.index.option_delete');?></a>
+                    <?php
+                    $this->Form->end();
+                    ?>
+                </td>
+            </tr>
+            <tr class="expand_details" id="package_option_<?php (print (isset($package_option->id) ? $this->Html->safe($package_option->id) : null));?>">
+                <td colspan="5" class="subtable">
+                </td>
+            </tr>
+            <?php
+            }
+            unset($i);
+            ?>
+        </table>
+        <?php
+            // Set pagination
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php
+                $type = (isset($type) ? $type : 'options');
+                $this->_('AdminPackageOptions.index.no_results_' . $type);
+                ?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("tr.package_option").click(function() {
+            $(this).blestaUpdateRow("<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'package_options/optioninfo/';?>" + $(this).next("tr").attr("id").split("_")[2], ".subtable");
+        });
+    });
+</script>

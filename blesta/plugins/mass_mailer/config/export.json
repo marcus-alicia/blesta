@@ -1,0 +1,23 @@
+{
+    "contacts": {
+        "id_code": "client.id_code",
+        "first_name": "contact.first_name",
+        "last_name": "contact.last_name",
+        "company": "contact.company",
+        "email": "contact.email",
+        "date_added": "contact.date_added"
+    },
+    "services": {
+        "id_code": "client.id_code",
+        "first_name": "contact.first_name",
+        "last_name": "contact.last_name",
+        "company": "contact.company",
+        "email": "contact.email",
+        "date_added": "contact.date_added",
+        "package_name": "package.name",
+        "service_name": "service.name",
+        "service_date_renews": "service.date_renews",
+        "module_name": "module.name",
+        "module_label": "module.label"
+    }
+}

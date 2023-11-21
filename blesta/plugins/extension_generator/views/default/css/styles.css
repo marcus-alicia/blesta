@@ -1,0 +1,34 @@
+/* Extension Generator plugin */
+.node-progress-container {
+    padding: 10px 10% 30px;
+}
+
+.node-progress-bar-container {
+    position: relative;
+}
+
+.node-progress-bar {
+    display: inline-block;
+    width: 100%;
+    height: 3px;
+    border: 2px solid #c3c3c3;
+}
+
+.node-progress-node-container {
+    position: absolute;
+    top: 0px;
+}
+
+.node-progress-node {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: -10px;
+    border: 2px solid #a0a0a0;
+    border-radius: 15px;
+    background-color: white;
+}
+
+.node-progress-node-container p {
+    margin-left: -50%;
+}

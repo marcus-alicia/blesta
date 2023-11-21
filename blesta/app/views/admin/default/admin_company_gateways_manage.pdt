@@ -1,0 +1,75 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyGateways.manage.boxtitle_manage', true, (isset($gateway_info->name) ? $gateway_info->name : null)));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+                        <div class="title_row first">
+                            <h3><?php $this->_('AdminCompanyGateways.manage.heading_gateway');?></h3>
+                        </div>
+                        <div class="pad">
+                            <?php echo (isset($content) ? $content : null);?>
+                        </div>
+                        <?php
+                        // Show all accepted currencies from this gateway
+                        if ((isset($gateway_currencies) ? $gateway_currencies : false)) {
+                        ?>
+                        <div class="title_row">
+                            <h3><?php $this->_('AdminCompanyGateways.manage.heading_currencies');?></h3>
+                        </div>
+                        <div class="pad">
+                            <dl>
+                            <?php
+                            // Display each currency accepted by this gateway
+                            foreach ($gateway_currencies as $gateway_currency) {
+                                // Set disabled class if this currency is disabled or unavailable for use
+                                $disabled = [];
+                                if ($gateway_currency->disabled || !$gateway_currency->available) {
+                                    $disabled = ['disabled' => 'disabled'];
+                                }
+                                ?>
+                                <dd>
+                                    <?php
+                                    $this->Form->fieldCheckbox('currencies[]', (isset($gateway_currency->code) ? $gateway_currency->code : null), in_array($gateway_currency->code, (isset($vars['currencies']) ? $vars['currencies'] : [])), array_merge(['id' => (isset($gateway_currency->code) ? $gateway_currency->code : null)], $disabled));
+                                    ?>
+                                    <label for="<?php (print (isset($gateway_currency->code) ? $this->Html->safe($gateway_currency->code) : null));?>" class="inline">
+                                        <?php
+                                        (print (isset($gateway_currency->code) ? $this->Html->safe($gateway_currency->code) : null));
+
+                                        // Link to add this currency
+                                        if (!$gateway_currency->available) {
+                                        ?>
+                                        - <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/currencies/add/' . (isset($gateway_currency->code) ? $gateway_currency->code : null));?>"><?php $this->_('AdminCompanyGateways.manage.text_addcurrency');?></a>
+                                        <?php
+                                        } elseif ($gateway_currency->in_use_by) {
+                                            // Link to the gateway that is using this currency
+                                        ?>
+                                        - <?php $this->_('AdminCompanyGateways.manage.text_in_use_by');?> <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/gateways/manage/' . (isset($gateway_currency->in_use_by->id) ? $gateway_currency->in_use_by->id : null) . '/');?>"><?php (print (isset($gateway_currency->in_use_by->name) ? $this->Html->safe($gateway_currency->in_use_by->name) : null));?></a>
+                                        <?php
+                                        }
+                                        ?>
+                                    </label>
+                                </dd>
+                                <?php
+                            }
+                            ?>
+                            </dl>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminCompanyGateways.manage.update_settings', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                        </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>

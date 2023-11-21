@@ -1,0 +1,103 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminMain.search.boxtitle_order', true, (isset($search) ? $this->Html->safe($search) : null)), ['id'=>'widget_order_admin_main_search'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="inner">
+            <?php
+            if ((isset($orders) ? $orders : null) && !empty($orders)) {
+            ?>
+            <table class="table" id="orders">
+                <tr class="heading_row">
+                    <td class="icon">
+                    </td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'widget/order/admin_main/search/?search=' . (isset($search) ? $search : null) . '&sort=order_number&order=' . ($sort == 'order_number' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'order_number' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_order_number');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'widget/order/admin_main/search/?search=' . (isset($search) ? $search : null) . '&sort=client_id_code&order=' . ($sort == 'client_id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'client_id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_client_id_code');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'widget/order/admin_main/search/?search=' . (isset($search) ? $search : null) . '&sort=invoice_id_code&order=' . ($sort == 'invoice_id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'invoice_id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_invoice_id_code');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'widget/order/admin_main/search/?search=' . (isset($search) ? $search : null) . '&sort=total&order=' . ($sort == 'total' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'total' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_total');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'widget/order/admin_main/search/?search=' . (isset($search) ? $search : null) . '&sort=paid&order=' . ($sort == 'paid' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'paid' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_paid');?></a></span></td>
+                    <td class="last"><span><a href="<?php echo $this->Html->safe($this->base_uri . 'widget/order/admin_main/search/?search=' . (isset($search) ? $search : null) . '&sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_date_added');?></a></span></td>
+                </tr>
+
+                <?php
+                $i=0;
+                foreach ($orders as $order) {
+                ?>
+                <tr class="<?php echo $this->Html->concat(' ', 'expand', 'order_info', (($i++%2 == 1) ? 'odd_row' : ''));?>">
+                    <td class="icon">
+                        <div class="<?php echo ((isset($order->date_closed) ? $order->date_closed : null) != null ? 'active' : 'inactive');?>">&nbsp;</div>
+                    </td>
+                    <td>
+                        <span class="tooltip quiet">
+                            <?php echo (isset($order->order_number) ? $this->Html->safe($order->order_number) : null);?>
+                            <div>
+                                <p>
+                                    <?php echo (isset($order->order_form_name) ? $this->Html->safe($order->order_form_name) : null);?>
+                                    <br />
+                                    <?php echo (isset($order->ip_address) ? $this->Html->safe($order->ip_address) : null);?>
+                                    <br />
+                                    <?php
+                                    if ((isset($order->geo_ip) ? $order->geo_ip : null) && (isset($order->geo_ip['location']) ? $order->geo_ip['location'] : null)) {
+                                        $location = $order->geo_ip['location'];
+                                    ?>
+                                    <br />
+                                    <strong><?php $this->_('AdminMain.index.text_location');?></strong>
+                                    <br />
+                                    <?php echo $this->Html->safe($this->Html->concat(', ', (isset($location['city']) ? $location['city'] : null), (isset($location['region']) ? $location['region'] : null)));?>
+                                    <?php echo (isset($location['postal_code']) ? $this->Html->safe($location['postal_code']) : null);?>
+                                    <br />
+                                    <?php
+                                        echo (isset($location['country_name']) ? $this->Html->safe($location['country_name']) : null);
+                                    }
+                                    ?>
+                                </p>
+                            </div>
+                        </span>
+                    </td>
+                    <td><span class="tooltip quiet"><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . (isset($order->client_id) ? $order->client_id : null));?>"><?php echo (isset($order->client_id_code) ? $this->Html->safe($order->client_id_code) : null);?></a><div><?php echo (isset($order->client_first_name) ? $this->Html->safe($order->client_first_name) : null) . ' ' . (isset($order->client_last_name) ? $this->Html->safe($order->client_last_name) : null);?><br /><?php echo (isset($order->client_company) ? $this->Html->safe($order->client_company) : null);?></div></span></td>
+                    <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/editinvoice/' . (isset($order->client_id) ? $order->client_id : null) . '/' . (isset($order->invoice_id) ? $order->invoice_id : null));?>"><?php echo (isset($order->invoice_id_code) ? $this->Html->safe($order->invoice_id_code) : null);?></a></td>
+                    <td><?php echo $this->CurrencyFormat->format($order->total, $order->currency, ['html_code'=>true]);?></td>
+                    <td><?php echo $this->CurrencyFormat->format($order->paid, $order->currency, ['html_code'=>true]);?></td>
+                    <td><?php echo $this->Date->cast((isset($order->date_added) ? $order->date_added : null), 'date_time');?></td>
+                </tr>
+                <tr class="expand_details" id="orders_<?php echo (isset($order->id) ? $this->Html->safe($order->id) : null);?>">
+                    <td colspan="8" class="subtable">
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+
+            </table>
+
+            <?php
+            $this->Pagination->build();
+            } else {
+            ?>
+            <div class="empty_section">
+                <div class="empty_box"><?php $this->_('AdminMain.index.no_results');?></div>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    $('#orders').blestaBindToolTips();
+
+    // Fetch order info
+    $('.order_info a', this).click(function(e) {
+        e.stopPropagation();
+    });
+    $('.order_info').click(function() {
+        $(this).blestaUpdateRow('<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_main/orderinfo/');?>' + $(this).next('tr').attr('id').split('_')[1], '.subtable');
+    });
+});
+</script>

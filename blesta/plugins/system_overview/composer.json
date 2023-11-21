@@ -1,0 +1,9 @@
+{
+    "name": "blesta/system_overview",
+    "description": "System Overview",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

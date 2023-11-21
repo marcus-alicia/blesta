@@ -1,0 +1,28 @@
+{
+    "version": "2.12.0",
+    "name": "Interworx.name",
+    "description": "Interworx.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "interworx_domain"
+    },
+    "service": {
+        "name_key": "interworx_domain"
+    },
+    "module": {
+        "row": "Interworx.module_row",
+        "rows": "Interworx.module_row_plural",
+        "row_key": "server_name",
+        "group": "Interworx.module_group"
+    },
+    "email_tags": {
+        "module": ["host_name", "name_servers", "notes"],
+        "package": ["type", "package"],
+        "service": ["interworx_username", "interworx_email", "interworx_password", "interworx_domain"]
+    }
+}

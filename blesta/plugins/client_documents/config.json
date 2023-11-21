@@ -1,0 +1,15 @@
+{
+	"version": "2.6.0",
+	"name": "ClientDocumentsPlugin.name",
+	"description": "ClientDocumentsPlugin.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://blesta.com"
+		},
+		{
+			"name": "Sponsored By PointPub Media",
+			"url": "http://pointpubmedia.com"
+		}
+	]
+}

@@ -1,0 +1,69 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Plesk.tab_stats.info_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Plesk.tab_stats.info_heading.field');?></td>
+                    <td class="last"><?php $this->_('Plesk.tab_stats.info_heading.value');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $keys = ['domain', 'ip_address'];
+                foreach ($keys as $i => $key) {
+                    if (array_key_exists($key, $stats->account_info)) {
+                    ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i%2 == 1) ? ' class="odd_row"' : '', '');?>>
+                        <td><?php $this->_('Plesk.tab_stats.info.' . $key);?></td>
+                        <td><?php echo (isset($stats->account_info[$key]) ? $this->Html->safe($stats->account_info[$key]) : null);?></td>
+                    </tr>
+                    <?php
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Plesk.tab_stats.bandwidth_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Plesk.tab_stats.bandwidth_heading.used');?></td>
+                    <td class="last"><?php $this->_('Plesk.tab_stats.bandwidth_heading.limit');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php echo (isset($stats->bandwidth_usage['used_formatted']) ? $this->Html->safe($stats->bandwidth_usage['used_formatted']) : null);?></td>
+                    <td><?php echo (isset($stats->bandwidth_usage['limit_formatted']) ? $this->Html->safe($stats->bandwidth_usage['limit_formatted']) : null);?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Plesk.tab_stats.disk_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Plesk.tab_stats.disk_heading.used');?></td>
+                    <td class="last"><?php $this->_('Plesk.tab_stats.disk_heading.limit');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php echo (isset($stats->disk_usage['used_formatted']) ? $this->Html->safe($stats->disk_usage['used_formatted']) : null);?></td>
+                    <td><?php echo (isset($stats->disk_usage['limit_formatted']) ? $this->Html->safe($stats->disk_usage['limit_formatted']) : null);?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

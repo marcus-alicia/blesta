@@ -1,0 +1,21 @@
+                    <div class="list-group package-groups">
+                    <?php
+                    foreach ($package_groups as $group_id => $package_group) {
+                        if (!array_key_exists($group_id, $packages)) {
+                            continue;
+                        }
+                    ?>
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'order/main/packages/' . (isset($order_form->label) ? $order_form->label : null) . '/?group_id=' . $group_id);?>" class="list-group-item">
+                            <h4><?php echo (isset($package_group->name) ? $this->Html->safe($package_group->name) : null);?></h4>
+                            <?php
+                            if (in_array($group_id, $order_form->meta['package_groups'] ?? []) && $cart_has_eligible_domain) {
+                            ?>
+                            <span class="badge badge-info"><i class="fab fa-creative-commons-zero"></i> <?php $this->_('Main.index.domain_bundle_eligble');?></span>
+                            <?php
+                            }
+                            ?>
+                        </a>
+                    <?php
+                    }
+                    ?>
+                    </div>

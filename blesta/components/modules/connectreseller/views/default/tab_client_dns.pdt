@@ -1,0 +1,98 @@
+    <div id="dns-records" class="pad">
+        <h4><?php $this->_('Connectreseller.tab_client_dns.title_list');?></h4>
+
+        <div class="table-responsive mt-2 mb-3">
+            <table class="table table-curved table-striped">
+                <thead>
+                    <tr class="heading_row">
+                        <th><span><?php $this->_('Connectreseller.tab_client_dns.record_type');?></span></th>
+                        <th><span><?php $this->_('Connectreseller.tab_client_dns.host');?></span></th>
+                        <th><span><?php $this->_('Connectreseller.tab_client_dns.value');?></span></th>
+                        <th><span><?php $this->_('Connectreseller.tab_client_dns.ttl');?></span></th>
+                        <th><span><?php $this->_('Connectreseller.tab_client_dns.field_delete');?></span></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php
+                    if (is_array($dns_records ?? []) && !empty($dns_records ?? [])) {
+                        foreach ($dns_records as $record) {
+                    ?>
+                    <tr>
+                        <td><?php echo ($record->recordType ?? null);?></td>
+                        <td><?php echo ($record->recordName ?? null);?></td>
+                        <td style="max-width: 200px; overflow: hidden;"><?php echo ($record->recordContent ?? null);?></td>
+                        <td><?php echo ($record->recordTTL ?? null);?></td>
+                        <td>
+                            <?php
+                            $this->Form->create();
+                            $this->Form->fieldHidden('dnszoneRecordID', ($record->dnszoneRecordID ?? null));
+
+                            $this->Form->fieldButton(
+                                'action',
+                                $this->_('Connectreseller.tab_client_dns.field_delete', true),
+                                [
+                                    'class' => 'btn btn-sm btn-danger',
+                                    'value' => 'delete',
+                                    'type' => 'submit',
+                                ]
+                            );
+
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+        <h4><?php $this->_('Connectreseller.tab_client_dns.title_add');?></h4>
+        <?php
+        $this->Form->create();
+        ?>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_('Connectreseller.tab_client_dns.record_type', true), 'record_type');
+                    $this->Form->fieldSelect('RecordType', $supported_types ?? [], $vars->RecordType ?? null, ['id' => 'record_type', 'class' => 'form-control']);
+                    ?>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_('Connectreseller.tab_client_dns.host', true), 'host');
+                    $this->Form->fieldText('RecordName', $vars->RecordName ?? null, ['id' => 'host', 'class' => 'form-control']);
+                    ?>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_('Connectreseller.tab_client_dns.value', true), 'value');
+                    $this->Form->fieldText('RecordValue', $vars->RecordValue ?? null, ['id' => 'value', 'class' => 'form-control']);
+                    ?>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_('Connectreseller.tab_client_dns.ttl', true), 'ttl');
+                    $this->Form->fieldText('RecordTTL', $vars->RecordTTL ?? 3600, ['id' => 'ttl', 'class' => 'form-control']);
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-light float-right" type="submit">
+            <i class="fas fa-edit"></i> <?php $this->_('Connectreseller.tab_client_dns.field_add'); ?>
+        </button>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>

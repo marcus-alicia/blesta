@@ -1,0 +1,28 @@
+{
+    "version": "2.6.0",
+    "name": "Centoswebpanel.name",
+    "description": "Centoswebpanel.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "centoswebpanel_domain"
+    },
+    "service": {
+        "name_key": "centoswebpanel_domain"
+    },
+    "module": {
+        "row": "Centoswebpanel.module_row",
+        "rows": "Centoswebpanel.module_row_plural",
+        "row_key": "server_name",
+        "group": "Centoswebpanel.module_group"
+    },
+    "email_tags": {
+        "module": ["host_name", "name_servers"],
+        "package": ["package"],
+        "service": ["centoswebpanel_domain", "centoswebpanel_username", "centoswebpanel_password"]
+    }
+}

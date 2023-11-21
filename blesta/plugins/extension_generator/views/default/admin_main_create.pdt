@@ -1,0 +1,12 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->create($this->_('AdminMain.index.boxtitle_extension_generator', true));
+
+        echo (isset($progress_bar) ? $progress_bar : null);
+
+        echo (isset($form) ? $form : null);
+
+        $this->Widget->end();

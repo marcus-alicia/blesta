@@ -1,0 +1,33 @@
+########################################################
+# package:    minPHP
+# filename:   .htaccess
+########################################################
+
+# Do not allow direct access to templates
+# or an unauthorized backdoor from CE
+<Files ~ "blesta2ce.php|\.(pdt)$">
+   order deny,allow
+   deny from all
+</Files>
+
+# Protect against Clickjacking
+#Header append X-Frame-Options "SAMEORIGIN"
+
+RewriteEngine on
+
+# Disable Apache MultiViews since it
+# may conflict with the GUI installer
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+# Force HTTPS
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=307,NE,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php
+
+RewriteCond %{REQUEST_URI} ^(.*)/install.php$
+RewriteRule install.php %1/install/ [R=301,L]

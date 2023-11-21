@@ -1,0 +1,45 @@
+
+        <div class="title_row">
+            <h3><?php $this->_('AdminSearch.packages.heading');?></h3>
+        </div>
+        <?php
+        if ((isset($packages) ? $packages : false) && ($num_packages = count($packages)) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><?php $this->_('AdminSearch.packages.heading_package_id');?></span></td>
+                <td><span><?php $this->_('AdminSearch.packages.heading_name');?></span></td>
+                <td><span><?php $this->_('AdminSearch.packages.heading_module');?></span></td>
+                <td><span><?php $this->_('AdminSearch.packages.heading_quantity');?></span></td>
+                <td class="last"><span><?php $this->_('AdminSearch.packages.heading_status');?></span></td>
+            </tr>
+            <?php
+            for ($i = 0; $i < $num_packages; $i++) {
+            ?>
+            <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'packages/edit/' . (isset($packages[$i]->id) ? $this->Html->safe($packages[$i]->id) : null) . '/');?>"><?php (print (isset($packages[$i]->id_code) ? $this->Html->safe($packages[$i]->id_code) : null));?></a></td>
+                <td><?php (print (isset($packages[$i]->name) ? $this->Html->safe($packages[$i]->name) : null));?></td>
+                <td><?php (print (isset($packages[$i]->module_name) ? $this->Html->safe($packages[$i]->module_name) : null));?></td>
+                <td><?php (print (isset($packages[$i]->qty) ? $this->Html->safe($packages[$i]->qty) : null));?></td>
+                <td><?php echo (isset($package_status[$packages[$i]->status]) ? $package_status[$packages[$i]->status] : null);?></td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+            <?php
+            if (isset($this->Pagination)) {
+                $this->Pagination->build();
+            }
+            ?>
+        <?php
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminSearch.packages.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>

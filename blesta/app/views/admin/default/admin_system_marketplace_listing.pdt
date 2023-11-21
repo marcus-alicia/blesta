@@ -1,0 +1,15 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemMarketplace.listing.boxtitle_listing', true, (isset($extension->name) ? $extension->name : null)));
+                ?>
+
+                <?php
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

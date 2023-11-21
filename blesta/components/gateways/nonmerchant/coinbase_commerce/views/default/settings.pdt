@@ -1,0 +1,23 @@
+
+	<ul>
+        <li>
+            <?php
+            $this->Form->label($this->_('CoinbaseCommerce.meta.api_key', true), 'api_key');
+            $this->Form->fieldText('api_key', ($meta['api_key'] ?? null), ['id' => 'api_key', 'class' => 'block']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('CoinbaseCommerce.meta.webhook_secret', true), 'webhook_secret');
+            $this->Form->fieldText('webhook_secret', ($meta['webhook_secret'] ?? null), ['id' => 'webhook_secret', 'class' => 'block']);
+            ?>
+        </li>
+	</ul>
+
+    <div class="title_row">
+        <h3><?php $this->_('CoinbaseCommerce.webhook'); ?></h3>
+    </div>
+    <div class="pad">
+        <p><?php $this->_('CoinbaseCommerce.webhook_note'); ?></p>
+        <code><?php echo Configure::get('Blesta.gw_callback_url') . Configure::get('Blesta.company_id') . '/coinbase_commerce/'; ?></code>
+    </div>

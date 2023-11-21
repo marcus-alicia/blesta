@@ -1,0 +1,38 @@
+
+                    <?php
+                    if ((isset($applied) ? $applied : false) && ($num_applied = count($applied)) > 0) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td class="fixed_small border_none"><i class="fas fa-share fa-flip-vertical"></i></td>
+                            <td class="border_left"><?php $this->_('AdminBilling.invoices.headingexpand_paymenttype');?></td>
+                            <td><?php $this->_('AdminBilling.invoices.headingexpand_amount');?></td>
+                            <td><?php $this->_('AdminBilling.invoices.headingexpand_applied');?></td>
+                            <td><?php $this->_('AdminBilling.invoices.headingexpand_appliedon');?></td>
+                            <td class="last"><?php $this->_('AdminBilling.invoices.headingexpand_options');?></td>
+                        </tr>
+                        <?php
+                        for ($i = 0; $i < $num_applied; $i++) {
+                            $transaction_type = ($applied[$i]->type_name != '' ? $applied[$i]->type_name : $applied[$i]->type);
+                        ?>
+                        <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : ''?>>
+                            <td>&nbsp;</td>
+                            <td><?php echo (isset($transaction_type) ? $this->Html->safe($transaction_types[$transaction_type]) : null);?></td>
+                            <td><?php echo $this->CurrencyFormat->format((isset($applied[$i]->amount) ? $this->Html->safe($applied[$i]->amount) : null), (isset($applied[$i]->currency) ? $this->Html->safe($applied[$i]->currency) : null), ['html_code' => true]);?></td>
+                            <td><?php echo $this->CurrencyFormat->format((isset($applied[$i]->applied_amount) ? $this->Html->safe($applied[$i]->applied_amount) : null), (isset($applied[$i]->currency) ? $this->Html->safe($applied[$i]->currency) : null), ['html_code' => true]);?></td>
+                            <td><?php echo $this->Date->cast((isset($applied[$i]->applied_date) ? $this->Html->safe($applied[$i]->applied_date) : null), 'date_time');?></td>
+                            <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/edittransaction/' . (isset($client->id) ? $client->id : null) . '/' . (isset($applied[$i]->id) ? $applied[$i]->id : null) . '/');?>"><?php $this->_('AdminBilling.invoices.text_edit');?></a></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box"><?php $this->_('AdminBilling.invoices.applied_no_results');?></div>
+                    </div>
+                    <?php
+                    }
+                    ?>

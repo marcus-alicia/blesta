@@ -1,0 +1,50 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons([]);
+        $this->Widget->create($this->_('OvhDomains.add_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('OvhDomains.row_meta.application_key', true), 'application_key');
+                        $this->Form->fieldText('application_key', ($vars->application_key ?? null), ['id' => 'application_key', 'class' => 'block']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('OvhDomains.row_meta.secret_key', true), 'secret_key');
+                        $this->Form->fieldText('secret_key', ($vars->secret_key ?? null), ['id' => 'secret_key', 'class' => 'block']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('OvhDomains.row_meta.consumer_key', true), 'consumer_key');
+                        $this->Form->fieldText('consumer_key', ($vars->consumer_key ?? null), ['id' => 'consumer_key', 'class' => 'block']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('OvhDomains.row_meta.endpoint', true), 'endpoint');
+                        $this->Form->fieldSelect('endpoint', ($endpoints ?? null), ($vars->endpoint ?? null), ['id' => 'endpoint', 'class' => 'block']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('OvhDomains.add_row.add_btn', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

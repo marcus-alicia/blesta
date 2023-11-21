@@ -1,0 +1,42 @@
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-share fa-flip-vertical"></i></th>
+                    <th><?php $this->_('Centovacast.service_info.hostname');?></th>
+                    <th><?php $this->_('Centovacast.service_info.username');?></th>
+                    <th><?php $this->_('Centovacast.service_info.password');?></th>
+                    <th><?php $this->_('Centovacast.service_info.options');?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><?php echo (isset($service_fields->centovacast_hostname) ? $this->Html->safe($service_fields->centovacast_hostname) : null);?></td>
+                    <td><?php echo (isset($service_fields->centovacast_username) ? $this->Html->safe($service_fields->centovacast_username) : null);?></td>
+                    <td><?php echo (isset($service_fields->centovacast_adminpassword) ? $this->Html->safe($service_fields->centovacast_adminpassword) : null);?></td>
+                    <td>
+                        <?php
+                        $this->Form->create($this->Html->safe('http://' . (isset($module_row->meta->hostname) ? $module_row->meta->hostname : null) . ':' . (isset($module_row->meta->port) ? $module_row->meta->port : null) . '/login/index.php'), ['target' => '_blank']);
+                        $this->Form->fieldHidden('username', (isset($service_fields->centovacast_username) ? $service_fields->centovacast_username : null));
+                        $this->Form->fieldHidden('password', (isset($service_fields->centovacast_adminpassword) ? $service_fields->centovacast_adminpassword : null));
+                        $this->Form->fieldHidden('login', 'Login');
+                        ?>
+                        <a id="centovacast_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>" href="#"><?php $this->_('Centovacast.service_info.option_login');?></a>
+                        <?php
+                        $this->Form->end();
+                        ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#centovacast_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>').click(function(e) {
+                e.preventDefault();
+
+                $(this).closest('form').submit();
+            });
+        });
+    </script>

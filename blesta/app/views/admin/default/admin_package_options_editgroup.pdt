@@ -1,0 +1,81 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminPackageOptions.editgroup.boxtitle_editgroup', true));
+        ?>
+
+        <div class="inner">
+            <?php $this->Form->create(null, ['id' => 'edit_package_option_group', 'class' => 'disable-on-submit']); ?>
+
+            <div class="title_row first"><h3><?php $this->_('AdminPackageOptions.editgroup.heading_basic');?></h3></div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminPackageOptions.editgroup.field_name', true), 'name'); ?>
+                        <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']); ?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminPackageOptions.editgroup.field_description', true), 'description'); ?>
+                        <?php $this->Form->fieldTextarea('description', (isset($vars->description) ? $vars->description : null), ['id' => 'description']); ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row">
+                <h3>
+                    <?php $this->_('AdminPackageOptions.editgroup.heading_packages');?>
+                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPackageOptions.!tooltip.package_membership');?></div></span>
+                </h3>
+            </div>
+            <div class="pad">
+                <table>
+                    <tr>
+                        <td><?php $this->Form->label($this->_('AdminPackageOptions.editgroup.text_memberpackages', true), 'assigned');?></td>
+                        <td></td>
+                        <td><?php $this->Form->label($this->_('AdminPackageOptions.editgroup.text_availablepackages', true), 'available');?></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php $this->Form->fieldMultiSelect('packages[]', (isset($vars->packages) ? $vars->packages : null), [], ['id' => 'assigned']);?>
+                        </td>
+                        <td><a href="#" class="move_left">&nbsp;</a> &nbsp; <a href="#" class="move_right">&nbsp;</a></td>
+                        <td>
+                            <?php $this->Form->fieldMultiSelect('available[]', (isset($packages) ? $packages : null), [], ['id' => 'available']);?>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminPackageOptions.editgroup.field_editgroupsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php $this->Form->end(); ?>
+        </div>
+
+        <?php
+        $this->Widget->end();
+
+        $this->Javascript->setInline("
+        $(document).ready(function() {
+            $('#edit_package_option_group').submit(function() {
+                $('#assigned option').prop('selected', true);
+            });
+
+            // Move packages from right to left
+            $('.move_left').click(function() {
+                $('#available option:selected').appendTo($('#assigned'));
+                return false;
+            });
+            // Move packages from left to right
+            $('.move_right').click(function() {
+                $('#assigned option:selected').appendTo($('#available'));
+                return false;
+            });
+        });
+        ");
+?>
+

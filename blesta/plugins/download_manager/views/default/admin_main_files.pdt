@@ -1,0 +1,154 @@
+
+        <?php
+        echo ($message ?? null);
+
+        $link_buttons = [
+            ['name'=>$this->_('AdminMain.files.add_download', true), 'attributes'=>['href'=>$this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/add/' . (!empty($category) ? '/' . ($category->id ?? null) : '')), 'class'=>'add_download']],
+            ['name'=>$this->_('AdminMain.files.add_category', true), 'attributes'=>['href'=>$this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/addcategory/' . (!empty($category) ? '/' . ($category->id ?? null) : '')), 'class'=>'add_download']]
+        ];
+
+        $tabs = [
+            [
+                'name' => $this->_('AdminMain.files.tab_files', true),
+                'current' => true,
+                'attributes' => [
+                    'class' => 'files',
+                    'href' => $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/')
+                ]
+            ],
+            [
+                'name' => $this->_('AdminMain.files.tab_urls', true),
+                'current' => false,
+                'attributes' => [
+                    'class' => 'urls',
+                    'href' => $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/urls/')
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->create($this->_('AdminMain.files.boxtitle_downloadmanager', true));
+
+        $category_name = (isset($category->name) ? (isset($category->name) ? $this->Html->safe($category->name) : null) : null);
+        ?>
+        <div class="pad">
+            <div class="inner">
+                <div class="links_row">
+                    <?php
+                    foreach ($link_buttons as $link_button) {
+                        $attributes = '';
+                        foreach (($link_button['attributes'] ?? []) as $attribute => $value) {
+                            $attributes .= ' ' . $attribute . '="' . $value . '"';
+                        }
+                    ?>
+                    <a class="btn btn-default btn-sm pull-right" title="<?php echo $this->Html->safe($link_button['name'] ?? '');?>"<?php echo $attributes;?>><?php echo $this->Html->safe($link_button['name'] ?? '');?></a>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <div class="title_row first">
+                    <h3><?php echo ($category_name ?? $this->_('AdminMain.!text.root_directory', true));?></h3>
+                </div>
+                <?php
+                // Set a link to go back a directory
+                if (!empty($category)) {
+                ?>
+                <div id="up_directory" class="clear">
+                    <a class="btn btn-sm btn-default mb-1" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/' . ($parent_category->id ?? null));?>">
+                        <i class="fas fa-level-down-alt fa-rotate-180"></i>
+                        <?php $this->_('AdminMain.files.go_back');?>
+                    </a>
+                </div>
+                <?php
+                }
+
+                if (!empty($categories) || !empty($files)) {
+                ?>
+                <div class="pad" id="downloads">
+                    <div class="row">
+                        <?php
+                        $i = 0;
+                        foreach ((isset($categories) ? $categories : []) as $category) {
+                            $i++;
+                            $icon = ((isset($category->access) ? $category->access : null) == 'public') ? 'fa-folder-open' : 'fa-folder';
+                        ?>
+                            <div class="col col-sm-4 col-xs-12">
+                                <div class="category">
+                                    <i class="fas fa-folder"></i>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/' . ($category->id ?? null) . '/');?>"><?php echo (isset($category->name) ? $this->Html->safe($category->name) : null);?></a>
+                                    <?php $this->_('AdminMain.!text.open_parenthesis');?><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/editcategory/'. ($category->id ?? null) . '/');?>"><?php $this->_('AdminMain.files.edit');?></a>
+                                    <?php $this->_('AdminMain.!text.forward_slash');?>
+                                    <?php
+                                    $this->Form->create($this->base_uri . 'plugin/download_manager/admin_main/deletecategory/');
+                                    $this->Form->fieldHidden('id', ($category->id ?? null));
+                                    ?>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/deletecategory/');?>" class="manage" rel="<?php $this->_('AdminMain.modal.delete_category');?>"><?php $this->_('AdminMain.files.delete');?></a><?php $this->_('AdminMain.!text.closed_parenthesis');?>
+                                    <?php
+                                    $this->Form->end();
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                            if ($i % 3 == 0) {
+                            ?>
+                            </div>
+                            <div class="row">
+                            <?php
+                            }
+                            ?>
+                        <?php
+                        }
+
+                        foreach ((isset($files) ? $files : []) as $file) {
+                            $i++;
+                        ?>
+                            <div class="col col-sm-4 col-xs-12">
+                                <div class="file">
+                                    <i class="fas fa-file-alt"></i>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/download/' . ($file->id ?? null));?>"><?php echo $this->Html->safe(($file->name ?? null) . ($file->extension ?? null));?></a>
+                                    <?php $this->_('AdminMain.!text.open_parenthesis');?><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/edit/' . ($file->id ?? null));?>"><?php $this->_('AdminMain.files.edit');?></a>
+                                    <?php $this->_('AdminMain.!text.forward_slash');?>
+                                    <?php
+                                    $this->Form->create($this->base_uri . 'plugin/download_manager/admin_main/delete/');
+                                    $this->Form->fieldHidden('id', ($file->id ?? null));
+                                    ?>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/delete/');?>" class="manage" rel="<?php $this->_('AdminMain.modal.delete_file');?>"><?php $this->_('AdminMain.files.delete');?></a><?php $this->_('AdminMain.!text.closed_parenthesis');?>
+                                    <?php
+                                    $this->Form->end();
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                            if ($i % 3 == 0) {
+                            ?>
+                                </div>
+                                <div class="row">
+                            <?php
+                            }
+                            ?>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+                <?php
+                } else {
+                ?>
+                    <div class="empty_section">
+                        <div class="empty_box"><?php $this->_('AdminMain.files.no_downloads');?></div>
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#downloads a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->Html->safe($this->base_uri);?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+    });
+</script>

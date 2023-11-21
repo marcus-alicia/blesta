@@ -1,0 +1,22 @@
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-share fa-flip-vertical"></i></td>
+                    <th><?php $this->_('DirectAdmin.service_info.username');?></th>
+                    <th><?php $this->_('DirectAdmin.service_info.password');?></th>
+                    <th><?php $this->_('DirectAdmin.service_info.server');?></th>
+                    <th><?php $this->_('DirectAdmin.service_info.options');?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><?php echo (isset($service_fields->direct_admin_username) ? $this->Html->safe($service_fields->direct_admin_username) : null);?></td>
+                    <td><?php echo (isset($service_fields->direct_admin_password) ? $this->Html->safe($service_fields->direct_admin_password) : null);?></td>
+                    <td><?php echo (isset($module_row->meta->host_name) ? $this->Html->safe($module_row->meta->host_name) : null);?></td>
+                    <td><a href="<?php echo $this->Html->safe('http://' . (isset($module_row->meta->host_name) ? $module_row->meta->host_name : null) . ':' . (isset($module_row->meta->port) ? $module_row->meta->port : null));?>" target="_blank"><?php $this->_('DirectAdmin.service_info.option_login');?></a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

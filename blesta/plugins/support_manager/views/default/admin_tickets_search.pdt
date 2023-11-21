@@ -1,0 +1,61 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminTickets.search.boxtitle_tickets', true, (isset($search) ? $this->Html->safe($search) : null)), ['id'=>'admin_tickets'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="inner">
+            <?php
+            if ((isset($tickets) ? $tickets : false) && ($num_tickets = count($tickets)) > 0) {
+            ?>
+            <table class="table" id="tickets">
+                <tr class="heading_row">
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/search/?search=' . (isset($search) ? $search : null) . '&sort=code&order=' . ($sort == 'code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'code' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.search.heading_code');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/search/?search=' . (isset($search) ? $search : null) . '&sort=priority&order=' . ($sort == 'priority' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'priority' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.search.heading_priority');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/search/?search=' . (isset($search) ? $search : null) . '&sort=status&order=' . ($sort == 'status' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'status' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.search.heading_status');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/search/?search=' . (isset($search) ? $search : null) . '&sort=department_name&order=' . ($sort == 'department_name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'department_name' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.search.heading_department_name');?></a></span></td>
+                    <td><?php $this->_('AdminTickets.search.heading_summary');?></td>
+                    <td class="last"><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/search/?sort=last_reply_date&order=' . ($sort == 'last_reply_date' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'last_reply_date' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.search.heading_last_reply_date');?></a></span></td>
+                </tr>
+                <?php
+                // Display all tickets
+                $i = 0;
+                foreach ($tickets as $ticket) {
+                    $highlight = ((isset($ticket->staff_id) ? $ticket->staff_id : null) == (isset($staff_id) ? $staff_id : null));
+                    $odd_row = ($i++%2 == 1);
+                    $tr_class = $this->Html->concat(' ', ($highlight ? 'highlight' : ''), ($odd_row ? 'odd_row' : ''));
+                ?>
+                <tr<?php echo (!empty($tr_class) ? ' class="' . $tr_class . '"' : '');?>>
+                    <td><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/reply/' . (isset($ticket->id) ? $ticket->id : null) . '/');?>"><?php echo (isset($ticket->code) ? $this->Html->safe($ticket->code) : null);?></a></td>
+                    <td><?php echo (isset($priorities[$ticket->priority]) ? $priorities[$ticket->priority] : null);?></td>
+                    <td><?php echo (isset($statuses[$ticket->status]) ? $statuses[$ticket->status] : null);?></td>
+                    <td><?php echo (isset($ticket->department_name) ? $this->Html->safe($ticket->department_name) : null);?></td>
+                    <td>
+                    <?php
+                        $summary = $string->truncate((isset($ticket->summary) ? $ticket->summary : null), ['word_length' => Configure::get('SupportManager.summary_truncate_length')]);
+                        echo (isset($summary) ? $this->Html->safe($summary) : null) . ($summary != (isset($ticket->summary) ? $ticket->summary : null) ? '...' : '');
+                    ?>
+                    </td>
+                    <td class="last"><?php echo (isset($ticket->last_reply_time) ? $this->Html->safe($ticket->last_reply_time) : null);?></td>
+                </tr>
+                <?php
+                }
+                unset($i);
+                ?>
+            </table>
+            <?php
+                // Set pagination
+                $this->Pagination->build();
+            } else {
+            ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminTickets.search.no_results');?>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();

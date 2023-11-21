@@ -1,0 +1,11 @@
+{
+    "version": "1.12.0",
+    "name": "BillingOverviewPlugin.name",
+    "description": "BillingOverviewPlugin.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://blesta.com"
+        }
+    ]
+}

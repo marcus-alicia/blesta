@@ -1,0 +1,33 @@
+
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="pad">
+        <ul>
+            <li>
+                <?php
+                $this->Form->label($this->_('Namecheap.tab_settings.field_registrar_lock', true), 'registrar_lock');
+
+                $this->Form->fieldRadio('registrar_lock', 'true', (isset($vars->registrar_lock) ? $vars->registrar_lock : null) == 'true', ['id' => 'registrar_lock_yes']);
+                $this->Form->label($this->_('Namecheap.tab_settings.field_registrar_lock_yes', true), 'registrar_lock_yes', ['class' => 'inline']);
+
+                $this->Form->fieldRadio('registrar_lock', 'false', (isset($vars->registrar_lock) ? $vars->registrar_lock : null) == 'false', ['id' => 'registrar_lock_no']);
+                $this->Form->label($this->_('Namecheap.tab_settings.field_registrar_lock_no', true), 'registrar_lock_no', ['class' => 'inline']);
+                ?>
+            </li>
+            <li>
+                <?php
+                $this->Form->fieldCheckbox('request_epp', 'true', (isset($vars->request_epp) ? $vars->request_epp : null) == 'true', ['id' => 'request_epp']);
+                $this->Form->label($this->_('Namecheap.tab_settings.field_request_epp', true), 'request_epp', ['class' => 'inline']);
+                ?>
+            </li>
+        </ul>
+    </div>
+    <div class="button_row">
+        <?php
+        $this->Form->fieldSubmit('save', $this->_('Namecheap.tab_settings.field_submit', true), ['class' => 'btn btn-primary float-right']);
+        ?>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>

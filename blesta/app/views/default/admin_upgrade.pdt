@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header p-3 h3">
+            <i class="fas fa-upload"></i>
+            Blesta Upgrader
+            <img class="float-right blesta-logo" src="<?php echo $this->view_dir . 'images/logo-color.svg';?>" alt="Blesta" />
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card bg-light p-3">
+                        <h4>Upgrade via Web Browser</h4>
+                        <p class="m-0">
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'upgrade/process/');?>" class="btn btn-success btn-block btn-lg">
+                                <i class="fas fa-arrow-right"></i> Continue with Upgrade
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card bg-light p-3">
+                        <h4>Upgrade via CLI</h4>
+                        <p>
+                            To upgrade via the command line, run the following from your Blesta installation directory:
+                        </p>
+                        <pre class="rounded bg-dark text-light p-2 m-0">php ./index.php <?php echo Configure::get('Route.admin');?>/upgrade</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

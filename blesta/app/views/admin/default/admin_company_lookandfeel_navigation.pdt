@@ -1,0 +1,219 @@
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $tabs = [
+                    ['name' => $this->_('AdminCompanyLookandfeel.navigation.category_nav_staff', true), 'current' => ((isset($location) ? $location : null) == 'nav_staff' ? true : false), 'attributes' => ['href' => $this->base_uri . 'settings/company/lookandfeel/navigation/nav_staff/', 'class' => 'ajax']],
+                    ['name' => $this->_('AdminCompanyLookandfeel.navigation.category_nav_client', true),'current' => ((isset($location) ? $location : null) == 'nav_client' ? true : false), 'attributes' => ['href' => $this->base_uri . 'settings/company/lookandfeel/navigation/nav_client/', 'class' => 'ajax']],
+                    ['name' => $this->_('AdminCompanyLookandfeel.navigation.category_nav_public', true),'current' => ((isset($location) ? $location : null) == 'nav_public' ? true : false), 'attributes' => ['href' => $this->base_uri . 'settings/company/lookandfeel/navigation/nav_public/', 'class' => 'ajax']]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create($this->_('AdminCompanyLookandfeel.navigation.boxtitle_navigation', true), ['id' => 'admin_company_lookandfeel_navigation'], (isset($render_section) ? $render_section : null));
+
+                $this->Form->create(null, ['id' => 'navigation_form']);
+                ?>
+                <div class="inner">
+                    <div class="row">
+                        <div class="pad col-md-4">
+                            <?php
+                            if ((isset($actions) ? $actions : false) && ($num_actions = count($actions)) > 0) {
+                            ?>
+                            <table class="table table-striped" id="actions">
+                                <thead>
+                                    <tr class="heading_row">
+                                        <td style="display:none;"> </td>
+                                        <td><?php $this->_('AdminCompanyLookandfeel.navigation.heading_action');?></td>
+                                        <td class="last"><?php $this->_('AdminCompanyLookandfeel.navigation.heading_options');?></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    foreach ($actions as $action) {
+                                        $name = !empty($action->name) ? $this->Html->safe($action->name) : $this->_('AdminCompanyLookandfeel.navigation.text_link', true);
+                                    ?>
+                                    <tr>
+                                        <td style="display:none;">
+                                            <span class="data-span" data-action_id="<?php echo (isset($action->id) ? $action->id : null);?>" data-name="<?php echo $name;?>"></span>
+                                        </td>
+                                        <td><span class="tooltip quiet"><a href="#"><?php echo $name;?></a><div><?php (print (isset($action->url) ? $this->Html->safe($action->url) : null));?></div></span></td>
+                                        <td>
+                                            <button class="btn btn-xs btn-primary pull-right add_button"><?php $this->_('AdminCompanyLookandfeel.actions.option_add');?></button>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td class="bg-light border-top" colspan="3">
+                                            <a href="<?php echo $this->base_uri . 'settings/company/lookandfeel/addaction/?location=' . $location;?>" class="btn btn-primary btn-block"><?php $this->_('AdminCompanyLookandfeel.actions.option_add_action');?></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <?php
+                            } else {
+                            ?>
+                            <div class="empty_section">
+                                <div class="empty_box">
+                                    <?php $this->_('AdminCompanyLookandfeel.navigation.no_results_actions');?>
+                                </div>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                        <div class="pad col-md-8">
+                            <div class="title_row first">
+                                <h3><?php $this->_('AdminCompanyLookandfeel.navigation.heading_navigation');?></h3>
+                            </div>
+                            <div class="ui-helper-clearfix"></div>
+                            <div>
+                                <div class="connected-sortable" id="navigation">
+                                    <div class="portlet ui-corner-all" style="display: none;" id="nav_template">
+                                        <div class="portlet-header ui-corner-all">
+                                            <span class="tooltip quiet"><a href="#"></a></span>
+                                            <?php
+                                            $this->Form->fieldHidden('navigation[action_id][]', '0', ['disabled' => 'disabled', 'class' => 'action_id']);
+                                            $this->Form->fieldHidden('navigation[subitem][]', '0', ['disabled' => 'disabled', 'class' => 'subitem']);
+                                            ?>
+                                            <button class="pull-right manage btn btn-xs btn-primary" href="#"><?php $this->_('AdminCompanyLookandfeel.actions.option_remove');?></button>
+                                        </div>
+                                        <div class="portlet-content">
+                                            <div class="connected-sortable">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    foreach ((isset($navigation_items) ? $navigation_items : []) as $navigation_item) {
+                                    ?>
+                                    <div class="portlet ui-corner-all">
+                                        <div class="portlet-header ui-corner-all">
+                                            <span class="tooltip quiet"><a href="#"><?php echo !empty($navigation_item['name']) ? $this->Html->safe($navigation_item['name']) : $this->_('AdminCompanyLookandfeel.navigation.text_link', true);?></a><div><?php (print (isset($navigation_item['url']) ? $this->Html->safe($navigation_item['url']) : null));?></div></span>
+                                            <?php
+                                            $this->Form->fieldHidden('navigation[action_id][]', (isset($navigation_item['action_id']) ? $navigation_item['action_id'] : null), ['class' => 'action_id']);
+                                            $this->Form->fieldHidden('navigation[subitem][]', (isset($navigation_item['parent_id']) ? $navigation_item['parent_id'] : null) !== null ? '1' : '0', ['class' => 'subitem']);
+                                            ?>
+                                            <button class="pull-right manage btn btn-xs btn-primary"><?php $this->_('AdminCompanyLookandfeel.actions.option_remove');?></button>
+                                        </div>
+                                        <div class="portlet-content">
+                                            <div class="connected-sortable">
+                                                <?php
+                                                foreach ((isset($navigation_item['sub']) ? $navigation_item['sub'] : []) as $subitem) {
+                                                ?>
+                                                <div class="portlet ui-corner-all">
+                                                    <div class="portlet-header ui-corner-all">
+                                                        <span class="tooltip quiet"><a href="#"><?php echo (!empty($subitem['name']) ? $this->Html->safe($subitem['name']) : $this->_('AdminCompanyLookandfeel.navigation.text_link', true));?></a><div><?php (print (isset($subitem['url']) ? $this->Html->safe($subitem['url']) : null));?></div></span>
+                                                        <?php
+                                                        $this->Form->fieldHidden('navigation[action_id][]', (isset($subitem['action_id']) ? $subitem['action_id'] : null), ['class' => 'action_id']);
+                                                        $this->Form->fieldHidden('navigation[subitem][]', '1', ['class' => 'subitem']);
+                                                        ?>
+                                                        <button class="pull-right manage btn btn-xs btn-primary"><?php $this->_('AdminCompanyLookandfeel.actions.option_remove');?></button>
+                                                    </div>
+                                                    <div class="portlet-content" style="display: none;">
+                                                        <div class="connected-sortable">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="button_row">
+                                <?php
+                                $this->Form->fieldSubmit('submit', $this->_('AdminCompanyLookandfeel.navigation.text_submit', true), ['class' => 'btn btn-primary pull-right']);
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#actions').on('click', '.add_button', function () {
+            var data_span = $(this).parents('tr').find('.data-span');
+            var action_id = data_span.data('action_id');
+            var name = data_span.data('name');
+
+            var navigation_item = $('#nav_template').clone();
+            navigation_item.find('.action_id').prop('disabled', false).val(action_id);
+            navigation_item.find('.subitem').prop('disabled', false);
+            navigation_item.find('.portlet-header span a').append(name);
+            navigation_item.show().removeAttr('id');
+            $('#navigation').append(navigation_item[0].outerHTML);
+
+            bindSortable();
+            return false;
+        });
+
+        bindSortable();
+
+        $('.portlet')
+            .find('.portlet-header')
+            .addClass( "ui-widget-header" )
+            .prepend('<span class="portlet-toggle"><i class="fas fa-chevron-down"></i></span>');
+
+        $('.portlet .portlet .portlet-toggle').hide();
+
+        $('.portlet-content').toggle();
+        $('#navigation').on('click', '.portlet-toggle', function() {
+            var icon = $(this);
+            icon.find('.fas').toggleClass('fa-chevron-up');
+            icon.find('.fas').toggleClass('fa-chevron-down');
+            icon.closest('.portlet').find('.portlet-content').toggle();
+        });
+        $('#navigation').on('click', 'button.manage', function() {
+            $(this).parents('.portlet').first().remove();
+            return false;
+        });
+    });
+
+    function bindSortable() {
+        $('.connected-sortable').sortable({
+            connectWith: '.connected-sortable',
+            handle: '.portlet-header',
+            placeholder: 'portlet-placeholder',
+            update: function(e, ui) {
+                if ($(ui.item).parents('.portlet').length > 0) {
+                    $(ui.item).find('.portlet-toggle, .portlet-content').hide().
+                        find('.fas').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+
+                    $(ui.item).find('.portlet').find('.portlet-toggle').show();
+                    $(ui.item).find('.portlet').find('.subitem').val('0');
+                    $(ui.item).find('.portlet').appendTo('#navigation');
+                    $(ui.item).find('.subitem').val('1');
+                } else {
+                    $(ui.item).children('.portlet-header').find('.portlet-toggle').show();
+                    $(ui.item).children('.portlet-header').find('.subitem').val('0');
+                }
+            }
+        });
+    }
+</script>

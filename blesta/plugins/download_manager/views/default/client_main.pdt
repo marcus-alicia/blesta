@@ -1,0 +1,117 @@
+
+                <?php
+                // Don't show this container when only rendering the widget section
+                if (!(isset($render_section) ? $render_section : null)) {
+                ?>
+            <div class="col-md-12">
+                <?php
+                }
+                echo (isset($message) ? $message : null);
+
+                $this->WidgetClient->clear();
+                $this->WidgetClient->setStyleSheet($this->view_dir . 'css/styles.css');
+                $this->WidgetClient->create($this->_('ClientMain.index.boxtitle_downloads', true), ['id'=>'download_manager_client_main'], (isset($render_section) ? $render_section : null));
+                $this->WidgetClient->startBody();
+                ?>
+                <div class="downloads">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/client_main/index/');?>">
+                                <?php $this->_('ClientMain.!text.root_directory');?>
+                            </a>
+                        </li>
+                        <?php
+                        if ((isset($category_hierarchy) ? $category_hierarchy : null)) {
+                            $current_category = end($category_hierarchy);
+                            foreach ($category_hierarchy as $index => $cat_item) {
+                                $active = ($current_category->id == $cat_item->id);
+                        ?>
+                        <li class="breadcrumb-item <?php echo ($active ? ' active' : '');?>">
+                            <?php
+                            if (!$active) {
+                            ?>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/client_main/index/' . (isset($cat_item->id) ? $cat_item->id : null) . '/');?>">
+                            <?php
+                            }
+
+                            echo (isset($cat_item->name) ? $this->Html->safe($cat_item->name) : null);
+
+                            if (!$active) {
+                            ?>
+                            </a>
+                            <?php
+                            }
+                            ?>
+                        </li>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </ol>
+
+                    <div class="row px-2">
+                        <?php
+                        if (!empty($category->description)) {
+                        ?>
+                        <div class="col-md-12 pb-2">
+                            <?php echo $this->TextParser->encode('markdown', $category->description);?>
+                        </div>
+                        <?php
+                        }
+
+                        if (!empty($categories) || !empty($files)) {
+                            $columns = 1;
+                            foreach ((isset($categories) ? $categories : []) as $category) {
+                            ?>
+                            <div class="col-md-4">
+                                <i class="fas fa-folder fa-fw"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/client_main/index/' . (isset($category->id) ? $category->id : null) . '/');?>">
+                                    <?php echo (isset($category->name) ? $this->Html->safe($category->name) : null);?>
+                                </a>
+                            </div>
+                            <?php
+                            }
+                            foreach ((isset($files) ? $files : []) as $file) {
+                            ?>
+                            <div class="col-md-4">
+                                <i class="fas fa-file-alt fa-fw"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/client_main/download/' . (isset($file->id) ? $file->id : null) . '/' . rawurlencode((isset($file->name) ? $file->name : null) . (isset($file->extension) ? $file->extension : null)));?>">
+                                    <?php echo $this->Html->safe((isset($file->name) ? $file->name : null) . (isset($file->extension) ? $file->extension : null));?>
+                                </a>
+                            </div>
+                            <?php
+                            }
+                        }
+                        else {
+                        ?>
+                        <div class="col-md-12 p-0">
+                            <div class="alert alert-info">
+                                <?php
+                                if ((isset($total_files) ? $total_files : null) && !(isset($client_id) ? $client_id : null)) {
+                                ?>
+                                    <p><?php $this->_('ClientMain.index.login');?></p>
+                                <?php
+                                } else {
+                                ?>
+                                    <p><?php $this->_('ClientMain.index.no_downloads');?></p>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->WidgetClient->endBody();
+                $this->WidgetClient->end();
+
+                // Don't show this container when only rendering the widget section
+                if (!(isset($render_section) ? $render_section : null)) {
+                ?>
+            </div>
+                <?php
+                }
+                ?>

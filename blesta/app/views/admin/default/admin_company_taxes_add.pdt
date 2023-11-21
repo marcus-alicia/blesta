@@ -1,0 +1,86 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyTaxes.add.boxtitle_add', true));
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.add.field.type', true), 'type', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.!tooltip.type');?></div></span>
+                                <?php $this->Form->fieldSelect('type', (isset($tax_types) ? $tax_types : null), (isset($vars->type) ? $vars->type : null), ['id' => 'type', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.add.field.level', true), 'level1', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.!tooltip.level');?></div></span>
+                                <span class="input_span block">
+                                    <?php
+                                    $this->Form->fieldRadio('level', '1', ((isset($vars->level) ? $vars->level : '1') == '1'), ['id' => 'level1']);
+                                    $this->Form->label($this->_('AdminCompanyTaxes.add.field.level1', true), 'level1', ['class' => 'inline']);
+                                    $this->Form->fieldRadio('level', '2', ((isset($vars->level) ? $vars->level : null) == '2'), ['id' => 'level2']);
+                                    $this->Form->label($this->_('AdminCompanyTaxes.add.field.level2', true), 'level2', ['class' => 'inline']);
+                                    ?>
+                                </span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.add.field.name', true), 'name', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.!tooltip.name');?></div></span>
+                                <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.add.field.amount', true), 'amount', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.!tooltip.amount');?></div></span>
+                                <span class="input_span block">
+                                    <?php $this->Form->fieldText('amount', (isset($vars->amount) ? $vars->amount : null), ['id' => 'amount']);?>%
+                                </span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.add.field.country', true), 'country', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.!tooltip.country');?></div></span>
+                                <?php $this->Form->fieldSelect('country', (isset($countries) ? $countries : null), (isset($vars->country) ? $vars->country : null), ['id' => 'country', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.add.field.state', true), 'state', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.!tooltip.state');?></div></span>
+                                <?php $this->Form->fieldSelect('state', (isset($states) ? $states : null), (isset($vars->state) ? $vars->state : null), ['id' => 'state', 'class' => 'block']);?>
+                            </li>
+                        </ul>
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminCompanyTaxes.add.field.addsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                        </div>
+
+                        <?php $this->Form->end();?>
+                    </div>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+
+    <?php
+    $this->Javascript->setInline('
+        $(document).ready(function() {
+            $("#country").change(function() {
+                $(this).blestaRequest("get", "' . $this->Html->safe($this->base_uri . 'settings/company/taxes/getstates/') . '" + $(this).val(), null, function(data) {
+                        // Remove all existing items
+                        $("option", "#state").remove();
+
+                        // Append all new items
+                        $.each($(this).blestaSortObject(data), function(index, item) {
+                            $("#state").append( new Option(item.value, item.key));
+                        });
+                    },
+                    null,
+                    {dataType: "json"}
+                );
+            });
+        });
+    ');
+    ?>

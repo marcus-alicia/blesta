@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="card">
+        <div class="card-header p-3 h3">
+            <i class="fas fa-download"></i>
+            Blesta Installer
+            <img class="float-right blesta-logo" src="<?php echo $this->view_dir . 'images/logo-color.svg';?>" alt="Blesta" />
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card bg-light p-3">
+                        <h4>Install via Web Browser</h4>
+                        <p class="m-0">
+                            <a href="<?php echo $this->Html->safe(WEBDIR . 'install/process/');?>" class="btn btn-success btn-block btn-lg">
+                                <i class="fas fa-arrow-right fa-fw"></i> Continue with Installation
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card bg-light p-3">
+                        <h4>Install via CLI</h4>
+                        <p>
+                            To install via the command line, run:
+                        </p>
+                        <pre class="rounded bg-dark text-light p-2 m-0">cd <?php echo DOCROOTDIR;?>
+
+php <?php echo '.' . DS . str_replace(DOCROOTDIR, '', ROOTWEBDIR);?>index.php install</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

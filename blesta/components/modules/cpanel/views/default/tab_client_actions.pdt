@@ -1,0 +1,39 @@
+
+    <div id="change_password">
+        <h4><?php $this->_('Cpanel.tab_client_actions.change_password');?></h4>
+
+        <?php
+        $this->Form->create($this->base_uri . 'services/manage/' . ($service_id ?? null) . '/tabClientActions/');
+        ?>
+        <div class="col-md-12">
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('Cpanel.tab_client_actions.field_cpanel_password', true), 'cpanel_password');
+                ?>
+                <div class="row">
+                    <div class="col-md-9">
+                        <?php
+                        $this->Form->fieldPassword('cpanel_password', ['id' => 'cpanel_password', 'class'=>'form-control cpanel_password', 'placeholder'=>$this->_('Cpanel.tab_client_actions.field_cpanel_password', true)]);
+                        ?>
+                    </div>
+                    <div class="col-md-3">
+                        <a class="btn btn-block btn-info generate-password" href="#" data-options="<?php echo (isset($password_options) ? $this->Html->safe($password_options) : null);?>" data-length="<?php echo (isset($password_length) ? $this->Html->safe($password_length) : null);?>" data-base-url="<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null);?>" data-for-class="cpanel_password">
+                            <i class="fas fa-sync-alt"></i> <?php $this->_('Cpanel.service_field.text_generate_password');?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('Cpanel.tab_client_actions.field_cpanel_confirm_password', true), 'cpanel_password');
+                $this->Form->fieldPassword('cpanel_confirm_password', ['id' => 'cpanel_confirm_password', 'class'=>'form-control', 'placeholder'=>$this->_('Cpanel.tab_client_actions.field_cpanel_confirm_password', true)]);
+                ?>
+            </div>
+        </div>
+        <button class="btn btn-light float-right">
+            <i class="fas fa-edit"></i> <?php $this->_('Cpanel.tab_client_actions.field_password_submit');?>
+        </button>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>

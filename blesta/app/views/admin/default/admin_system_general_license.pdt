@@ -1,0 +1,32 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemGeneral.license.boxtitle_license', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemGeneral.license.field.license_key', true), 'license_key', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemGeneral.!tooltip.license_key');?></div></span>
+                                <?php $this->Form->fieldText('license_key', (isset($vars['license_key']) ? $vars['license_key'] : null), ['id' => 'license_key', 'class' => 'block']);?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemGeneral.license.field.licensesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

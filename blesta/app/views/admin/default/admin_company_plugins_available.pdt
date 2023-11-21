@@ -1,0 +1,94 @@
+        <?php
+        // Show the nav
+        if ((isset($show_left_nav) ? $show_left_nav : null)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        }
+
+        $tabs = [];
+        foreach ((isset($link_tabs) ? $link_tabs : []) as $tab) {
+            $tabs[] = [
+                'name' => $tab['name'],
+                'current' => ($tab['uri'] == 'available'),
+                'attributes' => [
+                    'href' => $this->base_uri . 'settings/company/plugins/' . $tab['uri'] . '/',
+                    'class' => 'ajax'
+                ]
+            ];
+        }
+        ?>
+
+        <div<?php echo (isset($show_left_nav) ? $show_left_nav : null) ? ' id="right_outer"' : '';?>>
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create($this->_('AdminCompanyPlugins.available.boxtitle_plugins', true), ['id' => 'admin_company_plugins_available'], (isset($render_section) ? $render_section : null));
+                ?>
+                <div class="inner">
+                    <?php
+                    $num_plugins = count((isset($plugins) ? $plugins : []));
+                    if ($num_plugins > 0) {
+                        // List all plugins
+                        for ($i = 0; $i < $num_plugins; $i++) {
+                        ?>
+                        <div class="itemlist<?php echo ($i == $num_plugins - 1) ? ' last' : '';?>">
+                            <div class="logo<?php echo ((isset($plugins[$i]->installed) ? $plugins[$i]->installed : false) ? ' installed' : '');?>">
+                                <span><img src="<?php (print (isset($plugins[$i]->logo) ? $this->Html->safe($plugins[$i]->logo) : null));?>" /></span>
+                            </div>
+                            <ul>
+                                <li><strong><?php (print (isset($plugins[$i]->name) ? $this->Html->safe($plugins[$i]->name) : null));?></strong> <?php $this->_('AdminCompanyPlugins.available.text_version', false, (isset($plugins[$i]->version) ? $this->Html->safe($plugins[$i]->version) : null));?></li>
+                                <li>
+                                    <?php $this->_('AdminCompanyPlugins.available.text_author');?>
+                                    <?php
+                                    foreach ((array)(isset($plugins[$i]->authors) ? $plugins[$i]->authors : null) as $index => $author) {
+                                    ?>
+                                    <a href="<?php (print (isset($author['url']) ? $this->Html->safe($author['url']) : null));?>" target="_blank"><?php (print (isset($author['name']) ? $this->Html->safe($author['name']) : null));?></a><?php echo isset($plugins[$i]->authors[$index + 1]) ? ',' : '';?>
+                                    <?php
+                                    }
+                                    ?>
+                                </li>
+                                <li><?php echo nl2br((isset($plugins[$i]->description) ? $this->Html->safe($plugins[$i]->description) : ''))?></li>
+                            </ul>
+                            <?php
+                            // Show install button if this plugin is currently not installed
+                            if (!(isset($plugins[$i]->installed) ? $plugins[$i]->installed : true)) {
+                            ?>
+                            <div class="button_row_inline">
+                                <?php
+                                $this->Form->create($this->base_uri . 'settings/company/plugins/install/' . (isset($plugins[$i]->dir) ? $plugins[$i]->dir : null) . '/', ['class' => 'disable-on-submit']);
+                                $this->Form->fieldHidden('id', (isset($plugins[$i]->dir) ? $plugins[$i]->dir : null));
+                                $this->Form->fieldSubmit('save', $this->_('AdminCompanyPlugins.available.btn_install', true), ['class' => 'btn btn-primary pull-right']);
+                                $this->Form->end();
+                                ?>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                            <div class="clear"></div>
+                        </div>
+                        <?php
+                        }
+                    } else {
+                        // No plugins available
+                        ?>
+                        <div class="empty_section">
+                            <div class="empty_box">
+                                <?php $this->_('AdminCompanyPlugins.available.text_none');?>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#right_container .itemlist .button_row_inline form').on('submit', function() {
+            $(this).find('input[type="submit"]').css({"pointer-events":"none", "cursor":"default"});
+        });
+    });
+</script>

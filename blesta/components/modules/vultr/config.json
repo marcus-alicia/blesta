@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "name": "Vultr.name",
+    "description": "Vultr.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "vultr_hostname"
+    },
+    "service": {
+        "name_key": "vultr_hostname"
+    },
+    "module": {
+        "row": "Vultr.module_row",
+        "rows": "Vultr.module_row_plural",
+        "row_key": "account_name"
+    },
+    "email_tags": {
+        "module": ["server_name", "host_name"],
+        "package": ["server_type"],
+        "service": ["vultr_hostname", "vultr_location"]
+    }
+}

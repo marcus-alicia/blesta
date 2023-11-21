@@ -1,0 +1,122 @@
+<div id="authorizenet-cc-form">
+    <div id="cc-element">
+        <?php
+        if (($meta['sandbox'] ?? 'false') == 'true') {
+            ?>
+            <script type="text/javascript" src="https://jstest.authorize.net/v1/Accept.js" charset="utf-8"></script>
+        <?php
+        } else {
+        ?>
+            <script type="text/javascript" src="https://js.authorize.net/v1/Accept.js" charset="utf-8"></script>
+            <?php
+        }
+        ?>
+
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('AuthorizeNetAcceptjs.field_number', true), 'cardNumber');
+            $this->Form->fieldText('cardNumber', null, ['id' => 'cardNumber', 'maxlength' => '16', 'placeholder' => $this->_('AuthorizeNetAcceptjs.field_number', true)]);
+            ?>
+        </div>
+        <div class="form-group">
+            <?php $this->Form->label($this->_('AuthorizeNetAcceptjs.field_security', true), 'cardCode');?>
+            <?php $this->Form->fieldText('cardCode', null, ['id' => 'cardCode', 'maxlength' => '4', 'placeholder' => $this->_('AuthorizeNetAcceptjs.field_security', true)]);?>
+        </div>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('AuthorizeNetAcceptjs.field_expiration', true), 'expMonth');
+            $this->Form->fieldSelect('expMonth', ($expiration['months'] ?? null), null, ['id' => 'expMonth']);
+            $this->Form->fieldSelect('expYear', ($expiration['years'] ?? null), null, ['id' => 'expYear']);
+            ?>
+        </div>
+    </div>
+
+    <!-- Used to display form errors. -->
+    <div id="cc-errors" class="text-danger" role="alert"></div>
+
+    <?php
+    $this->Form->fieldHidden('dataValue', '', ['id' => 'dataValue']);
+    $this->Form->fieldHidden('dataDescriptor', '', ['id' => 'dataDescriptor']);
+    $this->Form->fieldHidden('reference_id', '', ['id' => 'reference_id']);
+    $this->Form->fieldHidden('client_reference_id', '', ['id' => 'client_reference_id']);
+    $this->Form->fieldHidden('last4', '', ['id' => 'last4']);
+    $this->Form->fieldHidden('expiration', '', ['id' => 'expiration']);
+    ?>
+
+    <script>
+        $(document).ready(function() {
+            $(this).blestaSetHeadTag("link", {media:"screen", type:"text/css", rel:"stylesheet", href: "<?php echo $this->Html->safe($this->view_dir . 'css/styles.css');?>"});
+
+            // Process form
+            $('#authorizenet-cc-form').closest('form').on('submit', processCard);
+
+            // Disable form if SSL is not available
+            if (location.protocol !== "https:") {
+                $('#authorizenet-cc-form .form-group *').attr('disabled', true);
+                $('#authorizenet-cc-form').closest('form').find('button[type="submit"]').attr('disabled', true);
+            }
+
+            function processCard(event) {
+                event.preventDefault();
+
+                // Disable ACH form
+                if ($('select[name="payment_type"]').val() === 'cc') {
+                    $('input,select,textarea', '#payment_details_ach').attr('disabled', true);
+                }
+
+                // Send data to Authorize.net
+                var authData = {};
+                authData.clientKey = '<?php echo $this->Html->safe($client_key ?? ''); ?>';
+                authData.apiLoginID = '<?php echo $this->Html->safe($meta['login_id'] ?? ''); ?>';
+
+                var cardData = {};
+                cardData.cardNumber = $('#authorizenet-cc-form #cardNumber').val();
+                cardData.month = $('#authorizenet-cc-form #expMonth').val();
+                cardData.year = $('#authorizenet-cc-form #expYear').val();
+                cardData.cardCode = $('#authorizenet-cc-form #cardCode').val();
+                cardData.fullName = $('#first_name').val();
+                cardData.zip = $('#zip').val();
+
+                // Dispatch data
+                var secureData = {};
+                secureData.authData = authData;
+                secureData.cardData = cardData;
+
+                Accept.dispatchData(secureData, responseHandler);
+            }
+
+            function responseHandler(response) {
+                if (response.messages.resultCode !== "Error") {
+                    $('#authorizenet-cc-form #dataValue').val(response.opaqueData.dataValue);
+                    $('#authorizenet-cc-form #dataDescriptor').val(response.opaqueData.dataDescriptor);
+
+                    // Pass the serialized opaque data as the reference id
+                    var card = $('#cardNumber').val();
+                    var masked_card = card.substring(0, 4);
+
+                    for (let i = 4; i < card.length; i++) {
+                        masked_card += '0';
+                    }
+
+                    $('#authorizenet-cc-form #reference_id').val(response.opaqueData.dataValue + '|' + response.opaqueData.dataDescriptor);
+                    $('#authorizenet-cc-form #client_reference_id').val(masked_card);
+                    $('#authorizenet-cc-form #last4').val(card.substring(card.length-4, card.length));
+                    $('#authorizenet-cc-form #expiration').val($('#expYear').val() + $('#expMonth').val());
+
+                    // Remove secure data
+                    $('#authorizenet-cc-form #cc-element *').attr('disabled', true);
+                    $('#authorizenet-cc-form #cc-errors').text('');
+                } else {
+                    // Restore secure data
+                    $('#authorizenet-cc-form #cc-element *').attr('disabled', false);
+                    $('#authorizenet-cc-form #cc-errors').text(response.messages.text);
+                }
+
+                $('#authorizenet-cc-form').closest('form').off('submit', processCard);
+                $(this).blestaEnableFormSubmission($('#authorizenet-cc-form').closest('form'));
+                $('#authorizenet-cc-form').closest('form').submit();
+            }
+        });
+    </script>
+</div>
+

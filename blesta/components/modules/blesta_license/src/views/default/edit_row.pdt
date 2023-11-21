@@ -1,0 +1,44 @@
+		<?php
+		$this->Widget->clear();
+		$this->Widget->create($this->_("BlestaLicense.edit_row.box_title", true));
+		?>
+		<div class="inner">
+			<?php
+			$this->Form->create();
+			?>
+			<div class="title_row first">
+				<h3><?php $this->_("BlestaLicense.edit_row.basic_title");?></h3>
+			</div>
+			<div class="pad">
+				<ul>
+					<li>
+						<?php
+						$this->Form->label($this->_("BlestaLicense.row_meta.username", true), "username");
+						$this->Form->fieldText("username", $this->Html->ifSet($vars->username), array('id' => "username"));
+						?>
+                        <span class="tooltip"><?php $this->_("AppController.tooltip.text");?><div><?php $this->_("BlestaLicense.!tooltip.username");?></div></span>
+					</li>
+                    <li>
+						<?php
+						$this->Form->label($this->_("BlestaLicense.row_meta.password", true), "password");
+						$this->Form->fieldText("password", $this->Html->ifSet($vars->password), array('id' => "password"));
+						?>
+                        <span class="tooltip"><?php $this->_("AppController.tooltip.text");?><div><?php $this->_("BlestaLicense.!tooltip.password");?></div></span>
+					</li>
+                    <li>
+						<?php
+						$this->Form->fieldCheckbox("test_mode", "true", $this->Html->ifSet($vars->test_mode) == "true", array('id' => "test_mode"));
+                        $this->Form->label($this->_("BlestaLicense.row_meta.test_mode", true), "test_mode", array('class' => "inline"));
+						?>
+					</li>
+				</ul>
+			</div>
+
+			<div class="button_row"><a class="btn btn-primary pull-right submit" href="#"><?php $this->_("BlestaLicense.edit_row.edit_btn");?></a></div>
+			<?php
+			$this->Form->end();
+			?>
+		</div>
+		<?php
+		$this->Widget->end();
+		?>

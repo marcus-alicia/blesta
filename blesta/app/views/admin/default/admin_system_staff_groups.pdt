@@ -1,0 +1,92 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminSystemStaff.groups.categorylink_addgroup', true),
+                            'href' => $this->base_uri . 'settings/system/staff/addgroup/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminSystemStaff.groups.boxtitle_groups', true), ['id' => 'admin_system_staff_groups'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($groups) ? $groups : false) && ($num_groups = count($groups)) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/staff/groups/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemStaff.groups.heading_name');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/staff/groups/?sort=company_name&order=' . ($sort == 'company_name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'company_name' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemStaff.groups.heading_company_name');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/staff/groups/?sort=num_staff&order=' . ($sort == 'num_staff' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'num_staff' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemStaff.groups.heading_staff');?></a></span></td>
+                        <td class="last"><span><?php $this->_('AdminSystemStaff.groups.heading_options');?></span></td>
+                    </tr>
+                    <?php
+                    for ($i = 0; $i < $num_groups; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($groups[$i]->name) ? $this->Html->safe($groups[$i]->name) : null));?></td>
+                        <td><?php (print (isset($groups[$i]->company_name) ? $this->Html->safe($groups[$i]->company_name) : null));?></td>
+                        <td><?php (print (isset($groups[$i]->num_staff) ? $this->Html->safe($groups[$i]->num_staff) : null));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'settings/system/staff/editgroup/' . (isset($groups[$i]->id) ? $this->Html->safe($groups[$i]->id) : null) . '/';?>"><?php $this->_('AdminSystemStaff.groups.option_edit');?></a><?php echo ((isset($groups[$i]->num_staff) ? $this->Html->safe($groups[$i]->num_staff) : null) == 0) ? ',' : '';?>
+                        <?php
+                        if ((isset($groups[$i]->num_staff) ? $this->Html->safe($groups[$i]->num_staff) : null) == 0) {
+                        ?>
+                            <?php
+                            $this->Form->create($this->base_uri . 'settings/system/staff/deletegroup/');
+                            $this->Form->fieldHidden('id', (isset($groups[$i]->id) ? $groups[$i]->id : null));
+                            ?>
+                            <a class="manage" href="<?php echo $this->base_uri . 'settings/system/staff/deletegroup/' . (isset($groups[$i]->id) ? $this->Html->safe($groups[$i]->id) : null) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminSystemStaff.groups.modal_delete', true));?>"><?php $this->_('AdminSystemStaff.groups.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        <?php
+                        }
+                        ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminSystemStaff.groups.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#admin_system_staff_groups a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

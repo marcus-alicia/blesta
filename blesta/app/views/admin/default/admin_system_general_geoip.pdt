@@ -1,0 +1,71 @@
+
+        <?php
+        echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminSystemGeneral.geoip.boxtitle_geoip', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+
+                // Set a placeholder value so submissions may be posted when no checkboxes are checked
+                $this->Form->fieldHidden('update', 'true');
+
+                $geoip_database_path = ((isset($uploads_dir) ? $uploads_dir : null) . 'system' . DS . (isset($geoip_database_filename) ? $geoip_database_filename : null));
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <p><?php $this->_('AdminSystemGeneral.geoip.text_setup');?></p>
+
+                        <p>
+                            <?php $this->_('AdminSystemGeneral.geoip.text_geolite', false, 'https://www.maxmind.com');?>
+                            <br />
+                            <code><?php (print (isset($geoip_database_path) ? $this->Html->safe($geoip_database_path) : null)); ?></code>
+                        </p>
+                        <ol>
+                            <li><a target="_blank" href="https://www.maxmind.com/en/geolite2/signup"><?php $this->_('AdminSystemGeneral.geoip.text_geolite_step_1');?></a></li>
+                            <li><?php $this->_('AdminSystemGeneral.geoip.text_geolite_step_2');?></li>
+                            <li><?php $this->_('AdminSystemGeneral.geoip.text_geolite_step_3');?></li>
+                            <li><?php $this->_('AdminSystemGeneral.geoip.text_geolite_step_4');?></li>
+                            <li><?php $this->_('AdminSystemGeneral.geoip.text_geolite_step_5');?></li>
+                        </ol>
+
+                        <ul>
+                            <li>
+                                <?php
+                                if ((isset($geoip_database_exists) ? $geoip_database_exists : false)) {
+                                ?>
+                                <i class="fas fa-check"></i>
+                                <span><?php echo $this->_('AdminSystemGeneral.geoip.text_database_exists', false, $this->Html->safe($geoip_database_path));?></span>
+                                <?php
+                                } else {
+                                ?>
+                                <i class="fas fa-ban"></i>
+                                <span><?php echo $this->_('AdminSystemGeneral.geoip.text_database_not_exists', false, $this->Html->safe($geoip_database_path));?></span>
+                                <?php
+                                }
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('geoip_enabled', 'true', ((isset($vars['geoip_enabled']) ? $vars['geoip_enabled'] : null) == 'true'), ['id' => 'geoip_enabled']);
+                                $this->Form->label($this->_('AdminSystemGeneral.geoip.field_geoip_enabled', true), 'geoip_enabled', ['class' => 'inline']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemGeneral.geoip.field_geoipsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

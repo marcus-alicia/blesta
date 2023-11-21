@@ -1,0 +1,5 @@
+
+    <?php
+    $this->Form->create();
+    $this->Form->fieldSubmit('submit_kassacompleet', $this->_('Kassacompleet.buildprocess.submit', true));
+    $this->Form->end();

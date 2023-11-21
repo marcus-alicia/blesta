@@ -1,0 +1,148 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons([]);
+        $this->Widget->create($this->_('Ispmanager.add_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            $this->Form->fieldHidden('account_count', (isset($vars->account_count) ? $vars->account_count : 0));
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('Ispmanager.add_row.basic_title'); ?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Ispmanager.row_meta.server_name', true), 'server_name');
+                        $this->Form->fieldText('server_name', (isset($vars->server_name) ? $vars->server_name : null));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Ispmanager.row_meta.host_name', true), 'host_name');
+                        $this->Form->fieldText('host_name', (isset($vars->host_name) ? $vars->host_name : null));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Ispmanager.row_meta.user_name', true), 'user_name');
+                        $this->Form->fieldText('user_name', (isset($vars->user_name) ? $vars->user_name : null));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Ispmanager.row_meta.password', true), 'password');
+                        $this->Form->fieldPassword('password');
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('use_ssl', 'true', (isset($vars->use_ssl) ? $vars->use_ssl : 'true') == 'true', ['id' => 'use_ssl']);
+                        $this->Form->label($this->_('Ispmanager.row_meta.use_ssl', true), 'use_ssl', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Ispmanager.row_meta.account_limit', true), 'account_limit');
+                        $this->Form->fieldText('account_limit', (isset($vars->account_limit) ? $vars->account_limit : null));
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('Ispmanager.add_row.name_servers_title'); ?></h3>
+            </div>
+            <div class="pad">
+                <div class="links_row">
+                    <a class="btn btn-default float-right btn-sm ns_row_add" href="#"><i class="fas fa-plus"></i> <span><?php $this->_('Ispmanager.add_row.name_server_btn'); ?></span></a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="heading_row">
+                            <td><?php $this->Form->label($this->_('Ispmanager.add_row.name_server_col', true)); ?></td>
+                            <td><?php $this->Form->label($this->_('Ispmanager.add_row.name_server_host_col', true)); ?></td>
+                            <td class="last"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $num_servers = count((isset($vars->name_servers) ? $vars->name_servers : []));
+                        for ($i = 0; $i < max(2, $num_servers); $i++) {
+                            ?>
+                        <tr class="ns_row<?php echo ($i % 2 == 1) ? ' odd_row' : ''; ?>">
+                            <td><?php $this->_('Ispmanager.add_row.name_server', false, '<span>' . ($i + 1) . '</span>'); ?></td>
+                            <td><?php $this->Form->fieldText('name_servers[]', (isset($vars->name_servers[$i]) ? $vars->name_servers[$i] : null)); ?></td>
+                            <td><a href="#" class="manage ns_row_remove"><?php $this->_('Ispmanager.add_row.remove_name_server'); ?></a></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('Ispmanager.add_row.notes_title'); ?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldTextarea('notes', (isset($vars->notes) ? $vars->notes : null));
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('Ispmanager.add_row.add_btn', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+$(document).ready(function() {
+    // Add a row
+    $('.ns_row_add').click(function() {
+        var fields = $('tr.ns_row:first').clone(true);
+        $(fields).find('input').val('');
+        $('td:first span', fields).text($('tr.ns_row').length+1);
+        $('tr.ns_row:last').after(fields);
+        updateNsRows();
+        return false;
+    });
+    // Remove a row
+    $('.ns_row_remove').click(function() {
+        if ($('tr.ns_row').length > 1) {
+            $(this).closest('tr').remove();
+            // Reorder the counts for these rows
+            $i=1;
+            $('tr.ns_row').each(function() {
+                $('td:first span', this).text($i++);
+            });
+        }
+        updateNsRows();
+        return false;
+    });
+});
+
+// Zebra-stripe pricing rows
+function updateNsRows() {
+    var i = 0;
+    $('tr.ns_row').each(function() {
+        if (i++%2 == 1)
+            $(this).addClass('odd_row');
+        else
+            $(this).removeClass('odd_row');
+    });
+}
+</script>

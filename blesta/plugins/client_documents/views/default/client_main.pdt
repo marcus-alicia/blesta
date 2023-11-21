@@ -1,0 +1,65 @@
+        <?php
+        // Don't show this container when only rendering the widget section
+        if (!(isset($render_section) ? $render_section : null)) {
+        ?>
+    <div class="col-md-12">
+        <?php
+        }
+        echo (isset($message) ? $message : null);
+
+        $this->WidgetClient->clear();
+        $this->WidgetClient->create($this->_('ClientMain.index.boxtitle_documents', true), ['id'=>'client_main'], (isset($render_section) ? $render_section : null));
+        $this->WidgetClient->startBody();
+
+        if (!empty($documents)) {
+        ?>
+        <div class="table-responsive">
+            <table class="table table-curved table-striped">
+                <thead>
+                    <tr>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/client_documents/client_main/index/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('ClientMain.index.heading_name');?></a></th>
+                        <th><?php $this->_('ClientMain.index.heading_description');?></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/client_documents/client_main/index/?sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('ClientMain.index.heading_date_added');?></a></th>
+                        <th class="last"><?php $this->_('ClientMain.index.heading_options');?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($documents as $document) {
+                    ?>
+                    <tr>
+                        <td><?php echo (isset($document->name) ? $this->Html->safe($document->name) : null);?></td>
+                        <td><?php echo (isset($document->description) ? $this->Html->safe($document->description) : null);?></td>
+                        <td><?php echo $this->Date->cast($document->date_added);?></td>
+                        <td>
+
+                            <a class="btn btn-xs btn-light" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/client_documents/client_main/download/' . (isset($document->id) ? $document->id : null));?>">
+                                <i class="fas fa-download fa-fw"></i> <?php $this->_('ClientMain.index.option_download');?>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        } else {
+        ?>
+        <div class="alert alert-info">
+            <p><?php $this->_('ClientMain.index.no_results');?></p>
+        </div>
+        <?php
+        }
+
+        $this->WidgetClient->endBody();
+        $this->WidgetClient->end();
+
+        // Don't show this container when only rendering the widget section
+        if (!(isset($render_section) ? $render_section : null)) {
+        ?>
+    </div>
+        <?php
+        }
+        ?>

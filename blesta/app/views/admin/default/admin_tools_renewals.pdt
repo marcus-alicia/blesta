@@ -1,0 +1,81 @@
+        <?php
+        echo ($message ?? null);
+
+        $this->Widget->create($this->_('AdminTools.renewals.boxtitle_renewals', true), ['id' => 'admin_tools_renewals'], ($render_section ?? null));
+        ?>
+
+    <div class="inner">
+        <?php
+        if (($num_services = count($services ?? [])) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/renewals/?sort=client_id_code&order=' . ($sort == 'client_id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'client_id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.renewals.heading_client');?></a></span></td>
+                <td><?php $this->_('AdminTools.renewals.heading_service_id');?></td>
+                <td><?php $this->_('AdminTools.renewals.heading_invoice');?></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/renewals/?sort=failed_attempts&order=' . ($sort == 'failed_attempts' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'failed_attempts' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.renewals.heading_failed_attempts');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/renewals/?sort=maximum_attempts&order=' . ($sort == 'maximum_attempts' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'maximum_attempts' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.renewals.heading_maximum_attempts');?></a></span></td>
+                <td><span><?php $this->_('AdminTools.renewals.heading_options');?></span></td>
+
+            </tr>
+            <?php
+            // Display all services
+            for ($i = 0; $i < $num_services; $i++) {
+            ?>
+            <tr>
+                <td><span class="tooltip quiet"><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . ($services[$i]->client_id ?? null) . '/');?>"><?php (print $this->Html->safe($services[$i]->client_id_code ?? null));?></a><div><?php echo $this->Html->safe($services[$i]->client_first_name ?? null) . ' ' . $this->Html->safe($services[$i]->client_last_name ?? null);?></div></span></td>
+                <td><span class="tooltip quiet"><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/editservice/' . ($services[$i]->client_id ?? null) . '/' . ($services[$i]->id ?? null) . '/');?>"><?php (print $this->Html->safe($services[$i]->id_code ?? null));?></a><div><?php echo $this->Html->safe($services[$i]->name ?? null);?></div></span></td>
+                <td><a href="<?php echo $this->base_uri . 'clients/viewinvoice/' . ($services[$i]->client_id ?? null) . '/' . ($services[$i]->renewal_invoice_id ?? null) . '/';?>"><?php $this->_('AdminTools.renewals.option_view');?></a></td>
+                <td><?php echo $services[$i]->failed_attempts; ?></td>
+                <td><?php echo $services[$i]->maximum_attempts; ?></td>
+                <td>
+                    <a class="manage" href="<?php echo $this->base_uri . 'tools/dequeue/' . $this->Html->safe($services[$i]->id) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminTools.renewals.confirm_dequeue', true));?>">
+                        <?php $this->_('AdminTools.renewals.option_dequeue');?></a>,
+                    <a href="<?php echo $this->base_uri . 'tools/changemaxattempts/' . $this->Html->safe($services[$i]->id) . '/';?>" class="modal"><?php $this->_('AdminTools.renewals.option_change_max');?></a>
+
+                </td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+        <?php
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminTools.renewals.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+    </div>
+        <?php
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(this).blestaBindToolTips();
+
+        // Handle confirmation
+        $('#admin_tools_renewals a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>'});
+
+
+        // Load modal content
+        $('#admin_tools_renewals .table a.modal').each(function() {
+            $(this).blestaModal({
+                close: '<?php $this->_('AppController.modal.text_close');?>',
+                url: $(this).attr('href'),
+                onShow: function (event, api) {
+                    var qtip = $('#' + api._id);
+
+                    qtip.addClass('common_box_modal');
+                    qtip.find('.qtip-content').removeClass('qtip-content');
+                }
+            });
+        });
+    });
+</script>

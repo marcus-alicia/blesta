@@ -1,0 +1,137 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminMain.service.boxtitle_pricing', true, (isset($service->package->name) ? $service->package->name : null), (isset($service->name) ? $service->name : null)), ['id'=>'reassign_pricing'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create(null, ['id' => 'reassign_pricing_service']);
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('AdminMain.service.heading_information');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_package_name');?>
+                        <?php echo (isset($service->package->name) ? $this->Html->safe($service->package->name) : null);?>
+                    </li>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_label');?>
+                        <?php echo (isset($service->name) ? $this->Html->safe($service->name) : null);?>
+                    </li>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_qty');?>
+                        <?php echo (isset($service->qty) ? $this->Html->safe($service->qty) : null);?>
+                    </li>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_term');?>
+                        <?php
+                        if ((isset($service->package_pricing->period) ? $service->package_pricing->period : null) == 'onetime') {
+                            echo (isset($periods[$service->package_pricing->period]) ? $this->Html->safe($periods[$service->package_pricing->period]) : null);
+                        } else {
+                            $term = (isset($service->package_pricing->term) ? $this->Html->safe($service->package_pricing->term) : null);
+                            echo $this->Html->safe($this->Html->concat(' ', $term, ($term == 1 ? (isset($periods[$service->package_pricing->period]) ? $periods[$service->package_pricing->period] : null) : (isset($periods[$service->package_pricing->period . '_plural']) ? $periods[$service->package_pricing->period . '_plural'] : null))));
+                        }
+                        ?>
+                    </li>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_status');?>
+                        <?php echo $this->Html->safe((isset($statuses[$service->status]) ? $statuses[$service->status] : null));?>
+                    </li>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_date_added');?>
+                        <?php echo (!empty($service->date_added) ? $this->Date->cast($service->date_added) : '');?>
+                    </li>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_date_renews');?>
+                        <?php echo (!empty($service->date_renews) ? $this->Date->cast($service->date_renews) : $this->_('AdminMain.index.text_never', true));?>
+                    </li>
+                    <?php
+                    // Display the coupon that should apply when the service renews
+                    if ((isset($recurring_coupon) ? $recurring_coupon : null) && (isset($recurring_coupon->type) ? $recurring_coupon->type : null) == 'exclusive') {
+                    ?>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_recurring_coupon');?>
+                        <?php
+                        if ((isset($recurring_coupon->recurring_amount->type) ? $recurring_coupon->recurring_amount->type : null) == 'percent') {
+                            $this->_('AdminMain.service.text_coupon_percent', false, $this->Html->safe((isset($recurring_coupon->code) ? $recurring_coupon->code : null)), $this->CurrencyFormat->cast((isset($recurring_coupon->recurring_amount->amount) ? $recurring_coupon->recurring_amount->amount : null), (isset($recurring_coupon->recurring_amount->currency) ? $recurring_coupon->recurring_amount->currency : null)));
+                        } else {
+                            $this->_('AdminMain.service.text_coupon_amount', false, $this->Html->safe((isset($recurring_coupon->code) ? $recurring_coupon->code : null)), $this->CurrencyFormat->format((isset($recurring_coupon->recurring_amount->amount) ? $recurring_coupon->recurring_amount->amount : null), (isset($recurring_coupon->recurring_amount->currency) ? $recurring_coupon->recurring_amount->currency : null)));
+                        }
+                        ?>
+                    </li>
+                    <?php
+                    }
+
+                    if ((isset($service->package_pricing->period) ? $service->package_pricing->period : null) != 'onetime') {
+                    ?>
+                    <li>
+                        <?php $this->_('AdminMain.service.text_renewal_price');?>
+                        <?php echo $this->CurrencyFormat->format((isset($service->renewal_price) ? $service->renewal_price : null), (isset($service->override_currency) ? $service->override_currency : (isset($service->package_pricing->currency) ? $service->package_pricing->currency : null)));?>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminMain.service.heading_pricing');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.service.field_pricing', true), 'pricing_id');
+                        $this->Form->fieldSelect('pricing_id', (isset($terms) ? $terms : []), (isset($vars->pricing_id) ? $vars->pricing_id : null), ['id' => 'pricing_id']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.service.field_group', true), 'package_group_id');
+                        $this->Form->fieldSelect('package_group_id', (isset($package_groups) ? $package_groups : []), (isset($vars->package_group_id) ? $vars->package_group_id : null), ['id' => 'package_group_id']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.service.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+                <a class="btn btn-default pull-right" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/reassign_pricing/admin_main/index/' . (isset($client->id) ? $client->id : null));?>"><?php $this->_('AdminMain.service.field_cancel');?></a>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+
+        $this->Javascript->setInline("
+        $(document).ready(function() {
+            $('#pricing_id').on('change', function() {
+                $(this).blestaRequest(
+                    'POST',
+                    '" . $this->Html->safe($this->base_uri . 'plugin/reassign_pricing/admin_main/getPackageGroups/') . (isset($client->id) ? $client->id : null) . "/' + $(this).val(),
+                    null,
+                    function(data) {
+                        if (data.groups) {
+                            $('#package_group_id').html('');
+                            len = data.groups.length
+                            for (var key in data.groups) {
+                                $('#package_group_id').append('<option value=\"' + key + '\">' + data.groups[key] + '</option>');
+                            }
+                        }
+                    },
+                    null,
+                    {dataType: 'json'}
+                );
+
+                return false;
+            });
+        });
+        ");
+        ?>

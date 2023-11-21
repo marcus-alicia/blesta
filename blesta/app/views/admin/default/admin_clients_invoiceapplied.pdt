@@ -1,0 +1,42 @@
+
+                    <?php
+                    if ((isset($applied) ? $applied : false) && ($num_applied = count($applied)) > 0) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td class="fixed_small border_none"><i class="fas fa-share fa-flip-vertical"></i></td>
+                            <td class="border_left"><?php $this->_('AdminClients.invoices.headingexpand_paymenttype');?></td>
+                            <td><?php $this->_('AdminClients.invoices.headingexpand_amount');?></td>
+                            <td><?php $this->_('AdminClients.invoices.headingexpand_applied');?></td>
+                            <td><?php $this->_('AdminClients.invoices.headingexpand_appliedon');?></td>
+                            <td class="last"><?php $this->_('AdminClients.invoices.headingexpand_options');?></td>
+                        </tr>
+                        <?php
+                        for ($i = 0; $i < $num_applied; $i++) {
+                            if ((isset($applied[$i]->type) ? $applied[$i]->type : null) == 'other' && (isset($applied[$i]->gateway_type) ? $applied[$i]->gateway_type : null) == 'nonmerchant') {
+                                $trans_type = $applied[$i]->gateway_name;
+                            } else {
+                                $trans_type = (isset($transaction_types[($applied[$i]->type_name != '' ? $applied[$i]->type_name : $applied[$i]->type)]) ? $transaction_types[($applied[$i]->type_name != '' ? $applied[$i]->type_name : $applied[$i]->type)] : null);
+                            }
+                        ?>
+                        <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                            <td>&nbsp;</td>
+                            <td><?php (print (isset($trans_type) ? $this->Html->safe($trans_type) : null));?></td>
+                            <td><?php echo $this->CurrencyFormat->format($applied[$i]->amount, $applied[$i]->currency, ['html_code' => true]);?></td>
+                            <td><?php echo $this->CurrencyFormat->format($applied[$i]->applied_amount, $applied[$i]->currency, ['html_code' => true]);?></td>
+                            <td><?php echo $this->Date->cast((isset($applied[$i]->applied_date) ? $this->Html->safe($applied[$i]->applied_date) : null), 'date_time');?></td>
+                            <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/edittransaction/' . (isset($client->id) ? $client->id : null) . '/' . (isset($applied[$i]->transaction_id) ? $applied[$i]->transaction_id : null) . '/');?>"><?php $this->_('AdminClients.invoices.option_edit');?></a></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box"><?php $this->_('AdminClients.invoices.applied_no_results');?></div>
+                    </div>
+                    <?php
+                    }
+                    ?>

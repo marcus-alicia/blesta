@@ -1,0 +1,66 @@
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.accountccinfo.heading_cc');?></h3>
+            </div>
+            <div class="pad">
+                <?php
+                if ((isset($gateway_form) ? $gateway_form : null)) {
+                    echo $gateway_form;
+                ?>
+            </div>
+            <div class="pad">
+                <?php
+                } else {
+                ?>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.accountccinfo.field_number', true), 'number');
+                        $this->Form->fieldText('number', isset($vars->last4) ? str_pad($vars->last4, 16, '*', STR_PAD_LEFT) : (isset($vars->number) ? $vars->number : null), ['id' => 'number']);
+
+                        if ((isset($edit) ? $edit : false) && !(isset($vars->gateway_id) ? $vars->gateway_id : null)) {
+                        ?>
+                        <a href="<?php echo $this->base_uri . 'clients/showcard/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($vars->id) ? $this->Html->safe($vars->id) : null);?>" class="show_card"><?php $this->_('AdminClients.accountccinfo.text_showcard');?></a>
+                        <?php
+                        }
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.accountccinfo.field_security', true), 'security_code');
+                        $this->Form->fieldText('security_code', (isset($vars->security_code) ? $vars->security_code : null), ['id' => 'security_code', 'class' => 'small']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.accountccinfo.tooltip_code');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.accountccinfo.field_expiration', true), 'expiration');
+                        $this->Form->fieldSelect('expiration_month', (isset($expiration['months']) ? $expiration['months'] : null), (isset($vars->expiration_month) ? $vars->expiration_month : null), ['id' => 'expiration_month']);
+                        $this->Form->fieldSelect('expiration_year', (isset($expiration['years']) ? $expiration['years'] : null), (isset($vars->expiration_year) ? $vars->expiration_year : null), ['id' => 'expiration_year']);
+                        ?>
+                    </li>
+                </ul>
+                <?php
+                }
+
+                if (isset($save_account) && $save_account) {
+                ?>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('save_details', 'true', isset($vars->save_details), ['id' => 'save_details_cc']);
+                        $this->Form->label($this->_('AdminClients.accountccinfo.field_savedetails', true), 'save_details_cc', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+                <?php
+                }
+                ?>
+            </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('a.show_card').blestaModal({close: '" . $this->_('AppController.modal.text_close', true) . "'});
+});
+");
+?>

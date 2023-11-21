@@ -1,0 +1,99 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $link_buttons = [
+            [
+                'icon' => 'fas fa-plus',
+                'name' => '',
+                'attributes' => [
+                    'title' => $this->_('AdminDepartments.index.categorylink_adddepartment', true),
+                    'href' => $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/add/')
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'support_manager_styles']);
+        $this->Widget->setLinkButtons($link_buttons);
+        $this->Widget->create($this->_('AdminDepartments.index.boxtitle_departments', true), ['id'=>'admin_department'], (isset($render_section) ? $render_section : null));
+
+        if ((isset($departments) ? $departments : false) && ($num_departments = count($departments)) > 0) {
+        ?>
+        <table class="table" id="departments">
+            <tr class="heading_row">
+                <td class="icon">&nbsp;</td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/index/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminDepartments.index.heading_name');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/index/?sort=description&order=' . ($sort == 'description' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'description' ? ' ' . $order : '');?>"><?php $this->_('AdminDepartments.index.heading_description');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/index/?sort=email&order=' . ($sort == 'email' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'email' ? ' ' . $order : '');?>"><?php $this->_('AdminDepartments.index.heading_email');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/index/?sort=assigned_staff&order=' . ($sort == 'assigned_staff' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'assigned_staff' ? ' ' . $order : '');?>"><?php $this->_('AdminDepartments.index.heading_assigned_staff');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/index/?sort=default_priority&order=' . ($sort == 'default_priority' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'default_priority' ? ' ' . $order : '');?>"><?php $this->_('AdminDepartments.index.heading_default_priority');?></a></span></td>
+                <td class="last"><span><?php $this->_('AdminDepartments.index.heading_options');?></span></td>
+            </tr>
+            <?php
+            // Display all departments
+            $i = 0;
+            foreach ($departments as $department) {
+            ?>
+            <tr class="<?php echo $this->Html->concat(' ', 'expand', 'department_staff', (($i++%2 == 1) ? 'odd_row' : ''));?>">
+                <td class="icon"><i class="fas fa-<?php echo (isset($department->status) ? $department->status : 'visible') == 'visible' ? 'eye' : 'eye-slash';?>"></i></td>
+                <td><?php echo (isset($department->name) ? $this->Html->safe($department->name) : null);?></td>
+                <td>
+                <?php
+                // Set department description
+                $description = $string->truncate((isset($department->description) ? $department->description : null), ['word_length' => Configure::get('SupportManager.summary_truncate_length')]);
+                echo (isset($description) ? $this->Html->safe($description) : null) . ($description != (isset($department->description) ? $department->description : null) ? '...' : '');
+                ?>
+                </td>
+                <td><?php echo (isset($department->email) ? $this->Html->safe($department->email) : null);?></td>
+                <td><?php echo (isset($department->assigned_staff) ? $this->Html->safe($department->assigned_staff) : null);?></td>
+                <td><?php echo (isset($priorities[$department->default_priority]) ? $priorities[$department->default_priority] : null);?></td>
+                <td class="last">
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/edit/' . (isset($department->id) ? $this->Html->safe($department->id) : null) . '/');?>"><?php $this->_('AdminDepartments.index.option_edit');?></a>,
+                    <?php
+                    $this->Form->create($this->base_uri . 'plugin/support_manager/admin_departments/delete/');
+                    $this->Form->fieldHidden('id', (isset($department->id) ? $department->id : null));
+                    ?>
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/delete/' . (isset($department->id) ? $this->Html->safe($department->id) : null) . '/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminDepartments.index.confirm_delete', true));?>"><?php $this->_('AdminDepartments.index.option_delete');?></a>
+                    <?php
+                    $this->Form->end();
+                    ?>
+                </td>
+            </tr>
+            <tr class="expand_details" id="departments_<?php echo (isset($department->id) ? $this->Html->safe($department->id) : null);?>">
+                <td colspan="7" class="subtable">
+                </td>
+            </tr>
+            <?php
+            }
+            unset($i);
+            ?>
+        </table>
+        <?php
+            // Set pagination
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminDepartments.index.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    // Handle confirmation
+    $('#departments a.manage[rel]').blestaModalConfirm({base_url: '" . $this->base_uri . "', close: '" . $this->_('AppController.modal.text_close', true) . "', submit: true});
+
+    // Fetch all staff in the department
+    $('.department_staff a', this).click(function(e) {
+        e.stopPropagation();
+    });
+    $('.department_staff').click(function() {
+        $(this).blestaUpdateRow('" . (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . "plugin/support_manager/admin_departments/assignedstaff/' + $(this).next('tr').attr('id').split('_')[1], '.subtable');
+    });
+});
+");

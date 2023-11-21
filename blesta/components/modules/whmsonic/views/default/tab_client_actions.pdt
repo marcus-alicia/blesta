@@ -1,0 +1,27 @@
+    <div id="change_password">
+        <h4><?php $this->_('Whmsonic.tab_client_actions.change_password');?></h4>
+
+        <?php
+        $this->Form->create($this->base_uri . 'services/manage/' . (isset($service_id) ? $service_id : null) . '/tabClientActions/');
+        ?>
+        <div class="w-100">
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('Whmsonic.tab_client_actions.password', true), 'password');
+                $this->Form->fieldPassword('password', ['id' => 'password', 'class' => 'form-control', 'placeholder' => $this->_('Whmsonic.tab_client_actions.password', true)]);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('Whmsonic.tab_client_actions.radio_password', true), 'radio_password');
+                $this->Form->fieldPassword('radio_password', ['id' => 'radio_password', 'class' => 'form-control', 'placeholder' => $this->_('Whmsonic.tab_client_actions.radio_password', true)]);
+                ?>
+            </div>
+        </div>
+        <button class="btn btn-light float-right">
+            <i class="fas fa-edit"></i> <?php $this->_('Whmsonic.submit');?>
+        </button>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>

@@ -1,0 +1,310 @@
+
+                <?php
+                echo (isset($message) ? $message : null);
+
+                $this->Widget->clear();
+                $this->Widget->setStyleSheet($this->view_dir . 'css/dropzone.css', ['id' => 'support_manager_dropzone_styles']);
+                $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'support_manager_styles']);
+                $this->Widget->setStyleSheet($this->view_dir . 'css/jquery.ui.theme.css', ['id' => 'support_manager_jquery_ui']);
+                $this->Widget->create($this->_('AdminTickets.add.boxtitle_add', true, (isset($ticket->code) ? $ticket->code : null)), ['id' => 'admin_tickets_add']);
+
+                $this->Form->create(null, ['id' => 'create_ticket', 'enctype' => 'multipart/form-data', 'class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <?php
+                    // Allow search for client
+                    if (empty($client)) {
+                    ?>
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminTickets.add.heading_search_client');?></h3>
+                    </div>
+                    <p>
+                        <?php
+                        $this->Form->fieldText('client', (isset($vars->client) ? $vars->client : null), ['id' => 'client', 'placeholder' => $this->_('Admintickets.add.client_placeholder', true)]);
+                        $this->Form->fieldHidden('client_id', (isset($vars->client_id) ? $vars->client_id : null), ['id' => 'client_id']);
+                        ?>
+                    </p>
+                    <div id="no_clients" class="empty_section" style="display:none;">
+                        <div class="empty_box"><?php $this->_('AdminTickets.add.text_no_clients');?></div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                    <div class="title_row<?php echo (!empty($client) ? ' first' : '');?>">
+                        <h3><?php $this->_('AdminTickets.add.heading_summary');?></h3>
+                    </div>
+
+                    <p>
+                        <?php
+                        $this->Form->fieldText('summary', (isset($vars->summary) ? $vars->summary : null), ['id' => 'summary']);
+                        ?>
+                    </p>
+
+                    <table class="table">
+                        <tr class="heading_row">
+                            <?php
+                            if (!empty($client)) {
+                            ?>
+                            <td><?php $this->_('AdminTickets.add.heading_client');?></td>
+                            <?php
+                            }
+                            ?>
+                            <td><?php $this->_('AdminTickets.add.heading_department');?></td>
+                            <td><?php $this->_('AdminTickets.add.heading_staff_id');?></td>
+                            <td><?php $this->_('AdminTickets.add.heading_priority');?></td>
+                            <td class="last"><?php $this->_('AdminTickets.add.heading_status');?></td>
+                        </tr>
+                        <tr>
+                            <?php
+                            if (!empty($client)) {
+                            ?>
+                            <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . (isset($client->id) ? $client->id : null) . '/');?>"><?php echo $this->Html->concat(' ', $this->Html->safe($client->first_name), $this->Html->safe($client->last_name));?></a></td>
+                            <?php
+                            }
+                            ?>
+                            <td><?php $this->Form->fieldSelect('department_id', (isset($departments) ? $departments : null), (isset($vars->department_id) ? $vars->department_id : null), ['id' => 'department_id']);?></td>
+                            <td><?php $this->Form->fieldSelect('ticket_staff_id', (isset($department_staff) ? $department_staff : null), (isset($vars->ticket_staff_id) ? $vars->ticket_staff_id : null), ['id' => 'ticket_staff_id']);?></td>
+                            <td><?php $this->Form->fieldSelect('priority', (isset($priorities) ? $priorities : null), (isset($vars->priority) ? $vars->priority : null), ['id' => 'priority']);?></td>
+                            <td><?php $this->Form->fieldSelect('status', (isset($statuses) ? $statuses : null), (isset($vars->status) ? $vars->status : null), ['id' => 'status']);?></td>
+                        </tr>
+                    </table>
+
+                    <h4 class="martop10"><a id="add_predefined_response" class="show_content" href="#"><?php $this->_('AdminTickets.add.text_add_response');?></a></h4>
+                    <div id="predefined_responses" style="display:none;">
+                        <?php echo (isset($predefined_responses) ? $predefined_responses : null);?>
+                    </div>
+
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $staff_signature = '';
+                                if (!empty($staff_settings['signature'])) {
+                                    $staff_signature = "\n\n" . (isset($staff_settings['signature']) ? $staff_settings['signature'] : null);
+                                }
+
+                                $this->Form->label($this->_('AdminTickets.add.field_details', true), 'details');
+                                $this->Form->fieldTextarea('details', (isset($vars->details) ? $vars->details : $staff_signature), ['id' => 'details', 'data-markdown-editor' => '']);
+                                ?>
+                            </li>
+                            <li>
+                                <div class="dz-message"><i class="fas fa-upload"></i> <?php $this->_('AdminTickets.add.dropzone_drop_files_here');?></div>
+                                <div class="martop10 fallback">
+                                    <ul>
+                                        <li id="file_attachment">
+                                            <?php
+                                            $this->Form->label($this->_('AdminTickets.add.field_attachments', true), 'attachment[]');
+                                            $this->Form->fieldFile('attachment[]');
+                                            ?>
+                                        </li>
+                                        <li id="add_attachment_field">
+                                            <a href="#">
+                                                <i class="fas fa-plus"></i>
+                                                <span><?php $this->_('AdminTickets.add.text_add_attachment');?></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="dropzone-previews"></div>
+                            </li>
+                            <li id="custom_fields"><?php echo $department_fields ?? '';?></li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminTickets.add.field_addsubmit', true), ['class' => 'btn btn-primary float-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        $('#department_id').change(function() {
+            setDepartmentPriorities($(this).val());
+            setDepartmentStaff($(this).val());
+        });
+
+        // Toggle predefined responses
+        $(this).blestaBindToggleEvent('#add_predefined_response', '#predefined_responses');
+        $('#add_predefined_response').click(function() {
+            if ($(this).hasClass('show_content')) {
+                setPredefinedResponses(null);
+            }
+        });
+
+        // Switch between response categories
+        $(document).on('click', '#responses .category a.text_link, #responses .up_level a.text_link', function() {
+            var match = $(this).attr('id').match(/(\d+)$/);
+            var cat_id = match ? parseInt(match[0], 10) : null;
+            setPredefinedResponses(cat_id);
+            return false;
+        });
+
+        // Add the predefined response
+        $(document).on('click', '#responses .response_item a.text_link', function() {
+            var match = $(this).attr('id').match(/(\d+)$/);
+            var response_id = match ? parseInt(match[0], 10) : null;
+            setPredefinedResponse(response_id);
+            return false;
+        });
+
+        // Initialize dropzone
+        $('#create_ticket').dropzone({
+            paramName: 'dropzone[]',
+            clickable: '.dz-message',
+            addRemoveLinks: true,
+            dictRemoveFile: '" . $this->_('AdminTickets.add.dropzone_remove_file', true) . "',
+            complete: function(file) {
+                var fields = ['name', 'type', 'size'];
+
+                fields.forEach(function(field, index) {
+                    $('<input>', {
+                        type: 'hidden',
+                        name: 'dropzone[' + field + '][' + file.name + ']',
+                        value: file[field]
+                    }).appendTo('.dropzone');
+                });
+
+                $('.dz-progress').hide();;
+            },
+            removedfile: function(file) {
+                var fields = ['name', 'type', 'size'];
+
+                fields.forEach(function(field, index) {
+                    $('input[name=\"dropzone[' + field + '][' + file.name + ']\"]').remove();
+                });
+
+                $(file.previewElement).remove();
+            },
+            previewsContainer: '.dropzone-previews',
+            timeout: 180000
+        });
+        $('#create_ticket').addClass('dropzone');
+
+        $('#add_attachment_field a').click(function() {
+            var attachment = $('#file_attachment input:first').clone();
+            $(attachment).val('');
+            $('<li></li>').insertBefore($('#add_attachment_field')).html($(attachment));
+            return false;
+        });
+
+        $('#client').autocomplete({
+            minLength: 3,
+            source: function(request, response) {
+                $(document).blestaRequest('POST', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getclients/') . "',
+                    { _csrf_token: $('#create_ticket').find('input[name=_csrf_token]').val(), search: request.term},
+                    function(data) {
+                        if (data && data.clients) {
+                            // Build the response to show
+                            var clients = new Array();
+                            for (var id in data.clients)
+                                clients.push({label:data.clients[id], value:data.clients[id], id:id});
+                            response(clients);
+
+                            // No results
+                            if (clients.length == 0)
+                                $('#no_clients').show();
+                            else
+                                $('#no_clients').hide();
+                        }
+                    },
+                    null,
+                    {dataType:'json'}
+                );
+            },
+            select: function(event, ui) {
+                $('#client_id').val(ui.item.id);
+            }
+        });
+
+        // Format form
+        $('#create_ticket').submit(function() {
+            // Submit unchecked checkboxes
+            $('#create_ticket input[type=\"checkbox\"]:not(:checked)').each(function() {
+                $(this).prop('disabled', true);
+                $('<input>', {
+                    type: 'hidden',
+                    name: $(this).attr('name'),
+                    value: '0'
+                }).appendTo($(this).parent());
+            });
+        });
+    });
+
+    function setPredefinedResponse(response_id) {
+        $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getresponse/') . "' + response_id, {},
+            function(data) {
+                if (data) {
+                    $('#details').val($('#details').val() + data);
+                    $('#details').scrollTop($('#details')[0].scrollHeight);
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+
+    function setPredefinedResponses(category_id) {
+        $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getresponselisting/') . "' + category_id, {},
+            function(data) {
+                if (data) {
+                    $('#predefined_responses').html(data);
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+
+    // Fetch priorities
+    function setDepartmentPriorities(department_id) {
+        $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getpriorities/') . "' + department_id, {},
+            function(data) {
+                if (data['priorities']) {
+                    $('#priority option').remove();
+
+                    var default_priority = (data['default_priority'] ? data['default_priority'] : '');
+                    for (var value in data['priorities']) {
+                        $('#priority').append(new Option(data['priorities'][value], value));
+
+                        if (default_priority == value)
+                            $('#priority option:last-child').prop('selected', true);
+                    }
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+
+    function setDepartmentStaff(department_id) {
+        $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getdepartmentstaff/') . "' + department_id, {},
+            function(data) {
+                if (data.department_staff) {
+                    $('#ticket_staff_id option').remove();
+
+                    var default_option = '';
+                    for (var value in data.department_staff) {
+                        $('#ticket_staff_id').append(new Option(data.department_staff[value], value));
+
+                        if (default_option == value)
+                            $('#ticket_staff_id option:last-child').prop('selected', true);
+                    }
+                }
+
+                if (data.hasOwnProperty('department_fields')) {
+                    $('#custom_fields').html(data.department_fields);
+                } else {
+                    $('#custom_fields').html('');
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+");

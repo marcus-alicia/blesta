@@ -1,0 +1,9 @@
+{
+    "name": "blesta/support_manager",
+    "description": "Support Manager",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

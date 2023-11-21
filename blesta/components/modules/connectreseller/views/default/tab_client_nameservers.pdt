@@ -1,0 +1,26 @@
+
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="row panel-fix">
+        <div class="col-md-12">
+            <?php
+            foreach ($nameserver_fields ?? [] as $name => $field) {
+            ?>
+            <div class="form-group">
+                <?php
+                $this->Form->label($field['label'], $name);
+                $this->Form->fieldText($name, ($vars->{$name} ?? ''), ['id' => $name, 'class'=>'form-control', 'placeholder' => $field['label']]);
+                ?>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+    </div>
+    <button class="btn btn-light float-right" type="submit">
+        <i class="fas fa-edit"></i> <?php $this->_('Connectreseller.tab_client_nameservers.field_submit');?>
+    </button>
+    <?php
+    $this->Form->end();
+    ?>

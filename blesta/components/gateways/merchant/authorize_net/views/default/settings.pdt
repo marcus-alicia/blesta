@@ -1,0 +1,57 @@
+
+	<ul>
+		<li>
+			<?php
+            $this->Form->label($this->_('Authorize_net.login_id', true));
+            $this->Form->fieldText('login_id', (isset($meta['login_id']) ? $meta['login_id'] : null));
+            ?>
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Authorize_net.transaction_key', true));
+            $this->Form->fieldText('transaction_key', (isset($meta['transaction_key']) ? $meta['transaction_key'] : null));
+            ?>
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Authorize_net.api', true));
+            $this->Form->fieldSelect('api', $apis, (isset($meta['api']) ? $meta['api'] : null), ['id'=>'api_to_use']);
+            ?>
+		</li>
+		<li class="cim_options">
+			<?php
+            $this->Form->label($this->_('Authorize_net.validation_mode', true));
+            $this->Form->fieldSelect('validation_mode', $validation_modes, (isset($meta['validation_mode']) ? $meta['validation_mode'] : null));
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Authorize_net.validation_note');?></div></span>
+		</li>
+		<li>
+			<?php
+            $this->Form->fieldCheckbox('test_mode', 'true', ((isset($meta['test_mode']) ? $meta['test_mode'] : 'false') == 'true'), ['id'=>'test_mode']);
+            $this->Form->label($this->_('Authorize_net.test_mode', true), 'test_mode', ['class'=>'inline']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Authorize_net.test_mode_note');?></div></span>
+		</li>
+		<li>
+			<?php
+            $this->Form->fieldCheckbox('dev_mode', 'true', ((isset($meta['dev_mode']) ? $meta['dev_mode'] : 'false') == 'true'), ['id'=>'dev_mode']);
+            $this->Form->label($this->_('Authorize_net.dev_mode', true), 'dev_mode', ['class'=>'inline']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Authorize_net.dev_mode_note');?></div></span>
+		</li>
+	</ul>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('li.cim_options').hide();
+		
+		if ($('#api_to_use').val() == 'cim')
+			$('li.cim_options').show();
+			
+		$('#api_to_use').change(function() {
+			if ($(this).val() == 'cim')
+				$('li.cim_options').show();
+			else
+				$('li.cim_options').hide();
+		});
+	});
+</script>

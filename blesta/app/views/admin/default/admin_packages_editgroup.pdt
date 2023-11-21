@@ -1,0 +1,145 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminPackages.editgroup.boxtitle_editgroup', true));
+        ?>
+
+        <div class="inner">
+            <?php $this->Form->create(null, ['id' => 'update_package_group', 'class' => 'disable-on-submit']); ?>
+
+            <div class="pad">
+                <ul>
+                    <li>
+                        <div class="tab_content inverse">
+                            <ul class="tabs">
+                                <?php
+                                foreach ($languages as $lang) {
+                                ?>
+                                <li<?php echo ((isset($lang->code) ? $lang->code : null) == Configure::get('Blesta.language') ? ' class="current"' : '');?>>
+                                    <a href="#"><?php (print (isset($lang->name) ? $this->Html->safe($lang->name) : null));?></a>
+                                </li>
+                                <?php
+                                }
+                                ?>
+                            </ul>
+                            <div class="inner_content">
+                                <?php
+                                foreach ($languages as $i => $lang) {
+                                    $name_value = '';
+                                    $description_value = '';
+
+                                    foreach ((array)(isset($vars->names) ? $vars->names : null) as $name) {
+                                        if ((isset($name->lang) ? $name->lang : null) == $lang->code) {
+                                            $name_value = (isset($name->name) ? $name->name : null);
+                                            break;
+                                        }
+                                    }
+
+                                    foreach ((array)(isset($vars->descriptions) ? $vars->descriptions : null) as $description) {
+                                        if ((isset($description->lang) ? $description->lang : null) == $lang->code) {
+                                            $description_value = (isset($description->description) ? $description->description : null);
+                                            break;
+                                        }
+                                    }
+                                ?>
+                                <div>
+                                    <ul>
+                                        <li>
+                                            <?php
+                                            $this->Form->label($this->_('AdminPackages.editgroup.field_name', true), 'name_' . (isset($lang->code) ? $lang->code : null));
+                                            $this->Form->fieldHidden('names[' . $i . '][lang]', (isset($lang->code) ? $lang->code : null));
+                                            ?>
+                                            <div><?php $this->Form->fieldText('names[' . $i . '][name]', (isset($name_value) ? $name_value : null), ['id' => 'name_' . (isset($lang->code) ? $lang->code : null)]);?></div>
+                                        </li>
+                                        <li>
+                                            <?php
+                                            $this->Form->label($this->_('AdminPackages.editgroup.field_description', true), 'description_' . (isset($lang->code) ? $lang->code : null));
+                                            $this->Form->fieldHidden('descriptions[' . $i . '][lang]', (isset($lang->code) ? $lang->code : null));
+                                            ?>
+                                            <div><?php $this->Form->fieldTextarea('descriptions[' . $i . '][description]', (isset($description_value) ? $description_value : null), ['id' => 'description_' . (isset($lang->code) ? $lang->code : null), 'data-markdown-editor' => '']);?></div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <?php $this->Form->fieldCheckbox('allow_upgrades', '1', ((isset($vars->allow_upgrades) ? $vars->allow_upgrades : '1') == '1'), ['id' => 'allow_upgrades']);?>
+                        <?php $this->Form->label($this->_('AdminPackages.editgroup.field_allow_upgrades', true), 'allow_upgrades', ['class' => 'inline']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminPackages.editgroup.field_type', true), 'type'); ?>
+                        <?php $this->Form->fieldSelect('type', (isset($group_types) ? $group_types : null), (isset($vars->type) ? $vars->type : null), ['id' => 'type']); ?>
+                    </li>
+                </ul>
+
+                <div id="parent_groups" style="display:none;">
+                    <table>
+                        <tr>
+                            <td><?php $this->Form->label($this->_('AdminPackages.editgroup.text_parentgroups', true), 'parents');?></td>
+                            <td></td>
+                            <td><?php $this->Form->label($this->_('AdminPackages.editgroup.text_availablegroups', true), 'available');?></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php $this->Form->fieldMultiSelect('parents[]', (isset($vars->parents) ? $vars->parents : null), [], ['id' => 'parents']);?>
+                            </td>
+                            <td><a href="#" class="move_left">&nbsp;</a> &nbsp; <a href="#" class="move_right">&nbsp;</a></td>
+                            <td>
+                                <?php $this->Form->fieldMultiSelect('available[]', (isset($standard_groups) ? $standard_groups : null), [], ['id' => 'available']);?>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminPackages.editgroup.field_editgroupsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php $this->Form->end(); ?>
+        </div>
+
+        <?php
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    if ($('#type').val() == 'addon')
+        $('#parent_groups').show();
+
+    $('#type').change(function() {
+        if ($(this).val() == 'addon')
+            $('#parent_groups').show();
+        else {
+            $('#parent_groups').hide();
+            $('#parents option').appendTo($('#available'));
+        }
+    });
+
+    $('#update_package_group').submit(function() {
+        $('#parents option').prop('selected', true);
+    });
+
+    // Move packages from right to left
+    $('.move_left').click(function() {
+        $('#available option:selected').appendTo($('#parents'));
+        return false;
+    });
+    // Move packages from left to right
+    $('.move_right').click(function() {
+        $('#parents option:selected').appendTo($('#available'));
+        return false;
+    });
+
+    $('div.tab_content').blestaTabbedContent();
+});
+");
+?>

@@ -1,0 +1,13 @@
+{
+    "id":"id",
+    "pricing_id":"pricing_id",
+    "package_id":"package_id",
+    "term":"term",
+    "period":"period",
+    "price":"price",
+    "price_renews":"price_renews",
+    "price_transfer":"price_transfer",
+    "setup_fee":"setup_fee",
+    "cancel_fee":"cancel_fee",
+    "currency":"currency"
+}

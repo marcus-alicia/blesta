@@ -1,0 +1,33 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyGeneral.marketing.boxtitle_marketing', true));
+                $this->Form->create();
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('show_receive_email_marketing', 'true', (isset($vars->show_receive_email_marketing) ? $vars->show_receive_email_marketing : 'true') == 'true', ['id' => 'show_receive_email_marketing']);
+                                $this->Form->label($this->_('AdminCompanyGeneral.marketing.field_show_receive_email_marketing', true), 'show_receive_email_marketing', ['class' => 'inline']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyGeneral.marketing.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

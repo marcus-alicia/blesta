@@ -1,0 +1,206 @@
+
+            <div class="navfix"></div>
+            <div class="col-md-12">
+
+                <div class="section-title">
+                    <h3><i class="fas fa-shopping-cart"></i> <?php $this->_('Cart.index.header_cart');?></h3>
+                    <p><?php $this->_('Cart.index.header_note');?></p>
+                </div>
+                <?php
+                echo (isset($message) ? $message : null);
+                ?>
+
+                <div class="card bg-light p-3 card-order table-responsive">
+                    <table class="table table-curved table-striped">
+                        <thead>
+                            <tr>
+                                <th><?php $this->_('Cart.index.table_description');?></th>
+                                <th></th>
+                                <th><?php $this->_('Cart.index.table_qty');?></th>
+                                <th><?php $this->_('Cart.index.table_price');?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $indexes = [];
+                            foreach ($display_items as $item) {
+                            ?>
+                                <tr>
+                                    <td>
+                                        <?php
+                                        switch ((isset($item['type']) ? $item['type'] : null)) {
+                                            case 'addon':
+                                            case 'config_fee':
+                                                echo (isset($item['description']) ? $this->Html->safe($item['description']) : null);
+                                                break;
+                                            default:
+                                                ?>
+                                                <strong><?php echo (isset($item['description']) ? $this->Html->safe($item['description']) : null);?></strong>
+                                                <?php
+                                        }
+                                        ?>
+
+                                    </td>
+                                    <td>
+                                        <?php
+                                        if ((isset($item['type']) ? $item['type'] : null) == 'service' || (isset($item['type']) ? $item['type'] : null) == 'addon') {
+                                            $this->Form->create($this->base_uri . 'order/cart/remove/' . (isset($order_form->label) ? $order_form->label : null), ['class' => 'disable-on-submit']);
+                                            $this->Form->fieldHidden('item', (isset($item['index']) ? $item['index'] : null));
+                                            ?>
+                                            <div class="btn-group">
+                                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/config/index/' . (isset($order_form->label) ? $order_form->label : null) . '/?item=' . (isset($item['index']) ? $item['index'] : null));?>" class="btn btn-light btn-xs"><i class="fas fa-edit"></i> <?php $this->_('Cart.index.edit_item');?></a>
+                                                <button type="submit" class="btn btn-danger btn-xs">
+                                                    <i class="fas fa-ban"></i> <?php $this->_('Cart.index.remove_item');?>
+                                                </button>
+                                            </div>
+                                            <?php
+                                            $this->Form->end();
+                                        }
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php $this->_('Cart.index.quantity', false, $this->CurrencyFormat->truncateDecimal($item['qty'], 0));?>
+                                    </td>
+                                    <td class="price-col text-right">
+                                        <strong class="currency_value"><?php echo $item['price'];?></strong>
+                                    </td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+
+                    <?php
+                    if ((isset($totals) ? $totals : null)) {
+                    ?>
+                        <hr />
+                        <table class="table table-curved">
+                            <tbody>
+                                <tr>
+                                    <td><?php $this->_('Cart.index.totals.subtotal');?></td>
+                                    <td class="price-col float-right"><strong class="currency_value"><?php echo (isset($totals['subtotal']['amount_formatted']) ? $this->Html->safe($totals['subtotal']['amount_formatted']) : null);?></strong></td>
+                                </tr>
+                                <?php
+                                if ((isset($totals['discount']['amount']) ? $totals['discount']['amount'] : null)) {
+                                ?>
+                                <tr>
+                                    <td><?php $this->_('Cart.index.totals.discount');?></td>
+                                    <td class="price-col float-right"><strong class="currency_value"><?php echo (isset($totals['discount']['amount_formatted']) ? $this->Html->safe($totals['discount']['amount_formatted']) : null);?></strong></td>
+                                </tr>
+                                <?php
+                                }
+                                if ((isset($totals['tax']) ? $totals['tax'] : null)) {
+                                    foreach ($totals['tax'] as $description => $tax) {
+                                ?>
+                                    <tr>
+                                        <td><?php $this->_('Cart.index.totals.tax', false, $description);?></td>
+                                        <td class="price-col float-right"><strong class="currency_value"><?php echo (isset($tax['amount_formatted']) ? $this->Html->safe($tax['amount_formatted']) : null);?></strong></td>
+                                    </tr>
+                                <?php
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                        <hr />
+
+                        <div class="col-md-6">
+                            <?php
+                            if ((isset($order_form->allow_coupons) ? $order_form->allow_coupons : null) == '1') {
+                            ?>
+                                <h5><a href="#coupon_box" data-toggle="collapse"><i class="fas fa-tag"></i> <?php $this->_('Summary.index.have_coupon');?></a></h5>
+                                <div id="coupon_box" class="collapse">
+                                    <?php
+                                    $this->Form->create((isset($this->base_uri) ? $this->base_uri : null) . 'order/cart/applycoupon/' . (isset($order_form->label) ? $order_form->label : null), ['id' => 'applycoupon', 'class' => 'disable-on-submit']);
+                                    ?>
+                                    <div class="form-group">
+                                        <div id="coupon_message"></div>
+                                    </div>
+                                    <div class="input-group">
+                                        <?php
+                                        if ((isset($cart['coupon']) ? $cart['coupon'] : null)) {
+                                        ?>
+                                        <span class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fas fa-check fa-fw"></i></span>
+                                        </span>
+                                        <?php
+                                        }
+                                        $this->Form->fieldText('coupon', (isset($cart['coupon']) ? $cart['coupon'] : (isset($temp_coupon) ? $temp_coupon : null)), ['class' => 'form-control' . ((isset($cart['coupon']) ? $cart['coupon'] : null) ? ' is-valid' : ''), 'id' => 'coupon', 'placeholder' => $this->_('Summary.index.coupon', true)]);
+                                        ?>
+                                        <div class="input-group-append">
+                                            <button class="btn <?php echo ((isset($cart['coupon']) ? $cart['coupon'] : null) ? 'btn-success' : 'btn-secondary');?> m-0" type="submit"><i class="fas fa-sync-alt"></i> <?php $this->_('Summary.index.coupon_btn');?></button>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    $this->Form->end();
+                                    ?>
+                                </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                        <div class="col-md-6 total-due">
+                            <small><?php $this->_('Cart.index.totals.total');?></small>
+                            <h4><strong class="currency_value"><?php echo (isset($totals['total_without_exclusive_tax']['amount_formatted']) ? $this->Html->safe($totals['total_without_exclusive_tax']['amount_formatted']) : null);?></strong></h4>
+
+                            <?php
+                            if ((isset($totals_recurring) ? $totals_recurring : null)) {
+                            ?>
+                            <small><?php $this->_('Cart.index.totals.total_recurring');?></small>
+                            <p>
+                                <?php
+                                $i = 0;
+                                foreach ($totals_recurring as $totals) {
+                                    // Determine the period to use
+                                    $term = $this->Html->safe($totals['term']);
+                                    $period = $this->Html->safe(($term == 1 ? (isset($periods[$totals['period']]) ? $periods[$totals['period']] : null) : (isset($periods[$totals['period'] . '_plural']) ? $periods[$totals['period'] . '_plural'] : null)), true);
+                                    $amount = $this->Html->safe($totals['totals']['total_without_exclusive_tax']['amount_formatted']);
+
+                                    if ($i++ > 0) {
+                                    ?>
+                                    <br />
+                                    <?php
+                                    }
+                                    ?>
+                                    <strong><?php $this->_('Cart.index.totals.total_recurring_amount', false, $term, $period, $amount);?></strong>
+                                    <?php
+                                }
+                                unset($i);
+                                ?>
+                            </p>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    <?php
+                    }
+                    ?>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="float-right">
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'order/main/index/' . (isset($order_form->label) ? $order_form->label : null));?>" class="btn btn-sm btn-secondary float-right"><i class="fas fa-arrow-left"></i> <?php $this->_('Cart.index.order_more_btn');?></a>
+                    <div class="clearfix"></div>
+                    <small><?php $this->_('Cart.index.order_more_note');?></small>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="col-md-12" id="create-account"></div>
+
+            <script type="text/javascript">
+                var base_uri = '<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null);?>';
+                var order_label = '<?php echo (isset($order_form->label) ? $this->Html->safe($order_form->label) : null);?>';
+            </script>
+            <script type="text/javascript" src="<?php echo $this->Html->safe($this->view_dir . 'javascript/cart.js');?>"></script>
+<?php
+// Attempt to auto-apply a temp coupon by submitting the coupon form
+if (!empty($temp_coupon) && empty($cart['coupon'])) {
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#applycoupon').trigger('submit');
+});
+</script>
+<?php
+}
+?>

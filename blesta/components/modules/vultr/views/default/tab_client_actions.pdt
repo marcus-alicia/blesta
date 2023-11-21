@@ -1,0 +1,175 @@
+    <h4><?php $this->_('Vultr.tab_client_actions.heading_status'); ?></h4>
+
+    <?php
+    if (($server_details->server_status ?? null) == 'locked') {
+        $status_class = 'warning';
+        $status = 'locked';
+    } elseif (($server_details->power_status ?? null) == 'running' && ($server_details->status ?? null) == 'active') {
+        $status_class = 'success';
+        $status = 'online';
+    } else {
+        $status_class = 'danger';
+        $status = 'offline';
+    }
+    ?>
+
+    <div id="vultr_status_badge">
+        <span class="badge badge-<?php echo (isset($status_class) ? $this->Html->safe($status_class) : null); ?> mb-3">
+            <i class="fas fa-lightbulb"></i> <?php $this->_('Vultr.tab_client_actions.status_' . (isset($status) ? $this->Html->safe($status) : null)); ?>
+        </span>
+    </div>
+
+    <h4><?php $this->_('Vultr.tab_client_actions.heading_actions'); ?></h4>
+    <div class="row options" id="vultr_actions">
+        <div class="col-md-4">
+            <?php
+            $this->Form->create();
+            $this->Form->fieldHidden('action', 'restart');
+            ?>
+            <button<?php echo ($status ?? null) != 'online' ? ' disabled="disabled"' : ''; ?> class="btn btn-block btn-success">
+                <i class="fas fa-sync-alt"></i> <?php $this->_('Vultr.tab_client_actions.action_restart'); ?>
+            </button>
+            <?php
+            $this->Form->end();
+            ?>
+
+            <?php
+            $this->Form->create();
+            $this->Form->fieldHidden('action', 'reinstall');
+            ?>
+            <button<?php echo ($status ?? null) == 'locked' ? ' disabled="disabled"' : '';?> class="btn btn-light btn-block" style="margin-top: 10px;">
+                <i class="fas fa-sync-alt"></i> <?php $this->_('Vultr.tab_client_actions.action_reinstall_template'); ?>
+            </button>
+            <?php
+            $this->Form->end();
+            ?>
+
+            <?php
+            $this->Form->create();
+            $this->Form->fieldHidden('action', 'enable_ipv6');
+            ?>
+            <button<?php echo ($status ?? null) != 'online' || !(isset($ipv6_enablable) ? $ipv6_enablable : null) ? ' disabled="disabled"' : ''; ?> class="btn btn-light btn-block" style="margin-top: 10px;">
+                <i class="fas fa-server"></i> <?php $this->_('Vultr.tab_actions.action_enable_ipv6'); ?>
+            </button>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <div class="col-md-4">
+            <?php
+            $this->Form->create();
+            $this->Form->fieldHidden('action', 'stop');
+            ?>
+            <button<?php echo ($status ?? null) != 'online' ? ' disabled="disabled"' : ''; ?> class="btn btn-block btn-danger">
+                <i class="fas fa-stop"></i> <?php $this->_('Vultr.tab_client_actions.action_stop'); ?>
+            </button>
+            <?php
+            $this->Form->end();
+            ?>
+
+            <a href="#" class="change_template btn btn-light btn-block<?php echo (isset($package->meta->set_template) ? $package->meta->set_template : null) != 'client' || (isset($status) ? $status : null) == 'locked' ? ' disabled' : ''; ?>" style="margin-top: 10px;">
+                <i class="fas fa-download"></i> <?php $this->_('Vultr.tab_client_actions.action_change_template'); ?>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <?php
+            $this->Form->create();
+            $this->Form->fieldHidden('action', 'start');
+            ?>
+            <button<?php echo ($status ?? null) != 'offline' || $package->meta->server_type == 'baremetal' ? ' disabled="disabled"' : ''; ?> class="btn btn-light btn-block">
+                <i class="fas fa-play"></i> <?php $this->_('Vultr.tab_client_actions.action_start'); ?>
+            </button>
+            <?php
+            $this->Form->end();
+            ?>
+
+            <a href="<?php echo ($server_details->kvm ?? null); ?>" class="btn btn-light btn-block<?php echo empty(($server_details->kvm ?? null)) || ($status ?? null) == 'locked' ? ' disabled' : ''; ?>" target="_blank" style="margin-top: 10px;">
+                <i class="fas fa-terminal"></i> <?php $this->_('Vultr.tab_client_actions.action_kvm_console'); ?>
+            </a>
+        </div>
+    </div>
+
+    <?php
+    if ($package->meta->set_template == 'client') {
+        ?>
+    <div class="clearfix"></div>
+    <div id="change_template" style="display:none;">
+        <hr>
+        <h4><?php $this->_('Vultr.tab_client_actions.heading_change_template'); ?></h4>
+        <div class="row">
+            <?php
+            $this->Form->create();
+            $this->Form->fieldHidden('action', 'change_template'); ?>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_('Vultr.tab_client_actions.field_template', true), 'template');
+                    $this->Form->fieldSelect('template', (isset($templates) ? $templates : null), (isset($vars->template) ? $vars->template : $service_fields->vultr_template), ['id' => 'template', 'class' => 'form-control']);
+                    ?>
+                </div>
+
+                <button class="btn btn-light float-right">
+                    <i class="fas fa-download"></i> <?php $this->_('Vultr.tab_client_actions.field_change_template_submit'); ?>
+                </button>
+            </div>
+            <?php
+            $this->Form->end(); ?>
+        </div>
+    </div>
+    <?php
+    }
+    ?>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            setVultrInterval('<?php echo Configure::get('Vultr.page_refresh_rate_fast');?>', '');
+            <?php
+            if ((isset($vars->template) ? $vars->template : false)) {
+                ?>
+            showSection('change_template');
+            <?php
+            }
+            ?>
+
+            $('.options').on('click', 'a.change_template', function(e) {
+                var item_class = "change_template";
+
+                hideSections();
+                showSection(item_class);
+            });
+
+            function hideSections() {
+                $('#change_template').hide();
+            }
+
+            function showSection(id) {
+                $('#' + id).show();
+            }
+
+            function setVultrInterval(refresh_rate, old_action_data) {
+                var interval = setInterval(function() {
+                    $(this).blestaRequest("GET",
+                        '<?php echo $this->base_uri . 'services/manage/' . (isset($service->id) ? $service->id : null) . '/tabClientActions/';?>',
+                        null,
+                        // Success response
+                        function(data) {
+                            if (data.replacer && data.content) {
+                                var badge_html = $('div', data.content).filter('#vultr_status_badge').html();
+                                $('#vultr_status_badge').html(badge_html);
+
+                                var html = $('div', data.content).filter('#vultr_actions').html();
+                                $('#vultr_actions').html(html);
+
+                                refresh_rate = (html == old_action_data) ? '<?php echo Configure::get('Vultr.page_refresh_rate');?>' : '<?php echo Configure::get('Vultr.page_refresh_rate_fast');?>';
+
+                                clearInterval(interval);
+                                setVultrInterval(refresh_rate, html);
+                            }
+                        },
+                        null,
+                        {dataType: 'json'}
+                    );
+                }, refresh_rate);
+            }
+        });
+    </script>

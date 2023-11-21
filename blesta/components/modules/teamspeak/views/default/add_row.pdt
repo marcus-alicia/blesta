@@ -1,0 +1,79 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons([]);
+        $this->Widget->create($this->_('Teamspeak.add_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            $this->Form->fieldHidden('account_count', (isset($vars->account_count) ? $vars->account_count : 0));
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('Teamspeak.add_row.basic_title'); ?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Teamspeak.row_meta.server_name', true), 'server_name');
+                        $this->Form->fieldText('server_name', (isset($vars->server_name) ? $vars->server_name : null));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Teamspeak.row_meta.hostname', true), 'hostname');
+                        $this->Form->fieldText('hostname', (isset($vars->hostname) ? $vars->hostname : null));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Teamspeak.row_meta.port', true), 'port');
+                        $this->Form->fieldText('port', (isset($vars->port) ? $vars->port : 10011));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Teamspeak.row_meta.username', true), 'username');
+                        $this->Form->fieldText('username', (isset($vars->username) ? $vars->username : null));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Teamspeak.row_meta.password', true), 'password');
+                        $this->Form->fieldPassword('password');
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Teamspeak.row_meta.account_limit', true), 'account_limit');
+                        $this->Form->fieldText('account_limit', (isset($vars->account_limit) ? $vars->account_limit : null));
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('Teamspeak.add_row.notes_title'); ?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldTextarea('notes', (isset($vars->notes) ? $vars->notes : null));
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('Teamspeak.add_row.add_btn', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

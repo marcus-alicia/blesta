@@ -1,0 +1,19 @@
+
+
+                            <div class="card p-3 card-kb bg-light">
+                                <?php
+                                $this->Form->create($this->base_uri . 'plugin/support_manager/knowledgebase/search/');
+                                ?>
+                                    <div class="input-group">
+                                        <?php
+                                        $this->Form->fieldText('search', (isset($vars->search) ? $vars->search : null), ['class'=>'form-control input-md', 'placeholder'=>$this->_('Knowledgebase.search.placeholder', true)]);
+                                        ?>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-secondary btn-md" type="submit"><i class="fas fa-search"></i> <?php $this->_('Knowledgebase.search.form_submit');?></button>
+                                        </div>
+                                    </div>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                                <div class="clearfix"></div>
+                            </div>

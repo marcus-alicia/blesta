@@ -1,0 +1,13 @@
+{
+	"version": "1.4.0",
+	"name": "Quantum_gateway.name",
+	"description": "Quantum_gateway.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["USD"],
+	"signup_url": "https://www.quantumgateway.com/index.php"
+}

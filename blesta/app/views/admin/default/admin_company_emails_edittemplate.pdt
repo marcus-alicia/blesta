@@ -1,0 +1,114 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $tabs = [];
+
+                // Set tab language
+                if (is_array((isset($templates) ? $templates : null)) && ($num_templates = count($templates)) > 0) {
+                    for ($i = 0; $i < $num_templates; $i++) {
+                        $tabs[$i]['name'] = (isset($templates[$i]->lang_name) ? $this->Html->safe($templates[$i]->lang_name) : null);
+                        $tabs[$i]['current'] = ((isset($vars->lang) ? $this->Html->safe($vars->lang) : null) == (isset($templates[$i]->lang) ? $this->Html->safe($templates[$i]->lang) : null) ? true : false);
+                        $tabs[$i]['attributes'] = ['href' => $this->base_uri . 'settings/company/emails/edittemplate/' . $templates[$i]->email_group_id . '/' . $templates[$i]->id . '/'];
+                    }
+                }
+
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create($this->_('AdminCompanyEmails.edittemplate.boxtitle_edittemplate', true, (isset($template_name) ? $template_name : null)));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.from_name', true), 'from_name', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyEmails.!tooltip.from_name');?></div></span>
+                                <?php $this->Form->fieldText('from_name', (isset($vars->from_name) ? $vars->from_name : null), ['id' => 'from_name', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.from', true), 'from', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyEmails.!tooltip.from');?></div></span>
+                                <?php $this->Form->fieldText('from', (isset($vars->from) ? $vars->from : null), ['id' => 'from', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.subject', true), 'subject', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyEmails.!tooltip.subject');?></div></span>
+                                <?php $this->Form->fieldText('subject', (isset($vars->subject) ? $vars->subject : null), ['id' => 'subject', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.tags', true), 'tags');
+
+                                if (is_array($template->tags)) {
+                                ?>
+                                    <div class="accent_box">
+                                    <?php
+                                    for ($i = 0, $num_tags = count($template->tags); $i < $num_tags; $i++) {
+                                    ?>
+                                    <?php (print (isset($template->tags[$i]) ? $this->Html->safe($template->tags[$i]) : null));?>
+                                    <?php
+                                    }
+                                    ?>
+                                    </div>
+                                <?php
+                                }
+                                ?>
+                            </li>
+                            <li>
+                                <div class="tab_content">
+                                    <ul class="tabs">
+                                        <li class="current">
+                                            <a href="#"><?php $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.html', true), 'html');?></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><?php $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.text', true), 'text');?></a>
+                                        </li>
+                                    </ul>
+                                    <div class="inner_content">
+                                        <div><?php $this->Form->fieldTextarea('html', (isset($vars->html) ? $vars->html : null), ['id' => 'html']);?></div>
+                                        <div><?php $this->Form->fieldTextarea('text', (isset($vars->text) ? $vars->text : null), ['id' => 'text']);?></div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.email_signature_id', true), 'email_signature_id', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyEmails.!tooltip.email_signature_id');?></div></span>
+                                <?php $this->Form->fieldSelect('email_signature_id', (isset($signatures) ? $signatures : null), (isset($vars->email_signature_id) ? $vars->email_signature_id : null), ['id' => 'email_signature_id', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('include_attachments', '1', ((isset($vars->include_attachments) ? $vars->include_attachments : '0') == '1'), ['id' => 'include_attachments']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.include_attachments', true), 'include_attachments', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyEmails.!tooltip.include_attachments');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('status', 'active', (isset($vars->status) && $vars->status == 'active' ? true : false), ['id' => 'status']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyEmails.edittemplate.field.status', true), 'status', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyEmails.!tooltip.status');?></div></span>
+                            </li>
+                        </ul>
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminCompanyEmails.edittemplate.field.edittemplatesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                            <a class="btn btn-default pull-right" href="<?php echo $this->base_uri;?>settings/company/emails/templates/"><?php $this->_('AdminCompanyEmails.!cancel.field.cancel');?></a>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $this->Form->fieldHidden('lang', (isset($vars->lang) ? $vars->lang : null));
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('#html').blestaBindWysiwygEditor({language: '" . substr(Configure::get('Blesta.language'), 0, 2) . "'});
+    $('div.tab_content').blestaTabbedContent();
+});
+");
+?>

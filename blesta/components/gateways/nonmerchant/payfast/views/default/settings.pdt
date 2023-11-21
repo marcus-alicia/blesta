@@ -1,0 +1,27 @@
+
+	<ul>
+        <li>
+            <?php
+            $this->Form->label($this->_('Payfast.meta.merchant_id', true), 'merchant_id');
+            $this->Form->fieldText('merchant_id', ($meta['merchant_id'] ?? null), ['id' => 'merchant_id', 'class' => 'block']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Payfast.meta.merchant_key', true), 'merchant_key');
+            $this->Form->fieldText('merchant_key', ($meta['merchant_key'] ?? null), ['id' => 'merchant_key', 'class' => 'block']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Payfast.meta.passphrase', true), 'passphrase');
+            $this->Form->fieldText('passphrase', ($meta['passphrase'] ?? null), ['id' => 'passphrase', 'class' => 'block']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->fieldCheckbox('sandbox', 'true', (($meta['sandbox'] ?? 'false') == 'true'), ['id' => 'sandbox']);
+            $this->Form->label($this->_('Payfast.meta.sandbox', true), 'sandbox', ['class' => 'inline']);
+            ?>
+        </li>
+	</ul>

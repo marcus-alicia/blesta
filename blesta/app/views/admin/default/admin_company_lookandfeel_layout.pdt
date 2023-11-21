@@ -1,0 +1,257 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $tabs = [];
+                foreach ((isset($theme_types) ? $theme_types : []) as $type => $name) {
+                    $tabs[] = ['name' => $name, 'current' => ($type == 'client'), 'attributes' => ['id' => $type . '_layout_tab', 'href' => '#']];
+                }
+
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create($this->_('AdminCompanyLookandfeel.layout.box_title', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <?php echo (isset($layout_admin) ? $layout_admin : null);?>
+                    <?php echo (isset($layout_client) ? $layout_client : null);?>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyLookandfeel.layout.text_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    // Set background on submit
+    function setCardColors() {
+        $('.preview_layout .card:not(.disabled)').each(function(index, card) {
+            var card_id = $(card).data('id');
+            $('#' + card_id + '_color').val($(this).blestaRgbToHex($(card).css('background-color')));
+        });
+    }
+
+    function setBackgroundTypes() {
+        $('.preview_layout .card:not(.disabled)').each(function(index, card) {
+            var card_id = $(card).data('id');
+
+            if ($(card).hasClass('color')) {
+                var background_type = 'color';
+            } else if ($(card).hasClass('image')) {
+                var background_type = 'image';
+            }
+
+            $('#' + card_id + '_background_type').val(background_type);
+        });
+    }
+
+    $('#right_container form').on('submit', function(e) {
+        setCardColors();
+        setBackgroundTypes();
+    });
+
+    // Enable and disable cards
+    $('.cards .card-container input[type=\"checkbox\"]').on('click', function() {
+        if ($(this).is(':checked')) {
+            $(this).parent().find('.card').removeClass('disabled');
+        } else if (!$(this).is(':checked')) {
+            $(this).parent().find('.card').addClass('disabled');
+        }
+    });
+
+    // Enable and disable widgets
+    $('.widgets .widget .widget-header input[type=\"checkbox\"]').on('click', function() {    
+        if ($(this).is(':checked')) {
+            $(this).parent().parent().parent().removeClass('disabled');
+        } else if (!$(this).is(':checked')) {
+            $(this).parent().parent().parent().addClass('disabled');
+        }
+    });
+
+    // Set tabs
+    $('#admin_layout').hide();
+
+    $('.tab_slider ul li').on('click', function() {
+        $('.tab_slider ul li').removeClass('current');
+        $(this).addClass('current');
+    });
+
+    $('#client_layout_tab').on('click', function() {
+        $('#admin_layout').hide();
+        $('#client_layout').show();
+    });
+
+    $('#admin_layout_tab').on('click', function() {
+        $('#admin_layout').show();
+        $('#client_layout').hide();
+    });
+
+    // Attach color picker to the cards
+    $('.card.color').each(function() {
+        $(this).blestaColorPicker({
+            onBeforeShow: function(element) {
+                $(this).ColorPickerSetColor(
+                    $(this).blestaRgbToHex($(this).css('background-color'))
+                );
+                $(element).find('.colorpicker_submit').css('background', 'none')
+                    .html('<a href=\"#\" id=\"switch-image\"><i class=\"fas fa-image\"></i></a>');
+            }
+        });
+    });
+
+    $('.card-text input').each(function() {
+        var element = $(this);
+
+        $(this).css('background', $(this).val());
+        $(this).blestaColorPicker({
+            onChange: function (hasb, hex, rgb) {
+                element.val('#' + hex);
+                element.css({
+                    backgroundColor: '#' + hex,
+                    color: '#' + this.blestaContrastColor(element.val())
+                });
+
+                var card_content = element.parent().parent().find('.card-content');
+                card_content.css({
+                    color: '#' + hex
+                });
+            },
+            onBeforeShow: function(element) {
+                $(this).ColorPickerSetColor(
+                    $(this).blestaRgbToHex($(this).css('background-color'))
+                );
+                $(element).find('.colorpicker_submit').hide();
+            }
+        });
+    });
+
+    // Toggle background image url input
+    $('.card-container').on('click', '.card.image', function() {
+        $(this).parent().find('.card-url').toggle();
+    });
+
+    $(document).on('mousedown', function(e) {
+        var parents = $(e.toElement).parents('.card-url');
+
+        if (parents.length == 0) {
+            $('.card-url').hide();
+        }
+    });
+
+    $('.card-container').on('change', '.card-url input', function() {
+        var url = $(this).val();
+        $(this).parent()
+            .parent()
+            .find('.card')
+            .attr('style', 'background-image: url(' + url + ')');
+    });
+
+    // Switch image card to color
+    $(document).on('click', '.switch-color', function() {
+        var card = $(this).parent().parent().find('.card');
+
+        if (card.hasClass('image')) {
+            // Hide background image url popup
+            card.parent().find('.card-url').hide();
+
+            // Attach color picker to the card
+            card.removeClass('image')
+                .addClass('color')
+                .css('background-image', '')
+                .css('background-color', '#EAE9EB');
+
+            $(card).blestaColorPicker({
+                onBeforeShow: function() {
+                    $(this).ColorPickerSetColor(
+                        $(this).blestaRgbToHex($(this).css('background-color'))
+                    );
+                    $('.colorpicker_submit').css('background', 'none')
+                        .html('<a href=\"#\" id=\"switch-image\"><i class=\"fas fa-image\"></i></a>');
+                }
+            });
+
+            $(card).trigger('click');
+        }
+    });
+
+    // Switch color card to image
+    $(document).on('click', '#switch-image', function() {
+        var picker = $(this).parent().parent();
+        var card = null;
+
+        // Get the card belonging to this color picker
+        $('.card.color').each(function() {
+            if ($(this).data().colorpickerId == picker.attr('id')) {
+                card = $(this);
+            }
+        });
+
+        // Remove color picker
+        picker.remove();
+        $(document).off('mousedown');
+        card.removeData('colorpickerId')
+            .removeData('colorpicker')
+            .removeClass('color')
+            .off();
+
+        // Add background url input
+        var url = card.parent().find('.card-url input').val();
+        card.addClass('image')
+            .attr('style', 'background-image: url(' + url + ')');
+        card.parent().find('.card-url').show();
+
+        $(document).on('mousedown', function(e) {
+            var parents = $(e.toElement).parents('.card-url');
+
+            if (parents.length == 0) {
+                $('.card-url').hide();
+            }
+        });
+    });
+
+    // Make cards sortable
+    $('.cards').blestaSortable('.card:not(.wireframe)', {
+        connectWith: '.card',
+        axis: false,
+        containment: false,
+        cursor: 'move',
+        opacity: 0.8,
+        start: function(event, ui) {
+            $('.cards .ui-sortable-placeholder').append('<div class=\"card\"></div>');
+            $('.card-url').hide();
+        }
+    });
+
+    $('.cards').on('hover', '.card', function() {
+        $(this).css('cursor', 'move');
+    });
+    
+    // Make widgets sortable
+    $('.widgets').blestaSortable('.widget:not(.wireframe)', {
+        connectWith: '.widget',
+        axis: false,
+        containment: false,
+        cursor: 'move',
+        opacity: 0.8,
+        start: function(event, ui) {
+            $('.widgets .ui-sortable-placeholder').append('<div class=\"widget\"></div>');
+        }
+    });
+
+    $('.widgets').on('hover', '.widget', function() {
+        $(this).css('cursor', 'move');
+    });
+});
+");
+?>

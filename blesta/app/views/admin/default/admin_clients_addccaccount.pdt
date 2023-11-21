@@ -1,0 +1,23 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.addccaccount.boxtitle_addccaccount', true));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <?php
+            // Set partials
+            echo (isset($contact_info) ? $contact_info : null);
+            echo (isset($cc_info) ? $cc_info : null);
+            ?>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.addccaccount.field_accountsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

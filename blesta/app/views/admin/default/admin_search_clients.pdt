@@ -1,0 +1,46 @@
+
+        <div class="title_row">
+            <h3><?php $this->_('AdminSearch.clients.heading');?></h3>
+        </div>
+        <?php
+        if ((isset($clients) ? $clients : false) && ($num_clients = count($clients)) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><?php $this->_('AdminSearch.clients.heading_client_id');?></span></td>
+                <td><span><?php $this->_('AdminSearch.clients.heading_group');?></span></td>
+                <td><span><?php $this->_('AdminSearch.clients.heading_name');?></span></td>
+                <td><span><?php $this->_('AdminSearch.clients.heading_company');?></span></td>
+                <td><span><?php $this->_('AdminSearch.clients.heading_address');?></span></td>
+                <td class="last"><span><?php $this->_('AdminSearch.clients.heading_email');?></span></td>
+            </tr>
+            <?php
+            // Display all clients
+            for ($i = 0; $i < $num_clients; $i++) {
+            ?>
+            <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                <td><a href="<?php echo $this->base_uri . 'clients/view/' . (isset($clients[$i]->id) ? $this->Html->safe($clients[$i]->id) : null) . '/';?>"><?php echo (isset($clients[$i]->id_code) ? $this->Html->safe($clients[$i]->id_code) : null);?></a></td>
+                <td><span class="buff" style="background-color:<?php echo $this->Color->hex((isset($clients[$i]->group->color) ? $clients[$i]->group->color : null))->asHtml();?>; color:<?php echo $this->Color->hex((isset($clients[$i]->group->color) ? $clients[$i]->group->color : null))->contrastYiq()->asHtml();?>;"><?php (print (isset($clients[$i]->group->name) ? $this->Html->safe($clients[$i]->group->name) : null));?></span></td>
+                <td><?php echo (isset($clients[$i]->first_name) ? $this->Html->safe($clients[$i]->first_name) : null) . ' ' . (isset($clients[$i]->last_name) ? $this->Html->safe($clients[$i]->last_name) : null);?></td>
+                <td><?php (print (isset($clients[$i]->company) ? $this->Html->safe($clients[$i]->company) : null));?></td>
+                <td><?php (print (isset($clients[$i]->address1) ? $this->Html->safe($clients[$i]->address1) : null));?></td>
+                <td><a href="mailto:<?php (print (isset($clients[$i]->email) ? $this->Html->safe($clients[$i]->email) : null));?>"><?php (print (isset($clients[$i]->email) ? $this->Html->safe($clients[$i]->email) : null));?></a></td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+            <?php
+            if (isset($this->Pagination)) {
+                $this->Pagination->build();
+            }
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminSearch.clients.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>

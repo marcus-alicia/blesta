@@ -1,0 +1,23 @@
+{
+    "version": "1.5.0",
+    "name": "Blesta License",
+    "description": "Resell Blesta Licenses. Requires a reseller account with Blesta.",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "service": {
+        "name_key": "license"
+    },
+    "module": {
+        "row": "BlestaLicense.module_row.name",
+        "rows": "BlestaLicense.module_rows.name",
+        "group": "",
+        "row_key": "username"
+    },
+    "package": {
+        "name_key": ""
+    }
+}

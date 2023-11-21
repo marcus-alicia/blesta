@@ -1,0 +1,79 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.email.boxtitle_emailclient', true));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.email.field_recipient', true), 'recipient');
+                        $this->Form->fieldRadio('email_field', 'email_selected', ((isset($vars->email_field) ? $vars->email_field : 'email_selected') == 'email_selected'));
+                        $this->Form->fieldSelect('recipient', (isset($contacts) ? $contacts : null), (isset($vars->recipient) ? $vars->recipient : null), ['id' => 'recipient']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldRadio('email_field', 'email_other', ((isset($vars->email_field) ? $vars->email_field : null) == 'email_other'));
+                        $this->Form->fieldText('recipient_other', (((isset($vars->email_field) ? $vars->email_field : null) == 'email_other') ? (isset($vars->recipient_other) ? $vars->recipient_other : null) : ''), ['id' => 'recipient_other']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.email.field_fromname', true), 'from_name');
+                        $this->Form->fieldText('from_name', (isset($vars->from_name) ? $vars->from_name : null), ['id' => 'from_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.email.field_from', true), 'from');
+                        $this->Form->fieldText('from', (isset($vars->from) ? $vars->from : null), ['id' => 'from']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.email.field_subject', true), 'subject');
+                        $this->Form->fieldText('subject', (isset($vars->subject) ? $vars->subject : null), ['id' => 'subject']);
+                        ?>
+                    </li>
+                    <li>
+                        <div class="tab_content">
+                            <ul class="tabs">
+                                <li<?php echo (!empty($vars->html) || empty($vars->message)) ? ' class="current"' : '';?>>
+                                    <a href="#"><?php $this->Form->label($this->_('AdminClients.email.field_messagehtml', true), 'html');?></a>
+                                </li>
+                                <li<?php echo (empty($vars->html) && !empty($vars->message)) ? ' class="current"' : '';?>>
+                                    <a href="#"><?php $this->Form->label($this->_('AdminClients.email.field_message', true), 'text');?></a>
+                                </li>
+                            </ul>
+                            <div class="inner_content">
+                                <div><?php $this->Form->fieldTextarea('html', (isset($vars->html) ? $vars->html : null), ['id' => 'html']);?></div>
+                                <div><?php $this->Form->fieldTextarea('text', (isset($vars->message) ? $vars->message : null), ['id' => 'text']);?></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="button_row">
+                    <?php
+                    $this->Form->fieldSubmit('save', $this->_('AdminClients.email.field_emailsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+
+        $this->Widget->end();
+        ?>
+
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('#html').blestaBindWysiwygEditor({language: '" . substr(Configure::get('Blesta.language'), 0, 2) . "'});
+    $('div.tab_content').blestaTabbedContent();
+});
+");
+?>

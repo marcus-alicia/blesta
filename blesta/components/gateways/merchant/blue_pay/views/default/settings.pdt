@@ -1,0 +1,21 @@
+
+	<ul>
+		<li>
+			<?php
+            $this->Form->label($this->_('Blue_pay.account_id', true), 'account_id');
+            $this->Form->fieldText('account_id', (isset($meta['account_id']) ? $meta['account_id'] : null), ['id'=>'account_id']);
+            ?>
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Blue_pay.secret_key', true), 'secret_key');
+            $this->Form->fieldText('secret_key', (isset($meta['secret_key']) ? $meta['secret_key'] : null), ['id'=>'secret_key']);
+            ?>
+		</li>
+		<li>
+			<?php
+            $this->Form->fieldCheckbox('test_mode', 'true', ((isset($meta['test_mode']) ? $meta['test_mode'] : 'false') == 'true'), ['id'=>'test_mode']);
+            $this->Form->label($this->_('Blue_pay.test_mode', true), 'test_mode', ['class'=>'inline']);
+            ?>
+		</li>
+	</ul>

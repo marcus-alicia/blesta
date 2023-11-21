@@ -1,0 +1,175 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Vpsdotnet.tab_actions.heading_actions');?></h3>
+    </div>
+    <div class="pad">
+        <div class="options">
+            <p><?php $this->_('Vpsdotnet.tab_actions.server_status');?> <span class="buff <?php echo (isset($server_state) ? $this->Html->safe($server_state) : null);?>"><?php $this->_('Vpsdotnet.tab_actions.status_' . (isset($server_state) ? $this->Html->safe($server_state) : null));?></span></p>
+            <?php
+            if ((isset($server_state) ? $server_state : null) == 'online') {
+            ?>
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/servicetab/' . (isset($client_id) ? $client_id : null) . '/' . (isset($service_id) ? $service_id : null) . '/tabActions/reboot/');?>" class="reboot btn btn-success"><i class="fas fa-sync-alt"></i> <?php $this->_('Vpsdotnet.!actions.reboot');?></a>
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/servicetab/' . (isset($client_id) ? $client_id : null) . '/' . (isset($service_id) ? $service_id : null) . '/tabActions/shutdown/');?>" class="shutdown btn btn-danger"><i class="fas fa-power-off"></i> <?php $this->_('Vpsdotnet.!actions.shutdown');?></a>
+            <?php
+            } elseif ((isset($server_state) ? $server_state : null) == 'offline') {
+            ?>
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/servicetab/' . (isset($client_id) ? $client_id : null) . '/' . (isset($service_id) ? $service_id : null) . '/tabActions/boot/');?>" class="boot btn btn-default"><i class="fas fa-power-off"></i> <?php $this->_('Vpsdotnet.!actions.boot');?></a>
+            <?php
+            }
+            ?>
+            <a href="#" class="reinstall btn btn-default"><i class="fas fa-download"></i> <?php $this->_('Vpsdotnet.!actions.reinstall');?></a>
+            <a href="#" class="hostname btn btn-default"><i class="fas fa-edit"></i> <?php $this->_('Vpsdotnet.!actions.hostname');?></a>
+            <a href="#" class="password btn btn-default"><i class="fas fa-lock"></i> <?php $this->_('Vpsdotnet.!actions.password');?></a>
+        </div>
+    </div>
+
+    <div id="reinstall" style="display:none;">
+        <div class="title_row">
+            <h3><?php $this->_('Vpsdotnet.tab_actions.heading_reinstall');?></h3>
+        </div>
+        <?php
+        $this->Form->create($this->base_uri . 'clients/servicetab/' . (isset($client_id) ? $client_id : null) . '/' . (isset($service_id) ? $service_id : null) . '/tabActions/reinstall/');
+        ?>
+        <div class="pad">
+            <ul>
+                <li>
+                    <?php
+                    $this->Form->label($this->_('Vpsdotnet.tab_actions.field_vpsdotnet_template_group', true), 'vpsdotnet_template_group');
+                    $this->Form->fieldSelect('vpsdotnet_template_group', (isset($template_groups) ? $template_groups : null), (isset($vars->vpsdotnet_template_group) ? $vars->vpsdotnet_template_group : null), ['id' => 'vpsdotnet_template_group']);
+                    ?>
+                </li>
+                <li>
+                    <?php
+                    $this->Form->label($this->_('Vpsdotnet.tab_actions.field_vpsdotnet_template', true), 'vpsdotnet_template');
+                    $this->Form->fieldSelect('vpsdotnet_template', (isset($templates) ? $templates : null), (isset($vars->vpsdotnet_template) ? $vars->vpsdotnet_template : null), ['id' => 'vpsdotnet_template']);
+                    ?>
+                </li>
+                <li>
+                    <?php
+                    $this->Form->fieldCheckbox('confirm', '1', '0', ['id' => 'confirm']);
+                    $this->Form->label($this->_('Vpsdotnet.tab_actions.field_confirm', true), 'confirm', ['class' => 'inline']);
+                    ?>
+                </li>
+            </ul>
+        </div>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('Vpsdotnet.tab_actions.field_reinstall_submit', true), ['class' => 'btn btn-primary float-right']);
+            ?>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>
+
+    <div id="hostname" style="display:none;">
+        <div class="title_row">
+            <h3><?php $this->_('Vpsdotnet.tab_actions.heading_hostname');?></h3>
+        </div>
+        <?php
+        $this->Form->create($this->base_uri . 'clients/servicetab/' . (isset($client_id) ? $client_id : null) . '/' . (isset($service_id) ? $service_id : null) . '/tabActions/hostname/');
+        ?>
+        <div class="pad">
+            <ul>
+                <li>
+                    <?php
+                    $this->Form->label($this->_('Vpsdotnet.tab_actions.field_vpsdotnet_hostname', true), 'vpsdotnet_hostname');
+                    $this->Form->fieldText('vpsdotnet_hostname', (isset($vars->vpsdotnet_hostname) ? $vars->vpsdotnet_hostname : null), ['id' => 'vpsdotnet_hostname']);
+                    ?>
+                </li>
+            </ul>
+        </div>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('Vpsdotnet.tab_actions.field_hostname_submit', true), ['class' => 'btn btn-primary float-right']);
+            ?>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>
+
+    <div id="password" style="display:none;">
+        <div class="title_row">
+            <h3><?php $this->_('Vpsdotnet.tab_actions.heading_password');?></h3>
+        </div>
+        <?php
+        $this->Form->create($this->base_uri . 'clients/servicetab/' . (isset($client_id) ? $client_id : null) . '/' . (isset($service_id) ? $service_id : null) . '/tabActions/password/');
+        $this->Form->fieldHidden('vpsdotnet_reset_password', 1);
+        ?>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('Vpsdotnet.tab_actions.field_password_submit', true), ['class' => 'btn btn-primary float-right']);
+            ?>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(this).blestaSetHeadTag("link", {media:"screen", type:"text/css", rel:"stylesheet", href: "<?php echo $this->Html->safe($this->view_dir . 'css/styles.css');?>"});
+    <?php
+    if ((isset($reinstall) ? $reinstall : false)) {
+    ?>
+    showSection('reinstall');
+    <?php
+    }
+    if ((isset($hostname) ? $hostname : false)) {
+    ?>
+    showSection('hostname');
+    <?php
+    }
+    if ((isset($password) ? $password : false)) {
+    ?>
+    showSection('password');
+    <?php
+    }
+    ?>
+
+    $('#vpsdotnet_template_group').change(function() {
+        $(this).blestaRequest('get', '<?php echo $this->Html->safe($this->base_uri . 'clients/servicetab/' . (isset($client_id) ? $client_id : null) . '/' . (isset($service_id) ? $service_id : null) . '/tabActions/gettemplatesfromgroup/' . (isset($module_row_id) ? $module_row_id : null) . '/' . (isset($cloud_id) ? $cloud_id : null) . '/');?>' + $(this).val(), null, function(data) {
+                if (data) {
+                    // Remove all existing items
+                    $('option', '#vpsdotnet_template').remove();
+
+                    // Append all new items
+                    $.each(data, function(val, text) {
+                        $('#vpsdotnet_template').append( new Option(text, val));
+                    });
+                }
+            },
+            null,
+            {dataType: 'json'}
+        );
+        return false;
+    });
+
+    $('.options a.reinstall, .options a.hostname, .options a.password').click(function(e) {
+        var classes = $(this).attr('class').split(' ');
+        var option = '';
+
+        $.each(classes, function(index, value) {
+            if ($.inArray(value, ['reinstall', 'hostname', 'password']) > -1) {
+                option = value;
+                return false;
+            }
+        });
+
+        hideSections();
+        showSection(option);
+        return false;
+    });
+
+    function hideSections() {
+        $('#reinstall').hide();
+        $('#hostname').hide();
+        $('#password').hide();
+    }
+
+    function showSection(id) {
+        $('#' + id).show();
+    }
+});
+</script>

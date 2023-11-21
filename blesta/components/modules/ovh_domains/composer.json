@@ -1,0 +1,10 @@
+{
+    "name": "blesta/ovh_domains",
+    "description": "OVH Domains",
+    "license": "proprietary",
+    "type": "blesta-module",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "ovh/ovh": "2.1.0"
+    }
+}

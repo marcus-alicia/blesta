@@ -1,0 +1,385 @@
+
+                    <?php
+                    $this->WidgetClient->clear();
+                    $this->WidgetClient->create($this->_('Domain.lookup.title', true));
+                    ?>
+                        <div class="card-body">
+                            <div class="col-md-12 whois">
+                                <div class="row">
+                                    <div class="col-md-8 col-md-offset-2">
+                                        <?php
+                                        $this->Form->create(null, ['class' => 'disable-on-submit']);
+                                        ?>
+                                            <div class="well">
+                                                <div class="form-group">
+                                                    <?php
+                                                    $this->Form->fieldText('domain', (isset($vars->domain) ? $vars->domain : null), ['placeholder' => $this->_('Domain.lookup.domain_placeholder', true), 'class' => 'form-control input-md']);
+                                                    ?>
+                                                </div>
+                                                <div class="form-group tlds">
+                                                    <?php
+                                                    if (!empty($spotlight_tlds)) {
+                                                        foreach ($spotlight_tlds as $spotlight_tld => $true) {
+                                                            if (array_key_exists($spotlight_tld, $tlds)) {
+                                                                unset($tlds[$spotlight_tld]);
+                                                    ?>
+                                                        <label class="checkbox-inline spotlight_tld">
+                                                            <?php
+                                                            $this->Form->fieldCheckbox('tlds[]', $spotlight_tld, in_array($spotlight_tld, (isset($vars->tlds) ? $vars->tlds : [])));
+                                                            ?>
+                                                            <?php echo (isset($spotlight_tld) ? $this->Html->safe($spotlight_tld) : null);?>
+                                                        </label>
+                                                    <?php
+                                                            }
+                                                        }
+                                                    }
+                                                    $hidden_tlds = false;
+                                                    foreach ($tlds as $tld => $pack) {
+                                                        $hide_tld = false;
+                                                        if (!empty($spotlight_tlds) && !in_array($tld, (isset($vars->tlds) ? $vars->tlds : []))) {
+                                                            $hide_tld = true;
+                                                            $hidden_tlds = true;
+                                                        }
+                                                    ?>
+                                                        <label class="checkbox-inline normal_tld<?php echo ($hide_tld ? '" style="display:none;' : '');?>">
+                                                            <?php
+                                                            $this->Form->fieldCheckbox('tlds[]', $tld, in_array($tld, (isset($vars->tlds) ? $vars->tlds : [])));
+                                                            ?>
+                                                            <?php echo (isset($tld) ? $this->Html->safe($tld) : null);?>
+                                                        </label>
+                                                    <?php
+                                                    }
+
+                                                    if ($hidden_tlds) {
+                                                    ?>
+                                                    <a class="show_more btn btn-secondary btn-xs"><?php $this->_('Domain.lookup.show_all');?></a>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                            <div class="search">
+                                                <div class="btn-group">
+                                                    <button class="btn btn-success" type="submit" name="lookup" value="1">
+                                                        <i class="fas fa-search"></i> <?php $this->_('Domain.lookup.lookup_btn');?>
+                                                    </button>
+                                                    <button class="btn btn-light" type="submit" name="transfer" value="1">
+                                                        <i class="fas fa-sign-in-alt"></i> <?php $this->_('Domain.lookup.transfer_btn');?>
+                                                    </button>
+                                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'order/main/index/' . (isset($order_form->label) ? $order_form->label : null) . '/?skip=true');?>" class="btn btn-light"><i class="fas fa-hand-point-right"></i> <?php $this->_('Domain.lookup.other_btn');?></a>
+                                                </div>
+                                            </div>
+                                        <?php
+                                        $this->Form->end();
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <?php
+                            if (count((isset($order_form->currencies) ? $order_form->currencies : [])) > 1) {
+                            ?>
+                            <div class="col-md-12">
+                                <div class="currency pt-3">
+                                    <?php
+                                    $this->Form->create(null, ['method' => 'POST', 'class' => 'form-inline']);
+                                    if (!empty($vars->domain)) {
+                                        $this->Form->fieldHidden('domain', $vars->domain);
+                                        foreach (($vars->tlds ?? []) as $tld) {
+                                            $this->Form->fieldHidden('tlds[]', $tld);
+                                        }
+
+                                        if (isset($vars->transfer)) {
+                                            $this->Form->fieldHidden('transfer', 'true');
+                                        }
+                                    }
+                                    ?>
+                                        <label for="change_currency" class="mr-2">
+                                            <?php $this->_('Main.index.field_currency');?>
+                                        </label>
+                                        <?php
+                                        $this->Form->fieldSelect('currency', $this->Form->collapseObjectArray($order_form->currencies, 'currency', 'currency'), (isset($currency) ? $currency : null), ['class' => 'form-control input-sm m-0', 'id' => 'change_currency']);
+                                        ?>
+                                    <?php
+                                    $this->Form->end();
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                            }
+
+                            if ((isset($domains) ? $domains : null) && !empty($domains)) {
+                                $this->Form->create($this->base_uri . 'order/config/index/' . $order_form->label, ['id' => 'configure_domain', 'class' => 'disable-on-submit']);
+                                ?>
+                                <hr>
+                                <?php
+                                if (!isset($availability) || in_array(true, $availability)) {
+                                ?>
+                                    <div class="alert alert-success mb-2">
+                                        <p><i class="fas fa-check-circle"></i> <?php $this->_('Domain.lookup.domains_header_available');?></p>
+                                    </div>
+                                <?php
+                                } else {
+                                ?>
+                                    <div class="alert alert-danger mb-2">
+                                        <p><i class="fas fa-exclamation-circle"></i> <?php $this->_('Domain.lookup.domains_header_unavailable');?></p>
+                                    </div>
+                                <?php
+                                }
+                                
+                                if (($order_form->meta['free_domain'] ?? '0') == '1' && !empty($free_domains)) {
+                                    $term = $this->_('Domain.lookup.term_' . $order_form->meta['period'] . ($order_form->meta['term'] > 1 ? 's' : ''), true, $order_form->meta['term']);
+                                ?>
+                                    <div class="alert alert-info my-2">
+                                        <p><i class="fas fa-info-circle"></i> <?php $this->_('Domain.lookup.domains_header_free', false, $term, $bundle_package_group_names ?? '');?></p>
+                                    </div>
+                                <?php
+                                }
+                                ?>
+                                <div class="table-responsive mb-2">
+                                    <table class="table table-curved">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" id="all_domains">
+                                                </th>
+                                                <th><?php $this->_('Domain.lookup.domains_domain_name');?></th>
+                                                <th><?php $this->_('Domain.lookup.domains_status');?></th>
+                                                <th><?php $this->_('Domain.lookup.domains_term');?></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            foreach ($domains as $domain => $pack) {
+                                                $allow = true;
+                                                if (isset($availability) && (!isset($availability[$domain]) || !$availability[$domain])) {
+                                                    $allow = false;
+                                                }
+                                            ?>
+                                            <tr>
+                                                <td>
+                                                    <?php
+                                                    $attr = ['id' => 'dom_' . $domain];
+                                                    if (!$allow) {
+                                                        $attr['disabled'] = 'disabled';
+                                                    }
+                                                    $this->Form->fieldCheckbox('domains[]', $domain, $allow && in_array($domain, (isset($vars->domains) ? $vars->domains : [])), $attr);
+                                                    ?>
+                                                </td>
+                                                <td><?php $this->Form->label(($domain ?? null), 'dom_' . $domain);?></td>
+                                                <td>
+                                                    <?php
+                                                    if ($allow) {
+                                                    ?>
+                                                        <span class="badge badge-success"><?php $this->_('Domain.lookup.domain_available');?></span>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <span class="badge badge-danger"><?php $this->_('Domain.lookup.domain_unavailable');?></span>
+                                                    <?php
+                                                    }
+                                                
+                                                    if (($pack->free_eligible ?? false) && ($lowest_term = $pack->package->pricing[0] ?? null)) {
+                                                    $term = ($order_form->meta['limit_term'] ?? false)
+                                                            ? $this->_('Domain.lookup.term_' . $lowest_term->period . ($lowest_term->term > 1 ? 's' : ''), true, $lowest_term->term)
+                                                            : '';
+                                                    ?>
+                                                        <span class="badge badge-info"><i class="fab fa-creative-commons-zero"></i> <?php $this->_('Domain.lookup.domain_eligible_free', false, $term);?></span>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    $prices = [];
+                                                    foreach ($pack->package->pricing as $price) {
+                                                        if (($price->period ?? null) == 'onetime') {
+                                                            $prices[$price->id] = $this->_('Domain.lookup.term_onetime', true, (isset($periods[$price->period]) ? $periods[$price->period] : null), $this->CurrencyFormat->format((isset($price->transfer) ? (isset($price->price_transfer) ? $price->price_transfer : null) : (isset($price->price) ? $price->price : null)), $price->currency));
+                                                        } else {
+                                                            // Set the pricing text to include or not include renewal pricing
+                                                            $period = ($price->term == 1 ? (isset($periods[$price->period]) ? $periods[$price->period] : null) : (isset($periods[$price->period . '_plural']) ? $periods[$price->period . '_plural'] : null));
+                                                            $prices[$price->id] = (
+                                                                (isset($price->period) ? $price->period : null) == 'onetime' || ((isset($vars->transfer) ? (isset($price->price_transfer) ? $price->price_transfer : null) : (isset($price->price) ? $price->price : null)) == (isset($price->price_renews) ? $price->price_renews : null))
+                                                                    ? $this->_('Domain.lookup.term', true, $price->term, $period, $this->CurrencyFormat->format((isset($vars->transfer) ? (isset($price->price_transfer) ? $price->price_transfer : null) : (isset($price->price) ? $price->price : null)), (isset($price->currency) ? $price->currency : null)))
+                                                                    : $this->_('Domain.lookup.term_recurring', true, $price->term, $period, $this->CurrencyFormat->format((isset($vars->transfer) ? (isset($price->price_transfer) ? $price->price_transfer : null) : (isset($price->price) ? $price->price : null)), (isset($price->currency) ? $price->currency : null)), $this->CurrencyFormat->format((isset($price->price_renews) ? $price->price_renews : null), (isset($price->currency) ? $price->currency : null)))
+                                                            );
+                                                        }
+                                                    }
+
+                                                    $attr = ['class' => 'form-control input-sm'];
+                                                    if (!$allow) {
+                                                        $attr['disabled'] = 'disabled';
+                                                    }
+
+                                                    $this->Form->fieldSelect('pricing_id[' . (isset($domain) ? $this->Html->safe($domain) : null) . ']', $prices, (isset($vars->pricing_id) ? $vars->pricing_id : null), $attr);
+                                                    $this->Form->fieldHidden('group_id[' . (isset($domain) ? $this->Html->safe($domain) : null) . ']', $pack->group->package_group_id);
+
+                                                    $this->Form->fieldHidden('meta[' . (isset($domain) ? $this->Html->safe($domain) : null) . '][domain]', $domain);
+
+                                                    if (isset($vars->transfer)) {
+                                                        $this->Form->fieldHidden('meta[' . (isset($domain) ? $this->Html->safe($domain) : null) . '][transfer]', 'true');
+                                                    }
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <button type="submit" class="btn btn-light float-right">
+                                    <i class="fas fa-chevron-circle-right"></i> <?php $this->_('Domain.lookup.order_btn');?>
+                                </button>
+                                <div class="clearfix"></div>
+                            <?php
+                                $this->Form->end();
+                            }
+                            ?>
+
+                            <hr class="mt-3">
+                            <div class="p-3 mb-2 table-responsive">
+                                <table class="table table-curved table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th><?php $this->_('Domain.lookup.heading_tld');?></th>
+                                            <th><?php $this->_('Domain.lookup.heading_price');?></th>
+                                            <th><?php $this->_('Domain.lookup.heading_transfer_price');?></th>
+                                            <th><?php $this->_('Domain.lookup.heading_renew_price');?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if (!empty($spotlight_tlds)) {
+                                            foreach ($spotlight_tlds as $spotlight_tld => $true) {
+                                                if (array_key_exists($spotlight_tld, $tlds_pricing)) {
+                                                    foreach($tlds_pricing[$spotlight_tld] as $term) {
+                                        ?>
+                                            <tr class="tld_pricing">
+                                                <td><?php echo $this->Html->safe($spotlight_tld); ?></td>
+                                                <td>
+                                                    <?php echo $this->CurrencyFormat->format(($term->price ?? 0), $term->currency);?>
+                                                    <br><small><?php $this->_('Domain.lookup.term_year' . ($term->term > 1 ? 's' : ''), false, $term->term);?></small>
+                                                </td>
+                                                <td>
+                                                    <?php echo $this->CurrencyFormat->format(($term->price_transfer ?? 0), $term->currency);?>
+                                                    <br><small><?php $this->_('Domain.lookup.term_year' . ($term->term > 1 ? 's' : ''), false, $term->term);?></small>
+                                                </td>
+                                                <td>
+                                                    <?php echo $this->CurrencyFormat->format(($term->price_renews ?? 0), $term->currency);?>
+                                                    <br><small><?php $this->_('Domain.lookup.term_year' . ($term->term > 1 ? 's' : ''), false, $term->term);?></small>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                                        break;
+                                                    }
+
+                                                    unset($tlds_pricing[$spotlight_tld]);
+                                                }
+                                            }
+                                        }
+
+                                        $hidden_tlds = array_diff_key($spotlight_tlds ?? $tlds_pricing, $tlds_pricing);
+                                        if (!empty($hidden_tlds)) {
+                                        ?>
+                                            <tr class="tld_pricing_show">
+                                                <td class="bg-white" colspan="5">
+                                                    <div class="btn btn-light btn-block"><?php $this->_('Domain.lookup.show_all');?></div>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php
+                    $this->WidgetClient->end();
+                    ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var tlds_loaded = false;
+        <?php
+        if ($hidden_tlds) {
+        ?>
+        $(".show_more").click(function () {
+            $(this).hide();
+            $(".normal_tld").show();
+        });
+        <?php
+        }
+        ?>
+
+        $("#all_domains").on("click", function() {
+            $("#configure_domain input[name='domains[]']").not(":disabled").prop('checked', this.checked);
+        });
+        $("#configure_domain").submit(function(event) {
+            var domain_form = this;
+            $("input[name='domains[]']", domain_form).each(function() {
+                if (!$(this).is(":checked")) {
+                    $("select[name='pricing_id[" + $(this).val() + "]']", domain_form).prop('disabled', true);;
+                    $("input[name='group_id[" + $(this).val() + "]']", domain_form).remove();
+                }
+            });
+        });
+
+        $(".tld_pricing_show .btn").on("click", function() {
+            if (tlds_loaded) {
+                toggleTldPricingTable();
+            } else {
+                tlds_loaded = true;
+                loadAllTlds();
+            }
+        });
+
+        // Process change currency request
+        $("#change_currency").change(function() {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                if (vars[i].substring(0, 9) === 'currency=') {
+                    vars[i] = 'currency=' + $(this).val();
+                }
+            }
+
+            if (vars.length === 0 || vars[0] === "") {
+                vars[0] = 'currency=' + $(this).val();
+            }
+
+            var url = window.location.origin + window.location.pathname + '?' + vars.join('&');
+            $(this).closest("form").attr('action', url);
+            $(this).closest("form").submit();
+        });
+    });
+
+    function loadAllTlds() {
+        $(".tld_pricing_show .btn").attr('disabled', true);
+        $(".tld_pricing_show .btn").text('<?php $this->_('Domain.lookup.loading');?>');
+        $(this).blestaRequest(
+            'get',
+            '<?php echo $this->Html->safe($this->base_uri . 'order/config/preconfig/' . (isset($order_form->label) ? $order_form->label : null) . '/') ?>?getAllTlds=true',
+            null,
+            function(data) {
+                if (data && data.html) {
+                    $('.tld_pricing_show').before( data.html );
+                    toggleTldPricingTable();
+                }
+                $(".tld_pricing_show .btn").attr('disabled', false);
+            },
+            null,
+            {dataType: 'json'}
+        );
+    }
+
+    function toggleTldPricingTable() {
+        $(".table .tld_pricing.hidden").toggle();
+
+        if ($(".table .tld_pricing.hidden").first().is(":visible")){
+            $(".tld_pricing_show .btn").text('<?php $this->_('Domain.lookup.hide_all');?>');
+        } else{
+            $(".tld_pricing_show .btn").text('<?php $this->_('Domain.lookup.show_all');?>');
+        }
+    }
+</script>

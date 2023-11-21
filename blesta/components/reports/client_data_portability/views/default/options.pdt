@@ -1,0 +1,12 @@
+
+            <div class="pad_side">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('ClientDataPortability.options.field_client_id', true), 'client_id');
+                        $this->Form->fieldText('client_id', (isset($vars->client_id) ? $vars->client_id : null), ['id' => 'client_id']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('ClientDataPortability.!tooltip.client_id');?></div></span>
+                    </li>
+                </ul>
+            </div>

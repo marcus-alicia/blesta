@@ -1,0 +1,40 @@
+<?php
+echo (isset($message) ? $message : null);
+?>
+<div class="common_box">
+    <div class="inner">
+        <div class="billing_layouts">
+            <p><?php $this->_('AdminBilling.updatedashboard.text_layout');?></p>
+            <?php
+            $current_layout = '';
+            foreach ((isset($layouts) ? $layouts : null) as $layout) {
+                if ((isset($layout->selected) ? $this->Html->safe($layout->selected) : null) == true) {
+                    $current_layout = (isset($layout->name) ? $this->Html->safe($layout->name) : null);
+                }
+            ?>
+            <a href="<?php echo $this->base_uri . 'billing/updatedashboard/' . (isset($layout->name) ? $this->Html->safe($layout->name) : null) . '/';?>">
+                <div class="dashboard <?php echo (isset($layout->name) ? $this->Html->safe($layout->name) : null) . ((isset($layout->selected) ? $this->Html->safe($layout->selected) : null) ? ' on' : '');?>"> </div>
+            </a>
+            <?php
+            }
+            ?>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var current_layout = "<?php echo $current_layout;?>";
+
+        $('div.common_box .billing_layouts a').hover(
+            function() {
+                if (!$(this).find('.dashboard').hasClass('on'))
+                    $(this).find('.dashboard').addClass('on');
+            },
+            function() {
+                if (!$(this).find('.dashboard').hasClass(current_layout))
+                    $(this).find('.dashboard').removeClass('on');
+            }
+        );
+    });
+</script>

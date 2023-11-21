@@ -1,0 +1,9 @@
+{
+    "name": "blesta/authorize_net",
+    "description": "Authorize.net",
+    "license": "proprietary",
+    "type": "blesta-gateway-merchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

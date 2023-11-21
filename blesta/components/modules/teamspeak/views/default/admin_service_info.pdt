@@ -1,0 +1,21 @@
+    <table class="table">
+        <tr class="heading_row">
+            <td class="fixed_small center border_none"><i class="fas fa-level-up-alt fa-rotate-90"></i></td>
+            <td class="border_left"><?php $this->_('Teamspeak.service_info.hostname'); ?></td>
+            <td class="last"><?php $this->_('Teamspeak.service_info.port'); ?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><?php echo (isset($module_row->meta->hostname) ? $this->Html->safe($module_row->meta->hostname) : null); ?></td>
+            <td><?php echo (isset($service_fields->teamspeak_port) ? $this->Html->safe($service_fields->teamspeak_port) : null); ?></td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#teamspeak_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>').click(function(e) {
+                e.preventDefault();
+
+                $(this).closest('form').submit();
+            });
+        });
+    </script>

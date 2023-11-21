@@ -1,0 +1,78 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminMain.index.boxtitle_extensions', true), ['id'=>'admin_main'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="pad">
+            <div class="inner">
+                <div class="links_row">
+                    <a class="btn btn-default btn-sm pull-right" title="<?php $this->_('AdminMain.index.extension_add');?>" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/extension_generator/admin_main/general/');?>"><i class="fas fa-plus"></i></a>
+                </div>
+                <?php
+                if ((isset($extensions) ? $extensions : null) && !empty($extensions)) {
+                ?>
+
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/extension_generator/admin_main/index/?sort=id&order=' . ($sort == 'id' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'id' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_id');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/extension_generator/admin_main/index/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_name');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/extension_generator/admin_main/index/?sort=type&order=' . ($sort == 'type' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'type' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_type');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/extension_generator/admin_main/index/?sort=form_type&order=' . ($sort == 'form_type' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'form_type' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_form_type');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/extension_generator/admin_main/index/?sort=code_examples&order=' . ($sort == 'code_examples' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'code_examples' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_code_examples');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/extension_generator/admin_main/index/?sort=date_updated&order=' . ($sort == 'date_updated' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_updated' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.index.heading_date_updated');?></a></span></td>
+                        <td class="last"><span><?php $this->_('AdminMain.index.heading_options');?></span></td>
+                    </tr>
+                    <?php
+                    // Display all extensions
+                    $i = 0;
+                    foreach ($extensions as $extension) {
+                    ?>
+                    <tr<?php echo ($i++%2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php echo (isset($extension->id) ? $this->Html->safe($extension->id) : null);?></td>
+                        <td><?php echo (isset($extension->name) ? $this->Html->safe($extension->name) : null);?></td>
+                        <td><?php echo $this->Html->safe((isset($types[$extension->type]) ? $types[$extension->type] : null));?></td>
+                        <td><?php echo $this->Html->safe((isset($form_types[$extension->form_type]) ? $form_types[$extension->form_type] : null));?></td>
+                        <td><?php echo (isset($extension->code_examples) ? $extension->code_examples : null) == 1 ? '<i class="fas fa-check">' : '<i class="fas fa-times">';?></td>
+                        <td><?php echo $this->Date->cast((isset($extension->date_updated) ? $extension->date_updated : null), 'date_time');?></td>
+                        <td>
+                            <a href="<?php echo $this->base_uri . 'plugin/extension_generator/admin_main/general/' . (isset($extension->id) ? $this->Html->safe($extension->id) : null) . '/';?>"><?php $this->_('AdminMain.index.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'plugin/extension_generator/admin_main/delete/');
+                            $this->Form->fieldHidden('id', (isset($extension->id) ? $extension->id : null));
+                            ?>
+                            <a href="<?php echo $this->base_uri . 'plugin/extension_generator/admin_main/delete/' . (isset($extension->id) ? $this->Html->safe($extension->id) : null) . '/';?>" class="manage delete_extension" rel="<?php $this->_('AdminMain.index.text_confirm_delete');?>"><?php $this->_('AdminMain.index.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="inner">
+                    <div class="empty_section">
+                        <div class="empty_box">
+                            <?php $this->_('AdminMain.index.extensions_no_results');?>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('a.delete_extension[rel]').blestaModalConfirm({base_url: '<?php echo $this->Html->safe($this->base_uri);?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+    });
+</script>

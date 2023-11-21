@@ -1,0 +1,70 @@
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.accountachinfo.heading_account');?></h3>
+            </div>
+            <div class="pad">
+                <?php echo ($message ?? null); ?>
+
+                <?php
+                if ((isset($gateway_form) ? $gateway_form : null)) {
+                    echo $gateway_form;
+                ?>
+            </div>
+            <div class="pad">
+                <?php
+                } else {
+                ?>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.accountachinfo.field_type', true), 'type');
+                        $this->Form->fieldSelect('type', (isset($types) ? $types : null), (isset($vars->type) ? $vars->type : null), ['id' => 'type']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.accountachinfo.field_accountnum', true), 'account');
+                        $this->Form->fieldText('account', isset($vars->last4) ? str_pad($vars->last4, 9, '*', STR_PAD_LEFT) : (isset($vars->account) ? $vars->account : null), ['id' => 'account']);
+                        ?>
+                        <?php
+                        if ((isset($edit) ? $edit : false) && !(isset($vars->gateway_id) ? $vars->gateway_id : null)) {
+                        ?>
+                        <a href="<?php echo $this->base_uri . 'clients/showaccount/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($vars->id) ? $this->Html->safe($vars->id) : null);?>" class="show_account"><?php $this->_('AdminClients.accountachinfo.text_showaccount');?></a>
+                        <?php
+                        }
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.accountachinfo.field_routingnum', true), 'routing');
+                        $this->Form->fieldText('routing', isset($vars->last4) ? str_pad(null, 9, '*', STR_PAD_LEFT) : (isset($vars->routing) ? $vars->routing : null), ['id' => 'routing']);
+                        ?>
+                    </li>
+                </ul>
+                <?php
+                }
+
+                if (isset($save_account) && $save_account) {
+                ?>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('save_details', 'true', isset($vars->save_details), ['id' => 'save_details_ach']);
+                        $this->Form->label($this->_('AdminClients.accountachinfo.field_savedetails', true), 'save_details_ach', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+                <?php
+                }
+                ?>
+            </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    var options = {
+        close: '" . $this->_('AppController.modal.text_close', true) . "'
+    };
+    $('a.show_account').blestaModal(options);
+});
+");
+?>

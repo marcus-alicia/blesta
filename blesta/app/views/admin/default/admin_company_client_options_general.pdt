@@ -1,0 +1,32 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyClientOptions.general.boxtitle', true));
+                ?>
+                <div class="inner">
+                    <?php
+                    $this->Form->create(null, ['class' => 'disable-on-submit']);
+                    ?>
+                    <div class="pad">
+                        <?php echo (isset($client_general_form) ? $client_general_form : null);?>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyClientOptions.general.text_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+
+                    <?php
+                    $this->Form->end();
+                    ?>
+                </div>
+                <?php
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

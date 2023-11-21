@@ -1,0 +1,82 @@
+    <?php
+    // Don't show this container when only rendering the widget section
+    if (!(isset($render_section) ? $render_section : null)) {
+    ?>
+    <div class="col-md-3">
+        <?php echo (isset($tabs) ? $tabs : null);?>
+    </div>
+    <div class="col-md-9">
+    <?php
+    }
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            ['name'=>$this->_('Payouts.index.category_approved', true) . ' <span class="badge">' . (isset($status_count['approved']) ? $this->Html->safe($status_count['approved']) : null) . '</span>', 'current'=>((isset($status) ? $status : null) == 'approved' ? true : false), 'attributes'=>['href'=>$this->base_uri . 'order/payouts/index/approved/', 'class'=>'ajax']],
+            ['name'=>$this->_('Payouts.index.category_pending', true) . ' <span class="badge">' . (isset($status_count['pending']) ? $this->Html->safe($status_count['pending']) : null) . '</span>', 'current'=>((isset($status) ? $status : null) == 'pending' ? true : false), 'attributes'=>['href'=>$this->base_uri . 'order/payouts/index/pending/', 'class'=>'ajax']],
+            ['name'=>$this->_('Payouts.index.category_declined', true) . ' <span class="badge">' . (isset($status_count['declined']) ? $this->Html->safe($status_count['declined']) : null) . '</span>', 'current'=>((isset($status) ? $status : null) == 'declined' ? true : false), 'attributes'=>['href'=>$this->base_uri . 'order/payouts/index/declined/', 'class'=>'ajax']]
+        ];
+        $link_buttons = [
+            ['name'=>$this->_('Payouts.index.categorylink_request_payout', true), 'attributes'=>['href'=>$this->Html->safe($this->base_uri . 'order/payouts/add/')]]
+        ];
+
+        $this->WidgetClient->clear();
+        $this->WidgetClient->setLinks($links);
+        $this->WidgetClient->setLinkButtons($link_buttons);
+        $this->WidgetClient->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'order_form_styles']);
+        $this->WidgetClient->create($this->_('Payouts.index.boxtitle_payouts', true), ['id' => 'payouts'], (isset($render_section) ? $render_section : null));
+        $this->WidgetClient->startBody();
+
+        if ((isset($payouts) ? $payouts : false) && ($num_payouts = count($payouts)) > 0) {
+        ?>
+        <div class="table-responsive">
+            <table class="table table-curved table-striped">
+                <thead>
+                    <tr>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/payouts/index/' . (isset($status) ? $status : null) . '/?sort=id&order=' . ($sort == 'id' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'id' ? ' ' . $order : '');?>"><?php $this->_('Payouts.index.heading_id');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/payouts/index/' . (isset($status) ? $status : null) . '/?sort=requested_amount&order=' . ($sort == 'requested_amount' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'requested_amount' ? ' ' . $order : '');?>"><?php $this->_('Payouts.index.heading_requested_amount');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/payouts/index/' . (isset($status) ? $status : null) . '/?sort=requested_currency&order=' . ($sort == 'requested_currency' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'requested_currency' ? ' ' . $order : '');?>"><?php $this->_('Payouts.index.heading_requested_currency');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/payouts/index/' . (isset($status) ? $status : null) . '/?sort=payment_method_name&order=' . ($sort == 'payment_method_name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'payment_method_name' ? ' ' . $order : '');?>"><?php $this->_('Payouts.index.heading_payment_method');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/payouts/index/' . (isset($status) ? $status : null) . '/?sort=date_requested&order=' . ($sort == 'date_requested' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_requested' ? ' ' . $order : '');?>"><?php $this->_('Payouts.index.heading_date_requested');?></a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($payouts as $payout) {
+                        ?>
+                        <tr>
+                            <td><?php echo (isset($payout->id) ? $this->Html->safe($payout->id) : null);?></td>
+                            <td><?php echo $this->CurrencyFormat->format($payout->requested_amount, $payout->requested_currency);?></td>
+                            <td><?php echo (isset($payout->requested_currency) ? $this->Html->safe($payout->requested_currency) : null);?></td>
+                            <td><?php echo (isset($payment_methods[$payout->payment_method_id]) ? $payment_methods[$payout->payment_method_id] : '');?></td>
+                            <td><?php echo $this->Date->cast((isset($payout->date_requested) ? $this->Html->safe($payout->date_requested) : null));?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        } else {
+        ?>
+        <div class="alert alert-info">
+            <p><?php $this->_('Payouts.index.no_results');?></p>
+        </div>
+        <?php
+        }
+
+        $this->WidgetClient->endBody();
+        if ($this->Pagination->hasPages()) {
+            $this->WidgetClient->startFooter();
+            $this->Pagination->build();
+            $this->WidgetClient->endFooter();
+        }
+        $this->WidgetClient->end();
+
+    // Don't show this container when only rendering the widget section
+    if (!(isset($render_section) ? $render_section : null)) {
+    ?>
+    </div>
+    <?php
+    }
+    ?>

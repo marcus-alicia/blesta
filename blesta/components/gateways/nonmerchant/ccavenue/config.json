@@ -1,0 +1,17 @@
+{
+	"version": "2.3.0",
+	"name": "Ccavenue.name",
+	"description": "Ccavenue.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		},
+        {
+            "name": "Nirays Technologies",
+            "url": "http://nirays.com"
+        }
+	],
+	"currencies": ["EUR", "GBP", "INR", "SGD", "USD"],
+	"signup_url": "https://dashboard.ccavenue.com/web/registration.do?command=navigateSchemeForm"
+}

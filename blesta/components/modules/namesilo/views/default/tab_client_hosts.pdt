@@ -1,0 +1,57 @@
+    <div class="row panel-fix">
+        <div class="col-md-12">
+            <?php
+            $this->Form->create();
+            ?>
+                <h4><?php $this->_('Namesilo.tab_hosts.title'); ?></h4>
+                <p class="mb-2"><?php $this->_('Namesilo.tab_hosts.desc'); ?></p>
+
+                <div class="table-responsive my-2">
+                    <table class="table table-curved table-striped-alt">
+                        <thead>
+                            <tr>
+                                <th><?php $this->_('Namesilo.tab_hosts.field_hostname'); ?></th>
+                                <th><?php $this->_('Namesilo.tab_hosts.field_ip'); ?></th>
+                            </tr>
+                        </thead>
+
+                        <?php
+                        foreach ($vars->hosts ?? [] as $host) {
+                        ?>
+                            <tbody>
+                                <?php
+                                foreach ($host->ip as $index => $ip) {
+                                ?>
+                                    <tr>
+                                        <td<?php echo $index !== 0 ? ' class="text-muted"' : ''; ?>><?php echo $host->host . '.' . ($domain ?? ''); ?></td>
+                                        <td><?php $this->Form->fieldText('hosts[' . (isset($host->host) ? $host->host : null) . '][]', $ip); ?></td>
+                                    </tr>
+                                <?php
+                                    }
+                                ?>
+                                <tr>
+                                    <td class="text-muted"></td>
+                                    <td><?php $this->Form->fieldText('hosts[' . (isset($host->host) ? $host->host : null) . '][]'); ?></td>
+                                </tr>
+                            </tbody>
+                        <?php
+                        }
+                        ?>
+
+                        <tbody>
+                            <tr>
+                                <td><?php $this->Form->fieldText('new_host'); echo '.' . $domain; ?></td>
+                                <td><?php $this->Form->fieldText('new_host_ip'); ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button class="btn btn-light float-right" type="submit">
+                    <i class="fas fa-edit"></i> <?php $this->_('Namesilo.tab_hosts.field_submit'); ?>
+                </button>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+    </div>

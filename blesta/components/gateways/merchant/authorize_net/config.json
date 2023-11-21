@@ -1,0 +1,13 @@
+{
+	"version": "1.9.1",
+	"name": "Authorize_net.name",
+	"description": "Authorize_net.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["CAD", "GBP", "EUR", "USD"],
+	"signup_url": "http://go.evopayments.us/blesta"
+}

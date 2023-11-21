@@ -1,0 +1,62 @@
+                    <div class="card bg-light p-3 card-order">
+                        <?php
+                        if ((isset($totals) ? $totals : null)) {
+                        ?>
+                        <div class="table-responsive">
+                            <table class="table table-curved">
+                                <tbody>
+                                    <tr>
+                                        <td><?php $this->_('Checkout.index.totals.subtotal');?></td>
+                                        <td><span class="price-col float-right"><strong><?php echo (isset($totals['subtotal']['amount_formatted']) ? $this->Html->safe($totals['subtotal']['amount_formatted']) : null);?></strong></span></td>
+                                    </tr>
+                                    <?php
+                                    if ((isset($totals['fees']['setup']) ? $totals['fees']['setup'] : null)) {
+                                    ?>
+                                    <tr>
+                                        <td><?php $this->_('Checkout.index.totals.setup_fee');?></td>
+                                        <td><span class="price-col float-right"><strong><?php echo (isset($totals['fees']['setup']['amount_formatted']) ? $this->Html->safe($totals['fees']['setup']['amount_formatted']) : null);?></strong></span></td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    if ((isset($totals['discount']['amount']) ? $totals['discount']['amount'] : null)) {
+                                    ?>
+                                    <tr>
+                                        <td><?php $this->_('Checkout.index.totals.discount');?></td>
+                                        <td><span class="price-col float-right"><strong><?php echo (isset($totals['discount']['amount_formatted']) ? $this->Html->safe($totals['discount']['amount_formatted']) : null);?></strong></span></td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    if ((isset($totals['tax']) ? $totals['tax'] : null)) {
+                                        foreach ($totals['tax'] as $tax) {
+                                    ?>
+                                        <tr>
+                                            <td><?php $this->_('Checkout.index.totals.tax', false, $tax['name'], $tax['percentage']);?></td>
+                                            <td><span class="price-col float-right"><strong><?php echo (isset($tax['amount_formatted']) ? $this->Html->safe($tax['amount_formatted']) : null);?></strong></span></td>
+                                        </tr>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <hr>
+                        <?php
+                        }
+                        ?>
+
+                        <div class="row">
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6 total-due">
+                                <?php
+                                if ((isset($totals) ? $totals : null)) {
+                                ?>
+                                    <small><?php $this->_('Checkout.index.totals.total');?></small>
+                                    <h4><strong><?php echo (isset($totals['total']['amount_formatted']) ? $this->Html->safe($totals['total']['amount_formatted']) : null);?></strong></h4>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>

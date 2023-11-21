@@ -1,0 +1,102 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $tabs = [];
+
+                // Set tab language
+                if (is_array((isset($template->messages) ? $template->messages : null)) && count($template->messages) > 0) {
+                    foreach ($template->messages as $type => $messages) {
+                        $tabs[] = [
+                            'name' => (isset($types[$type]) ? $types[$type] : null),
+                            'current' => (isset($message_type) ? $message_type : null) == $type ? true : false,
+                            'attributes' => ['href' => $this->base_uri . 'settings/company/messengers/edittemplate/' . $template->id . '/' . $type . '/']
+                        ];
+                    }
+                }
+
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create($this->_('AdminCompanyMessengers.edittemplate.boxtitle_edittemplate', true, (isset($template_name) ? $template_name : null)));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyMessengers.edittemplate.field.tags', true), 'tags');
+
+                                if (is_array($template->tags)) {
+                                ?>
+                                    <div class="accent_box">
+                                    <?php
+                                    for ($i = 0, $num_tags = count($template->tags); $i < $num_tags; $i++) {
+                                    ?>
+                                    <?php (print (isset($template->tags[$i]) ? $this->Html->safe($template->tags[$i]) : null));?>
+                                    <?php
+                                    }
+                                    ?>
+                                    </div>
+                                <?php
+                                }
+                                ?>
+                            </li>
+                            <li>
+                                <div class="tab_content">
+                                    <ul class="tabs">
+                                        <?php
+                                        $i = 1;
+                                        foreach ($template->messages[$message_type]->content as $message) {
+                                        ?>
+                                            <li<?php if ($i == 1) { ?> class="current"<?php } ?>>
+                                                <a href="#"><?php $this->Form->label((isset($message->lang_name) ? $message->lang_name : null), $message->lang);?></a>
+                                            </li>
+                                        <?php
+                                            $i++;
+                                        }
+                                        ?>
+                                    </ul>
+                                    <div class="inner_content">
+                                        <?php
+                                        $i = 1;
+                                        foreach ($template->messages[$message_type]->content as $message) {
+                                        ?>
+                                            <div>
+                                                <?php $this->Form->fieldTextarea('message[' . $message->message_id . '][content][' . $message->lang . ']', (isset($vars->message[$message->message_id]['content'][$message->lang]) ? $vars->message[$message->message_id]['content'][$message->lang] : $message->content), ['id' => $message->lang]);?>
+                                            </div>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('message[' . $template->messages[$message_type]->id . '][status]', 'active', ((isset($vars->message[$template->messages[$message_type]->id]['status']) ? $vars->message[$template->messages[$message_type]->id]['status'] : (isset($template->messages[$message_type]->status) ? $template->messages[$message_type]->status : null)) == 'active' ? true : false), ['id' => 'status']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyMessengers.edittemplate.field.status', true), 'status', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyMessengers.!tooltip.status');?></div></span>
+                            </li>
+                        </ul>
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminCompanyMessengers.edittemplate.field.edittemplatesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                            <a class="btn btn-default pull-right" href="<?php echo $this->base_uri;?>settings/company/messengers/templates/"><?php $this->_('AdminCompanyMessengers.edittemplate.field.cancel');?></a>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('div.tab_content').blestaTabbedContent();
+});
+");
+?>

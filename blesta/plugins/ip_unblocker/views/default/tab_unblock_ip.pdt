@@ -1,0 +1,16 @@
+<h4><?php $this->_('IpUnblockerPlugin.unblock_ip')?></h4>
+<?php
+$this->Form->create();
+?>
+<div class="form-group">
+<?php
+$this->Form->fieldText('ip_address', (isset($ip_address) ? $ip_address : null), ['class' => 'form-control', 'disabled' => 'disabled']);
+?>
+</div>
+<div class="form-group">
+<?php
+$this->Form->fieldSubmit('submit', $this->_('IpUnblockerPlugin.unblock_ip', true), ['class' => 'btn btn-light float-right']);
+?>
+</div>
+<?php
+$this->Form->end();

@@ -1,0 +1,1 @@
+This software is commercially licensed under the [Blesta License](http://docs.blesta.com/display/support/End+User+License+Agreement).

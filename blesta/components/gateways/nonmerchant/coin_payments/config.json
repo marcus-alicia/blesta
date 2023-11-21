@@ -1,0 +1,17 @@
+{
+	"version": "1.5.0",
+	"name": "CoinPayments.name",
+	"description": "CoinPayments.description",
+	"authors": [
+		{
+			"name": "CoinPayments.net",
+			"url": "https://www.coinpayments.net"
+		},
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["AUD", "BRL", "BTC", "CAD", "CHF", "CNY", "CZK", "EUR", "GBP", "HKD", "JPY", "KRW", "LAK", "LTC", "MXN", "NZD", "PLN", "RUB", "SEK", "SGD", "THB", "TWD", "USD", "ZAR"],
+	"signup_url": "https://www.coinpayments.net/index.php?ref=10f425656e02bac792ea749dba767aba"
+}

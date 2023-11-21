@@ -1,0 +1,20 @@
+
+	<?php
+    // Disable CSRF for this form
+    $this->Form->setCsrfOptions(['set_on_create' => false]);
+    $this->Form->create($post_to);
+
+    $this->Form->fieldHidden('encRequest', (isset($encRequest) ? $encRequest : null));
+    $this->Form->fieldHidden('access_code', (isset($access_code) ? $access_code : null));
+
+    $this->Form->fieldImage(
+        'submit',
+        $this->_('Ccavenue.buildprocess.submit', true),
+        [
+            'src' => $this->view_dir.'images/ccav_secure_banner_pay.gif',
+            'alt' => $this->_('Ccavenue.buildprocess.submit', true),
+            'title' => $this->_('Ccavenue.buildprocess.submit', true)
+        ]
+    );
+
+    $this->Form->end();

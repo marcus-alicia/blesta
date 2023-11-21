@@ -1,0 +1,118 @@
+
+        <?php
+        echo ($message ?? null);
+
+        $link_buttons = [
+            ['name'=>$this->_('AdminMain.urls.add_url', true), 'attributes'=>['href'=>$this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/addurl/'), 'class'=>'add_url']]
+        ];
+
+        $tabs = [
+            [
+                'name' => $this->_('AdminMain.urls.tab_files', true),
+                'current' => false,
+                'attributes' => [
+                    'class' => 'files',
+                    'href' => $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/')
+                ]
+            ],
+            [
+                'name' => $this->_('AdminMain.urls.tab_urls', true),
+                'current' => true,
+                'attributes' => [
+                    'class' => 'urls',
+                    'href' => $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/urls/')
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->create($this->_('AdminMain.urls.boxtitle_downloadmanager', true), ['id' => 'urls'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="pad">
+            <div class="inner">
+                <div class="links_row">
+                    <?php
+                    foreach ($link_buttons as $link_button) {
+                        $attributes = '';
+                        foreach (($link_button['attributes'] ?? []) as $attribute => $value) {
+                            $attributes .= ' ' . $attribute . '="' . $value . '"';
+                        }
+                    ?>
+                    <a class="btn btn-default btn-sm pull-right" title="<?php echo $this->Html->safe($link_button['name'] ?? '');?>"<?php echo $attributes;?>><?php echo $this->Html->safe($link_button['name'] ?? '');?></a>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <?php
+                if (!empty($urls)) {
+                ?>
+                <table class="table table-striped" id="urls">
+                    <thead>
+                        <tr class="heading_row">
+                            <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/urls/?sort=url&order=' . ($sort == 'url' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'url' ? ' ' . $order : '');?>"><?php $this->_('AdminMain.urls.heading_url');?></a></span></td>
+                            <td><span><?php $this->_('AdminMain.urls.heading_file');?></span></td>
+                            <td><span><?php $this->_('AdminMain.urls.heading_link');?></span></td>
+                            <td class="last"><span><?php $this->_('AdminMain.urls.heading_options');?></span></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($urls as $url) {
+                        ?>
+                        <tr>
+                            <td><?php echo $this->Html->safe($url->url);?></td>
+                            <td>
+                                <?php
+                                if (!empty($url->file_id)) {
+                                ?>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/edit/' . $url->file_id);?>"><i class="fas fa-file-archive fa-fw mr-1"></i><?php echo $this->Html->safe($url->full_path);?></a>
+                                <?php
+                                } elseif (!empty($url->category_id)) {
+                                ?>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/' . $url->category_id);?>"><i class="fas fa-folder-open fa-fw mr-1"></i><?php $this->_('AdminMain.urls.latest_file', false, $url->full_path);?></a>
+                                <?php
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $this->Html->safe(($base_url ?? '/') . ltrim($public_uri ?? '', '/') . 'download/' . $url->url);?></td>
+                            <td>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/editurl/' . $url->id);?>"><?php $this->_('AdminMain.urls.edit');?></a>,
+                                <?php
+                                $this->Form->create($this->base_uri . 'plugin/download_manager/admin_main/deleteurl/');
+                                $this->Form->fieldHidden('id', ($url->id ?? null));
+                                ?>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/deleteurl/');?>" class="manage" rel="<?php $this->_('AdminMain.modal.delete_url');?>"><?php $this->_('AdminMain.urls.delete');?></a>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                            </td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <?php
+                    if ($this->Pagination->hasPages()) {
+                        $this->Pagination->build();
+                    }
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box"><?php $this->_('AdminMain.urls.no_urls');?></div>
+                </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#urls a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->Html->safe($this->base_uri);?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+    });
+</script>

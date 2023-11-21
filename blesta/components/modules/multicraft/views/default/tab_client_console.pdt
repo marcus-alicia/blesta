@@ -1,0 +1,102 @@
+    <div id="multicraft_console">
+        <h4><?php $this->_('Multicraft.tab_client_players.heading_console');?></h4>
+        <?php
+        $this->Form->create();
+        ?>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('Multicraft.tab_client_console.field_command', true), 'command');
+            $this->Form->fieldText('command', (isset($vars['command']) ? $vars['command'] : null), ['id'=>'command', 'class' => 'form-control', 'placeholder' => $this->_('Multicraft.tab_client_console.field_command', true)]);
+            ?>
+        </div>
+        <button class="btn btn-light float-right" type="submit">
+            <i class="fas fa-plus-circle"></i>
+            <?php $this->_('Multicraft.tab_client_console.submit_send');?>
+        </button>
+        <?php
+        $this->Form->end();
+        ?>
+        <div class="clearfix"></div>
+        <hr />
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a href="#console" class="nav-link active" data-toggle="tab"><?php $this->_('Multicraft.tab_client_players.heading_console_tab');?></a></li>
+            <li class="nav-item"><a href="#chat" class="nav-link" data-toggle="tab"><?php $this->_('Multicraft.tab_client_players.heading_chat_tab');?></a></li>
+        </ul>
+        <div class="tab-content">
+            <br />
+            <div class="tab-pane fade show active" id="console">
+                <?php
+                $this->Form->create();
+                $log_data = '';
+                if (!empty($console_logs)) {
+                    foreach ($console_logs as $log) {
+                        if (array_key_exists('line', $log)) {
+                            $log_data .= $log['line'] . "\n";
+                        }
+                    }
+                }
+                ?>
+                <div class="form-group">
+                    <?php
+                    $this->Form->fieldTextarea('log', htmlspecialchars_decode($log_data, ENT_QUOTES), ['id' => 'multicraft_console_logs', 'readonly' => 'readonly', 'class' => 'form-control', 'rows' => '20']);
+                    $this->Form->fieldHidden('clear_console_log', 'true');
+                    ?>
+                </div>
+                <button class="btn btn-light float-right" type="submit">
+                    <i class="fas fa-times"></i>
+                    <?php $this->_('Multicraft.tab_client_console.submit_clear_log');?>
+                </button>
+                <?php
+                $this->Form->end();
+                ?>
+            </div>
+            <div class="tab-pane fade" id="chat">
+                <?php
+                $this->Form->create();
+                $log_data = '';
+                if (!empty($chat_logs)) {
+                    foreach ($chat_logs as $log) {
+                        $time = (array_key_exists('time', $log) ? $this->Date->cast($log['time'], 'date_time') : '');
+                        $name = (array_key_exists('name', $log) ? $log['name'] : '');
+                        $text = (array_key_exists('text', $log) ? htmlspecialchars_decode($log['text'], ENT_QUOTES) : '');
+                        $log_data .= $this->_('Multicraft.tab_client_console.chat_entry', true, $time, $name, $text) ."\n";
+                    }
+                }
+                ?>
+                <div class="form-group">
+                    <?php
+                    $this->Form->fieldTextarea('log', $log_data, ['id' => 'multicraft_chat_logs', 'readonly' => 'readonly', 'class' => 'form-control', 'rows' => '20']);
+                    $this->Form->fieldHidden('clear_chat_log', 'true');
+                    ?>
+                </div>
+                <button class="btn btn-light float-right" type="submit">
+                    <i class="fas fa-times"></i>
+                    <?php $this->_('Multicraft.tab_client_console.submit_clear_log');?>
+                </button>
+                <?php
+                $this->Form->end();
+                ?>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // Refresh
+    multicraft_actions_interval = setInterval(function() {
+        $(this).blestaRequest("GET", '<?php echo $this->Html->safe($this->base_uri . 'services/manage/' . (isset($service_id) ? $service_id : null) . '/console/');?>', null,
+            // Success response
+            function(data) {
+                if (data.replacer && data.content) {
+                    var html = $('textarea', data.content).filter('#multicraft_console_logs').html();
+                    $('#multicraft_console_logs').html(html);
+                    html = $('textarea', data.content).filter('#multicraft_chat_logs').html();
+                    $('#multicraft_chat_logs').html(html);
+                }
+            },
+            null,
+            {dataType: 'json'}
+        );
+    }, <?php echo Configure::get('Multicraft.page_refresh_rate');?>);
+});
+</script>

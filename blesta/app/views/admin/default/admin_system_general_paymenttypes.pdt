@@ -1,0 +1,86 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminSystemGeneral.paymenttypes.categorylink_addtype', true),
+                            'href' => $this->base_uri . 'settings/system/general/addtype/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminSystemGeneral.paymenttypes.boxtitle_types', true), ['id' => 'admin_system_general_paymenttypes'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($types) ? $types : false) && ($num_types = count($types)) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><span><?php $this->_('AdminSystemGeneral.paymenttypes.heading_name');?></span></td>
+                        <td><span><?php $this->_('AdminSystemGeneral.paymenttypes.heading_type');?></span></td>
+                        <td><span><?php $this->_('AdminSystemGeneral.paymenttypes.heading_is_lang');?></span></td>
+                        <td class="last"><span><?php $this->_('AdminSystemGeneral.paymenttypes.heading_options');?></span></td>
+                    </tr>
+                    <?php
+                    // Display each payment type
+                    for ($i = 0; $i < $num_types; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($types[$i]->real_name) ? $this->Html->safe($types[$i]->real_name) : null));?></td>
+                        <td><?php echo $this->Html->safe((isset($debit_types[$types[$i]->type]) ? $debit_types[$types[$i]->type] : null));?></td>
+                        <td><?php echo ((isset($types[$i]->is_lang) ? $this->Html->safe($types[$i]->is_lang) : null) == '1' ? $this->_('AdminSystemGeneral.paymenttypes.text_yes', true) : $this->_('AdminSystemGeneral.paymenttypes.text_no', true));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'settings/system/general/edittype/' . (isset($types[$i]->id) ? $this->Html->safe($types[$i]->id) : null) . '/';?>"><?php $this->_('AdminSystemGeneral.paymenttypes.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'settings/system/general/deletetype/');
+                            $this->Form->fieldHidden('id', (isset($types[$i]->id) ? $this->Html->safe($types[$i]->id) : null));
+                            ?>
+                            <a class="manage" href="<?php echo $this->base_uri . 'settings/system/general/deletetype/' . (isset($types[$i]->id) ? $this->Html->safe($types[$i]->id) : null) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminSystemGeneral.paymenttypes.modal_delete', true));?>"><?php $this->_('AdminSystemGeneral.paymenttypes.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminSystemGeneral.paymenttypes.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#admin_system_general_paymenttypes a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

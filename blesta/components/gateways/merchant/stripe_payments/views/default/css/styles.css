@@ -1,0 +1,104 @@
+.StripeElement {
+    box-sizing: border-box;
+
+    height: 20px;
+    width: 100%;
+    max-width: 370px;
+
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: white;
+
+    box-shadow: 0 1px 3px 0 #d6dbe1;
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+    box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+    border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+}
+
+#stripe-cc-form, #stripe-ach-form {
+    clear: both;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+    width: 100%;
+    max-width: 370px;
+}
+
+#stripe-ach-form .form-group {
+    margin-bottom: 15px;
+}
+
+#stripe-ach-form .form-group:last-of-type {
+    margin-bottom: 10px;
+}
+
+#stripe-ach-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 100%;
+    color: #6b7c93;
+    padding: 0px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#stripe-ach-form p {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    max-width: 100%;
+    color: #6b7c93;
+    padding: 0px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#stripe-ach-form input, #stripe-ach-form select {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    height: 40px;
+    width: 100%;
+    color: #32325d;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: white;
+    outline: none;
+    box-shadow: 0 1px 3px 0 #d6dbe1;
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+    padding: 10px 12px;
+}
+
+#stripe-ach-form input:disabled, #stripe-ach-form select:disabled {
+    color: #79808a;
+}
+
+#stripe-ach-form select {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAh0lEQVQ4T93TMQrCUAzG8V9x8QziiYSuXdzFC7h4AcELOPQAdXYovZCHEATlgQV5GFTe1ozJlz/kS1IpjKqw3wQBVyy++JI0y1GTe7DCBbMAckeNIQKk/BanALBB+16LtnDELoMcsM/BESDlz2heDR3WePwKSLo5eoxz3z6NNcFD+vu3ij14Aqz/DxGbKB7CAAAAAElFTkSuQmCC');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 5px) 50%;
+    padding: 5px 12px;
+}
+
+#stripe-ach-form input:focus, #stripe-ach-form select:focus {
+    border-color: transparent;
+}
+
+#stripe-ach-form #ach-errors {
+    color: #fa755a;
+}

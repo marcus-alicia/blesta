@@ -1,0 +1,77 @@
+    <div class="pad">
+        <h4><?php $this->_('OvhDomains.tab_client_dns.heading');?></h4>
+
+        <?php
+        $this->Form->create();
+        ?>
+        <div class="table-responsive my-2">
+            <table class="table table-curved table-striped">
+                <thead>
+                    <tr class="heading_row">
+                        <th><span><?php $this->_('OvhDomains.tab_client_dns.record_type');?></span></th>
+                        <th><span><?php $this->_('OvhDomains.tab_client_dns.host');?></span></th>
+                        <th><span><?php $this->_('OvhDomains.tab_client_dns.value');?></span></th>
+                        <th><span><?php $this->_('OvhDomains.tab_client_dns.ttl');?></span></th>
+                        <th><span><?php $this->_('OvhDomains.tab_client_dns.options');?></span></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php
+                    if (count($records ?? []) > 0) {
+                        foreach ($records as $record) {
+                    ?>
+                        <tr>
+                            <td><?php echo $this->Html->safe($record['fieldType'] ?? '');?></td>
+                            <td><?php echo $this->Html->safe((!empty($record['subDomain']) ? $record['subDomain'] . '.' : '') . ($record['zone'] ?? ''));?></td>
+                            <td><?php echo $this->Html->safe($record['target'] ?? '');?></td>
+                            <td><?php echo $this->Html->safe($record['ttl'] ?? '');?></td>
+                            <td>
+                                <?php
+                                $this->Form->fieldButton(
+                                    'delete',
+                                    '<i class="fas fa-trash"></i> ' . $this->_('OvhDomains.tab_client_dns.field_delete', true),
+                                    [
+                                        'class' => 'btn btn-sm btn-danger',
+                                        'value' => ($record['id'] ?? null),
+                                        'type' => 'submit'
+                                    ]
+                                );
+                                ?>
+                            </td>
+                        </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td><?php $this->Form->fieldSelect('record_type', $record_types ?? [], ($vars->record_type ?? ''), ['class' => 'form-control']);?></td>
+                        <td>
+                            <div class="input-group">
+                                <?php $this->Form->fieldText('host', ($vars->host ?? ''), ['placeholder' => $this->_('OvhDomains.tab_client_dns.host', true), 'class' => 'form-control']);?>
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><?php echo '.' . $this->Html->safe($service_fields->domain ?? 'domain.com');?></span>
+                                </div>
+                            </div>
+                        </td>
+                        <td><?php $this->Form->fieldText('value', ($vars->value ?? ''), ['placeholder' => $this->_('OvhDomains.tab_client_dns.value', true), 'class' => 'form-control']);?></td>
+                        <td><?php $this->Form->fieldText('ttl', ($vars->ttl ?? 3600), ['placeholder' => $this->_('OvhDomains.tab_client_dns.ttl', true), 'class' => 'form-control']);?></td>
+                        <td>
+                            <?php
+                            $this->Form->fieldButton(
+                                null,
+                                '<i class="fas fa-plus-circle"></i> ' . $this->_('OvhDomains.tab_client_dns.field_add', true),
+                                ['class' => 'btn btn-sm btn-light', 'type' => 'submit']
+                            );
+                            ?>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>

@@ -1,0 +1,156 @@
+
+                    <div id="<?php echo ($theme_type ?? null);?>_layout" class="pad">
+                        <div class="preview_layout">
+                            <div class="row">
+                                <div class="preview_sidebar col-lg-3 d-none d-lg-block">
+                                    <div class="wireframe client_info"><?php $this->_('AdminCompanyLookandfeel.layout.text_cards_note');?></div>
+                                </div>
+                                <div class="preview_widgets col-lg-9">
+                                    <div class="row cards">
+                                        <?php
+                                        $num_cards = count($cards ?? []);
+                                        if ($num_cards > 0) {
+                                            foreach ($cards as $card) {
+                                                if (isset($card->background)) {
+                                                    if ($card->background_type == 'color') {
+                                                        $background = ' style="background: ' . $card->background . ';"';
+                                                    } else {
+                                                        $background = ' style="background-image: url(' . $card->background . ');"';
+                                                    }
+                                                }
+
+                                                if (isset($card->text_color)) {
+                                                    $text_color = ' style="color: ' . $card->text_color . ' !important;"';
+                                                }
+                                        ?>
+                                        <div class="col-lg-6 col-xl-<?php echo ($num_cards < 4) ? (($num_cards < 3) ? 6 : 4) : 3;?>">
+                                            <?php
+                                            if ((isset($card->callback_type) ? $card->callback_type : null) == 'html') {
+                                            ?>
+                                            <div class="card-container">
+                                                <?php
+                                                $this->Form->fieldHidden('cards[' . (isset($card->card_id) ? $card->card_id : null) . '][id]', (isset($card->id) ? $card->id : null));
+                                                $this->Form->fieldCheckbox('cards[' . (isset($card->card_id) ? $card->card_id : null) . '][enabled]', '1', (isset($card->enabled) ? $card->enabled : '0') == '1', ['id' => (isset($card->card_id) ? $card->card_id : null) . '_enabled']);
+                                                ?>
+                                                <div class="card<?php if (($card->enabled ?? null) !== '1') { echo ' disabled'; } ?>" data-id="<?php echo (isset($card->card_id) ? $card->card_id : null);?>">
+                                                    <div class="card-content">
+                                                        <div class="card-label"><?php echo (isset($card->label) ? $this->Html->safe($card->label) : null);?></div>
+                                                        <small><?php $this->_('AdminCompanyLookandfeel.layout.text_html_generated');?></small>
+                                                    </div>
+                                                </div>
+
+                                                <div class="wireframe card-text"></div>
+                                            </div>
+                                            <?php
+                                            } else {
+                                            ?>
+                                            <div class="card-container">
+                                                <?php
+                                                $this->Form->fieldHidden('cards[' . (isset($card->card_id) ? $card->card_id : null) . '][id]', (isset($card->id) ? $card->id : null));
+                                                $this->Form->fieldHidden('cards[' . (isset($card->card_id) ? $card->card_id : null) . '][background_type]', (isset($card->background_type) ? $card->background_type : null), ['id' => (isset($card->card_id) ? $card->card_id : null) . '_background_type']);
+                                                $this->Form->fieldHidden('cards[' . (isset($card->card_id) ? $card->card_id : null) . '][background_color]', (isset($card->background) ? $card->background : null), ['id' => (isset($card->card_id) ? $card->card_id : null) . '_color']);
+                                                $this->Form->fieldCheckbox('cards[' . (isset($card->card_id) ? $card->card_id : null) . '][enabled]', '1', (isset($card->enabled) ? $card->enabled : '1') == '1', ['id' => (isset($card->card_id) ? $card->card_id : null) . '_enabled']);
+                                                ?>
+                                                <div class="card<?php if ((isset($card->background_type) ? $card->background_type : null) == 'color') { echo ' color'; } else { echo ' image'; } ?><?php if ((isset($card->enabled) ? $card->enabled : null) !== '1') { echo ' disabled'; } ?>" data-id="<?php echo (isset($card->card_id) ? $card->card_id : null);?>"<?php echo (isset($background) ? $background : null);?>>
+                                                    <div class="card-content"<?php echo (isset($text_color) ? $text_color : null);?>>
+                                                        <div class="card-value">0</div>
+                                                        <div class="card-label"><?php echo (isset($card->label) ? $card->label : null);?></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="card-text">
+                                                    <?php
+                                                    $this->Form->label($this->_('AdminCompanyLookandfeel.layout.field.text_color', true),  (isset($card->card_id) ? $card->card_id : null) . '_text_color');
+                                                    $this->Form->fieldText('cards[' . (isset($card->card_id) ? $card->card_id : null) . '][text_color]', (isset($card->text_color) ? $card->text_color : '#343A40'), ['id' => (isset($card->card_id) ? $card->card_id : null) . '_text_color']);
+                                                    ?>
+                                                </div>
+
+                                                <div class="card-url">
+                                                    <?php
+                                                    $this->Form->label($this->_('AdminCompanyLookandfeel.layout.field.background_url', true),  (isset($card->card_id) ? $card->card_id : null) . '_image');
+                                                    $this->Form->fieldText('cards[' . (isset($card->card_id) ? $card->card_id : null) . '][background_image]', ((isset($card->background_type) ? $card->background_type : null) == 'image' ? (isset($card->background) ? $card->background : null) : ''), ['id' => (isset($card->card_id) ? $card->card_id : null) . '_image']);
+                                                    ?>
+                                                    <a href="#" class="switch-color"><i class="fas fa-brush fa-fw"></i></a>
+                                                </div>
+                                            </div>
+                                            <?php
+                                            }
+                                            ?>
+                                        </div>
+                                        <?php
+                                            }
+                                        } else {
+                                        ?>
+                                        <div class="col-lg-6 col-xl-3">
+                                            <div class="wireframe card"></div>
+                                            <div class="wireframe card-text"></div>
+                                        </div>
+                                        <div class="col-lg-6 col-xl-3">
+                                            <div class="wireframe card"></div>
+                                            <div class="wireframe card-text"></div>
+                                        </div>
+                                        <div class="col-lg-6 col-xl-3">
+                                            <div class="wireframe card"></div>
+                                            <div class="wireframe card-text"></div>
+                                        </div>
+                                        <div class="col-lg-6 col-xl-3">
+                                            <div class="wireframe card"></div>
+                                            <div class="wireframe card-text"></div>
+                                        </div>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+
+                                    <?php
+                                    if (!empty($widgets)) {
+                                    ?>
+                                    <div class="row widgets mt-3">
+                                        <?php
+                                        foreach ($widgets as $widget) {
+                                        ?>
+                                        <div class="col-md-12">
+                                            <div class="widget<?php if (($widget->enabled ?? null) !== '1') { echo ' disabled'; } ?>">
+                                                <div class="wireframe widget-header" style="background: linear-gradient(#<?php echo ($theme_type ?? null) == 'admin' ? $colors['theme_widget_heading_bg_color_top'] : $colors['theme_panel_header_background_color_top'];?>, #<?php echo ($theme_type ?? null) == 'admin' ? $colors['theme_widget_heading_bg_color_bottom'] : $colors['theme_panel_header_background_color_bottom'];?>);">
+                                                    <?php echo (empty($this->_($widget->name, true)) ? $widget->name : $this->_($widget->name, true));?>
+                                                    <div class="float-right">
+                                                        <?php
+                                                        $this->Form->fieldHidden('widgets[' . ($widget->widget_id ?? null) . '][id]', ($widget->id ?? null));
+                                                        $this->Form->fieldCheckbox('widgets[' . ($widget->widget_id ?? null) . '][enabled]', '1', ($widget->enabled ?? '0') == '1', ['id' => ($widget->widget_id ?? null) . '_enabled']);
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                                <div class="wireframe widget-body">
+                                                    <?php
+                                                    if (!empty($widget->html_preview)) {
+                                                    ?>
+                                                    <div class="clearfix"><?php echo $widget->html_preview ?? '';?></div>
+                                                    <?php
+                                                    } else {
+                                                    ?>
+                                                        <div class="wireframe box w-100 p-5"><?php $this->_('AdminCompanyLookandfeel.layout.text_widget_preview_note');?></div>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php
+                                            }
+                                        ?>
+                                    </div>
+                                    <?php
+                                    } else {
+                                    ?>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="wireframe box"></div>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>

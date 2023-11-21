@@ -1,0 +1,194 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            ['name' => $this->_('AdminPackages.groups.category_standard', true) . ' <span>(' . (isset($type_count['standard']) ? $this->Html->safe($type_count['standard']) : null) . ')</span>', 'current' => ((isset($type) ? $type : null) == 'standard' ? true : false), 'attributes' => ['href' => $this->base_uri . 'packages/groups/standard/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminPackages.groups.category_addon', true) . ' <span>(' . (isset($type_count['addon']) ? $this->Html->safe($type_count['addon']) : null) . ')</span>', 'current' => ((isset($type) ? $type : null) == 'addon' ? true : false), 'attributes' => ['href' => $this->base_uri . 'packages/groups/addon/', 'class' => 'ajax']],
+        ];
+
+        $link_buttons = [
+            [
+                'icon' => 'fas fa-plus',
+                'name' => '',
+                'attributes' => [
+                    'title' => $this->_('AdminPackages.groups.categorylink_creategroup', true),
+                    'href' => $this->base_uri . 'packages/addgroup/'
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinks($links);
+        $this->Widget->setLinkButtons($link_buttons);
+        $this->Widget->setFilters((isset($filters) ? $filters : null), $this->Html->safe($this->base_uri . 'packages/groups/' . (isset($type) ? $type : null) . '/'), !empty($filter_vars));
+        $this->Widget->setAjaxFiltering();
+        $this->Widget->create($this->_('AdminPackages.groups.boxtitle_packagegroups', true), ['id' => 'admin_packages_groups'], (isset($render_section) ? $render_section : null));
+
+        if ((isset($package_groups) ? $package_groups : false) && ($num_groups = count($package_groups)) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'packages/groups/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminPackages.groups.heading_name');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'packages/groups/?sort=type&order=' . ($sort == 'type' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'type' ? ' ' . $order : '');?>"><?php $this->_('AdminPackages.groups.heading_type');?></a></span></td>
+                <td class="last"><span><?php $this->_('AdminPackages.groups.heading_options');?></span></td>
+            </tr>
+            <?php
+            // Display all packages
+            for ($i = 0; $i < $num_groups; $i++) {
+            ?>
+            <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'expand');?>">
+                <td><?php (print (isset($package_groups[$i]->name) ? $this->Html->safe($package_groups[$i]->name) : null));?></td>
+                <td><?php echo (isset($types[$package_groups[$i]->type]) ? $types[$package_groups[$i]->type] : null);?></td>
+                <td class="last">
+                    <a href="<?php echo $this->base_uri . 'packages/editgroup/' . (isset($package_groups[$i]->id) ? $this->Html->safe($package_groups[$i]->id) : null) . '/';?>"><?php $this->_('AdminPackages.groups.option_edit');?></a>,
+                    <?php
+                    $this->Form->create($this->base_uri . 'packages/deletegroup/');
+                    $this->Form->fieldHidden('id', (isset($package_groups[$i]->id) ? $this->Html->safe($package_groups[$i]->id) : null));
+                    ?>
+                    <a class="manage" rel="<?php $this->_('AdminPackages.groups.confirm_delete');?>" href="<?php echo $this->base_uri . 'packages/deletegroup/' . (isset($package_groups[$i]->id) ? $this->Html->safe($package_groups[$i]->id) : null) . '/';?>"><?php $this->_('AdminPackages.groups.option_delete');?></a>
+                    <?php
+                    $this->Form->end();
+                    ?>
+                </td>
+            </tr>
+            <tr class="expand_details" id="package_group_<?php (print (isset($package_groups[$i]->id) ? $this->Html->safe($package_groups[$i]->id) : null));?>">
+                <td class="subtable" colspan="3">
+                <?php
+                if ((isset($package_groups[$i]->type) ? $package_groups[$i]->type : false) == 'addon') {
+                ?>
+                    <div class="group_title_row">
+                        <div class="title_row first">
+                            <h3><?php $this->_('AdminPackages.groups.heading_parent_groups');?></h3>
+                        </div>
+                    <?php
+                    // Show parents
+                    if (!empty($package_groups[$i]->parents)) {
+                    ?>
+                        <table class="table">
+                            <tr class="heading_row">
+                                <td><?php $this->_('AdminPackages.groups.heading_group');?></td>
+                                <td><?php $this->_('AdminPackages.groups.heading_options');?></td>
+                            </tr>
+                            <?php
+                            // Display each parent package group
+                            $j = 0;
+                            foreach ($package_groups[$i]->parents as $parent) {
+                            ?>
+                            <tr<?php echo ($j++ % 2 == 1) ? ' class="odd_row"' : '';?>>
+                                <td><?php (print (isset($parent->name) ? $this->Html->safe($parent->name) : null));?></td>
+                                <td><a href="<?php echo $this->base_uri . 'packages/editgroup/' . (isset($parent->id) ? $this->Html->safe($parent->id) : null) . '/';?>"><?php $this->_('AdminPackages.groups.option_edit');?></a></td>
+                            </tr>
+                            <?php
+                            }
+                            unset($j);
+                            ?>
+                        </table>
+                <?php
+                    } else {
+                ?>
+                        <div class="empty_section">
+                            <div class="empty_box"><?php $this->_('AdminPackages.groups.parents_no_results');?></div>
+                        </div>
+                    <?php
+                    }
+                    ?>
+                    </div>
+                <?php
+                }
+                ?>
+                    <div class="group_title_row">
+                        <div class="title_row<?php echo ((isset($package_groups[$i]->type) ? $package_groups[$i]->type : false) != 'addon') ? ' first' : '';?>">
+                            <h3><?php $this->_('AdminPackages.groups.heading_packages');?></h3>
+                        </div>
+                <?php
+                if (!empty($package_groups[$i]->packages)) {
+                ?>
+                        <table class="table table-striped option_table">
+                            <thead>
+                                <tr class="heading_row">
+                                    <td></td>
+                                    <td><?php $this->_('AdminPackages.groups.heading_package_name');?></td>
+                                    <td><?php $this->_('AdminPackages.groups.heading_options');?></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $j = 0;
+                                foreach ($package_groups[$i]->packages as $package) {
+                                ?>
+                                <tr class="option_row" id="packages_<?php (print (isset($package->id) ? $this->Html->safe($package->id) : null));?>">
+                                    <td style="width:17px;" class="center"><i class="fas fa-arrows-alt movable"></i></td>
+                                    <td><?php (print (isset($package->name) ? $this->Html->safe($package->name) : null));?></td>
+                                    <td><a href="<?php echo $this->Html->safe($this->base_uri . 'packages/edit/' . (isset($package->id) ? $package->id : null));?>"><?php $this->_('AdminPackages.groups.option_edit');?></a></td>
+                                </tr>
+                                <?php
+                                }
+                                unset($j);
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php
+                } else {
+                ?>
+                        <div class="empty_section">
+                            <div class="empty_box"><?php $this->_('AdminPackages.groups.packages_no_results');?></div>
+                        </div>
+                <?php
+                }
+                ?>
+                    </div>
+                </td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+        <?php
+            // Set pagination
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminPackages.groups.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+$(document).ready(function() {
+    // Handle confirmation
+    $('#admin_packages_groups a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+
+        // Allow sort of options
+        var options = {
+            // Sort items on the list
+            update: function(event, ui) {
+                var params = {
+                    group_id: $(this).closest("tr.expand_details").attr("id").replace("package_group_", ""),
+                    _csrf_token: "<?php echo $this->Form->getCsrfToken();?>",
+                }
+
+                $(this).blestaRequest("POST", '<?php echo $this->Html->safe($this->base_uri . 'packages/orderpackages/');?>', $(this).sortable("serialize") + "&" + $.param(params),
+                // Success
+                null,
+                // Error
+                null,
+                {dataType: 'json'});
+            }
+        }
+        $('table.table.option_table tbody').blestaSortable(false, options);
+        $('.option_table tbody tr').hover(
+            function() {
+                $('.movable', this).show();
+            },
+            function() {
+                $('.movable', this).hide();
+            }
+        );
+});
+</script>

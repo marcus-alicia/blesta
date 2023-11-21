@@ -1,0 +1,107 @@
+        <?php
+        if ((isset($show_left_nav) ? $show_left_nav : null)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        }
+
+        $tabs = [];
+        foreach ((isset($link_tabs) ? $link_tabs : []) as $tab) {
+            $tabs[] = [
+                'name' => $tab['name'],
+                'current' => ($tab['uri'] == 'installed'),
+                'attributes' => [
+                    'href' => $this->base_uri . 'settings/company/modules/' . $tab['uri'] . '/',
+                    'class' => 'ajax'
+                ]
+            ];
+        }
+        ?>
+
+        <div<?php echo (isset($show_left_nav) ? $show_left_nav : null) ? ' id="right_outer"' : '';?>>
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+
+                <?php
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create(
+                    $this->_('AdminCompanyModules.installed.boxtitle_installed', true),
+                    ['id' => 'admin_company_modules_installed'],
+                    (isset($render_section) ? $render_section : null)
+                );
+                ?>
+                <div class="inner pad" id="modules">
+                    <?php
+                    $num_modules = count((isset($modules) ? $modules : []));
+                    if ($num_modules > 0) {
+                        for ($i = 0; $i < $num_modules; $i++) {
+                        ?>
+                        <div class="itemlist<?php echo ($i == $num_modules - 1) ? ' last' : ''; ?>">
+                            <div class="logo">
+                                <span><img src="<?php (print (isset($modules[$i]->logo) ? $this->Html->safe($modules[$i]->logo) : null));?>" /></span>
+                            </div>
+                            <ul>
+                                <li><strong><?php (print (isset($modules[$i]->name) ? $this->Html->safe($modules[$i]->name) : null));?></strong> <?php $this->_('AdminCompanyModules.installed.text_version', false, (isset($modules[$i]->installed_version) ? $this->Html->safe($modules[$i]->installed_version) : null));?></li>
+                                <li>
+                                    <?php $this->_('AdminCompanyModules.installed.text_author');?>
+                                    <?php
+                                    foreach ((array)(isset($modules[$i]->authors) ? $modules[$i]->authors : null) as $index => $author) {
+                                    ?>
+                                    <a href="<?php (print (isset($author['url']) ? $this->Html->safe($author['url']) : null));?>"><?php (print (isset($author['name']) ? $this->Html->safe($author['name']) : null));?></a><?php echo isset($modules[$i]->authors[$index + 1]) ? ',' : '';?>
+                                    <?php
+                                    }
+                                    ?>
+                                </li>
+                                <li><?php echo nl2br((isset($modules[$i]->description) ? $this->Html->safe($modules[$i]->description) : ''))?></li>
+                            </ul>
+                            <div class="button_row_inline">
+                                <?php
+                                $this->Form->create($this->base_uri . 'settings/company/modules/uninstall/');
+                                $this->Form->fieldHidden('id', (isset($modules[$i]->id) ? $modules[$i]->id : null));
+                                ?>
+                                    <a class="btn btn-danger pull-right manage" href="<?php echo $this->base_uri . 'settings/company/modules/uninstall/' . (isset($modules[$i]->id) ? $this->Html->safe($modules[$i]->id) : null) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminCompanyModules.installed.confirm_uninstall', true));?>"><?php $this->_('AdminCompanyModules.installed.btn_uninstall');?></a>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                                <?php
+                                if ((isset($modules[$i]->version) ? $modules[$i]->version : null) == (isset($modules[$i]->installed_version) ? $modules[$i]->installed_version : null)) {
+                                ?>
+                                    <a class="btn btn-default pull-right" href="<?php echo $this->base_uri . 'settings/company/modules/manage/' . (isset($modules[$i]->id) ? $this->Html->safe($modules[$i]->id) : null) . '/';?>"><?php $this->_('AdminCompanyModules.installed.btn_manage');?></a>
+                                <?php
+                                } else {
+                                ?>
+                                    <?php
+                                    $this->Form->create($this->base_uri . 'settings/company/modules/upgrade/' . (isset($modules[$i]->id) ? $modules[$i]->id : null) . '/', ['class' => 'disable-on-submit']);
+                                    $this->Form->fieldHidden('id', (isset($modules[$i]->id) ? $modules[$i]->id : null));
+                                    $this->Form->fieldSubmit('save', $this->_('AdminCompanyModules.installed.btn_upgrade', true), ['class' => 'btn btn-primary pull-right']);
+                                    $this->Form->end();
+                                    ?>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <?php
+                        }
+                    } else {
+                        // No modules available
+                        ?>
+                        <div class="empty_section">
+                            <div class="empty_box">
+                                <?php $this->_('AdminCompanyModules.installed.text_none');?>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        // Handle confirmation on delete action
+        $('#modules a.manage[rel]').blestaModalConfirm({base_url: '" . $this->base_uri . "', close: '" . $this->_('AppController.modal.text_close', true) . "', submit: true});
+    });
+");

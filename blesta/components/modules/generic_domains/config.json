@@ -1,0 +1,28 @@
+{
+    "version": "1.1.1",
+    "type": "registrar",
+    "name": "GenericDomains.name",
+    "description": "GenericDomains.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "domain"
+    },
+    "service": {
+        "name_key": "domain"
+    },
+    "module": {
+        "row": "GenericDomains.module_row",
+        "rows": "GenericDomains.module_row_plural",
+        "row_key": "name"
+    },
+    "email_tags": {
+        "module": [],
+        "package": [],
+        "service": ["domain"]
+    }
+}

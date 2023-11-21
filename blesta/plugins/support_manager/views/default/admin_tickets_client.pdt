@@ -1,0 +1,79 @@
+
+        <?php
+        $links = [
+            ['name' => $this->_('AdminTickets.client.category_open', true) . ' <span>(' . (isset($status_count['open']) ? $this->Html->safe($status_count['open']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'open' ? true : false), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/open/'), 'class' => 'ajax']],
+            ['name' => $this->_('AdminTickets.client.category_awaiting_reply', true) . ' <span>(' . (isset($status_count['awaiting_reply']) ? $this->Html->safe($status_count['awaiting_reply']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'awaiting_reply' ? true : false), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/awaiting_reply/'), 'class' => 'ajax']],
+            ['name' => $this->_('AdminTickets.client.category_in_progress', true) . ' <span>(' . (isset($status_count['in_progress']) ? $this->Html->safe($status_count['in_progress']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'in_progress' ? true : false), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/in_progress/'), 'class' => 'ajax']],
+            ['name' => $this->_('AdminTickets.client.category_on_hold', true) . ' <span>(' . (isset($status_count['on_hold']) ? $this->Html->safe($status_count['on_hold']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'on_hold' ? true : false), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/on_hold/'), 'class' => 'ajax']],
+            ['name' => $this->_('AdminTickets.client.category_closed', true) . ' <span>(' . (isset($status_count['closed']) ? $this->Html->safe($status_count['closed']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'closed' ? true : false), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/closed/'), 'class' => 'ajax']],
+            ['name' => $this->_('AdminTickets.client.category_trash', true) . ' <span>(' . (isset($status_count['trash']) ? $this->Html->safe($status_count['trash']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'trash' ? true : false), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/trash/'), 'class' => 'ajax']]
+        ];
+        $link_buttons = [
+            [
+                'icon' => 'fas fa-plus',
+                'name' => '',
+                'attributes' => [
+                    'title' => $this->_('AdminTickets.client.categorylink_createticket', true),
+                    'href' => $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/add/' . (isset($client->id) ? $client->id : null) . '/')
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinks($links);
+        $this->Widget->setLinkButtons($link_buttons);
+        $this->Widget->setFilters($filters, $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null)), !empty($filter_vars));
+        $this->Widget->setAjaxFiltering();
+        $this->Widget->setWidgetButton('arrow');
+        $this->Widget->setBadgeUri($this->base_uri . 'plugin/support_manager/admin_tickets/clientticketcount/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null));
+        $this->Widget->create($this->_('AdminTickets.client.boxtitle_tickets', true), ['id'=>'plugin_support_manager_admin_tickets_client'], (isset($render_section) ? $render_section : null));
+
+        if ((isset($tickets) ? $tickets : false) && ($num_tickets = count($tickets)) > 0) {
+        ?>
+        <table class="table" id="tickets">
+            <tr class="heading_row">
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/' . (isset($status) ? $status : null) . '/?sort=code&order=' . ($sort == 'code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'code' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.client.heading_code');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/' . (isset($status) ? $status : null) . '/?sort=priority&order=' . ($sort == 'priority' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'priority' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.client.heading_priority');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/' . (isset($status) ? $status : null) . '/?sort=department_name&order=' . ($sort == 'department_name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'department_name' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.client.heading_department_name');?></a></span></td>
+                <td><?php $this->_('AdminTickets.client.heading_summary');?></td>
+                <td class="last"><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/client/' . (isset($client->id) ? $client->id : null) . '/' . (isset($status) ? $status : null) . '/?sort=last_reply_date&order=' . ($sort == 'last_reply_date' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'last_reply_date' ? ' ' . $order : '');?>"><?php $this->_('AdminTickets.client.heading_last_reply_date');?></a></span></td>
+            </tr>
+            <?php
+            // Display all tickets
+            $i = 0;
+            foreach ($tickets as $ticket) {
+                $highlight = ((isset($ticket->staff_id) ? $ticket->staff_id : null) == (isset($staff_id) ? $staff_id : null));
+                $odd_row = ($i++%2 == 1);
+                $tr_class = $this->Html->concat(' ', ($highlight ? 'highlight' : ''), ($odd_row ? 'odd_row' : ''));
+            ?>
+            <tr<?php echo (!empty($tr_class) ? ' class="' . $tr_class . '"' : '');?>>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/reply/' . (isset($ticket->id) ? $ticket->id : null) . '/');?>"><?php echo (isset($ticket->code) ? $this->Html->safe($ticket->code) : null);?></a></td>
+                <td><?php echo (isset($priorities[$ticket->priority]) ? $priorities[$ticket->priority] : null);?></td>
+                <td><?php echo (isset($ticket->department_name) ? $this->Html->safe($ticket->department_name) : null);?></td>
+                <td>
+                <?php
+                    $summary = $string->truncate((isset($ticket->summary) ? $ticket->summary : null), ['word_length' => Configure::get('SupportManager.summary_truncate_length')]);
+                    echo (isset($summary) ? $this->Html->safe($summary) : null) . ($summary != (isset($ticket->summary) ? $ticket->summary : null) ? '...' : '');
+                ?>
+                </td>
+                <td class="last"><?php echo (isset($ticket->last_reply_time) ? $this->Html->safe($ticket->last_reply_time) : null);?></td>
+            </tr>
+            <?php
+            }
+            unset($i);
+            ?>
+        </table>
+        <?php
+            // Set pagination
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminTickets.client.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+
+        $this->Widget->end();

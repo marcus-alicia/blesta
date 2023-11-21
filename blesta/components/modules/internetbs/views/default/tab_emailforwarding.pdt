@@ -1,0 +1,78 @@
+
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="title_row first">
+        <h3><?php $this->_('Internetbs.tab_emailforwarding.heading_current_rules');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <tbody>
+                <tr class="heading_row">
+                    <td><?php $this->_('Internetbs.tab_emailforwarding.heading_source');?></td>
+                    <td><?php $this->_('Internetbs.tab_emailforwarding.heading_destination');?></td>
+                    <td class="last"><?php $this->_('Internetbs.tab_emailforwarding.heading_options');?></td>
+                </tr>
+
+                <?php
+                if (!empty($domain_rules)) {
+                    foreach ($domain_rules as $rule) {
+                ?>
+                <tr>
+                    <td><?php echo $this->Html->safe($rule->source);?></td>
+                    <td><?php echo $this->Html->safe($rule->destination);?></td>
+                    <td>
+                        <a href="?delete=<?php echo urlencode($rule->source);?>" class="manage"><?php $this->_('Internetbs.tab_emailforwarding.option_delete');?></a>
+                    </td>
+                </tr>
+                <?php
+                    }
+                } else {
+                ?>
+                <tr>
+                    <td colspan="4">
+                        <section class="error_section p-0">
+                            <article class="error_box alert">
+                                <div class="icon-line fa-2x">
+                                    <i class="fas fa-exclamation-triangle fa-fw"></i>
+                                    <p style="padding-bottom: 0px !important;"><?php $this->_('Internetbs.tab_emailforwarding.text_no_forwarding_rules');?></p>
+                                </div>
+                            </article>
+                        </section>
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Internetbs.tab_emailforwarding.heading_add_rule');?></h3>
+    </div>
+    <div class="pad">
+        <ul>
+            <li>
+                <?php
+                $this->Form->label($this->_('Internetbs.tab_emailforwarding.field_source', true), 'source');
+                $this->Form->fieldText('Source', ($vars->Source ?? ''), ['id' => 'source']);
+                ?>
+            </li>
+            <li>
+                <?php
+                $this->Form->label($this->_('Internetbs.tab_emailforwarding.field_destination', true), 'destination');
+                $this->Form->fieldText('Destination', ($vars->Destination ?? ''), ['id' => 'destination']);
+                ?>
+            </li>
+        </ul>
+    </div>
+
+    <div class="button_row">
+        <?php
+        $this->Form->fieldSubmit(null, $this->_('Internetbs.tab_emailforwarding.field_submit', true), ['class' => 'btn btn-primary float-right']);
+        ?>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>

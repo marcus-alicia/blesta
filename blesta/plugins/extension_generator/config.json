@@ -1,0 +1,11 @@
+{
+    "version": "2.0.1",
+    "name": "ExtensionGeneratorPlugin.name",
+    "description": "ExtensionGeneratorPlugin.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://blesta.com"
+        }
+    ]
+}

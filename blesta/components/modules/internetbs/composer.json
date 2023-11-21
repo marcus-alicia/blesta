@@ -1,0 +1,15 @@
+{
+    "name": "blesta/internetbs",
+    "description": "Internet.bs",
+    "license": "proprietary",
+    "type": "blesta-module",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    },
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "homepage": "https://blesta.com/"
+        }
+    ]
+}

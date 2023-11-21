@@ -1,0 +1,34 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminCompanyBilling.latefees.boxtitle_latefees', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminCompanyBilling.latefees.heading_basic');?></h3>
+                    </div>
+                    <div class="pad">
+                        <?php
+                        // Display invoice form partial
+                        echo (isset($late_fees_form) ? $late_fees_form : null);
+                        ?>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyBilling.latefees.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

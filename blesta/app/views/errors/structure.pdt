@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+    <head>
+        <meta name="referrer" content="never" />
+        <meta charset="utf-8">
+        <title>Blesta</title>
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/application.min.css">
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/font-awesome.min.css">
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/font-awesome-shims.min.css">
+    </head>
+    <body>
+        <div class="error-container">
+            <?php echo $content;?>
+        </div>
+    </body>
+</html>

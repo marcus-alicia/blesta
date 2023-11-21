@@ -1,0 +1,113 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $link_buttons = [];
+
+        $link_buttons[] = ['name'=>$this->_('AdminKnowledgebase.index.add_article', true), 'attributes'=>['href'=>$this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/add/' . (!empty($current_category) ? (isset($current_category->id) ? $current_category->id : null) . '/' : '')), 'class'=>'add_article']];
+        $link_buttons[] = ['name'=>$this->_('AdminKnowledgebase.index.add_category', true), 'attributes'=>['href'=>$this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/addcategory/' . (!empty($current_category) ? (isset($current_category->id) ? $current_category->id : null) . '/' : '')), 'class'=>'add_category']];
+
+        $this->Widget->clear();
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->setLinkButtons($link_buttons);
+        $this->Widget->create($this->_('AdminKnowledgebase.index.boxtitle_knowledgebase', true));
+        ?>
+        <div class="title_row first">
+            <h3><?php echo (isset($bread_crumbs) ? $bread_crumbs : null);?></h3>
+        </div>
+        <?php
+        // Set a link to go back a directory
+        if (!empty($current_category)) {
+        ?>
+        <div id="up_level" class="clear">
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/index/' . (isset($current_category->parent_id) ? $current_category->parent_id : null));?>">
+                <i class="fas fa-level-down-alt fa-rotate-180"></i>
+                <?php $this->_('AdminKnowledgebase.index.go_back');?>
+            </a>
+        </div>
+        <?php
+        }
+
+        if (!empty($categories) || !empty($articles)) {
+        ?>
+        <div class="pad" id="articles">
+            <div class="row">
+                <?php
+                $i = 0;
+                foreach ((isset($categories) ? $categories : []) as $category) {
+                    $i++;
+                    $icon = ((isset($category->access) ? $category->access : null) == 'public') ? 'fa-folder-open' : 'fa-folder';
+                ?>
+                <div class="col-sm-4 col-xs-12">
+                    <div class="category<?php echo (isset($category->access) ? $category->access : null) == 'public' ? ' public' : '';?>">
+                        <i class="fas <?php echo (isset($icon) ? $this->Html->safe($icon) : null);?>"></i>
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/index/' . (isset($category->id) ? $category->id : null) . '/');?>"><?php echo (isset($category->name) ? $this->Html->safe($category->name) : null);?></a>
+                        <?php $this->_('AdminKnowledgebase.!text.open_enclosure');?><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/editcategory/' . (isset($category->id) ? $category->id : null) . '/');?>"><?php $this->_('AdminKnowledgebase.index.edit');?></a>
+                        <?php $this->_('AdminKnowledgebase.!text.enclosure_separator');?>
+                        <?php
+                        $this->Form->create($this->base_uri . 'plugin/support_manager/admin_knowledgebase/deletecategory/');
+                        $this->Form->fieldHidden('id', (isset($category->id) ? $category->id : null));
+                        ?>
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/deletecategory/' . (isset($category->id) ? $category->id : null) . '/');?>" class="manage" rel="<?php $this->_('AdminKnowledgebase.modal.delete_category');?>"><?php $this->_('AdminKnowledgebase.index.delete');?></a><?php $this->_('AdminKnowledgebase.!text.closed_enclosure');?>
+                        <?php
+                        $this->Form->end();
+                        ?>
+                    </div>
+                </div>
+                <?php
+                    if ($i % 3 == 0) {
+                        ?>
+            </div>
+            <div class="row">
+                        <?php
+                    }
+                }
+                foreach ((isset($articles) ? $articles : []) as $article) {
+                    $i++;
+                    $icon = ((isset($article->access) ? $article->access : null) == 'public' && !empty($article->categories)) ? 'fa-file-alt' : 'fa-file';
+                ?>
+                <div class="col-sm-4 col-xs-12">
+                    <div class="article<?php echo (isset($article->access) ? $article->access : null) == 'public' && !empty($article->categories) ? ' public' : '';?>">
+                        <i class="fas <?php echo (isset($icon) ? $this->Html->safe($icon) : null);?>"></i>
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/knowledgebase/view/' . (isset($article->id) ? $article->id : null) . '/' . (isset($article->uri_title) ? $article->uri_title : null) . '/' . ((isset($current_category) ? $current_category : null) ? (isset($current_category->id) ? $current_category->id : null) . '/' : ''));?>" target="_blank"><?php echo (isset($article->title) ? $this->Html->safe($article->title) : null);?></a>
+                        <?php $this->_('AdminKnowledgebase.!text.open_enclosure');?><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/edit/' . (isset($article->id) ? $article->id : null) . '/' . ((isset($current_category) ? $current_category : null) ? (isset($current_category->id) ? $current_category->id : null) . '/' : ''));?>"><?php $this->_('AdminKnowledgebase.index.edit');?></a>
+                        <?php $this->_('AdminKnowledgebase.!text.enclosure_separator');?>
+                        <?php
+                        $this->Form->create($this->base_uri . 'plugin/support_manager/admin_knowledgebase/delete/');
+                        $this->Form->fieldHidden('id', (isset($article->id) ? $article->id : null));
+                        if ((isset($current_category) ? $current_category : null)) {
+                            $this->Form->fieldHidden('category_id', (isset($current_category->id) ? $current_category->id : null));
+                        }
+                        ?>
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/delete/' . (isset($article->id) ? $article->id : null) . '/' . ((isset($current_category) ? $current_category : null) ? (isset($current_category->id) ? $current_category->id : null) . '/' : ''));?>" class="manage" rel="<?php $this->_('AdminKnowledgebase.modal.delete_article');?>"><?php $this->_('AdminKnowledgebase.index.delete');?></a><?php $this->_('AdminKnowledgebase.!text.closed_enclosure');?>
+                        <?php
+                        $this->Form->end();
+                        ?>
+                    </div>
+                </div>
+                <?php
+                    if ($i % 3 == 0) {
+                        ?>
+            </div>
+            <div class="row">
+                        <?php
+                    }
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        } else {
+        ?>
+            <div class="empty_section">
+                <div class="empty_box"><?php $this->_('AdminKnowledgebase.index.no_results');?></div>
+            </div>
+        <?php
+        }
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#articles a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->Html->safe($this->base_uri);?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+    });
+</script>

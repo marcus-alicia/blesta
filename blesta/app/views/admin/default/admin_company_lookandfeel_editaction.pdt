@@ -1,0 +1,47 @@
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyLookandfeel.editaction.boxtitle_editaction', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['id' => 'editaction', 'class' => 'disable-on-submit']);?>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyLookandfeel.editaction.field_location', true), 'location', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyLookandfeel.!tooltip.disabled_location');?></div></span>
+                                <?php $this->Form->fieldSelect('location', (isset($nav_locations) ? $nav_locations : null), (isset($vars->location) ? $vars->location : null), ['id' => 'location', 'class' => 'block', 'disabled' => 'disabled']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyLookandfeel.editaction.field_name', true), 'name', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyLookandfeel.!tooltip.action_name', false, ROOTWEBDIR . 'language' . DS . 'en_us' . DS);?><p>$lang['<span class="language_key"><?php echo $this->Html->safe((isset($vars->name) ? $vars->name : 'Global.admin.link_text')); ?></span>'] = '<?php $this->_('AdminCompanyLookandfeel.!tooltip.action_name_language');?>';</p></div></span>
+                                <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyLookandfeel.editaction.field_url', true), 'url', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyLookandfeel.!tooltip.action_url', false, rtrim($this->base_url, '/') . $this->admin_uri);?></div></span>
+                                <?php $this->Form->fieldText('url', (isset($vars->url) ? $vars->url : null), ['id' => 'url', 'class' => 'block']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyLookandfeel.editaction.field_addsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+<script type='text/javascript'>
+    $(document).ready(function () {
+        $('#name').on('keyup change', function () {
+            $('.language_key').html($(this).val());
+        });
+    });
+</script>

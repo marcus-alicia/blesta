@@ -1,0 +1,198 @@
+<?php
+echo (isset($message) ? $message : null);
+
+$link_buttons = [
+    [
+        'icon' => 'fas fa-plus',
+        'name' => '',
+        'attributes' => [
+            'title' => $this->_('AdminMain.index.categorylink_compose', true),
+            'href' => $this->Html->safe($this->base_uri . 'plugin/mass_mailer/admin_filter/')
+        ]
+    ]
+];
+
+$this->Widget->clear();
+$this->Widget->setLinkButtons($link_buttons);
+$this->Widget->create(
+    $this->_('AdminMain.index.boxtitle', true),
+    ['id' => 'admin_main_mailer'],
+    (isset($render_section) ? $render_section : null)
+);
+?>
+    <?php
+    if (count((isset($jobs) ? $jobs : [])) > 0) {
+    ?>
+    <table class="table" id="mass-mailer-jobs">
+        <tr class="heading_row">
+            <td class="icon" title="<?php $this->_('AdminMain.index.heading_type');?>"></td>
+            <td><?php $this->_('AdminMain.index.heading_date');?></td>
+            <td><?php $this->_('AdminMain.index.heading_status');?></td>
+            <td><?php $this->_('AdminMain.index.heading_complete');?></td>
+            <td><?php $this->_('AdminMain.index.heading_options');?></td>
+        </tr>
+        <?php
+        $i = 0;
+        foreach ($jobs as $job) {
+            $total_tasks = max((int)(isset($job->task_count) ? $job->task_count : 0), 0);
+            $completed_tasks = ($total_tasks - (int)(isset($job->total_tasks) ? $job->total_tasks : 0));
+
+            // Determine the icon to show based on the job type
+            $icon = 'fa-external-link-alt';
+            $icon_title = 'AdminMain.index.type.export';
+            if (!empty($job->email)) {
+                $icon = 'fa-envelope-open-text';
+                $icon_title = 'AdminMain.index.type.email';
+            }
+        ?>
+        <tr class="expand<?php echo ($i++%2 == 1) ? ' odd_row' : '';?>">
+            <td>
+                <i class="fas <?php echo (isset($icon) ? $this->Html->safe($icon) : null);?>" title="<?php $this->_($icon_title);?>"></i>
+            </td>
+            <td>
+                <?php echo $this->Date->cast((isset($job->date_added) ? $job->date_added : null), 'date_time');?>
+            </td>
+            <td>
+                <?php echo (isset($statuses[$job->status]) ? $statuses[$job->status] : null);?>
+            </td>
+            <td>
+                <?php $this->_('AdminMain.index.job_task_total', false, $completed_tasks, $total_tasks);?>
+            </td>
+            <td>
+                <?php
+                // Link to the export
+                if (empty($job->email) && $job->status === 'complete') {
+                ?>
+                <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/mass_mailer/admin_main/download/' . (isset($job->id) ? $job->id : null));?>"><?php $this->_('AdminMain.index.option_export');?></a>
+                <?php
+                }
+                ?>
+            </td>
+        </tr>
+        <tr class="expand_details">
+            <td class="subtable" colspan="5">
+                <?php
+                if (!empty($job->email)) {
+                ?>
+                <table class="table multi_heading">
+                    <tr class="header">
+                        <td class="heading"><?php $this->_('AdminMain.index.email_to');?></td>
+                        <td><?php $this->_('AdminMain.index.email_to_recipients', false, (isset($job->task_count) ? $this->Html->safe($job->task_count) : null));?></td>
+                    </tr>
+                    <tr class="header">
+                        <td class="heading"><?php $this->_('AdminMain.index.email_from');?></td>
+                        <td><a href="mailto:<?php echo (isset($job->email->from_address) ? $this->Html->safe($job->email->from_address) : null);?>"><?php echo (isset($job->email->from_name) ? $this->Html->safe($job->email->from_name) : null);?></a></td>
+                    </tr>
+                    <tr class="header bottom">
+                        <td class="heading"><?php $this->_('AdminMain.index.email_subject');?></td>
+                        <td><?php echo (isset($job->email->subject) ? $this->Html->safe($job->email->subject) : null);?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><?php echo nl2br($this->Html->hyperlink((isset($job->email->text) ? $this->Html->safe($job->email->text) : '')));?></td>
+                    </tr>
+                </table>
+                <?php
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminMain.index.no_export_details');?>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+            </td>
+        </tr>
+        <?php
+        }
+        ?>
+    </table>
+    <?php
+        $this->Pagination->build();
+    } else {
+    ?>
+    <div class="empty_section">
+        <div class="empty_box">
+            <?php $this->_('AdminMain.index.no_results');?>
+        </div>
+    </div>
+    <?php
+    }
+    ?>
+    <script type="text/javascript">
+        <?php
+        if ((isset($set_timer) ? $set_timer : null)) {
+        ?>
+        // Global timer
+        var mass_mailer_refresh_timer;
+        <?php
+        }
+        ?>
+
+        $(document).ready(function() {
+            // If a timer is set, end it before starting a new one
+            if (mass_mailer_refresh_timer) {
+                MassMailerStopTimer();
+            }
+            <?php
+            // Create a global timer so we can clear it before starting another on this page
+            if ((isset($page) ? $page : null) == '1') {
+            ?>
+            mass_mailer_refresh_timer = MassMailerStartTimer();
+            <?php
+            }
+            ?>
+
+            if (mass_mailer_refresh_timer) {
+                // Unbind the event so it is not triggered multiple times
+                $(document).off('click', '#mass-mailer-jobs tr.expand');
+                // Bind the event to 'pause' the timer by stopping/restarting it
+                // when an expandable row is open
+                $(document).on('click', '#mass-mailer-jobs tr.expand', function(event) {
+                    var open = false;
+                    $('#mass-mailer-jobs tr.expand_details').each(function() {
+                        if ($(this).is(':visible')) {
+                            open = true;
+                        }
+                    });
+
+                    // Stort/stop the timer
+                    if (open) {
+                        MassMailerStopTimer();
+                    } else {
+                        mass_mailer_refresh_timer = MassMailerStartTimer();
+                    }
+                });
+            }
+        });
+
+        function MassMailerStartTimer() {
+            return setTimeout(function() {
+                $(this).blestaRequest(
+                    'GET',
+                    '<?php echo $this->Html->safe($this->base_uri . 'plugin/mass_mailer/admin_main/');?>',
+                    null,
+                    function (data) {
+                        if (data && data.content) {
+                            if (data.replacer == null) {
+                                $("#admin_main_mailer").html(data.content);
+                            }
+                            else {
+                                $(data.replacer, $("#admin_main_mailer")).html(data.content);
+                            }
+                        }
+                    },
+                    null,
+                    {dataType: 'json'}
+                );
+            }, 30000);
+        }
+        function MassMailerStopTimer() {
+            if (mass_mailer_refresh_timer) {
+                clearTimeout(mass_mailer_refresh_timer);
+            }
+        }
+    </script>
+<?php
+$this->Widget->end();

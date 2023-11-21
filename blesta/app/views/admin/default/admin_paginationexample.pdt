@@ -1,0 +1,5 @@
+
+    <div class="box">
+        <h3>Pagination:</h3>
+        <?php echo $pagination; ?>
+    </div>

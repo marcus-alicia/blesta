@@ -1,0 +1,17 @@
+{
+	"version": "1.4.0",
+	"name": "PayJunction.name",
+	"description": "PayJunction.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		},
+        {
+            "name": "Nirays Technologies",
+            "url": "http://www.nirays.com"
+        }
+	],
+	"currencies": ["USD"],
+	"signup_url": "https://www.payjunction.com/payments/"
+}

@@ -1,0 +1,34 @@
+<ul>
+    <li>
+        <?php
+        $this->Form->label($this->_('Coingate.app_id', true), 'app_id');
+        $this->Form->fieldText('app_id', (isset($meta['app_id']) ? $meta['app_id'] : null), ['id' => 'app_id']);
+        ?>
+    </li>
+    <li>
+        <?php
+        $this->Form->label($this->_('Coingate.api_key', true), 'api_key');
+        $this->Form->fieldText('api_key', (isset($meta['api_key']) ? $meta['api_key'] : null), ['id' => 'api_key']);
+        ?>
+    </li>
+    <li>
+        <?php
+        $this->Form->label($this->_('Coingate.api_secret', true), 'api_secret');
+        $this->Form->fieldText('api_secret', (isset($meta['api_secret']) ? $meta['api_secret'] : null), ['id' => 'api_secret']);
+        ?>
+    </li>
+    <li>
+        <?php
+        $this->Form->label($this->_('Coingate.receive_currency', true), 'receive_currency');
+        $this->Form->fieldSelect('receive_currency', (isset($receive_currency) ? $receive_currency : []), (isset($meta['receive_currency']) ? $meta['receive_currency'] : null), ['id' => 'receive_currency']);
+        ?>
+        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Coingate.receive_currency_note');?></div></span>
+    </li>
+    <li>
+        <?php
+        $this->Form->label($this->_('Coingate.coingate_environment', true), 'coingate_environment');
+        $this->Form->fieldSelect('coingate_environment', (isset($coingate_environment) ? $coingate_environment : []), (isset($meta['coingate_environment']) ? $meta['coingate_environment'] : null), ['id' => 'coingate_environment']);
+        ?>
+        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Coingate.environment_note');?></div></span>
+    </li>
+</ul>

@@ -1,0 +1,77 @@
+
+    <ul>
+        <li>
+            <?php
+            $this->Form->fieldHidden('step', 'configuration');
+            $this->Form->fieldHidden('host', (isset($vars->host) ? $vars->host : null));
+            $this->Form->fieldHidden('database', (isset($vars->database) ? $vars->database : null));
+            $this->Form->fieldHidden('user', (isset($vars->user) ? $vars->user : null));
+            $this->Form->fieldHidden('pass', (isset($vars->pass) ? $vars->pass : null));
+            $this->Form->fieldHidden('passphrase', (isset($vars->passphrase) ? $vars->passphrase : null));
+            $this->Form->fieldHidden('enable_debug', (isset($vars->enable_debug) ? $vars->enable_debug : null));
+
+            $this->Form->fieldRadio('create_packages', 'true', (isset($vars->create_packages) ? $vars->create_packages : 'true') == 'true', ['id' => 'create_packages_true']);
+            $this->Form->label($this->_('Clientexec5_5.configuration.create_packages_true', true), 'create_packages_true', ['class' => 'inline']);
+            $this->Form->fieldRadio('create_packages', 'false', (isset($vars->create_packages) ? $vars->create_packages : null) == 'false', ['id' => 'create_packages_false']);
+            $this->Form->label($this->_('Clientexec5_5.configuration.create_packages_false', true), 'create_packages_false', ['class' => 'inline']);
+            ?>
+        </li>
+        <li class="map_packages">
+            <?php
+            if ((isset($local_packages) ? $local_packages : null)) {
+                ?>
+            <table class="table">
+                <thead>
+                    <tr class="heading_row">
+                        <td><?php $this->_('Clientexec5_5.configuration.remote_package'); ?></td>
+                        <td class="last"><?php $this->_('Clientexec5_5.configuration.local_package'); ?></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $i=0;
+                foreach ($remote_packages as $package) {
+                    ?>
+                    <tr<?php echo $i++ % 2 == 1 ? ' class="odd_row"' : ''; ?>>
+                        <td>
+                            <?php
+                            $this->Form->fieldHidden('remote_packages[]', $package->id);
+                    echo (isset($package->planname) ? $this->Html->safe($package->planname) : null); ?>
+                        </td>
+                        <td>
+                            <?php
+                            $this->Form->fieldSelect('local_packages[]', ['' => 'Do not import'] + (array) $this->Form->collapseObjectArray($local_packages, 'name', 'id')); ?>
+                        </td>
+                    </tr>
+                    <?php
+                } ?>
+                </tbody>
+            </table>
+            <?php
+            } else {
+                ?>
+            <div class="empty_section">
+                <div class="empty_box"><?php $this->_('Clientexec5_5.configuration.no_local_packages'); ?></div>
+            </div>
+            <?php
+            }
+            ?>
+        </li>
+    </ul>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            renderPackages();
+            $("input[name='create_packages']").change(function() {
+                renderPackages();
+            });
+
+            function renderPackages() {
+                if ($("input[name='create_packages']:checked").val() == "true")
+                    $(".map_packages").hide();
+                else
+                    $(".map_packages").show();
+            }
+        });
+    </script>

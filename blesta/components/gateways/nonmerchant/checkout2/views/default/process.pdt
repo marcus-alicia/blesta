@@ -1,0 +1,22 @@
+
+	<?php
+    // Disable CSRF for this form
+    $this->Form->setCsrfOptions(['set_on_create' => false]);
+    $this->Form->create($post_to, ['method' => (isset($form_method) ? $form_method : 'post')]);
+    if ((isset($fields) ? $fields : null)) {
+        foreach ($fields as $key => $value) {
+            $this->Form->fieldHidden($key, $value);
+        }
+    }
+
+    $this->Form->fieldImage(
+        'submit',
+        $this->_('Checkout2.buildprocess.submit', true),
+        [
+            'src' => 'https://www.2checkout.com/upload/images/paymentlogoshorizontal.png',
+            'alt' => $this->_('Checkout2.buildprocess.submit', true),
+            'title' => $this->_('Checkout2.buildprocess.submit', true)
+        ]
+    );
+
+    $this->Form->end();

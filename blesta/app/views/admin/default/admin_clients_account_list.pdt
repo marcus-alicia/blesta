@@ -1,0 +1,90 @@
+        <?php
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+
+        if ((isset($accounts) ? $accounts : false) && (($num_accounts = count($accounts)) > 0)) {
+        ?>
+        <table class="table" id="accounts">
+            <tr class="heading_row">
+                <td class="fixed_small center"><?php $this->Form->fieldRadio('account_id', 'none', ((isset($vars->account_id) ? $this->Html->safe($vars->account_id) : null) == 'none'));?></td>
+                <td><span><?php $this->_('AdminClients.accounts.text_name');?></span></td>
+                <td><span><?php $this->_('AdminClients.accounts.text_type');?></span></td>
+                <td><span><?php $this->_('AdminClients.accounts.text_last4');?></span></td>
+                <td class="last"><span><?php $this->_('AdminClients.accounts.text_options');?></span></td>
+            </tr>
+            <?php
+            // Save the account type of the account that is checked
+            $account_type = 'cc';
+
+            // Loop through all invoices
+            for ($i = 0; $i < $num_accounts; $i++) {
+            ?>
+            <tr<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? ' class="odd_row"' : '', '');?>>
+                <?php
+                // Radio is checked if both account ID and account type match
+                $radio_checked = false;
+
+                if (((isset($vars->account_id) ? $this->Html->safe($vars->account_id) : null) == (isset($accounts[$i]->id) ? $accounts[$i]->id : null)) &&
+                    ((isset($vars->type) ? $this->Html->safe($vars->type) : null) == (isset($accounts[$i]->account_type) ? $accounts[$i]->account_type : null))) {
+                    $radio_checked = true;
+                    $account_type = (isset($accounts[$i]->account_type) ? $accounts[$i]->account_type : null);
+                }
+                ?>
+                <td class="fixed_small center">
+                    <?php
+                    $this->Form->fieldRadio('account_id', (isset($accounts[$i]->id) ? $accounts[$i]->id : null), $radio_checked);
+                    $this->Form->fieldHidden('account_type', (isset($accounts[$i]->account_type) ? $accounts[$i]->account_type : null));
+                    ?>
+                </td>
+                <td><?php echo (isset($accounts[$i]->first_name) ? $this->Html->safe($accounts[$i]->first_name) : null) . ' ' . (isset($accounts[$i]->last_name) ? $this->Html->safe($accounts[$i]->last_name) : null);?></td>
+                <td class="account_type">
+                    <?php
+                    if ((isset($accounts[$i]->account_type) ? $accounts[$i]->account_type : null) == 'cc') {
+                        $expiration = substr((isset($accounts[$i]->expiration) ? $accounts[$i]->expiration : null), 0, 4) . '-' . substr((isset($accounts[$i]->expiration) ? $accounts[$i]->expiration : null), 4, 6);
+                        $this->_('AdminClients.accounts.type_cc', false, (isset($account_types['cc']) ? $account_types['cc'] : null), (isset($cc_types[$accounts[$i]->type]) ? $cc_types[$accounts[$i]->type] : null), date('F Y', strtotime($expiration)));
+                    } else {
+                        $this->_('AdminClients.accounts.type_ach', false, (isset($account_types['ach']) ? $account_types['ach'] : null), (isset($ach_types[$accounts[$i]->type]) ? $ach_types[$accounts[$i]->type] : null));
+                    }
+                    ?>
+                </td>
+                <td><?php (print (isset($accounts[$i]->last4) ? $this->Html->safe($accounts[$i]->last4) : null));?></td>
+                <td>
+                    <?php
+                    if (($accounts[$i]->status ?? 'active') == 'active') {
+                    ?>
+                    <a href="<?php echo $this->base_uri . 'clients/' . ((isset($accounts[$i]->account_type) ? $accounts[$i]->account_type : null) == 'cc' ? 'editccaccount' : 'editachaccount') . '/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($accounts[$i]->id) ? $this->Html->safe($accounts[$i]->id) : null) . '/';?>"><?php $this->_('AdminClients.accounts.option_edit');?></a>,
+                    <?php
+                    } elseif (($accounts[$i]->account_type ?? null) == 'ach') {
+                    ?>
+                    <a href="<?php echo $this->base_uri . 'clients/verifyachaccount/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($accounts[$i]->id) ? $this->Html->safe($accounts[$i]->id) : null) . '/';?>"><?php $this->_('AdminClients.accounts.option_verify');?></a>,
+                    <?php
+                    }
+                    ?>
+                    <a href="<?php echo $this->base_uri . 'clients/' . ((isset($accounts[$i]->account_type) ? $accounts[$i]->account_type : null) == 'cc' ? 'deleteccaccount' : 'deleteachaccount') . '/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($accounts[$i]->id) ? $this->Html->safe($accounts[$i]->id) : null) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminClients.accounts.confirm_delete', true));?>" class="manage"><?php $this->_('AdminClients.accounts.option_delete');?></a>
+                </td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+        <?php
+        $this->Form->fieldHidden('type', (isset($account_type) ? $this->Html->safe($account_type) : null), ['id' => 'account_type']);
+        ?>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('AdminClients.accounts.field_accountsubmit', true), ['class' => 'btn btn-primary pull-right']);
+            ?>
+        </div>
+        <?php
+        } else {
+        ?>
+        <div class="inner">
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminClients.accounts.no_results');?>
+                </div>
+            </div>
+        </div>
+        <?php
+        }
+
+        $this->Form->end();

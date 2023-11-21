@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="PSR2 Transitional">
+    <!-- Require short array syntax, not long array syntax -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
+
+    <!-- Every file should end with a new line except views -->
+    <rule ref="Generic.Files.EndFileNewline">
+        <exclude-pattern>*.pdt</exclude-pattern>
+    </rule>
+
+    <!-- Line ending characters should all be \n -->
+    <rule ref="Generic.Files.LineEndings" />
+
+    <!-- Double quotes should be used only when necessary, otherwise use single quotes -->
+    <rule ref="Squiz.Strings.DoubleQuoteUsage" />
+
+    <!-- Require 1 space before/after operators -->
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+        <properties>
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Exclude template and language files from the line-too-long PSR2 rule -->
+    <rule ref="Generic.Files.LineLength.TooLong">
+        <exclude-pattern>*.pdt</exclude-pattern>
+        <exclude-pattern>/language/*.php</exclude-pattern>
+    </rule>
+
+    <!-- Require PSR2 Rules except for namespaces -->
+    <rule ref="PSR2">
+        <exclude name="PSR1.Classes.ClassDeclaration"/>
+    </rule>
+</ruleset>

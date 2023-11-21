@@ -1,0 +1,51 @@
+{
+    "version": "2.9.1",
+    "name": "GoGetSSL.name",
+    "description": "GoGetSSL.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        },
+        {
+            "name": "Full Ambit Networks",
+            "url": "https://fullambit.net"
+        }
+    ],
+    "package": {
+        "name_key": "gogetssl_name"
+    },
+    "service": {
+        "name_key": "gogetssl_fqdn"
+    },
+    "module": {
+        "row": "GoGetSSL.module_row",
+        "rows": "GoGetSSL.module_row_plural",
+        "row_key": "gogetssl_name"
+    },
+    "email_tags": {
+        "module": [],
+        "package": ["gogetssl_product"],
+        "service": [
+            "gogetssl_approver_email",
+            "gogetssl_fqdn",
+            "gogetssl_webserver_type",
+            "gogetssl_csr",
+            "gogetssl_orderid",
+            "gogetssl_title",
+            "gogetssl_firstname",
+            "gogetssl_lastname",
+            "gogetssl_address1",
+            "gogetssl_address2",
+            "gogetssl_city",
+            "gogetssl_zip",
+            "gogetssl_state",
+            "gogetssl_country",
+            "gogetssl_email",
+            "gogetssl_number",
+            "gogetssl_fax",
+            "gogetssl_organization",
+            "gogetssl_organization_unit"
+        ]
+    }
+}

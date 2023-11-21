@@ -1,0 +1,38 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons([]);
+        $this->Widget->create($this->_('Connectreseller.edit_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Connectreseller.row_meta.reseller_name', true), 'reseller_name');
+                        $this->Form->fieldText('reseller_name', ($vars->reseller_name ?? null), ['id' => 'reseller_name', 'class' => 'block']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Connectreseller.row_meta.api_key', true), 'api_key');
+                        $this->Form->fieldText('api_key', ($vars->api_key ?? null), ['id' => 'api_key', 'class' => 'block']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('Connectreseller.edit_row.edit_btn', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

@@ -1,0 +1,34 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminMain.editcategory.boxtitle_editcategory', true, ($category->name ?? null)));
+
+        $this->Form->create();
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminMain.editcategory.field_name', true));?>
+                        <?php $this->Form->fieldText('name', ($vars->name ?? null), ['id'=>'name']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminMain.editcategory.field_description', true));?>
+                        <?php $this->Form->fieldTextarea('description', ($vars->description ?? null), ['id'=>'description', 'class'=>'small', 'data-markdown-editor' => '']);?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.editcategory.submit_edit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+                <a class="btn btn-default pull-right" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/' . ($category->id ?? null));?>"><?php $this->_('AdminMain.editcategory.submit_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

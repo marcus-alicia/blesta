@@ -1,0 +1,97 @@
+
+        <?php
+        $link_buttons = [
+            [
+                'icon' => 'fas fa-plus',
+                'name' => '',
+                'attributes' => [
+                    'title' => $this->_('AdminClients.notes.categorylink_create', true),
+                    'href' => $this->base_uri . 'clients/addnote/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/'
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons($link_buttons);
+        $this->Widget->create($this->_('AdminClients.notes.boxtitle_notes', true), ['id' => 'admin_clients_notes'], (isset($render_section) ? $render_section : null));
+
+        if ((isset($notes) ? $notes : false) && ($num_notes = count($notes)) > 0) {
+        ?>
+        <table class="table" id="notes">
+            <tr class="heading_row">
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/notes/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/?sort=title&order=' . ($sort == 'title' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'title' ? ' ' . $order : '');?>"><?php $this->_('AdminClients.notes.heading_title');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/notes/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/?sort=date_updated&order=' . ($sort == 'date_updated' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_updated' ? ' ' . $order : '');?>"><?php $this->_('AdminClients.notes.heading_dateupdated');?></a></span></td>
+                <td><span><?php $this->_('AdminClients.notes.heading_options');?></span></td>
+            </tr>
+            <?php
+            // Display all notes
+            for ($i = 0; $i < $num_notes; $i++) {
+            ?>
+            <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'expand');?>">
+                <td><?php (print (isset($notes[$i]->title) ? $this->Html->safe($notes[$i]->title) : null));?></td>
+                <td><?php echo $this->Date->cast($notes[$i]->date_updated);?></td>
+                <td><a href="<?php echo $this->base_uri . 'clients/editnote/' . (isset($notes[$i]->client_id) ? $this->Html->safe($notes[$i]->client_id) : null) . '/' . (isset($notes[$i]->id) ? $this->Html->safe($notes[$i]->id) : null) . '/';?>"><?php $this->_('AdminClients.notes.option_edit');?></a>, <a class="manage" href="<?php echo $this->base_uri . 'clients/deletenote/' . (isset($notes[$i]->client_id) ? $this->Html->safe($notes[$i]->client_id) : null) . '/' . (isset($notes[$i]->id) ? $this->Html->safe($notes[$i]->id) : null);?>" rel="<?php echo $this->Html->safe($this->_('AdminClients.notes.confirm_delete', true));?>"><?php $this->_('AdminClients.notes.option_delete');?></a></td>
+            </tr>
+            <tr class="expand_details">
+                <td colspan="9" class="subtable">
+                    <table class="table multi_heading">
+                        <tr class="header">
+                            <td class="heading"><?php $this->_('AdminClients.notes.heading_staff');?></td>
+                            <td>
+                                <?php
+                                if ((isset($notes[$i]->staff_id) ? $notes[$i]->staff_id : null)) {
+                                ?>
+                                    <?php echo $this->Html->concat(' ', (isset($notes[$i]->staff_first_name) ? $this->Html->safe($notes[$i]->staff_first_name) : null), (isset($notes[$i]->staff_last_name) ? $this->Html->safe($notes[$i]->staff_last_name) : null));?>
+                                <?php
+                                } else {
+                                ?>
+                                    <?php $this->_('AdminClients.notes.by_system');?>
+                                <?php
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <tr class="header bottom">
+                            <td class="heading"><?php $this->_('AdminClients.notes.heading_dateadded');?></td>
+                            <td><?php echo $this->Date->cast($notes[$i]->date_added);?></td>
+                        </tr>
+                        <?php
+                        // Show the note description
+                        if (!empty($notes[$i]->description)) {
+                        ?>
+                        <tr>
+                            <td colspan="2"><?php echo nl2br((isset($notes[$i]->description) ? $this->Html->safe($notes[$i]->description) : ''));?></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                </td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+        <?php
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="inner">
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminClients.notes.no_results');?>
+                </div>
+            </div>
+        </div>
+        <?php
+        }
+
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Handle confirmation on delete action
+        $('#notes a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>'});
+    });
+</script>

@@ -1,0 +1,9 @@
+{
+    "name": "blesta/checkout2",
+    "description": "2Checkout",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

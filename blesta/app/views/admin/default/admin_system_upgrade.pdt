@@ -1,0 +1,44 @@
+
+        <?php
+        echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminSystemUpgrade.index.boxtitle_upgrade', true));
+                ?>
+                <div class="inner pad">
+                    <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+                    <?php
+                    #
+                    # TODO: Add upgrade options
+                    #
+                    if (false) {
+                    ?>
+                    <div class="setting">
+
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemUpgrade.index.field_upgradesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box">
+                            <?php $this->_('AdminSystemUpgrade.index.no_results');?>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>

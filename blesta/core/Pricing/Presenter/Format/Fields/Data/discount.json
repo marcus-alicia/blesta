@@ -1,0 +1,16 @@
+{
+    "id":"id",
+    "name":"code",
+    "used_qty":"used_qty",
+    "max_qty":"max_qty",
+    "date_start":"start_date",
+    "date_end":"end_date",
+    "status":"status",
+    "type":"type",
+    "recurs":"recurring",
+    "recur_limits_apply":"limit_recurring",
+    "apply_to_options":"apply_package_options",
+    "discounts":"amounts",
+    "terms_allowed":"terms",
+    "packages_applied":"packages"
+}

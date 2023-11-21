@@ -1,0 +1,9 @@
+{
+    "name": "blesta/import_manager",
+    "description": "Import Manager",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

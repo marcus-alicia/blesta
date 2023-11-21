@@ -1,0 +1,59 @@
+    <div class="title_row first">
+        <h3><?php $this->_('Whmsonic.tab_stats');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Whmsonic.tab_stats.info_heading.field');?></td>
+                    <td class="last"><?php $this->_('Whmsonic.tab_stats.info_heading.value');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.username');?></td>
+                    <td><?php echo (isset($service_fields->whmsonic_username) ? $this->Html->safe($service_fields->whmsonic_username) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.password');?></td>
+                    <td><?php echo (isset($service_fields->whmsonic_password) ? $this->Html->safe($service_fields->whmsonic_password) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.whmsonic_radio_password');?></td>
+                    <td><?php echo (isset($service_fields->whmsonic_radio_password) ? $this->Html->safe($service_fields->whmsonic_radio_password) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.whmsonic_radio_ip');?></td>
+                    <td><?php echo (isset($service_fields->whmsonic_radio_ip) ? $this->Html->safe($service_fields->whmsonic_radio_ip) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.client_type');?></td>
+                    <td><?php echo (isset($package_fields->client_type) ? $this->Html->safe($package_fields->client_type) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.bitrate');?></td>
+                    <td><?php echo (isset($package_fields->bitrate) ? $this->Html->safe($package_fields->bitrate) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.hspace');?></td>
+                    <td><?php echo (isset($package_fields->hspace) ? $this->Html->safe($package_fields->hspace) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.bandwidth');?></td>
+                    <td><?php echo (isset($package_fields->bandwidth) ? $this->Html->safe($package_fields->bandwidth) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.listeners');?></td>
+                    <td><?php echo (isset($package_fields->listeners) ? $this->Html->safe($package_fields->listeners) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.autodj');?></td>
+                    <td><?php echo (isset($package_fields->autodj) ? $this->Html->safe($package_fields->autodj) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Whmsonic.tab_stats.info.whmsonic_ftp');?></td>
+                    <td><?php echo (isset($service_fields->whmsonic_ftp) ? $this->Html->safe($service_fields->whmsonic_ftp) : null);?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

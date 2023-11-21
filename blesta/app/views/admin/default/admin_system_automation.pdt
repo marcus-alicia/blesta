@@ -1,0 +1,98 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemAutomation.index.boxtitle_automation', true));
+
+                // Cron Status
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create($this->base_uri . 'settings/system/automation/', ['class' => 'disable-on-submit']);?>
+                    <div class="title_row first"><h3><?php $this->_('AdminSystemAutomation.index.heading_status');?></h3></div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                // Show the cron last ran time
+                                $last_run_time = $this->_('AdminSystemAutomation.index.text_cron_never_ran', true);
+                                if ($cron_last_ran === null) {
+                                    $last_run_time = $this->_('AdminSystemAutomation.index.text_cron_currently_running', true);
+                                } elseif ((isset($cron_last_ran) ? $cron_last_ran : false)) {
+                                    $last_run_time = $this->_('AdminSystemAutomation.index.text_cron_last_ran', true, $this->Date->cast($cron_last_ran, 'date_time'));
+                                }
+
+                                $icon = ($cron_icon == 'active' ? 'check' : 'exclamation-triangle');
+                                ?>
+                                <i class="fas fa-<?php (print (isset($icon) ? $this->Html->safe($icon) : null));?>"></i>
+                                <?php (print (isset($last_run_time) ? $this->Html->safe($last_run_time) : null));?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemAutomation.index.field_croncommand', true), 'cron_command', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemAutomation.index.note_cron_command');?></div></span>
+                                <?php $this->Form->fieldText('cron_command', (isset($cron_command) ? $cron_command : null), ['id' => 'cron_command', 'readonly' => 'readonly', 'class' => 'xlarge block']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <h4><a id="update_cron_key" class="show_content" href="#"><i class="fas fa-chevron-down"></i> <?php $this->_('AdminSystemAutomation.index.text_update_key');?></a></h4>
+
+                    <div class="pad reverse cron_key" style="display:none;">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSystemAutomation.index.field_cron_key', true), 'cron_key');
+                                $this->Form->fieldText('cron_key', (isset($vars->cron_key) ? $vars->cron_key : null), ['id' => 'cron_key']);
+                                ?>
+                                <span class="icon"><a class="generate_code" href="#"><i class="fas fa-sync-alt"></i> <?php $this->_('AdminSystemAutomation.index.text_generate_code');?></a></span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <a id="run_cron" class="btn btn-warning pull-right" href="#"><?php $this->_('AdminSystemAutomation.index.field_runcron');?></a>
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemAutomation.index.field_cronkey_submit', true), ['class' => 'btn btn-primary pull-right cron_key', 'style' => 'display:none;']);
+                        ?>
+                    </div>
+                    <?php
+                    $this->Form->end();
+                    ?>
+
+                    <div id="cron_results" class="pad clear" style="display:none;">
+                        <iframe src="#" scrolling="auto"></iframe>
+                    </div>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    // Display cron running
+    $('#run_cron').click(function() {
+        $('#cron_results').show();
+        $('#cron_results iframe').attr('src', '" . $this->Html->safe(WEBDIR . 'cron/?cron_key=' . (isset($vars->cron_key) ? $vars->cron_key : null)) . "');
+        return false;
+    });
+
+    " .
+    // Hide/show cron key
+    (((isset($show_cron_key) ? $this->Html->safe($show_cron_key) : null)) ? "$('.cron_key').show(); $('#update_cron_key').hide();" : '') .
+    "
+    // Toggle cron key
+    $(this).blestaBindToggleEvent('#update_cron_key', '.cron_key');
+
+    $('#cron_command').focusin(function() {
+        $(this).select();
+    });
+
+    $('.generate_code').click(function() {
+        $('#cron_key').attr('value', $(this).blestaRandomString(8));
+        return false;
+    });
+});
+");
+?>

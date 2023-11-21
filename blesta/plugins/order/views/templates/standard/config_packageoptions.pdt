@@ -1,0 +1,40 @@
+            <?php
+            // Show module fields
+            if (isset($input_html) && ($package_field_html = $input_html->generate())) {
+            ?>
+                <div class="pad">
+                <?php
+                echo $package_field_html;
+                ?>
+                </div>
+            <?php
+            }
+
+            echo ($option_logic_js ?? null);
+            ?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input[data-type='quantity']").each(function() {
+			var input = $(this);
+			if (input.attr("data-min") != "" && input.attr("data-max") != "") {
+				var min = parseInt(input.attr("data-min"));
+				var max = parseInt(input.attr("data-max"));
+				var step = parseInt(input.attr("data-step") == "" ? 1 : input.attr("data-step"));
+				var value = parseInt(input.val());
+				if (value < min)
+					value = min;
+				if (value > max)
+					value = max;
+
+				$(input).slider({
+					value: value,
+					min: min,
+					max: max,
+					step: step,
+					orientation: 'horizontal'
+				});
+            }
+		});
+	});
+</script>

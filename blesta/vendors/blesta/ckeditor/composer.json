@@ -1,0 +1,7 @@
+{
+    "name": "blesta/ckeditor",
+    "type": "library",
+    "description": "CKEditor 5 editor generated with the online builder - JavaScript WYSIWYG web text editor.",
+    "author": "CKSource (https://cksource.com/)",
+    "license": "MIT"
+}

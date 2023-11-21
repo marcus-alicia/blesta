@@ -1,0 +1,48 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="login-box vertical-center">
+                <div class="card card-login">
+                    <div class="card-body">
+                        <h3><?php $this->_('AdminLogin.otp.title_adminarea', false, (isset($system_company->name) ? $this->Html->safe($system_company->name) : null));?></h3>
+                        <?php
+                        echo (isset($message) ? $message : null);
+                        $this->Form->create(null, ['class' => 'disable-on-submit']);
+                        ?>
+                            <div class="form-group">
+                                <?php
+                                $this->Form->fieldText(
+                                    'otp',
+                                    null,
+                                    [
+                                        'id' => 'otp',
+                                        'class' => 'form-control',
+                                        'tabindex' => 1,
+                                        'placeholder' => $this->_('AdminLogin.otp.field_password', true),
+                                        'autofocus' => 'autofocus'
+                                    ]
+                                );
+                                ?>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-block btn-success float-right" type="submit">
+                                        <i class="fas fa-sign-in-alt"></i> <?php $this->_('AdminLogin.otp.field_loginsubmit');?>
+                                    </button>
+                                </div>
+                            </div>
+                        <?php
+                        $this->Form->end();
+                        ?>
+                    </div>
+                    <div class="card-footer">
+                       <div class="pass-reset">
+                           <a href="<?php echo $this->base_uri . 'logout/';?>"><?php $this->_('AdminLogin.otp.link_login');?></a>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

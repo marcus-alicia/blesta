@@ -1,0 +1,123 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyThemes.add.boxtitle_addtheme', true));
+                $this->Form->create(null, ['enctype' => 'multipart/form-data', 'class' => 'disable-on-submit']);
+                $this->Form->fieldHidden('type', (isset($vars->type) ? $vars->type : null));
+                ?>
+                <div class="inner">
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminCompanyThemes.add.heading_options');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldRadio('add_type', 'import', (isset($vars->add_type) ? $vars->add_type : 'import') == 'import', ['id' => 'import_type', 'class' => 'add_type']);
+                                $this->Form->label($this->_('AdminCompanyThemes.add.add_type_import', true), 'import_type', ['class' => 'inline']);
+                                $this->Form->fieldRadio('add_type', 'manual', (isset($vars->add_type) ? $vars->add_type : null) == 'manual', ['id' => 'manual_type', 'class' => 'add_type']);
+                                $this->Form->label($this->_('AdminCompanyThemes.add.add_type_manual', true), 'manual_type', ['class' => 'inline']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="import_type">
+                        <div class="title_row">
+                            <h3><?php $this->_('AdminCompanyThemes.add.heading_import');?></h3>
+                        </div>
+                        <div class="pad">
+                            <ul>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminCompanyThemes.add.field_import_file', true), 'import_file');
+                                    $this->Form->fieldFile('import_file', ['id' => 'import_file']);
+                                    ?>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="manual_type" style="display:none;">
+                        <div class="title_row">
+                            <h3><?php $this->_('AdminCompanyThemes.add.heading_manual');?></h3>
+                        </div>
+                        <div class="pad">
+                            <ul>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminCompanyThemes.add.field_name', true), 'name');
+                                    $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);
+                                    ?>
+                                </li>
+                                <?php
+                                // Display each color
+                                foreach ((isset($colors) ? $colors : []) as $key => $color_field) {
+                                ?>
+                                <li class="colors">
+                                    <?php
+                                    $for = (is_array($color_field) && isset($color_field[0]) ? $color_field[0] : $color_field);
+                                    $this->Form->label($this->_('AdminCompanyThemes.add.field_' . (isset($key) ? $key : null), true), 'colors[' . (isset($for) ? $for : null) . ']');
+
+                                    foreach ($color_field as $color) {
+                                        $this->Form->fieldText('colors[' . (isset($color) ? $color : null) . ']', (isset($vars->colors[$color]) ? $vars->colors[$color] : null), ['id' => 'colors[' . (isset($color) ? $color : null) . ']', 'class' => 'color_well']);
+                                    }
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyThemes.!theme.tooltip_' . (isset($key) ? $key : null));?></div></span>
+                                </li>
+                                <?php
+                                }
+                                ?>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminCompanyThemes.add.field_logo_url', true), 'logo_url');
+                                    $this->Form->fieldText('logo_url', (isset($vars->logo_url) ? $vars->logo_url : null), ['id' => 'logo_url']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyThemes.!theme.tooltip_logo_url');?></div></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyThemes.add.field_addthemesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    changeAddOptions();
+    $('.add_type').on('change', function() {
+        changeAddOptions();
+    });
+
+
+    // Set the color picker for each color field
+    $('li.colors input.color_well').each(function() {
+        $(this).blestaColorPicker();
+    });
+});
+
+function changeAddOptions() {
+    if ($('.add_type:checked').val() == 'import') {
+        $('.import_type').show();
+        $('.manual_type').hide();
+    }
+    else {
+        $('.import_type').hide();
+        $('.manual_type').show();
+    }
+}
+");
+?>

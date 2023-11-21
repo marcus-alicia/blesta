@@ -1,0 +1,164 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->create($this->_('AdminPlugin.index.boxtitle_extension_generator', true), ['id' => 'admin_plugin_integrations']);
+
+        echo (isset($progress_bar) ? $progress_bar : null);
+
+        $this->Form->create();
+        ?>
+        <div class="inner">
+            <div class="title_row"><h3><?php $this->_('AdminPlugin.integrations.heading_actions');?> - <a id="actions_more_info" href="#"><?php $this->_('AdminPlugin.integrations.heading_more_info');?></a></h3></div>
+            <div class="pad" id="actions_info_text" style="display:none;">
+                <div class="empty_box"><?php $this->_('AdminPlugin.integrations.text_actions_more_info');?></div>
+            </div>
+            <div class="pad">
+                <div class="links_row">
+                    <a class="btn btn-default pull-right btn-sm action_row_add" href="#"><span><?php $this->_('AdminPlugin.integrations.action_row_add');?></span></a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminPlugin.integrations.location');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_location');?></div></span></td>
+                            <td><?php $this->_('AdminPlugin.integrations.controller');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_controller');?></div></span></td>
+                            <td><?php $this->_('AdminPlugin.integrations.action');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_action');?></div></span></td>
+                            <td><?php $this->_('AdminPlugin.integrations.name');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_name');?></div></span></td>
+                            <td class="last"><?php $this->_('AdminPlugin.integrations.text_options');?></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $rows = 0;
+                    if ((isset($vars['actions']['name']) ? $vars['actions']['name'] : false)) {
+                        $rows = count($vars['actions']['name']);
+                    }
+                    for ($i = -1; $i < $rows; $i++) {
+                        $disabled = ($i >= 0 ? [] : ['disabled' => 'disabled']);
+                    ?>
+                        <tr class="action_row"<?php echo ($i >= 0 ? '' : ' style="display:none;"');?>>
+                            <td><?php $this->Form->fieldSelect('actions[location][]', (isset($action_locations) ? $action_locations : null), (isset($vars['actions']['location'][$i]) ? $vars['actions']['location'][$i] : null), array_merge(['class' => 'stretch'], $disabled));?></td>
+                            <td><?php $this->Form->fieldText('actions[controller][]', (isset($vars['actions']['controller'][$i]) ? $vars['actions']['controller'][$i] : null), array_merge(['class' => 'stretch', 'placeholder' => $this->_('AdminPlugin.integrations.placeholder_controller', true)], $disabled));?></td>
+                            <td><?php $this->Form->fieldText('actions[action][]', (isset($vars['actions']['action'][$i]) ? $vars['actions']['action'][$i] : null), array_merge(['class' => 'stretch', 'placeholder' => $this->_('AdminPlugin.integrations.placeholder_action', true)], $disabled));?></td>
+                            <td><?php $this->Form->fieldText('actions[name][]', (isset($vars['actions']['name'][$i]) ? $vars['actions']['name'][$i] : null), array_merge(['class' => 'stretch', 'placeholder' => $this->_('AdminPlugin.integrations.placeholder_name', true)], $disabled));?></td>
+                            <td><a href="#" class="manage action_row_remove"><?php $this->_('AdminPlugin.integrations.text_remove');?></a></td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="title_row"><h3><?php $this->_('AdminPlugin.integrations.heading_events');?> - <a id="events_more_info" href="#"><?php $this->_('AdminPlugin.integrations.heading_more_info');?></a></h3></div>
+            <div class="pad" id="events_info_text" style="display:none;">
+                <div class="empty_box"><?php $this->_('AdminPlugin.integrations.text_events_more_info');?></div>
+            </div>
+            <div class="pad">
+                <div class="links_row">
+                    <a class="btn btn-default pull-right btn-sm event_row_add" href="#"><span><?php $this->_('AdminPlugin.integrations.event_row_add');?></span></a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminPlugin.integrations.event');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_event');?></div></span></td>
+                            <td><?php $this->_('AdminPlugin.integrations.event_callback');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_event_callback');?></div></span></td>
+                            <td class="last"><?php $this->_('AdminPlugin.integrations.text_options');?></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $rows = 0;
+                    if ((isset($vars['events']['event']) ? $vars['events']['event'] : false)) {
+                        $rows = count($vars['events']['event']);
+                    }
+                    for ($i = -1; $i < $rows; $i++) {
+                        $disabled = ($i >= 0 ? [] : ['disabled' => 'disabled']);
+                    ?>
+                        <tr class="event_row"<?php echo ($i >= 0 ? '' : ' style="display:none;"');?>>
+                            <td><?php $this->Form->fieldText('events[event][]', (isset($vars['events']['event'][$i]) ? $vars['events']['event'][$i] : null), array_merge(['class' => 'stretch', 'placeholder' => $this->_('AdminPlugin.integrations.placeholder_event', true)], $disabled));?></td>
+                            <td><?php $this->Form->fieldText('events[callback][]', (isset($vars['events']['callback'][$i]) ? $vars['events']['callback'][$i] : null), array_merge(['class' => 'stretch', 'placeholder' => $this->_('AdminPlugin.integrations.placeholder_event_callback', true)], $disabled));?></td>
+                            <td><a href="#" class="manage event_row_remove"><?php $this->_('AdminPlugin.integrations.text_remove');?></a></td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="title_row"><h3><?php $this->_('AdminPlugin.integrations.heading_cards');?> - <a id="cards_more_info" href="#"><?php $this->_('AdminPlugin.integrations.heading_more_info');?></a></h3></div>
+            <div class="pad" id="cards_info_text" style="display:none;">
+                <div class="empty_box"><?php $this->_('AdminPlugin.integrations.text_cards_more_info');?></div>
+            </div>
+            <div class="pad">
+                <div class="links_row">
+                    <a class="btn btn-default pull-right btn-sm card_row_add" href="#"><span><?php $this->_('AdminPlugin.integrations.card_row_add');?></span></a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminPlugin.integrations.level');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_name');?></div></span></td>
+                            <td><?php $this->_('AdminPlugin.integrations.card_callback');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_card_callback');?></div></span></td>
+                            <td><?php $this->_('AdminPlugin.integrations.label');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_label');?></div></span></td>
+                            <td><?php $this->_('AdminPlugin.integrations.link');?><span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPlugin.integrations.tooltip_link');?></div></span></td>
+                            <td class="last"><?php $this->_('AdminPlugin.integrations.text_options');?></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $rows = 0;
+                    if ((isset($vars['cards']['level']) ? $vars['cards']['level'] : false)) {
+                        $rows = count($vars['cards']['level']);
+                    }
+                    for ($i = -1; $i < $rows; $i++) {
+                        $disabled = ($i >= 0 ? [] : ['disabled' => 'disabled']);
+                    ?>
+                        <tr class="card_row"<?php echo ($i >= 0 ? '' : ' style="display:none;"');?>>
+                            <td><?php $this->Form->fieldSelect('cards[level][]', (isset($card_levels) ? $card_levels : null), (isset($vars['cards']['level'][$i]) ? $vars['cards']['level'][$i] : null), array_merge(['class' => 'stretch'], $disabled));?></td>
+                            <td><?php $this->Form->fieldText('cards[callback][]', (isset($vars['cards']['callback'][$i]) ? $vars['cards']['callback'][$i] : null), array_merge(['class' => 'stretch', 'placeholder' => $this->_('AdminPlugin.integrations.placeholder_card_callback', true)], $disabled));?></td>
+                            <td><?php $this->Form->fieldText('cards[label][]', (isset($vars['cards']['label'][$i]) ? $vars['cards']['label'][$i] : null), array_merge(['class' => 'stretch', 'placeholder' => $this->_('AdminPlugin.integrations.placeholder_label', true)], $disabled));?></td>
+                            <td><?php $this->Form->fieldText('cards[link][]', (isset($vars['cards']['link'][$i]) ? $vars['cards']['link'][$i] : null), array_merge(['class' => 'stretch', 'placeholder' => $this->_('AdminPlugin.integrations.placeholder_link', true)], $disabled));?></td>
+                            <td><a href="#" class="manage card_row_remove"><?php $this->_('AdminPlugin.integrations.text_remove');?></a></td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="button_row">
+                <?php $this->Form->fieldSubmit('submit', $this->_('AdminPlugin.integrations.features', true), ['class' => 'btn btn-primary pull-right']);?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+
+        $this->Widget->end();
+        ?>
+
+<script>
+    $(document).ready(function() {
+        var field_types = ['action', 'event', 'card'];
+        field_types.forEach(function (field_type) {
+            $('.' + field_type + '_row_add').click(function() {
+                var fields = $('tr.' + field_type + '_row:first').clone(true);
+                // Enable input fileds
+                fields.find('input,textarea,select').removeAttr('disabled');
+                fields.show();
+                $('tr.' + field_type + '_row:last').after(fields);
+
+                return false;
+            });
+
+            $('.' + field_type + '_row_remove').click(function() {
+                $(this).closest('tr').remove();
+
+                return false;
+            });
+        });
+
+        $(this).blestaBindToggleEvent('#actions_more_info', '#actions_info_text');
+        $(this).blestaBindToggleEvent('#events_more_info', '#events_info_text');
+        $(this).blestaBindToggleEvent('#cards_more_info', '#cards_info_text');
+    });
+</script>

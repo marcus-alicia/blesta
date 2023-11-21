@@ -1,0 +1,47 @@
+	<div class="table-responsive">
+		<table class="table table-curved table-striped">
+			<thead>
+				<tr>
+					<th><i class="fas fa-share fa-flip-vertical"></i></th>
+					<th><?php $this->_("Tcadmin.service_info.hostname");?></th>
+					<th><?php $this->_("Tcadmin.service_info.rcon_password");?></th>
+					<th><?php $this->_("Tcadmin.service_info.private_password");?></th>
+                    <th><?php $this->_("Tcadmin.service_info.server");?></th>
+                    <th><?php $this->_("Tcadmin.service_info.username");?></th>
+                    <th><?php $this->_("Tcadmin.service_info.password");?></th>
+					<th><?php $this->_("Tcadmin.service_info.options");?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+					<td><?php echo (isset($service_fields->hostname) ? $this->Html->safe($service_fields->hostname) : null);?></td>
+					<td><?php echo (isset($service_fields->rcon_password) ? $this->Html->safe($service_fields->rcon_password) : null);?></td>
+					<td><?php echo (isset($service_fields->private_password) ? $this->Html->safe($service_fields->private_password) : null);?></td>
+					<td><?php echo (isset($module_row->meta->host_name) ? $this->Html->safe($module_row->meta->host_name) : null);?></td>
+					<td><?php echo (isset($service_fields->user_name) ? $this->Html->safe($service_fields->user_name) : null);?></td>
+					<td><?php echo (isset($service_fields->user_password) ? $this->Html->safe($service_fields->user_password) : null);?></td>
+					<td>
+						<?php
+				        $this->Form->create($this->Html->safe("//" . (isset($module_row->meta->host_name) ? $module_row->meta->host_name : null) . ":".(isset($module_row->meta->port) ? $module_row->meta->port : null)), array('target' => "_blank"));
+						$this->Form->fieldHidden("user", (isset($service_fields->username) ? $service_fields->username : null));
+						$this->Form->fieldHidden("password", (isset($service_fields->password) ? $service_fields->password : null));
+						?>
+						<a id="login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>" href="#"><?php $this->_("Tcadmin.service_info.option_login");?></a>
+						<?php
+						$this->Form->end();
+						?>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>').click(function(e) {
+				e.preventDefault();
+				
+				$(this).closest('form').submit();
+			});
+		});
+	</script>

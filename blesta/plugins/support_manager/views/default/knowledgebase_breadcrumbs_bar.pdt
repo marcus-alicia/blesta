@@ -1,0 +1,45 @@
+
+
+                            <nav>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/knowledgebase/');?>"><?php $this->_('Knowledgebase.!text.root_directory');?></a>
+                                    </li>
+                                    <?php
+                                    foreach ((isset($categories) ? $categories : []) as $category) {
+                                        $active = (empty($article) && ((isset($current_category->id) ? $current_category->id : false) == (isset($category->id) ? $category->id : null)));
+                                    ?>
+                                    <li class="breadcrumb-item<?php echo $active ? ' active' : '';?>">
+                                        <?php
+                                        if (!$active) {
+                                        ?>
+                                        <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/knowledgebase/index/' . (isset($category->id) ? $category->id : null) . '/');?>">
+                                        <?php
+                                        }
+
+                                        echo (isset($category->name) ? $this->Html->safe($category->name) : null);
+
+                                        if (!$active) {
+                                        ?>
+                                        </a>
+                                        <?php
+                                        }
+                                        ?>
+                                    </li>
+                                    <?php
+                                    }
+
+                                    if ((isset($article) ? $article : null)) {
+                                        // Show a placeholder if no category breadcrumbs are known
+                                        if (empty($categories)) {
+                                    ?>
+                                    <li class="breadcrumb-item"><?php $this->_('Knowledgebase.!text.ellipsis');?></li>
+                                    <?php
+                                        }
+                                    ?>
+                                    <li class="breadcrumb-item"><?php echo (isset($article->title) ? $this->Html->safe($article->title) : null);?></li>
+                                    <?php
+                                    }
+                                    ?>
+                                </ol>
+                            </nav>

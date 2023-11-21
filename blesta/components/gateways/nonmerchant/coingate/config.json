@@ -1,0 +1,20 @@
+{
+	"version": "1.4.0",
+	"name": "Coingate.name",
+	"description": "Coingate.description",
+	"authors": [
+		{
+			"name": "Coingate",
+			"url": "https://coingate.com"
+		},
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+    "currencies": ["EUR", "GBP", "USD", "BTC", "PLN", "CZK", "SEK", "NOK",
+        "DKK", "CHF", "ZAR", "AUD", "JPY", "BRL", "CAD",  "CNY", "HKD", "HUF",
+        "INR", "RUB", "ILS", "MYR", "MXN", "SGD", "RON", "VEF", "IDR", "PHP",
+        "ARS", "THB", "NGN", "COP", "PKR", "AED", "UAH", "BGN"],
+    "signup_url": "https://coingate.com/sign_up"
+}

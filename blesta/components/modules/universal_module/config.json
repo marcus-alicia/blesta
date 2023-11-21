@@ -1,0 +1,21 @@
+{
+    "version": "1.10.0",
+    "name": "UniversalModule.name",
+    "description": "UniversalModule.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "module": {
+        "row": "UniversalModule.module_row",
+        "rows": "UniversalModule.module_row_plural",
+        "row_key": "name"
+    },
+    "email_tags": {
+        "module": ["*"],
+        "package": ["*"],
+        "service": ["*"]
+    }
+}

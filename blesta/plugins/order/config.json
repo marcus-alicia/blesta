@@ -1,0 +1,11 @@
+{
+	"version": "2.36.7",
+	"name": "OrderPlugin.name",
+	"description": "Allow users to place orders. Manage orders in the staff interface.",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://blesta.com"
+		}
+	]
+}

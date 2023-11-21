@@ -1,0 +1,34 @@
+
+        <div class="common_box slim">
+            <div class="content_section">
+                <?php
+                $this->Form->create(null, ['id' => 'admin_client_delaysuspension', 'class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <ul>
+                        <li>
+                            <?php $this->Form->label($this->_('AdminClients.delaysuspension.field_autosuspend_date', true), 'autosuspend_date');?>
+                            <?php $this->Form->fieldText('autosuspend_date', (isset($vars->autosuspend_date) ? $vars->autosuspend_date : null), ['id' => 'autosuspend_date', 'class' => 'date']);?>
+                            <a href="#" class="clear"><?php $this->_('AdminClients.delaysuspension.text_clear');?></a>
+                        </li>
+                    </ul>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminClients.delaysuspension.field_save', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                ?>
+            </div>
+        </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#admin_client_delaysuspension a.clear').click(function(e) {
+            $('#admin_client_delaysuspension input.date').val('');
+            e.preventDefault();
+        });
+        $('#admin_client_delaysuspension input.date').datePicker();
+    });
+</script>

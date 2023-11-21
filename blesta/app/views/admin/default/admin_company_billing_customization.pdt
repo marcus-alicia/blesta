@@ -1,0 +1,328 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminCompanyBilling.customization.boxtitle_customization', true), ['id' => 'admin_company_billing_customization']);
+                $this->Form->create(null, ['enctype' => 'multipart/form-data', 'class' => 'disable-on-submit']);
+                $this->Form->fieldHidden('inv_pad_size', 0);
+                $this->Form->fieldHidden('inv_pad_str', 0);
+                ?>
+                <div class="inner">
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminCompanyBilling.customization.heading_general');?></h3>
+                    </div>
+
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_format', true), 'inv_format', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_format');?></div></span>
+                                <?php $this->Form->fieldText('inv_format', (isset($vars['inv_format']) ? $vars['inv_format'] : null), ['id' => 'inv_format', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_draft_format', true), 'inv_draft_format', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_draft_format');?></div></span>
+                                <?php $this->Form->fieldText('inv_draft_format', (isset($vars['inv_draft_format']) ? $vars['inv_draft_format'] : null), ['id' => 'inv_draft_format', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_start', true), 'inv_start', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_start');?></div></span>
+                                <?php $this->Form->fieldNumber('inv_start', (isset($vars['inv_start']) ? $vars['inv_start'] : null), 0, null, 1, ['id' => 'inv_start', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_increment', true), 'inv_increment', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_increment');?></div></span>
+                                <?php $this->Form->fieldNumber('inv_increment', (isset($vars['inv_increment']) ? $vars['inv_increment'] : null), 1, null, 1, ['id' => 'inv_increment', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_type', true), 'inv_type', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_type');?></div></span>
+                                <?php $this->Form->fieldSelect('inv_type', (isset($inv_types) ? $inv_types : null), (isset($vars['inv_type']) ? $vars['inv_type'] : null), ['id' => 'inv_type', 'class' => 'block']);?>
+                            </li>
+                            <li class="proforma">
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_proforma_format', true), 'inv_proforma_format', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_proforma_format');?></div></span>
+                                <?php $this->Form->fieldText('inv_proforma_format', (isset($vars['inv_proforma_format']) ? $vars['inv_proforma_format'] : null), ['id' => 'inv_proforma_format', 'class' => 'block']);?>
+                            </li>
+                            <li class="proforma">
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_proforma_start', true), 'inv_proforma_start', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_proforma_start');?></div></span>
+                                <?php $this->Form->fieldText('inv_proforma_start', (isset($vars['inv_proforma_start']) ? $vars['inv_proforma_start'] : null), ['class' => 'small block', 'id' => 'inv_proforma_start']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyBilling.customization.heading_quotations');?></h3>
+                    </div>
+
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.quotation_format', true), 'quotation_format', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.quotation_format');?></div></span>
+                                <?php $this->Form->fieldText('quotation_format', (isset($vars['quotation_format']) ? $vars['quotation_format'] : null), ['id' => 'quotation_format', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.quotation_start', true), 'quotation_start', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.quotation_start');?></div></span>
+                                <?php $this->Form->fieldNumber('quotation_start', (isset($vars['quotation_start']) ? $vars['quotation_start'] : null), 0, null, 1, ['id' => 'quotation_start', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.quotation_increment', true), 'quotation_increment', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.quotation_increment');?></div></span>
+                                <?php $this->Form->fieldNumber('quotation_increment', (isset($vars['quotation_increment']) ? $vars['quotation_increment'] : null), 1, null, 1, ['id' => 'quotation_increment', 'class' => 'block']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyBilling.customization.heading_cache');?></h3>
+                    </div>
+
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_cache', true), 'inv_cache', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_cache');?></div></span>
+                                <?php $this->Form->fieldSelect('inv_cache', (isset($inv_cache_methods) ? $inv_cache_methods : null), (isset($vars['inv_cache']) ? $this->Html->safe($vars['inv_cache']) : null), ['id' => 'inv_cache', 'class' => 'block']);?>
+                            </li>
+                            <li style="display: none;">
+                                <?php
+                                $this->Form->fieldCheckbox('inv_cache_compress', 'true', (isset($vars['inv_cache_compress']) ? $vars['inv_cache_compress'] : null) == 'true', ['id' => 'inv_cache_compress']);
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_cache_compress', true), 'inv_cache_compress', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_cache_compress');?></div></span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyBilling.customization.heading_lookandfeel');?></h3>
+                    </div>
+
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_logo', true), 'inv_logo', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_logo');?></div></span>
+                                <?php
+                                $this->Form->fieldHidden('remove_inv_logo', 'false');
+
+                                if ((isset($vars['inv_logo']) ? $vars['inv_logo'] : null) != '') {
+                                ?>
+                                <div class="inv_logo">
+                                    <div class="box_left">
+                                        <img src="<?php echo WEBDIR . 'uploads/invoices/inv_logo';?>" style="max-width: 150px; max-height: 150px;" />
+                                    </div>
+                                    <div class="box_left">
+                                        <a href="#" class="remove"><i class="fas fa-times"></i> <?php $this->_('AdminCompanyBilling.customization.remove');?></a>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                                <?php $this->Form->fieldFile('inv_logo', ['id' => 'inv_logo']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_background', true), 'inv_background', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_background');?></div></span>
+                                <?php
+                                $this->Form->fieldHidden('remove_inv_background', 'false');
+
+                                if ((isset($vars['inv_background']) ? $vars['inv_background'] : null) != '') {
+                                ?>
+                                <div class="inv_background">
+                                    <div class="box_left">
+                                        <img src="<?php echo WEBDIR . 'uploads/invoices/inv_background';?>" style="max-width: 150px; max-height: 150px;" />
+                                    </div>
+                                    <div class="box_left">
+                                        <a href="#" class="remove"><i class="fas fa-times"></i> <?php $this->_('AdminCompanyBilling.customization.remove');?></a>
+                                    </div>
+                                    <div class="clear"></div>
+
+                                </div>
+                                <?php
+                                }
+                                ?>
+                                <?php $this->Form->fieldFile('inv_background', ['id' => 'inv_background']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_paper_size', true), 'inv_paper_size', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_paper_size');?></div></span>
+                                <?php $this->Form->fieldSelect('inv_paper_size', (isset($paper_sizes) ? $paper_sizes : null), (isset($vars['inv_paper_size']) ? $vars['inv_paper_size'] : null), ['id' => 'inv_paper_size', 'class' => 'block']);?>
+                            </li>
+                            <?php
+                            if ((isset($templates) ? $templates : null)) {
+                            ?>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_template', true), 'inv_template', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_template');?></div></span>
+                                <?php $this->Form->fieldSelect('inv_template', $this->Form->collapseObjectArray($templates, 'name', 'class'), (isset($vars['inv_template']) ? $this->Html->safe($vars['inv_template']) : null), ['id' => 'inv_template', 'class' => 'block']);?>
+                            </li>
+                            <?php
+                            $num_templates = count($templates);
+                            for ($i = 0; $i < $num_templates; $i++) {
+                            ?>
+                            <li class="inv_template template_<?php (print (isset($templates[$i]->class) ? $this->Html->safe($templates[$i]->class) : null));?>">
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_mimetype', true), 'inv_mimetype', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_mimetype');?></div></span>
+                                <?php $this->Form->fieldSelect('inv_mimetype[' . $templates[$i]->class . ']', $templates[$i]->mime_types, (isset($vars['inv_mimetype']) ? $this->Html->safe($vars['inv_mimetype']) : null), ['id' => 'inv_mimetype', 'class' => 'block']);?>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                            <?php
+                            }
+                            ?>
+                            <?php
+                            if ((isset($languages) ? $languages : null)) {
+                            ?>
+                            <li class="inv_pdf">
+                                <div class="tab_content inverse">
+                                    <ul class="tabs">
+                                        <?php
+                                        foreach ($languages as $lang) {
+                                        ?>
+                                        <li<?php echo ((isset($lang->code) ? $lang->code : null) == Configure::get('Blesta.language') ? ' class="current"' : '');?>>
+                                            <a href="#"><?php $this->Form->label((isset($lang->name) ? $lang->name : null), 'font_' . (isset($lang->code) ? $lang->code : null));?></a>
+                                        </li>
+                                        <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                    <div class="inner_content">
+                                        <?php
+                                        foreach ($languages as $lang) {
+                                        ?>
+                                        <div id="font_<?php (print (isset($lang->code) ? $this->Html->safe($lang->code) : null));?>">
+                                            <ul>
+                                                <li>
+                                                    <?php $font_name = 'inv_font_' . (isset($lang->code) ? $lang->code : null);?>
+                                                    <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_font', true), $font_name, ['class' => 'inline']);?>
+                                                    <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_font');?></div></span>
+                                                    <?php $this->Form->fieldSelect($font_name, (isset($fonts) ? $fonts : null), (isset($vars[$font_name]) ? $vars[$font_name] : 'dejavusanscondensed'), ['id' => $font_name, 'class' => 'block']);?>
+                                                </li>
+                                                <li>
+                                                    <?php $terms_name = 'inv_terms_' . (isset($lang->code) ? $lang->code : null);?>
+                                                    <?php $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_terms', true), $terms_name, ['class' => 'inline']);?>
+                                                    <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_terms');?></div></span>
+                                                    <?php $this->Form->fieldTextarea($terms_name, (isset($vars[$terms_name]) ? $vars[$terms_name] : null), ['id' => $terms_name]);?>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_display', true));
+                                // Logo
+                                $this->Form->fieldCheckbox('inv_display_logo', 'true', ((isset($vars['inv_display_logo']) ? $vars['inv_display_logo'] : 'false') == 'true'), ['id' => 'inv_display_logo']);
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_display_logo', true), 'inv_display_logo', ['class' => 'inline']);
+                                // Company info
+                                $this->Form->fieldCheckbox('inv_display_companyinfo', 'true', ((isset($vars['inv_display_companyinfo']) ? $vars['inv_display_companyinfo'] : 'false') == 'true'), ['id' => 'inv_display_companyinfo']);
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_display_company', true), 'inv_display_companyinfo', ['class' => 'inline']);
+                                // Paid watermark
+                                $this->Form->fieldCheckbox('inv_display_paid_watermark', 'true', ((isset($vars['inv_display_paid_watermark']) ? $vars['inv_display_paid_watermark'] : 'false') == 'true'), ['id' => 'inv_display_paid_watermark']);
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_display_paid_watermark', true), 'inv_display_paid_watermark', ['class' => 'inline']);
+                                // Payments/Credits
+                                $this->Form->fieldCheckbox('inv_display_payments', 'true', ((isset($vars['inv_display_payments']) ? $vars['inv_display_payments'] : 'false') == 'true'), ['id' => 'inv_display_payments']);
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_display_payments', true), 'inv_display_payments', ['class' => 'inline']);
+                                // Due Date
+                                $this->Form->fieldCheckbox('inv_display_due_date_draft', 'true', ((isset($vars['inv_display_due_date_draft']) ? $vars['inv_display_due_date_draft'] : 'false') == 'true'), ['id' => 'inv_display_due_date_draft']);
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_display_due_date_draft', true), 'inv_display_due_date_draft', ['class' => 'inline']);
+                                $this->Form->fieldCheckbox('inv_display_due_date_proforma', 'true', ((isset($vars['inv_display_due_date_proforma']) ? $vars['inv_display_due_date_proforma'] : 'false') == 'true'), ['id' => 'inv_display_due_date_proforma']);
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_display_due_date_proforma', true), 'inv_display_due_date_proforma', ['class' => 'inline']);
+                                $this->Form->fieldCheckbox('inv_display_due_date_inv', 'true', ((isset($vars['inv_display_due_date_inv']) ? $vars['inv_display_due_date_inv'] : 'false') == 'true'), ['id' => 'inv_display_due_date_inv']);
+                                $this->Form->label($this->_('AdminCompanyBilling.customization.field.inv_display_due_date_inv', true), 'inv_display_due_date_inv', ['class' => 'inline']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyBilling.customization.field.customizationsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+
+        displayInvType();
+        $('#inv_type').change(function() {
+            displayInvType();
+        });
+
+        displayInvCacheCompress();
+        $('#admin_company_billing_customization select[name=\"inv_cache\"]').change(function() {
+            displayInvCacheCompress();
+        });
+
+        $('#admin_company_billing_customization a.remove').click(function() {
+            var section = $(this).parent().parent().attr('class');
+
+            $(this).closest('.' + section).fadeOut();
+            $('#admin_company_billing_customization input[name=\"remove_' + section + '\"]').val('true');
+
+            return false;
+        });
+
+        displayFileType($('#admin_company_billing_customization select[name=\"inv_template\"]').val());
+
+        $('#admin_company_billing_customization select[name=\"inv_template\"]').change(function() {
+            displayFileType($(this).val());
+        });
+        $('select[name^=\'inv_mimetype\']').change(function() {
+            changeMimeType($('#admin_company_billing_customization select[name=\"inv_template\"]').val());
+        });
+
+        $('div.tab_content').blestaTabbedContent();
+    });
+
+    function displayInvType() {
+        $('.proforma').hide();
+        if ($('#inv_type').val() == 'proforma') {
+            $('.proforma').show();
+        }
+    }
+
+    function displayInvCacheCompress() {
+        $('#admin_company_billing_customization input[name=\"inv_cache_compress\"]').parent().hide();
+        if ($('#admin_company_billing_customization select[name=\"inv_cache\"]').val() == 'json_pdf') {
+            $('#admin_company_billing_customization input[name=\"inv_cache_compress\"]').parent().show();
+        }
+    }
+
+    function displayFileType(value) {
+        $('#admin_company_billing_customization li.inv_template').hide();
+        $('#admin_company_billing_customization li.template_' + value).show();
+
+        changeMimeType(value);
+    }
+
+    function changeMimeType(value) {
+        $('.inv_pdf').hide();
+        if ('application/pdf' == $('#admin_company_billing_customization li.template_' + value + ' select[name=\'inv_mimetype[' + value + ']\']').val())
+            $('.inv_pdf').show();
+    }
+");
+?>

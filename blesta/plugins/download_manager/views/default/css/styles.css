@@ -1,0 +1,17 @@
+
+#downloads { margin-top:0px;}
+#downloads .col { padding-top:4px;}
+#downloads .col div { font-size:12px; padding-right:8px;}
+#downloads .col div a.manage { color:#C62425}
+#downloads form { float:none; display:inline;}
+
+#up_directory { padding:0; line-height:16px;}
+#up_directory a { font-size:12px; }
+
+.inner_content .inner .pad { padding:10px 15px 0 15px;}
+.inner_content .inner .pad .table_sec { padding-top:10px;}
+
+.downloads > div { padding-bottom: 10px;}
+.downloads > div.clearfix { padding-bottom:0;}
+
+.file a, .category a {word-wrap: break-word;}

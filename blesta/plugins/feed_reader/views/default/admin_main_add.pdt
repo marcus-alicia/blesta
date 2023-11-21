@@ -1,0 +1,28 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminMain.add.boxtitle_feed', true), ['id'=>'feed_reader_main_add'], (isset($render_section) ? $render_section : null));
+
+        $this->Form->create();
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminMain.add.field_url', true));?>
+                        <?php $this->Form->fieldText('url');?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.add.submit_add', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+                <a class="btn btn-default pull-right ajax" href="<?php echo $this->Html->safe($this->base_uri . 'widget/feed_reader/admin_main/settings/');?>"><?php $this->_('AdminMain.add.submit_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

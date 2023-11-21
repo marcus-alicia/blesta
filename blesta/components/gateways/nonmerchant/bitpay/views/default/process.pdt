@@ -1,0 +1,3 @@
+<a href="<?php echo (isset($invoice_url) ? $invoice_url : null); ?>">
+    <img src="https://bitpay.com/cdn/en_US/bp-btn-pay.svg" class="img-responsive" />
+</a>

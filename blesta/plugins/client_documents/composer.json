@@ -1,0 +1,9 @@
+{
+    "name": "blesta/client_documents",
+    "description": "Client Documents",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

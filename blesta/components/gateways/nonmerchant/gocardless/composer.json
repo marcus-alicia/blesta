@@ -1,0 +1,15 @@
+{
+    "name": "blesta/gocardless",
+    "description": "GoCardless",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "gocardless/gocardless-pro": "^2.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.6",
+        "squizlabs/php_codesniffer": "~3.0",
+        "satooshi/php-coveralls": "~0.7"
+    }
+}

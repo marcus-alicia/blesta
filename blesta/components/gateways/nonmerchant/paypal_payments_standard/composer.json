@@ -1,0 +1,9 @@
+{
+    "name": "blesta/paypal_payments_standard",
+    "description": "PayPal Payments Standard",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

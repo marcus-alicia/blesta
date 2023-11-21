@@ -1,0 +1,86 @@
+
+                <div class="group_title_row">
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminStaff.schedule_list.heading_schedule');?></h3>
+                    </div>
+                    <?php
+                    if ((isset($staff->schedules) ? $staff->schedules : false) && (count($staff->schedules)) > 0) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminStaff.schedule_list.heading_day');?></td>
+                            <td><?php $this->_('AdminStaff.schedule_list.heading_start_time');?></td>
+                            <td class="last"><?php $this->_('AdminStaff.schedule_list.heading_end_time');?></td>
+                        </tr>
+                        <?php
+                        // Display all staff schedules
+                        $i = 0;
+                        foreach ($staff->schedules as $schedule) {
+                        ?>
+                        <tr<?php echo (($i++%2 == 1) ? ' class="odd_row"' : '');?>>
+                            <td><?php echo (isset($days[$schedule->day]) ? $days[$schedule->day] : null);?></td>
+                            <td><?php echo $this->Date->cast($schedule->start_time, Configure::get('SupportManager.time_format'));?></td>
+                            <td class="last"><?php echo $this->Date->cast($schedule->end_time, Configure::get('SupportManager.time_format'));?></td>
+                        </tr>
+                        <?php
+                        }
+                        unset($i);
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box">
+                            <?php $this->_('AdminStaff.schedule_list.no_results');?>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+
+                <div class="group_title_row">
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminStaff.schedule_list.heading_departments');?></h3>
+                    </div>
+                    <?php
+                    if ((isset($staff->departments) ? $staff->departments : false) && (count($staff->departments)) > 0) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminStaff.schedule_list.heading_department');?></td>
+                            <td class="last"><?php $this->_('AdminStaff.schedule_list.heading_description');?></td>
+                        </tr>
+                        <?php
+                        // Display all staff departments
+                        $i = 0;
+                        foreach ($staff->departments as $department) {
+                        ?>
+                        <tr<?php echo (($i++%2 == 1) ? ' class="odd_row"' : '');?>>
+                            <td><?php echo (isset($department->name) ? $this->Html->safe($department->name) : null);?></td>
+                            <td class="last">
+                                <?php
+                                // Set department description
+                                $description = $string->truncate((isset($department->description) ? $department->description : null), ['word_length' => Configure::get('SupportManager.summary_truncate_length')]);
+                                echo (isset($description) ? $this->Html->safe($description) : null) . ($description != (isset($department->description) ? $department->description : null) ? '...' : '');
+                                ?>
+                            </td>
+                        </tr>
+                        <?php
+                        }
+                        unset($i);
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box">
+                            <?php $this->_('AdminStaff.schedule_list.no_department_results');?>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>

@@ -1,0 +1,14 @@
+{
+    "name": "blesta/btcpay_server",
+    "description": "BTCPay Server",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BTCPayServer\\": "lib/"
+        }
+    }
+}

@@ -1,0 +1,78 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemBackup.ftp.boxtitle_backup', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['id' => 'sftp', 'class' => 'disable-on-submit']);?>
+                    <div class="pad">
+                        <p><a class="test_sftp btn btn-sm btn-default" href="#"><?php $this->_('AdminSystemBackup.ftp.field.test');?></a></p>
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemBackup.ftp.field.ftp_host', true), 'ftp_host', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemBackup.!tooltip.ftp_host');?></div></span>
+                                <?php $this->Form->fieldText('ftp_host', (isset($vars['ftp_host']) ? $vars['ftp_host'] : null), ['id' => 'ftp_host', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemBackup.ftp.field.ftp_port', true), 'ftp_port', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemBackup.!tooltip.ftp_port');?></div></span>
+                                <?php $this->Form->fieldText('ftp_port', (isset($vars['ftp_port']) ? $vars['ftp_port'] : null), ['id' => 'ftp_port', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemBackup.ftp.field.ftp_username', true), 'ftp_username', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemBackup.!tooltip.ftp_username');?></div></span>
+                                <?php $this->Form->fieldText('ftp_username', (isset($vars['ftp_username']) ? $vars['ftp_username'] : null), ['id' => 'ftp_username', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemBackup.ftp.field.ftp_password', true), 'ftp_password', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemBackup.!tooltip.ftp_password');?></div></span>
+                                <?php $this->Form->fieldPassword('ftp_password', ['id' => 'ftp_password', 'value' => (isset($vars['ftp_password']) ? $vars['ftp_password'] : null), 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemBackup.ftp.field.ftp_path', true), 'ftp_path', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemBackup.!tooltip.ftp_path');?></div></span>
+                                <?php $this->Form->fieldText('ftp_path', (isset($vars['ftp_path']) ? $vars['ftp_path'] : null), ['id' => 'ftp_path', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemBackup.ftp.field.ftp_rate', true), 'ftp_rate', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemBackup.!tooltip.ftp_rate');?></div></span>
+                                <?php $this->Form->fieldSelect('ftp_rate', $frequency, (isset($vars['ftp_rate']) ? $vars['ftp_rate'] : null), ['id' => 'ftp_rate', 'class' => 'block']);?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemBackup.ftp.field.backupsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        // Request to validate the SFTP info entered in this form
+        $('.test_sftp').click(function() {
+            if ($('#sftp').blestaDisableFormSubmission($('#sftp'))) {
+                $(this).blestaRequest('POST', '" . $this->base_uri . 'settings/system/backup/ftptest/' . "', $('#sftp').serialize(),
+                    function(data) {
+                        $('#right_container .error_section').hide();
+                        // On success, draw the success or error message
+                        $('#right_container').prepend(data).blestaBindCloseMessage();
+                    },
+                    null,
+                    {complete: function() { $('#sftp').blestaEnableFormSubmission($('#sftp')); }}
+                );
+            }
+
+            return false;
+        });
+    });
+");

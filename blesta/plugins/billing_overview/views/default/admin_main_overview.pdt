@@ -1,0 +1,219 @@
+        <?php
+        $this->Form->create();
+        ?>
+        <div class="billing_top_row">
+            <div class="billing_settings">
+                <?php
+                $num_statistics = count((isset($statistics) ? $statistics : []));
+                $statistics_mid_point = round($num_statistics / 2);
+                ?>
+                <ul class="left_box">
+                    <?php
+                    for ($i = 0; $i < $statistics_mid_point; ++$i) {
+                    ?>
+                    <li class="<?php echo (isset($statistics[$i]['class']) ? $this->Html->safe($statistics[$i]['class']) : null);?>">
+                        <div>
+                            <?php
+                            if (!empty($statistics[$i]['icon'])) {
+                            ?>
+                            <i class="<?php echo (isset($statistics[$i]['icon']) ? $this->Html->safe($statistics[$i]['icon']) : null);?>"></i>
+                            <?php
+                            }
+                            ?>
+                            <span><?php echo (isset($statistics[$i]['name']) ? $this->Html->safe($statistics[$i]['name']) : null);?></span>
+                            <span class="value <?php echo (isset($statistics[$i]['value_class']) ? $this->Html->safe($statistics[$i]['value_class']) : null);?>"><?php echo (isset($statistics[$i]['value']) ? $this->Html->safe($statistics[$i]['value']) : null);?></span>
+                        </div>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+
+                <ul class="right_box">
+                    <?php
+                    for ($i = $statistics_mid_point; $i < $num_statistics; ++$i) {
+                    ?>
+                    <li class="<?php echo (isset($statistics[$i]['class']) ? $this->Html->safe($statistics[$i]['class']) : null);?>">
+                        <div>
+                            <?php
+                            if (!empty($statistics[$i]['icon'])) {
+                            ?>
+                            <i class="<?php echo (isset($statistics[$i]['icon']) ? $this->Html->safe($statistics[$i]['icon']) : null);?>"></i>
+                            <?php
+                            }
+                            ?>
+                            <span><?php echo (isset($statistics[$i]['name']) ? $this->Html->safe($statistics[$i]['name']) : null);?></span>
+                            <span class="value <?php echo (isset($statistics[$i]['value_class']) ? $this->Html->safe($statistics[$i]['value_class']) : null);?>"><?php echo (isset($statistics[$i]['value']) ? $this->Html->safe($statistics[$i]['value']) : null);?></span>
+                        </div>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
+
+        <div class="billing_bottom_row">
+            <div class="currency">
+                <ul>
+                    <li><?php $this->Form->fieldSelect('currency', (isset($currencies) ? $currencies : []), (isset($vars['currency']) ? $vars['currency'] : null), ['id' => 'currency']);?></li>
+                </ul>
+            </div>
+
+            <div class="graphs">
+                <?php
+                // Create a section for each graph
+                foreach ((isset($graphs['graphs']) ? $graphs['graphs'] : []) as $graph_type => $graph) {
+                ?>
+                <div class="graph_box">
+                    <h5><?php echo (isset($graph['name']) ? $this->Html->safe($graph['name']) : null);?></h5>
+                    <svg id="<?php echo (isset($graph_type) ? $this->Html->safe($graph_type) : null);?>" class="graph"></svg>
+                </div>
+                <div class="clear"></div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    billingOverviewInitialize();
+});
+
+function billingOverviewInitialize() {
+    // Retrieve the required scripts
+    $.when(
+        $.ajax({
+            url: '<?php echo $this->Html->safe(VENDORWEBDIR . 'd3/d3.min.js');?>',
+            dataType: "script",
+            cache: true,
+            ifModified: false
+        }),
+        $.Deferred(function(deferred) {
+            $(deferred.resolve);
+        })
+    ).done(function() {
+        $.ajax({
+            url: '<?php echo $this->Html->safe(VENDORWEBDIR . 'nvd3/nv.d3.min.js');?>',
+            dataType: "script",
+            cache: true,
+            ifModified: false
+        }).done(function() {
+            buildBillingOverviewGraphs();
+        });
+    });
+}
+
+function buildBillingOverviewGraphs() {
+    var chart;
+    var points;
+    var colors = d3.scale.category20c().range();
+
+    <?php
+    foreach ((isset($graphs['graphs']) ? $graphs['graphs'] : []) as $graph_type => $graph) {
+    ?>
+    nv.addGraph(function() {
+        points = [
+            <?php
+            // Build the line name and point values
+            foreach ($graph['data'] as $i => $data) {
+            ?>
+            {
+                "key":"<?php echo str_replace('"', '\"', (isset($data['name']) ? $data['name'] : null));?>",
+                "disabled":<?php echo (isset($data['disabled']) ? $data['disabled'] : null) === false ? 'false' : 'true';?>,
+                "values":<?php echo (isset($data['points']) ? $data['points'] : '[]');?>
+            }<?php echo isset($graph['data'][$i + 1]) ? ',' : '';?>
+            <?php
+            }
+            ?>
+        ];
+
+        chart = nv.models.stackedAreaChart()
+            // Allows some interactive functionality, and also  displays all items in tooltip
+            .useInteractiveGuideline(true)
+            .x(function(d) { return d[0] })
+            .y(function(d) { return d[1] })
+            .controlLabels({stacked: "Stacked"})
+            .duration(300);
+
+        // Format the axes
+        chart.xAxis.tickFormat(function(d) {
+            // The timestamps given are already local,
+            // so offset them for display by setting them to UTC
+            // to avoid d3's locale date formatting
+            return d3.time.format.utc('%b %d')(new Date(d));
+        });
+        chart.yAxis.tickFormat(function(d) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = '<?php echo (isset($currency->prefix) ? $this->Html->safe($currency->prefix) : null);?>';
+            return txt.value + d3.format('.2s')(d);
+        });
+
+        // Use a different format for tooltip values than the y-axis format
+        chart.interactiveLayer.tooltip.valueFormatter(function(d,i) {
+          return '<?php echo (isset($currency->prefix) ? $this->Html->safe($currency->prefix) : null);?>'
+            + d3.format('<?php echo $this->Html->safe(',.' . (isset($currency->precision) ? $currency->precision : 2) . 'f');?>')(d);
+        });
+
+        chart.legend.vers('furious');
+        // Set line colors
+        chart.color(function (d, i) {
+            return colors[i % colors.length];
+        });
+        // Line interpolation between points
+        chart.interpolate("basis");
+        // Message to display if there is no data
+        chart.noData("There is no data to display");
+        // Hide the ability to switch from stacked, stream, expanded
+        chart.showControls(true);
+        // Show the x axis
+        chart.showXAxis(true);
+        // Show the y axis
+        chart.showYAxis(true);
+        // Force minimum Y-axis value
+        chart.forceY([0]);
+        // Show legend
+        chart.showLegend(<?php echo (((isset($graphs['settings']['show_legend']) ? $graphs['settings']['show_legend'] : 0) == 1) ? 'true' : 'false');?>);
+        // Show total in graph
+        chart.showTotalInTooltip(true);
+        // Set total language
+        chart.totalLabel('<?php $this->_('AppController.graphs.label.total');?>');
+        // Set control label language
+        chart.controlLabels({
+            "stacked":"<?php $this->_('AppController.graphs.control_label.stacked');?>",
+            "stream":"<?php $this->_('AppController.graphs.control_label.stream');?>",
+            "expanded":"<?php $this->_('AppController.graphs.control_label.expanded');?>"
+        });
+        chart.margin({
+            "top":30,
+            "right":25,
+            "bottom":50,
+            "left":35
+        });
+
+        d3.select('#<?php echo (isset($graph_type) ? $this->Html->safe($graph_type) : null);?>')
+            .datum(points)
+            .transition()
+            .duration(1000)
+            .call(chart)
+            .each('start', function() {
+                setTimeout(function() {
+                    d3.selectAll('#<?php echo (isset($graph_type) ? $this->Html->safe($graph_type) : null);?> *').each(function() {
+                        if(this.__transition__)
+                            this.__transition__.duration = 1;
+                    })
+                }, 0)
+            });
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+    });
+    <?php
+    }
+    ?>
+}
+</script>

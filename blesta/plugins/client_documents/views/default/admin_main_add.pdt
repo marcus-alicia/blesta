@@ -1,0 +1,40 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminMain.add.boxtitle_adddocument', true));
+        ?>
+        <div class="inner">
+            <?php $this->Form->create(null, ['id' => 'add_document', 'enctype' => 'multipart/form-data']);?>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.add.field_name', true), 'name');
+                        $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.add.field_document', true), 'file');
+                        $this->Form->fieldFile('file', ['id' => 'document']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.add.field_description', true), 'description');
+                        $this->Form->fieldTextarea('description', (isset($vars->description) ? $vars->description : null), ['id' => 'description']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.add.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php $this->Form->end();?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

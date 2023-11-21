@@ -1,0 +1,27 @@
+
+    <h4><?php $this->_('Vultr.tab_client_stats.server_information'); ?></h4>
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 50%;"><?php $this->_('Vultr.tab_client_stats.info_heading.field'); ?></th>
+                    <th><?php $this->_('Vultr.tab_client_stats.info_heading.value'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            $keys = ['os', 'ram', 'disk', 'main_ip', 'vcpu_count', 'cpu_count', 'location', 'default_password', 'current_bandwidth_gb', 'allowed_bandwidth_gb', 'netmask_v4', 'gateway_v4'];
+            foreach ($server_details as $key => $value) {
+                if (in_array($key, $keys)) {
+                ?>
+                <tr>
+                    <td><?php $this->_('Vultr.tab_client_stats.info.' . $key); ?></td>
+                    <td><?php echo (isset($value) ? $this->Html->safe($value) : null); ?></td>
+                </tr>
+                <?php
+                }
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>

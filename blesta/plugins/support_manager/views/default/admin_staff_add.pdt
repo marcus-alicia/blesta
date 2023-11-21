@@ -1,0 +1,234 @@
+
+                <?php
+                echo (isset($message) ? $message : null);
+
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminStaff.add.boxtitle_addstaff', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['id' => 'staff', 'class' => 'disable-on-submit']);?>
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminStaff.add.heading_staff');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminStaff.add.field_staff_group_id', true), 'staff_group_id');
+                                $this->Form->fieldSelect('staff_group_id', (isset($staff_groups) ? $staff_groups : null), (isset($vars->staff_group_id) ? $vars->staff_group_id : null), ['id' => 'staff_group_id']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminStaff.add.field_staff_id', true), 'staff_id');
+                                $this->Form->fieldSelect('staff_id', (isset($staff) ? $staff : null), (isset($vars->staff_id) ? $vars->staff_id : null), ['id' => 'staff_id']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminStaff.add.heading_schedule');?></h3>
+                    </div>
+                    <div class="pad">
+                        <table class="table">
+                            <tr class="heading_row">
+                                <td><span><?php $this->_('AdminStaff.add.heading_day');?></span></td>
+                                <td>
+                                    <span><?php $this->_('AdminStaff.add.heading_all_day');?></span>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminStaff.!tooltip.all_day');?></div></span>
+                                </td>
+                                <td><span><?php $this->_('AdminStaff.add.heading_start_time');?></span></td>
+                                <td class="last"><span><?php $this->_('AdminStaff.add.heading_end_time');?></span></td>
+                            </tr>
+                            <?php
+                            $i = 0;
+                            foreach ((isset($days) ? $days : []) as $key => $day) {
+                            ?>
+                            <tr<?php echo ($i%2 == 1) ? ' class="odd_row"' : '';?>>
+                                <td>
+                                    <?php
+                                    echo (isset($day) ? $day : null);
+                                    $this->Form->fieldHidden('schedules[' . $i . '][day]', $key);
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    // Set whether the box should be checked
+                                    $all_day_checked = false;
+                                    $start_time = (isset($vars->schedules[$i]['start_time']) ? $vars->schedules[$i]['start_time'] : null);
+                                    $end_time = (isset($vars->schedules[$i]['end_time']) ? $vars->schedules[$i]['end_time'] : null);
+                                    if (((isset($vars->schedules[$i]['all_day']) ? $vars->schedules[$i]['all_day'] : false) == 1) || (!empty($start_time) && $start_time == $end_time)) {
+                                        $all_day_checked = true;
+                                    }
+
+                                    $this->Form->fieldCheckbox('schedules[' . $i . '][all_day]', '1', $all_day_checked, ['class' => 'all_day']);
+                                    ?>
+                                </td>
+                                <td><?php $this->Form->fieldSelect('schedules[' . $i . '][start_time]', (isset($times) ? $times : null), (isset($vars->schedules[$i]['start_time']) ? $vars->schedules[$i]['start_time'] : null), ['class' => 'time']);?></td>
+                                <td><?php $this->Form->fieldSelect('schedules[' . $i . '][end_time]', (isset($times) ? $times : null), (isset($vars->schedules[$i]['end_time']) ? $vars->schedules[$i]['end_time'] : null), ['class' => 'time']);?></td>
+                            </tr>
+                            <?php
+                                $i++;
+                            }
+                            unset($i);
+                            ?>
+                        </table>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminStaff.add.heading_settings');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminStaff.add.ticket_emails', true), 'ticket_emails');
+
+                                // Set checkboxes for each priority
+                                foreach ((isset($priorities) ? $priorities : []) as $priority => $language) {
+                                    $setting_value = isset($vars->settings['ticket_emails'][$priority]) ? $vars->settings['ticket_emails'][$priority] : '';
+                                    $this->Form->fieldCheckbox('settings[ticket_emails][' . $priority . ']', 'true', ($setting_value == 'true'), ['id' => 'settings[ticket_emails][' . $priority . ']']);
+                                    $this->Form->label($language, 'settings[ticket_emails][' . $priority . ']', ['class' => 'inline']);
+                                }
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminStaff.!tooltip.ticket_emails');?></div></span>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminStaff.add.mobile_ticket_emails', true), 'mobile_ticket_emails');
+
+                                // Set checkboxes for each priority
+                                foreach ((isset($priorities) ? $priorities : []) as $priority => $language) {
+                                    $setting_value = isset($vars->settings['mobile_ticket_emails'][$priority]) ? $vars->settings['mobile_ticket_emails'][$priority] : '';
+                                    $this->Form->fieldCheckbox('settings[mobile_ticket_emails][' . $priority . ']', 'true', ($setting_value == 'true'), ['id' => 'settings[mobile_ticket_emails][' . $priority . ']']);
+                                    $this->Form->label($language, 'settings[mobile_ticket_emails][' . $priority . ']', ['class' => 'inline']);
+                                }
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminStaff.!tooltip.mobile_ticket_emails');?></div></span>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminStaff.add.ticket_messenger_notifications', true), 'ticket_messenger_notifications');
+
+                                // Set checkboxes for each priority
+                                foreach ((isset($priorities) ? $priorities : []) as $priority => $language) {
+                                    $setting_value = isset($vars->settings['ticket_messenger_notifications'][$priority]) ? $vars->settings['ticket_messenger_notifications'][$priority] : '';
+                                    $this->Form->fieldCheckbox('settings[ticket_messenger_notifications][' . $priority . ']', 'true', ($setting_value == 'true'), ['id' => 'settings[ticket_messenger_notifications][' . $priority . ']']);
+                                    $this->Form->label($language, 'settings[ticket_messenger_notifications][' . $priority . ']', ['class' => 'inline']);
+                                }
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminStaff.!tooltip.ticket_messenger_notifications');?></div></span>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminStaff.add.title', true), 'settings[title]');
+                                $this->Form->fieldText('settings[title]', (isset($vars->settings['title']) ? $vars->settings['title'] : null), ['id' => 'settings[title]']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminStaff.!tooltip.title', false, $this->_('AdminTickets.reply.staff_title', true));?></div></span>
+                            </li>
+                            <li>
+                                <label for="settings[signature]">
+                                    <?php $this->_('AdminStaff.add.signature');?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminStaff.!tooltip.signature');?></div></span>
+                                </label>
+                                <?php $this->Form->fieldTextarea('settings[signature]', (isset($vars->settings['signature']) ? $vars->settings['signature'] : null), ['id' => 'settings[signature]', 'data-markdown-editor' => '']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminStaff.add.heading_departments');?></h3>
+                    </div>
+                    <div class="pad">
+                        <table>
+                            <tr>
+                                <td><?php $this->_('AdminStaff.add.text_assigneddepartments');?></td>
+                                <td></td>
+                                <td><?php $this->_('AdminStaff.add.text_availabledepartments');?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('departments[]', (isset($vars->departments) ? $vars->departments : null), [], ['id'=>'assigned', 'class'=>'groups']);?>
+                                </td>
+                                <td><a href="#" class="move_left">&nbsp;</a> &nbsp; <a href="#" class="move_right">&nbsp;</a></td>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('available[]', (isset($departments) ? $departments : null), [], ['id'=>'available', 'class'=>'groups']);?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminStaff.add.field_addsubmit', true), ['class' => 'btn btn-primary float-right']);
+                        ?>
+                    </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        // Select all assigned groups on submit
+        $('#staff').submit(function() {
+            $('#assigned option').prop('selected', true);
+        });
+
+        // Move department from right to left
+        $('.move_left').click(function() {
+            $('#available option:selected').appendTo($('#assigned'));
+            return false;
+        });
+        // Move department from left to right
+        $('.move_right').click(function() {
+            $('#assigned option:selected').appendTo($('#available'));
+            return false;
+        });
+
+        // Fetch staff by group
+        $('#staff_group_id').change(function() {
+            fetchStaff($(this).val());
+            return false;
+        });
+
+        // Initially disable time fields
+        $('#staff .all_day').each(function() {
+            if ($(this).is(':checked')) {
+                var times = $(this).parents('tr').find('.time');
+                $(times).val('00:00:00');
+                $(times).prop('disabled', true);
+            }
+        });
+
+        // Set all day, disable fields
+        $('#staff .all_day').change(function() {
+            var times = $(this).parents('tr').find('.time');
+            if ($(this).is(':checked')) {
+                $(times).val('00:00:00');
+                $(times).prop('disabled', true);
+            }
+            else {
+                $(times).val('');
+                $(times).prop('disabled', false);
+            }
+        });
+    });
+
+    // Fetch staff
+    function fetchStaff(group_id) {
+        $(document).blestaRequest('POST', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_staff/getstaff/') . "' + group_id, {},
+            function(data) {
+                if (data) {
+                    $('#staff_id option').remove();
+                    for (var i=0; i<data.length; i++) {
+                        $('#staff_id').append(new Option(data[i].name, data[i].value));
+                    }
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+");

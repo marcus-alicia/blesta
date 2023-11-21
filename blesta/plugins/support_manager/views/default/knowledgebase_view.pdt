@@ -1,0 +1,92 @@
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            echo (isset($search_bar) ? $search_bar : null);
+                            echo (isset($bread_crumbs) ? $bread_crumbs : null);
+                            ?>
+                        </div>
+                    </div>
+                    <div class="section-title">
+                        <h3><?php echo (isset($article->title) ? $this->Html->safe($article->title) : null);?></h3>
+                    </div>
+                    <div class="article">
+                        <?php echo $Markdown->text((isset($article->body) ? $article->body : null));?>
+                    </div>
+                    <?php
+                    if ((isset($is_admin) ? $is_admin : null)) {
+                    ?>
+                    <div class="row edit">
+                        <div class="col-md-12">
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/edit/' . (isset($article->id) ? $article->id : null) . '/');?>" class="btn btn-light btn-sm" target="_blank"><i class="fas fa-edit"></i> <?php $this->_('Knowledgebase.view.edit');?></a>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                    <div class="row">
+                        <div class="rate">
+                            <h5><?php $this->_('Knowledgebase.view.text_rate');?></h5>
+                            <?php
+                            $this->Form->create($this->base_uri . 'plugin/support_manager/knowledgebase/vote/', ['id'=>'rate']);
+                            $this->Form->fieldHidden('direction', '', ['id' => 'direction']);
+                            ?>
+                            <p>
+                                <a href="#" class="green btn btn-lg btn-light<?php echo (isset($voted) ? $voted : null) ? ' disabled' : '';?>"><i class="fas fa-thumbs-up fa-fw"></i> <span><?php echo (isset($article->up_votes) ? $this->Html->safe($article->up_votes) : null);?></span></a>
+                                <a href="#" class="red btn btn-lg btn-light<?php echo (isset($voted) ? $voted : null) ? ' disabled' : '';?>"><i class="fas fa-thumbs-down fa-fw"></i> <span><?php echo (isset($article->down_votes) ? $this->Html->safe($article->down_votes) : null);?></span></a>
+                            </p>
+                            <?php
+                            if ((isset($voted) ? $voted : null)) {
+                            ?>
+                            <p class="voted">
+                                <?php $this->_('Knowledgebase.view.text_voted');?>
+                            </p>
+                            <?php
+                            } else {
+                            ?>
+                            <p class="voted" style="display:none;">
+                                <?php $this->_('Knowledgebase.view.text_vote_thanks');?>
+                            </p>
+                            <?php
+                            }
+
+                            $this->Form->end();
+                            ?>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#rate a').on('click', function(e) {
+        e.preventDefault();
+
+        var direction = ($(this).hasClass('green') ? 'up' : 'down');
+        $('#direction').val(direction);
+
+        $('#rate').trigger('submit');
+        return false;
+    });
+
+    $('#rate').on('submit', function(e) {
+        e.preventDefault();
+
+        $(this).blestaRequest('POST', '<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/knowledgebase/rate/' . (isset($article->id) ? $article->id : null) . '/');?>', $(this).serialize(),
+            function(data) {
+                if (data.direction && data.rating) {
+                    var attr_class = (data.direction == 'up' ? 'green' : 'red');
+                    $('#rate a.' + attr_class + ' span').html(data.rating);
+
+                    $('#rate a.green, #rate a.red').addClass('disabled');
+                    $('#rate p.voted').show();
+                }
+            },
+            null,
+            {dataType: 'json'}
+        );
+
+        return false;
+    });
+});
+</script>

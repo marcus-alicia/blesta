@@ -1,0 +1,11 @@
+{
+    "name": "blesta/opensrs",
+    "description": "OpenSRS",
+    "license": "proprietary",
+    "type": "blesta-module",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "ext-dom": "*",
+        "ext-simplexml": "*"
+    }
+}

@@ -1,0 +1,104 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminCompanyGroups.index.categorylink_addgroup', true),
+                            'href' => $this->base_uri . 'settings/company/groups/add/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminCompanyGroups.index.boxtitle_groups', true), ['id' => 'admin_company_groups'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($groups) ? $groups : false) && ($num_groups = count($groups)) > 0) {
+                ?>
+                <table class="table" id="groups">
+                    <tr class="heading_row">
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/groups/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyGroups.index.text_name');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/groups/?sort=description&order=' . ($sort == 'description' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'description' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyGroups.index.text_description');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/groups/?sort=num_clients&order=' . ($sort == 'num_clients' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'num_clients' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyGroups.index.text_clients');?></a></span></td>
+                        <td class="last"><span><?php $this->_('AdminCompanyGroups.index.text_options');?></span></td>
+                    </tr>
+                    <?php
+                    for ($i = 0; $i < $num_groups; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><span class="buff" style="background:<?php echo $this->Color->hex((isset($groups[$i]->color) ? $groups[$i]->color : null))->asHtml();?>;color:<?php echo $this->Color->hex((isset($groups[$i]->color) ? $groups[$i]->color : null))->contrastYiq()->asHtml();?>; "><?php (print (isset($groups[$i]->name) ? $this->Html->safe($groups[$i]->name) : null));?></span></td>
+                        <?php
+                        // Set group description
+                        $description = (isset($groups[$i]->description) ? $this->Html->safe($groups[$i]->description) : null);
+                        if (strlen($description) > 40) {
+                            if (function_exists('mb_strimwidth')) {
+                                $description = mb_strimwidth($description, 0, 40) . '...';
+                            } else {
+                                $description = substr($description, 0, 40) . '...';
+                            }
+                        }
+                        ?>
+                        <td><?php echo $description;?></td>
+                        <td><?php (print (isset($groups[$i]->num_clients) ? $this->Html->safe($groups[$i]->num_clients) : null));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'settings/company/groups/edit/' . (isset($groups[$i]->id) ? $this->Html->safe($groups[$i]->id) : null) . '/';?>"><?php $this->_('AdminCompanyGroups.index.option_edit');?></a><?php echo ((isset($groups[$i]->id) ? $this->Html->safe($groups[$i]->id) : null) != 1) ? ',' : '';?>
+                            <?php
+                            // Do not display link to delete the default client group
+                            if ((isset($groups[$i]->id) ? $this->Html->safe($groups[$i]->id) : null) != 1) {
+                            ?>
+                                <?php
+                                $this->Form->create($this->base_uri . 'settings/company/groups/delete/');
+                                $this->Form->fieldHidden('id', (isset($groups[$i]->id) ? $this->Html->safe($groups[$i]->id) : null));
+                                ?>
+                                <a class="manage" href="<?php echo $this->base_uri . 'settings/company/groups/delete/' . (isset($groups[$i]->id) ? $this->Html->safe($groups[$i]->id) : null) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminCompanyGroups.index.confirm_delete', true));?>"><?php $this->_('AdminCompanyGroups.index.option_delete');?></a>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                            <?php
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminCompanyGroups.index.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Handle confirmation
+                $('#groups a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

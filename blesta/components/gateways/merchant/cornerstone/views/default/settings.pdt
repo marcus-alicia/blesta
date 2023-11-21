@@ -1,0 +1,9 @@
+
+	<ul>
+		<li>
+			<?php
+            $this->Form->label($this->_('Cornerstone.security_key', true), 'security_key');
+            $this->Form->fieldText('security_key', (isset($meta['security_key']) ? $meta['security_key'] : null), ['id' => 'security_key']);
+            ?>
+		</li>
+	</ul>

@@ -1,0 +1,147 @@
+<div id="stripe-ach-form">
+    <div id="ach-element">
+        <?php
+        if (($status ?? 'new') == 'unverified') {
+        ?>
+        <p><?php $this->_('StripePayments.ach_form.verification_notice'); ?></p>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('StripePayments.ach_form.field_first_deposit', true), 'first_deposit');
+            $this->Form->fieldText('first_deposit', null, ['id' => 'first_deposit', 'maxlength' => '2', 'placeholder' => '$0.']);
+            ?>
+        </div>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('StripePayments.ach_form.field_second_deposit', true), 'second_deposit');
+            $this->Form->fieldText('second_deposit', null, ['id' => 'second_deposit', 'maxlength' => '2', 'placeholder' => '$0.']);
+            ?>
+        </div>
+        <?php
+        }
+
+        if (($status ?? 'new') == 'new') {
+        ?>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('StripePayments.ach_form.field_holder_type', true), 'holder_type');
+            $this->Form->fieldSelect('holder_type', ($holder_types ?? null), null, ['id' => 'holder_type']);
+            ?>
+        </div>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('StripePayments.ach_form.field_type', true), 'acc_type');
+            $this->Form->fieldSelect('acc_type', ($types ?? null), null, ['id' => 'acc_type']);
+            ?>
+        </div>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('StripePayments.ach_form.field_account_number', true), 'account_number');
+            $this->Form->fieldText('account_number', null, ['id' => 'account_number', 'placeholder' => $this->_('StripePayments.ach_form.field_account', true)]);
+            ?>
+        </div>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('StripePayments.ach_form.field_routing_number', true), 'routing_number');
+            $this->Form->fieldText('routing_number', null, ['id' => 'routing_number', 'maxlength' => '9', 'placeholder' => $this->_('StripePayments.ach_form.field_routing', true)]);
+            ?>
+        </div>
+        <?php
+        }
+        ?>
+
+        <p class="mb-0 mt-2"><small><?php $this->_('StripePayments.ach_form.mandate_authorization', false, ($company->name ?? ''));?></small></p>
+        <p id="future_usage_mandate" class="mt-0 mt-2"><small><?php $this->_('StripePayments.ach_form.mandate_future_usage', false, ($company->name ?? ''));?></small></p>
+    </div>
+
+    <!-- Used to display form errors. -->
+    <div id="ach-errors" role="alert"></div>
+    <?php
+    if (($status ?? 'new') == 'new') {
+        $this->Form->fieldHidden('type', '', ['id' => 'type']);
+        $this->Form->fieldHidden('reference_id', '', ['id' => 'reference_id']);
+    } elseif (($status ?? 'new') == 'unverified') {
+        $this->Form->fieldHidden('type', $account_info['type'] ?? null, ['id' => 'type']);
+        $this->Form->fieldHidden('reference_id', $account_info['reference_id'] ?? null, ['id' => 'reference_id']);
+        $this->Form->fieldHidden('client_reference_id', $account_info['client_reference_id'] ?? null, ['id' => 'client_reference_id']);
+    }
+
+    if (($status ?? 'new') == 'new') {
+    ?>
+    <?php if ($load_stripe ?? false) { ?><script src="https://js.stripe.com/v3/"></script><?php } ?>
+    <script>
+        $(document).ready(function() {
+            // Load CSS
+            $(this).blestaSetHeadTag("link", {media:"screen", type:"text/css", rel:"stylesheet", href: "<?php echo $this->Html->safe($this->view_dir . 'css/styles.css');?>"});
+
+            // Create a Stripe client
+            var stripe_ach = Stripe('<?php echo (isset($meta['publishable_key']) ? $this->Html->safe($meta['publishable_key']) : null);?>');
+
+            // If payment details changed setup a new bank account
+            $('#stripe-ach-form #ach-element *').change(function() {
+                $('#stripe-ach-form #ach-errors').text('');
+                $('#stripe-ach-form #reference_id').val('');
+                $(this).blestaEnableFormSubmission($('#stripe-ach-form').closest('form'));
+            });
+
+            // Always save the bank account, one-time payments are not supported
+            $('#payment_details_ach input[name="save_details"]').prop('checked', true);
+            $('#payment_details_ach input[name="save_details"]').parent().hide();
+
+            // Get bank account token
+            $('#stripe-ach-form').closest('form').on('submit', processBankAccount);
+
+            function processBankAccount(event) {
+                // Disable CC form
+                if ($('select[name="payment_type"]').val() == 'ach') {
+                    $('#payment_details_cc input').attr('disabled', true);
+                }
+
+                // Paying with an existing payment account
+                var accountVisible = ($('#account:visible').length || ($('#pay_with_account').prop('checked') && $('select[name=payment_account]').length));
+
+                // Paying with a new payment account
+                var detailsVisible = ($('#details:visible').length || ($('#pay_with_details').prop('checked') && $('select[name=payment_type]').length));
+                var accountDetails = detailsVisible && ($('#details').val() === 'ach' || $('select[name=payment_type]').val() === 'ach');
+
+                // Add/update only the payment account (i.e. no payment)
+                var name = $('#first_name:visible').length;
+
+                if (accountDetails || (name && !accountVisible && !detailsVisible)) {
+                    event.preventDefault();
+
+                    // Create bank account token
+                    stripe_ach.createToken('bank_account', {
+                        country: 'US', // ACH is available only in the US
+                        currency: 'usd', // ACH only supports USD
+                        routing_number: $('#stripe-ach-form #routing_number').val(),
+                        account_number: $('#stripe-ach-form #account_number').val(),
+                        account_holder_name: $('#first_name').val() + ' ' + $('#last_name').val(),
+                        account_holder_type: $('#stripe-ach-form #holder_type').val()
+                    })
+                    .then(function(result) {
+                        if (result.hasOwnProperty('error')) {
+                            $('#stripe-ach-form #ach-errors').text(result.error.message);
+                        }
+
+                        if (result.hasOwnProperty('token')) {
+                            // Set reference id
+                            $('#stripe-ach-form #type').val($('#stripe-ach-form #acc_type').val());
+                            $('#stripe-ach-form #reference_id').val(result.token.id);
+
+                            // Remove secure data
+                            $('#stripe-ach-form #ach-element *').attr('disabled', true);
+
+                            // Submit form
+                            $('#stripe-ach-form').closest('form').off('submit', processBankAccount);
+                            $(this).blestaEnableFormSubmission($('#stripe-ach-form').closest('form'));
+                            $('#stripe-ach-form').closest('form').submit();
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+    <?php
+    }
+    ?>
+</div>

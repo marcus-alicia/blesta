@@ -1,0 +1,35 @@
+{
+    "version": "1.0.0",
+    "type": "registrar",
+    "name": "Connectreseller.name",
+    "description": "Connectreseller.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "https://blesta.com/"
+        }
+    ],
+    "module": {
+        "row": "Connectreseller.module_row",
+        "rows": "Connectreseller.module_row_plural",
+        "group": "Connectreseller.module_group",
+        "row_key": "reseller_name"
+    },
+    "package": {
+        "name_key": "domain"
+    },
+    "service": {
+        "name_key": "domain"
+    },
+    "email_tags": {
+        "module": [],
+        "package": [],
+        "service": ["domain"]
+    },
+    "features": {
+        "dns_management": 1,
+        "email_forwarding": 0,
+        "id_protection": 1,
+        "epp_code": 1
+    }
+}

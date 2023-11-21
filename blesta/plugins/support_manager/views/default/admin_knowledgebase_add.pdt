@@ -1,0 +1,60 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminKnowledgebase.add.boxtitle_add', true));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div id="add_article" class="inner">
+            <div class="pad">
+                <?php echo (isset($article_content) ? $article_content : null);?>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminKnowledgebase.add.field_access', true));?>
+                        <?php $this->Form->fieldSelect('access', (isset($access_types) ? $access_types : null), (isset($vars->access) ? $vars->access : null), ['id'=>'access', 'class'=>'small']);?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminKnowledgebase.!tooltip.access_article');?></div></span>
+                    </li>
+                    <?php
+                    $num_categories = (!empty($vars->categories) ? count($vars->categories) : 1);
+                    for ($i = 0; $i<$num_categories; $i++) {
+                    ?>
+                    <li class="category">
+                        <?php
+                        $this->Form->label($this->_('AdminKnowledgebase.add.field_categories', true));
+                        $this->Form->fieldSelect('categories[]', (isset($categories) ? $categories : null), (isset($vars->categories[$i]) ? $vars->categories[$i] : null), ['class'=>'categories']);
+                        ?>
+                        <a href="#" class="add_category">
+                            <i class="fas fa-plus"></i>
+                            <?php $this->_('AdminKnowledgebase.!text.add_category');?>
+                        </a>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminKnowledgebase.add.submit_add', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+                <a class="btn btn-default float-right" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/index/' . ((isset($category) ? $category : null) ? (isset($category->id) ? $category->id : null) . '/' : ''));?>"><?php $this->_('AdminKnowledgebase.add.submit_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+
+        $this->Javascript->setInline("
+$(document).ready(function() {
+    $('body').on('click', 'a.add_category', function(e) {
+        e.preventDefault();
+        $('#add_article li.category:last').after('<li class=\"category\">' + $(this).parents('li').html() + '</li>');
+        return false;
+    });
+});
+");

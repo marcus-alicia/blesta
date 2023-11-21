@@ -1,0 +1,40 @@
+
+        <?php
+        echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminSystemApi.add.boxtitle_add', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemApi.add.field_company', true), 'company_id');?>
+                                <?php $this->Form->fieldSelect('company_id', (isset($companies) ? $companies : null), (isset($vars->company_id) ? $vars->company_id : null), ['id' => 'company_id']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemApi.add.field_user', true), 'user');?>
+                                <?php $this->Form->fieldText('user', (isset($vars->user) ? $vars->user : null), ['id' => 'user']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemApi.add.field_notes', true), 'notes');?>
+                                <?php $this->Form->fieldTextarea('notes', (isset($vars->notes) ? $vars->notes : null), ['id' => 'notes']);?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemApi.add.field_apisubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>

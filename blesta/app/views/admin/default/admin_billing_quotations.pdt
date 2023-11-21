@@ -1,0 +1,118 @@
+
+        <?php
+        echo ($message ?? null);
+
+        $links = [];
+        $highlight = ['expired', 'dead', 'lost'];
+        foreach ($quotation_statuses ?? [] as $status_id => $category_name) {
+            $link = ['name' => $category_name . ' <span>(' . (isset($status_count[$status_id]) ? $this->Html->safe($status_count[$status_id]) : null) . ')</span>', 'current' => (($status ?? null) == $status_id ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/quotations/' . $status_id . '/', 'class' => 'ajax']];
+
+            if (in_array($status_id, $highlight)) {
+                $link['highlight'] = true;
+            }
+
+            $links[] = $link;
+        }
+
+        $this->Widget->clear();
+
+        $this->Widget->setFilters(($filters ?? null), $this->Html->safe($this->base_uri . 'billing/quotations/' . (isset($status) ? $this->Html->safe($status) : null)), !empty($filter_vars));
+        $this->Widget->setAjaxFiltering();
+        $this->Widget->setLinks($links);
+        $this->Widget->create($this->_('AdminBilling.quotations.boxtitle_quotations', true), ['id' => 'admin_billing_quotations'], ($render_section ?? null));
+
+        if (($quotations ?? false) && (($num_quotations = count($quotations)) > 0)) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/quotations/' . ($status ?? null) . '/?sort=id_code&order=' . ($sort == 'id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.quotations.heading_quotation');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/quotations/' . ($status ?? null) . '/?sort=client_id_code&order=' . ($sort == 'client_id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'client_id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.quotations.heading_client');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/quotations/' . ($status ?? null) . '/?sort=title&order=' . ($sort == 'title' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'title' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.quotations.heading_title');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/quotations/' . ($status ?? null) . '/?sort=staff_first_name&order=' . ($sort == 'staff_first_name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'staff_first_name' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.quotations.heading_staff');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/quotations/' . ($status ?? null) . '/?sort=subtotal&order=' . ($sort == 'subtotal' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'subtotal' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.quotations.heading_subtotal');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/quotations/' . ($status ?? null) . '/?sort=total&order=' . ($sort == 'total' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'total' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.quotations.heading_total');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/quotations/' . ($status ?? null) . '/?sort=date_created&order=' . ($sort == 'date_created' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_created' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.quotations.heading_date_created');?></a></span></td>
+                <?php
+                if (($status ?? null) !== 'approved') {
+                ?>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/quotations/' . ($status ?? null) . '/?sort=date_expires&order=' . ($sort == 'date_expires' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_expires' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.quotations.heading_date_expires');?></a></span></td>
+                <?php
+                }
+                ?>
+                <td class="last"><span><?php $this->_('AdminBilling.quotations.heading_options');?></span></td>
+            </tr>
+            <?php
+            // Display all quotations
+            for ($i = 0; $i < $num_quotations; $i++) {
+                $expired = (($status ?? null) == 'expired' && $this->Date->toTime($this->Date->cast($quotations[$i]->date_expires)) < $this->Date->toTime(date('c')));
+            ?>
+                <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'expand', 'quotation_applied');?>">
+                    <td><?php echo (isset($quotations[$i]->id_code) ? $this->Html->safe($quotations[$i]->id_code) : null);?></td>
+                    <td><span class="tooltip quiet"><a href="<?php echo $this->base_uri . 'clients/view/' . (isset($quotations[$i]->client_id) ? $this->Html->safe($quotations[$i]->client_id) : null);?>"><?php (print (isset($quotations[$i]->client_id_code) ? $this->Html->safe($quotations[$i]->client_id_code) : null));?></a><div><?php echo (isset($quotations[$i]->client_first_name) ? $this->Html->safe($quotations[$i]->client_first_name) : null) . ' ' . (isset($quotations[$i]->client_last_name) ? $this->Html->safe($quotations[$i]->client_last_name) : null);?><br /><?php (print (isset($quotations[$i]->client_company) ? $this->Html->safe($quotations[$i]->client_company) : null));?></div></span></td>
+                    <td><?php echo (isset($quotations[$i]->title) ? $this->Html->safe($quotations[$i]->title) : null);?></td>
+                    <td><?php echo (isset($quotations[$i]->staff_first_name) ? $this->Html->safe($quotations[$i]->staff_first_name) : null) . ' ' . (isset($quotations[$i]->staff_last_name) ? $this->Html->safe($quotations[$i]->staff_last_name) : null);?></td>
+                    <td><?php echo $this->CurrencyFormat->format($quotations[$i]->subtotal, $quotations[$i]->currency, ['html_code' => true]);?></td>
+                    <td><?php echo $this->CurrencyFormat->format($quotations[$i]->total, $quotations[$i]->currency, ['html_code' => true]);?></td>
+                    <td><?php echo $this->Date->cast($quotations[$i]->date_created);?></td>
+                    <?php
+                    if (($status ?? null) !== 'approved') {
+                    ?>
+                    <td<?php echo ($expired ? ' class="red_txt"' : '');?>><?php echo $this->Date->cast($quotations[$i]->date_expires);?></td>
+                    <?php
+                    }
+                    ?>
+                    <td>
+                        <a href="<?php echo $this->base_uri . 'clients/editquotation/' . (isset($quotations[$i]->client_id) ? $this->Html->safe($quotations[$i]->client_id) : null) . '/' . (isset($quotations[$i]->id) ? $this->Html->safe($quotations[$i]->id) : null) . '/';?>"><?php $this->_('AdminBilling.quotations.option_edit');?></a>,
+                        <a href="<?php echo $this->base_uri . 'clients/viewquotation/' . (isset($quotations[$i]->client_id) ? $this->Html->safe($quotations[$i]->client_id) : null) . '/' . (isset($quotations[$i]->id) ? $this->Html->safe($quotations[$i]->id) : null) . '/';?>"><?php $this->_('AdminBilling.quotations.option_view');?></a><?php echo ($status == 'approved' || $status == 'pending' ? ',' : '');?>
+                        <?php
+                        if ($status == 'approved') {
+                        ?>
+                            <a href="<?php echo $this->base_uri . 'clients/invoicequotation/' . (isset($quotations[$i]->client_id) ? $this->Html->safe($quotations[$i]->client_id) : null) . '/' . (isset($quotations[$i]->id) ? $this->Html->safe($quotations[$i]->id) : null) . '/';?>" class="manage invoice_quotation"><?php $this->_('AdminBilling.quotations.option_invoice');?></a>
+                        <?php
+                        }
+                        ?>
+                        <?php
+                        if ($status == 'pending') {
+                        ?>
+                            <a href="<?php echo $this->base_uri . 'clients/approvequotation/' . (isset($quotations[$i]->client_id) ? $this->Html->safe($quotations[$i]->client_id) : null) . '/' . (isset($quotations[$i]->id) ? $this->Html->safe($quotations[$i]->id) : null) . '/';?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminBilling.quotations.confirm_approve', true));?>"><?php $this->_('AdminBilling.quotations.option_approve');?></a>
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <?php if (($status ?? null) != 'draft') { ?>
+                    <tr class="expand_details" id="quotations_<?php (print (isset($quotations[$i]->id) ? $this->Html->safe($quotations[$i]->id) : null));?>">
+                        <td colspan="<?php if (($status ?? null) !== 'approved') { echo '9'; } else { echo '8'; } ?>" class="subtable">
+                        </td>
+                    </tr>
+                <?php } ?>
+            <?php
+            }
+            ?>
+        </table>
+        <?php
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminBilling.quotations.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(this).blestaBindToolTips();
+
+        $('a.invoice_quotation').blestaModal({close: '<?php $this->_('AppController.modal.text_close');?>'});
+
+        // Fetch all associated invoices to the given quotations
+        $(".quotation_applied").click(function() {
+            $(this).blestaUpdateRow("<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'billing/quotationinvoices/';?>" + $(this).next("tr").attr("id").split("_")[1], ".subtable");
+        });
+    });
+</script>

@@ -1,0 +1,9 @@
+{
+    "name": "blesta/payflow",
+    "description": "Payflow Pro",
+    "license": "proprietary",
+    "type": "blesta-gateway-merchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

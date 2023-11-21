@@ -1,0 +1,133 @@
+<?php
+// Get source code
+$line = $exception->getLine();
+$code = null;
+
+if (file_exists($exception->getFile())) {
+    $code = @file_get_contents($exception->getFile());
+
+    if ($line > 0) {
+        $line = $line - 1;
+    }
+
+    if (!empty($code)) {
+        $code = explode("\n", $code);
+
+        $show_lines = count($exception->getTrace()) * 8;
+        $start_line = $line - (($show_lines < $line) ? $show_lines : $line);
+        $end_line = count(array_slice($code, $line));
+        $end_line = $line + (($show_lines < $end_line) ? $show_lines : $line);
+
+        if (!isset($code[$line])) {
+            $code = null;
+        }
+    }
+}
+?>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 p-3">
+            <div class="card">
+                <div class="card-header p-3">
+                    <h3 class="m-0"><i class="fab fa-whmcs fa-fw"></i> Something went wrong.</h3>
+                </div>
+                <?php
+                // Display the error message or debug info (stack trace)
+                if (Configure::get('System.debug') && !empty($exception)) {
+                ?>
+                <div class="row m-0">
+                    <div class="col-lg-6 col-xl-5 p-0">
+                        <div class="card-body bg-warning">
+                            <h5 class="m-0">
+                                <i class="fas fa-exclamation-triangle"></i> <?php echo htmlentities($exception->getMessage(), ENT_QUOTES, 'UTF-8');?>.
+                            </h5>
+                        </div>
+
+                        <div class="card-body bg-light">
+                            <?php echo htmlentities($exception->getMessage(), ENT_QUOTES, 'UTF-8');?>
+                            on line <strong><?php echo htmlentities($exception->getLine(), ENT_QUOTES, 'UTF-8');?></strong>
+                            in <strong><?php echo htmlentities($exception->getFile(), ENT_QUOTES, 'UTF-8');?></strong>
+                        </div>
+
+                        <?php
+                        $trace = $exception->getTrace();
+                        if (!empty($trace)) {
+                        ?>
+                        <div class="card-body">
+                            <?php
+                            foreach ($exception->getTrace() as $trace_line) {
+                            ?>
+                            <div class="border-bottom pb-3 mb-3">
+                                <h5 class="m-0">
+                                    <?php echo $trace_line['class'] . $trace_line['type'] . $trace_line['function'];?>
+                                    <small>
+                                        <div class="badge badge-danger d-inline-block">Line <?php echo $trace_line['line'];?></div>
+                                    </small>
+                                </h5>
+                                <p class="m-0">
+                                    <small class="text-muted"><?php echo $trace_line['file'];?></small>
+                                </p>
+
+                                <?php
+                                if (!empty($trace_line['args'])) {
+                                ?>
+                                <pre class="bg-light rounded border m-0 mt-2 p-2"><?php var_dump($trace_line['args']);?></pre>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="col-lg-6 col-xl-7 p-0 bg-dark">
+                        <div class="code">
+                            <?php
+                            if (!empty($code) && is_array($code)) {
+                                foreach ($code as $line_no => $line_str) {
+                                    if ($line_no < $start_line || $line_no > $end_line) {
+                                        continue;
+                                    }
+                            ?>
+                            <div class="code-line<?php echo ($line_no == $line) ? ' bg-danger' : ''?>">
+                                <div class="line-number">
+                                    <?php echo $line_no +1;?>
+                                </div>
+                                <pre class="line-str"><?php echo htmlentities($line_str == '' ? ' ' : $line_str);?></pre>
+                            </div>
+                            <?php
+                                }
+                            } else {
+                            ?>
+                                <div class="text-white text-monospace p-3">
+                                    <?php echo nl2br(htmlentities($exception->getTraceAsString()));?>
+                                </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                } elseif (!empty($error)) {
+                ?>
+                <div class="card-body">
+                    <?php echo $error;?>
+                </div>
+                <?php
+                } else {
+                ?>
+                <div class="card-body">
+                    An unexpected error occurred. Please contact the site administrator for help.
+                </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>

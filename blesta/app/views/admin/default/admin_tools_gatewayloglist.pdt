@@ -1,0 +1,45 @@
+
+                    <?php
+                    if ((isset($gateway_logs) ? $gateway_logs : false)) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td class="border_left"><?php $this->_('AdminTools.gatewayloglist.text_direction');?></td>
+                            <td><?php $this->_('AdminTools.gatewayloglist.text_data');?></td>
+                            <td><?php $this->_('AdminTools.gatewayloglist.text_date');?></td>
+                            <td class="last"><?php $this->_('AdminTools.gatewayloglist.text_status');?></td>
+                        </tr>
+                        <?php
+                        $i = 0;
+                        foreach ($gateway_logs as $gateway_log) {
+                            $status = (isset($gateway_log->status) ? $this->Html->safe($gateway_log->status) : null);
+                            $icon = ($status == 'success') ? 'check' : 'ban';
+                        ?>
+                        <tr<?php echo ($i++ % 2 == 1) ? ' class="odd_row"' : '';?>>
+                            <td><?php $this->_('AdminTools.gatewayloglist.text_' . (isset($gateway_log->direction) ? $this->Html->safe($gateway_log->direction) : null));?></td>
+                            <td>
+                                <?php
+                                $this->Form->create();
+                                $this->Form->fieldTextarea('data', (isset($gateway_log->url) ? $gateway_log->url : null) . "\n" . (isset($gateway_log->data) ? $gateway_log->data : null));
+                                $this->Form->end();
+                                ?>
+                            </td>
+                            <td><?php echo $this->Date->cast((isset($gateway_log->date_added) ? $this->Html->safe($gateway_log->date_added) : null), 'date_time');?></td>
+                            <td class="icon middle">
+                                <i class="fas fa-<?php (print (isset($icon) ? $this->Html->safe($icon) : null));?>"></i>
+                                <?php $this->_('AdminTools.gatewayloglist.text_' . $status);?>
+                            </td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box"><?php $this->_('AdminTools.gatewayloglist.no_results');?></div>
+                    </div>
+                    <?php
+                    }
+                    ?>

@@ -1,0 +1,28 @@
+{
+    "version": "1.9.1",
+    "name": "Vesta.name",
+    "description": "Vesta.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "domain"
+    },
+    "service": {
+        "name_key": "domain"
+    },
+    "module": {
+        "row": "Vesta.module_row",
+        "rows": "Vesta.module_row_plural",
+        "row_key": "server_name",
+        "group": "Vesta.module_group"
+    },
+    "email_tags": {
+        "module": ["host_name", "port"],
+        "package": ["package_name"],
+        "service": ["username", "password", "domain"]
+    }
+}

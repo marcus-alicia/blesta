@@ -1,0 +1,333 @@
+
+        <?php
+        $links = [
+            ['name' => $this->_('AdminClients.services.category_active', true) . ' <span>(' . (isset($status_count['active']) ? $this->Html->safe($status_count['active']) : null) . ')</span>', 'current' => (isset($status) ? $status : null) == 'active', 'attributes' => ['href' => $this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/active/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminClients.services.category_pending', true) . ' <span>(' . (isset($status_count['pending']) ? $this->Html->safe($status_count['pending']) : null) . ')</span>', 'current' => (isset($status) ? $status : null) == 'pending', 'attributes' => ['href' => $this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/pending/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminClients.services.category_suspended', true) . ' <span>(' . (isset($status_count['suspended']) ? $this->Html->safe($status_count['suspended']) : null) . ')</span>', 'current' => (isset($status) ? $status : null) == 'suspended', 'highlight' => true, 'attributes' => ['href' => $this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/suspended/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminClients.services.category_canceled', true) . ' <span>(' . (isset($status_count['canceled']) ? $this->Html->safe($status_count['canceled']) : null) . ')</span>', 'current' => (isset($status) ? $status : null) == 'canceled', 'attributes' => ['href' => $this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/canceled/', 'class' => 'ajax']],
+        ];
+        $link_buttons = [
+            [
+                'icon' => 'fas fa-plus',
+                'name' => '',
+                'attributes' => [
+                    'title' => $this->_('AdminClients.services.categorylink_newservice', true),
+                    'href' => $this->base_uri . 'clients/addservice/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/'
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinks($links);
+        $this->Widget->setLinkButtons($link_buttons);
+        $this->Widget->setBadgeUri($this->base_uri . 'clients/serviceCount/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null));
+        $this->Widget->setFilters(($filters ?? null), $this->Html->safe($this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null)), !empty($filter_vars));
+        $this->Widget->setAjaxFiltering();
+        $this->Widget->setWidgetButton('arrow');
+        $this->Widget->create($this->_('AdminClients.services.boxtitle_services', true), ['id' => 'admin_clients_services'], ($render_section ?? null));
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+
+        if (($services ?? false) && ($num_services = count($services)) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <?php
+                if (!in_array(($status ?? null), ['in_review', 'canceled'])) {
+                ?>
+                <td class="icon"><?php $this->Form->fieldCheckbox('service_ids[]', 'all', (($vars->service_ids[0] ?? null) == 'all'), ['class' => 'actions']);?></td>
+                <?php
+                }
+                if (in_array(($status ?? null), ['active', 'suspended'])) {
+                ?>
+                <td class="icon">&nbsp;</td>
+                <?php
+                }
+                ?>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null) . '/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminClients.services.heading_package');?></a></span></td>
+                <td><span><?php $this->_('AdminClients.services.heading_label');?></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null) . '/?sort=term&order=' . ($sort == 'term' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'term' ? ' ' . $order : '');?>"><?php $this->_('AdminClients.services.heading_term');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null) . '/?sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('AdminClients.services.heading_datecreated');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null) . '/?sort=date_renews&order=' . ($sort == 'date_renews' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_renews' ? ' ' . $order : '');?>"><?php $this->_('AdminClients.services.heading_daterenews');?></a></span></td>
+                <?php
+                if (($status ?? null) == 'suspended') {
+                ?>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null) . '/?sort=date_suspended&order=' . ($sort == 'date_suspended' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_suspended' ? ' ' . $order : '');?>"><?php $this->_('AdminClients.services.heading_datesuspended');?></a></span></td>
+                <?php
+                } elseif (($status ?? null) == 'canceled') {
+                ?>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/services/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($status) ? $this->Html->safe($status) : null) . '/?sort=date_canceled&order=' . ($sort == 'date_canceled' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_canceled' ? ' ' . $order : '');?>"><?php $this->_('AdminClients.services.heading_datecanceled');?></a></span></td>
+                <?php
+                }
+                ?>
+                <td class="last"><span><?php $this->_('AdminClients.services.heading_options');?></span></td>
+            </tr>
+            <?php
+            // List all services
+            for ($i = 0; $i < $num_services; $i++) {
+            ?>
+            <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'expand', 'service_info');?>">
+                <?php
+                if (!in_array(($status ?? null), ['in_review', 'canceled'])) {
+                ?>
+                <td>
+                    <?php $this->Form->fieldCheckbox('service_ids[]', ($services[$i]->id ?? null), in_array(($services[$i]->id ?? null), ($vars->service_ids ?? [])), ['class' => 'actions']);?>
+                </td>
+                <?php
+                }
+                if (in_array(($status ?? null), ['active', 'suspended'])) {
+                    $icon = empty($services[$i]->date_canceled) ? 'check' : 'calendar-times';
+                ?>
+                <td class="icon"><i class="fas fa-<?php (print (isset($icon) ? $this->Html->safe($icon) : null));?>"></i></td>
+                <?php
+                }
+                ?>
+                <td><?php (print (isset($services[$i]->package->name) ? $this->Html->safe($services[$i]->package->name) : null));?></td>
+                <td><?php (print (isset($services[$i]->name) ? $this->Html->safe($services[$i]->name) : null));?></td>
+                <td>
+                    <?php
+                    if (($services[$i]->package_pricing->period ?? null) == 'onetime') {
+                        (print (isset($periods[$services[$i]->package_pricing->period]) ? $this->Html->safe($periods[$services[$i]->package_pricing->period]) : null));
+                    } else {
+                        $term = (isset($services[$i]->package_pricing->term) ? $this->Html->safe($services[$i]->package_pricing->term) : null);
+                        $period = ($term == 1 ? ($periods[$services[$i]->package_pricing->period] ?? null) : ($periods[$services[$i]->package_pricing->period . '_plural'] ?? null));
+                        $renewal_price = $this->CurrencyFormat->format(($services[$i]->renewal_price ?? null), ($services[$i]->override_currency ?? (isset($services[$i]->package_pricing->currency) ? $services[$i]->package_pricing->currency : null)));
+                        $this->_('AdminClients.services.recurring_term', false, $this->Html->safe($term), $this->Html->safe($period), $this->Html->safe($renewal_price));
+                    }
+                    ?>
+                </td>
+                <td><?php echo $this->Date->cast((isset($services[$i]->date_added) ? $this->Html->safe($services[$i]->date_added) : null));?></td>
+                <td><?php echo (empty($services[$i]->date_renews) ? $this->_('AdminClients.services.text_never', true) : $this->Date->cast((isset($services[$i]->date_renews) ? $this->Html->safe($services[$i]->date_renews) : null)));?></td>
+                <?php
+                if (($status ?? null) == 'suspended') {
+                ?>
+                <td><?php echo (empty($services[$i]->date_suspended) ? $this->_('AdminClients.services.text_never', true) : $this->Date->cast((isset($services[$i]->date_suspended) ? $this->Html->safe($services[$i]->date_suspended) : null)));?></td>
+                <?php
+                } elseif (($status ?? null) == 'canceled') {
+                ?>
+                <td><?php echo (empty($services[$i]->date_canceled) ? $this->_('AdminClients.services.text_never', true) : $this->Date->cast((isset($services[$i]->date_canceled) ? $this->Html->safe($services[$i]->date_canceled) : null)));?></td>
+                <?php
+                }
+                ?>
+                <td>
+                    <?php
+                    // Cannot manage a canceled service
+                    $show_manage = ($status ?? null) != 'canceled';
+                    if ($show_manage) {
+                    ?>
+                    <a href="<?php echo $this->base_uri . 'clients/editservice/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($services[$i]->id) ? $this->Html->safe($services[$i]->id) : null) . '/';?>" class="manage"><?php $this->_('AdminClients.services.option_manage');?></a><?php
+                    }
+
+                    if (in_array(($status ?? null), ['pending', 'canceled'])) {
+                        echo ($show_manage ? ',' : '');
+                    ?>
+                    <a href="<?php echo $this->base_uri . 'clients/deleteservice/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . '/' . (isset($services[$i]->id) ? $this->Html->safe($services[$i]->id) : null) . '/';?>" class="manage" data-service-id="<?php (print (isset($services[$i]->id) ? $this->Html->safe($services[$i]->id) : null));?>" rel="<?php echo $this->Html->safe($this->_('AdminClients.services.confirm_delete', true));?>"><?php $this->_('AdminClients.services.option_delete');?></a>
+                    <?php
+                    }
+                    ?>
+                </td>
+            </tr>
+            <tr class="expand_details" id="services_<?php (print (isset($services[$i]->id) ? $this->Html->safe($services[$i]->id) : null));?>">
+                <td colspan="10" class="subtable">
+                </td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+        <?php
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminClients.services.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+        <div id="service_actions" class="button_row pad_top">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('AdminClients.services.field_actionsubmit', true), ['class' => 'btn btn-primary pull-right btn-sm']);
+            ?>
+            <div class="actions">
+                <div id="schedule_cancellation">
+                    <?php
+                    $this->Form->label($this->_('AdminClients.services.action.field_action_type_none', true), 'action_type_none', ['class' => 'inline']);
+                    $this->Form->fieldRadio('action_type', 'none', ($vars->action_type ?? null) == 'none', ['id' => 'action_type_none']);
+                    ?>
+                    <div class="float">
+                        <?php
+                        $this->Form->fieldText('date', ($vars->date ?? $this->Date->modify(date('c'), '+1 day', 'Y-m-d', Configure::get('Blesta.company_timezone'))), ['class' => 'date']);
+                        ?>
+                    </div>
+                    <?php
+                    $this->Form->label($this->_('AdminClients.services.action.field_action_type_date', true), 'action_type_date', ['class' => 'inline']);
+                    $this->Form->fieldRadio('action_type', 'date', ($vars->action_type ?? null) == 'date', ['id' => 'action_type_date']);
+                    $this->Form->label($this->_('AdminClients.services.action.field_action_type_term', true), 'action_type_term', ['class' => 'inline']);
+                    $this->Form->fieldRadio('action_type', 'term', ($vars->action_type ?? 'term') == 'term', ['id' => 'action_type_term']);
+                    ?>
+                </div>
+                <div id="invoice_renewal">
+                    <div class="float">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.services.action.field_cycles', true), 'cycles', ['class' => 'inline']);
+                        $this->Form->fieldText('cycles', ($vars->cycles ?? 1), ['class' => 'form-control input-md']);
+                        ?>
+                    </div>
+                </div>
+                <div id="push_to_client">
+                    <div class="float">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.services.action.field_client', true), 'client', ['class' => 'inline']);
+                        $this->Form->fieldText('client', ($vars->client ?? ''), ['class' => 'form-control ui-autocomplete-input input-md', 'id' => 'client']);
+                        $this->Form->fieldHidden('client_id', ($vars->client_id ?? null), ['id' => 'client_id']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->fieldSelect('action', ($actions ?? []), ($vars->action ?? null));
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+
+        if (in_array(($status ?? null), ['pending', 'canceled'])) {
+            $this->Form->create($this->base_uri . 'clients/deleteservice/', ['id' => 'delete_service']);
+            $this->Form->fieldHidden('client_id', ($client->id ?? null));
+            $this->Form->fieldHidden('id', '', ['id' => 'delete_service_service_id']);
+            $this->Form->end();
+        }
+
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Set datepicker
+        $('#service_actions input.date').datePicker({startDate:'1996-01-01'});
+
+        // Fetch all transactions applied to the given invoices
+        $("#admin_clients_services").on('click', '.service_info a,.service_info input', function(e) {
+            e.stopPropagation();
+        });
+        $("#admin_clients_services").on('click', '.service_info', function() {
+            $(this).blestaUpdateRow("<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'clients/serviceinfo/' . (isset($client->id) ? $this->Html->safe($client->id) : null);?>/" + $(this).next("tr").attr("id").split("_")[1], ".subtable");
+        });
+
+        // Handle confirmation
+        $('#admin_clients_services a.manage[rel]').not('#admin_clients_services .expand_details a.manage[rel]').click(function() {
+            var service_id = $(this).attr('data-service-id');
+            $('#delete_service_service_id').val(service_id);
+        });
+        $('#admin_clients_services a.manage[rel]').not('#admin_clients_services .expand_details a.manage[rel]').each(function() {
+            $(this).blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true, form: $('#delete_service')});
+        });
+
+        showServiceActions();
+        $('#admin_clients_services input.actions').click(function() {
+            // Show/hide actions
+            if ($('#admin_clients_services input.actions:checked').length > 0) {
+                // Check all checkboxes
+                if ($(this).val() === 'all') {
+                    if ($(this).prop('checked')) {
+                        // Check all checkboxes
+                        $('#admin_clients_services input.actions').each(function() {
+                            $(this).prop('checked', true);
+                        });
+
+                        // Show email input
+                        $('#service_actions').show();
+                    }
+                    else {
+                        // Uncheck all checkboxes
+                        $('#admin_clients_services input.actions').each(function() {
+                            $(this).prop('checked', false);
+                        });
+
+                        // Hide email input
+                        $('#service_actions').hide();
+                    }
+                }
+                else {
+                    // Check individual checkboxes
+                    if ($(this).prop('checked')) {
+                        $('#service_actions').show();
+                    }
+                    else {
+                        // Uncheck 'all'
+                        $('#admin_clients_services input[value=all].actions').prop('checked', false);
+                    }
+                }
+            } else {
+                // Hide input
+                $('#service_actions').hide();
+            }
+        });
+
+        function showServiceActions() {
+            if ($('#admin_clients_services input.actions:checked').length > 0) {
+                $('#service_actions').show();
+            } else {
+                $('#service_actions').hide();
+            }
+        }
+
+        switchServiceActions();
+        $('#service_actions select[name="action"]').on('change', function() {
+            switchServiceActions();
+        });
+
+        function switchServiceActions() {
+            if ($('#service_actions select[name="action"]').val() == 'schedule_cancellation') {
+                $('#service_actions #schedule_cancellation').show();
+                $('#service_actions #invoice_renewal').hide();
+                $('#service_actions #push_to_client').hide();
+            }
+
+            if ($('#service_actions select[name="action"]').val() == 'invoice_renewal') {
+                $('#service_actions #schedule_cancellation').hide();
+                $('#service_actions #invoice_renewal').show();
+                $('#service_actions #push_to_client').hide();
+            }
+
+            if ($('#service_actions select[name="action"]').val() == 'push_to_client') {
+                $('#service_actions #schedule_cancellation').hide();
+                $('#service_actions #invoice_renewal').hide();
+                $('#service_actions #push_to_client').show();
+            }
+        }
+
+        $('#client').autocomplete({
+            minLength: 3,
+            source: function(request, response) {
+                $(document).blestaRequest('POST', '<?php echo $this->Html->safe($this->base_uri . 'clients/getclients/'); ?>',
+                    { _csrf_token: $('#service_actions').closest('form').find('input[name=_csrf_token]').val(), search: request.term},
+                    function(data) {
+                        if (data && data.clients) {
+                            // Build the response to show
+                            var clients = [];
+                            for (var id in data.clients) {
+                                clients.push({label: data.clients[id], value: data.clients[id], id: id});
+                            }
+                            response(clients);
+
+                            // No results
+                            if (clients.length == 0) {
+                                $('#no_clients').show();
+                            } else {
+                                $('#no_clients').hide();
+                            }
+                        }
+                    },
+                    null,
+                    {dataType:'json'}
+                );
+            },
+            select: function(event, ui) {
+                $('#client_id').val(ui.item.id);
+            }
+        });
+    });
+</script>

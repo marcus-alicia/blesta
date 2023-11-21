@@ -1,0 +1,84 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminBilling.batch.boxtitle_batch', true), ['id' => 'admin_billing_batch'], (isset($render_section) ? $render_section : null));
+        ?>
+
+        <div class="inner">
+        <?php
+        if ((isset($batch_enabled) ? $this->Html->safe($batch_enabled) : null)) {
+            $this->Form->create(null, ['id' => 'run_cron']);
+            $this->Form->fieldHidden('cron_key', (isset($cron_key) ? $cron_key : null));
+        ?>
+            <div class="pad">
+                <p><?php $this->_('AdminBilling.batch.text_description');?></p>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminBilling.batch.field_passphrase', true), 'passphrase');
+                        $this->Form->fieldPassword('passphrase', ['id' => 'passphrase']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminBilling.batch.text_batchsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+
+            <div id="cron_results" class="pad clear" style="display:none;">
+                <iframe src="#" scrolling="auto"></iframe>
+            </div>
+        <?php
+        } else {
+        ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php
+                    $this->_('AdminBilling.batch.no_passphrase');
+                    ?>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    // Display cron running
+    $('#run_cron').on('submit', function() {
+        var form_data = $(this).closest('form').serialize();
+
+        if ($(this).blestaDisableFormSubmission($(this))) {
+            $(this).blestaRequest('POST', '" . $this->Html->safe($this->base_uri . 'billing/verifypassphrase/') . "', form_data,
+                function(data) {
+                    if (data.valid) {
+                        $('#cron_results').show();
+
+                        $('#cron_results iframe').attr('src', '" . $this->Html->safe(WEBDIR . 'cron/autodebitinvoices/?') . "' + form_data);
+                    }
+                    else {
+                        $('#admin_billing_batch').parent().prepend(data.message);
+                    }
+
+                },
+                null,
+                {dataType: 'json', complete: function() { $('#run_cron').blestaEnableFormSubmission($('#run_cron')); }}
+            );
+        }
+
+        return false;
+    });
+});
+");

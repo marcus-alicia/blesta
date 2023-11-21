@@ -1,0 +1,139 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyGroups.edit.boxtitle_editgroup', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['class' => 'disable-on-submit']); ?>
+                    <div class="title_row first"><h3><?php $this->_('AdminCompanyGroups.edit.heading_basic');?></h3></div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGroups.edit.field_name', true), 'name');?>
+                                <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGroups.edit.field_color', true), 'color');?>
+                                <?php $this->Form->fieldText('color', (isset($vars->color) ? $vars->color : null), ['id' => 'color', 'class' => 'color_well']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGroups.edit.field_description', true), 'description');?>
+                                <?php $this->Form->fieldTextarea('description', (isset($vars->description) ? $vars->description : null), ['id' => 'description']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckBox('use_company_settings', 'true', ((isset($vars->use_company_settings) ? $vars->use_company_settings : null) == 'true'), ['id' => 'use_company_settings']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyGroups.edit.field_company_settings', true), 'use_company_settings', ['class' => 'inline']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="group_settings">
+                        <div class="title_row"><h3><?php $this->_('AdminCompanyGroups.edit.heading_invoice');?></h3></div>
+                        <div class="pad">
+                            <?php echo (isset($invoice_form) ? $invoice_form : null);?>
+                        </div>
+
+                        <div class="title_row"><h3><?php $this->_('AdminCompanyGroups.edit.heading_late_fees');?></h3></div>
+                        <div class="pad">
+                            <?php echo (isset($late_fees_form) ? $late_fees_form : null);?>
+                        </div>
+
+                        <div class="title_row"><h3><?php $this->_('AdminCompanyGroups.edit.heading_delivery');?></h3></div>
+                        <div class="pad">
+                            <ul>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminCompanyGroups.edit.field_delivery_methods', true));
+                                    foreach ((isset($delivery_methods) ? $delivery_methods : []) as $method => $name) {
+                                        $disable = $method == 'email';
+                                        $options = ['id' => 'delivery_method_' . $method];
+                                        if ($disable) {
+                                            $options['disabled'] = 'disabled';
+                                        }
+
+                                        $this->Form->fieldCheckbox('delivery_methods[]', $method, (in_array($method, (isset($vars->delivery_methods) ? $vars->delivery_methods : [])) || $disable), $options);
+                                        $this->Form->label($name, 'delivery_method_' . $method, ['class' => 'inline']);
+                                    }
+                                    ?>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="title_row"><h3><?php $this->_('AdminCompanyGroups.edit.heading_payment');?></h3></div>
+                        <div class="pad">
+                            <?php echo (isset($notice_form) ? $notice_form : null);?>
+                        </div>
+
+                        <div class="title_row"><h3><?php $this->_('AdminCompanyGroups.edit.heading_client_settings');?></h3></div>
+                        <div class="pad">
+                            <?php echo (isset($general_form) ? $general_form : null);?>
+                        </div>
+
+                        <div class="title_row"><h3><?php $this->_('AdminCompanyGroups.edit.heading_client_fields');?></h3></div>
+                        <div class="pad">
+                            <?php echo (isset($required_fields_form) ? $required_fields_form : null);?>
+                        </div>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyGroups.edit.text_editsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+
+                    <?php $this->Form->end(); ?>
+                </div>
+                <?php $this->Widget->end(); ?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('.color_well').blestaColorPicker();
+
+    // Enable/disable setting fields
+    updateSettingFields();
+    $('#use_company_settings').change(function() {
+        updateSettingFields();
+    });
+});
+
+function updateSettingFields() {
+    // Disable settings
+    if ($('#use_company_settings').prop('checked')) {
+        $('#group_settings input, #group_settings select').each(function() {
+            $(this).prop('disabled', true);
+        });
+    } else {
+        // Enable settings except for email delivery method
+        $('#group_settings input, #group_settings select').not('#email, #first_name, #last_name, #delivery_method_email').each(function() {
+            $(this).prop('disabled', false);
+        });
+        
+        // Disable the minimum field if the fee type is fixed
+        $('.fee_type:checked').each(function() {
+            var minimum_field = $(this).parent().parent().find('.minimum');
+            
+            if ($(this).val() == 'fixed') {
+                minimum_field.prop('disabled', true);
+            } else {
+                minimum_field.prop('disabled', false);
+            }
+        });
+        
+        // Disable the prevent payments checkbox if email verification is unchecked            
+        if ($('#email_verification').prop('checked')) {
+            $('#prevent_unverified_payments').prop('disabled', false);
+        } else {
+            $('#prevent_unverified_payments').prop('disabled', true);
+        }
+        
+        $('input.disabled').prop('disabled', true);
+    }
+}
+");
+?>

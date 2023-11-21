@@ -1,0 +1,28 @@
+
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="pad">
+        <ul>
+            <?php
+            for ($i=0; $i<5; $i++) {
+            ?>
+            <li>
+                <?php
+                $this->Form->label($this->_('Namecheap.tab_nameserver.field_ns', true, $i+1), 'ns' . ($i+1));
+                $this->Form->fieldText('ns[]', (isset($vars->ns[$i]) ? $vars->ns[$i] : null), ['id' => 'ns' . ($i+1)]);
+                ?>
+            </li>
+            <?php
+            }
+            ?>
+        </ul>
+    </div>
+    <div class="button_row">
+        <?php
+        $this->Form->fieldSubmit('save', $this->_('Namecheap.tab_nameservers.field_submit', true), ['class' => 'btn btn-primary float-right']);
+        ?>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>

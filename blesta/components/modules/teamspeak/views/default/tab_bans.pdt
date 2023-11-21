@@ -1,0 +1,83 @@
+    <div class="title_row first">
+        <h3><?php $this->_('Teamspeak.tab_bans.heading_bans'); ?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <tbody>
+                <tr class="heading_row">
+                    <td><span><?php $this->_('Teamspeak.tab_bans.bans_heading.date'); ?></span></td>
+                    <td><span><?php $this->_('Teamspeak.tab_bans.bans_heading.ban_id'); ?></span></td>
+                    <td><span><?php $this->_('Teamspeak.tab_bans.bans_heading.ban_rule'); ?></span></td>
+                    <td><span><?php $this->_('Teamspeak.tab_bans.bans_heading.reason'); ?></span></td>
+                    <td class="last"><span><?php $this->_('Teamspeak.tab_bans.bans_heading.options'); ?></span></td>
+                </tr>
+
+                <?php
+                if (!empty($server_bans->bans)) {
+                    $i = 0;
+                    foreach ($server_bans->bans as $ban) {
+                        $date = date('M d, Y', $ban->created);
+                        $rule = !empty($ban->ip) ? $ban->ip : $ban->lastnickname; ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? ' class="odd_row"' : '', ''); ?>>
+                        <td><?php echo (isset($date) ? $this->Html->safe($date) : null); ?></td>
+                        <td><?php echo (isset($ban->banid) ? $this->Html->safe($ban->banid) : null); ?></td>
+                        <td><?php echo (isset($rule) ? $this->Html->safe($rule) : null); ?></td>
+                        <td><?php echo (isset($ban->reason) ? $this->Html->safe($ban->reason) : null); ?></td>
+                        <td>
+                            <?php
+                            $this->Form->create();
+                            $this->Form->fieldHidden('action', 'unban_client');
+                            $this->Form->fieldHidden('banid', $ban->banid); ?>
+                            <a href="#" class="submit">
+                                <?php $this->_('Teamspeak.tab_bans.action_unban_client'); ?>
+                            </a>
+                            <?php
+                            $this->Form->end(); ?>
+                        </td>
+                    </tr>
+                <?php
+                        $i++;
+                    }
+                } else {
+                    ?>
+                <tr>
+                    <td colspan="5"><?php $this->_('Teamspeak.tab_bans.text_no_bans'); ?></td>
+                </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Teamspeak.tab_bans.heading_create_ban'); ?></h3>
+    </div>
+    <?php
+        $this->Form->create();
+    ?>
+    <div class="pad">
+        <ul>
+            <li>
+                <?php
+                    $this->Form->label($this->_('Teamspeak.tab_bans.field_ip_address', true), 'ip_address');
+                    $this->Form->fieldText('ip_address', (isset($vars->ip_address) ? $vars->ip_address : null), ['id' => 'ip_address', 'placeholder' => $this->_('Teamspeak.tab_bans.field_ip_address', true)]);
+                ?>
+            </li>
+            <li>
+                <?php
+                    $this->Form->label($this->_('Teamspeak.tab_bans.field_reason', true), 'reason');
+                    $this->Form->fieldText('reason', (isset($vars->reason) ? $vars->reason : null), ['id' => 'reason', 'placeholder' => $this->_('Teamspeak.tab_bans.field_reason', true)]);
+                    $this->Form->fieldHidden('action', 'create_ban');
+                ?>
+            </li>
+        </ul>
+    </div>
+    <div class="button_row">
+        <?php
+            $this->Form->fieldSubmit('submit', $this->_('Teamspeak.tab_bans.field_ban_submit', true), ['class' => 'btn btn-primary float-right']);
+        ?>
+    </div>
+    <?php
+        $this->Form->end();
+    ?>

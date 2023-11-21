@@ -1,0 +1,46 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.verifyachaccount.boxtitle_verifyachaccount', true));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="title_row first">
+                <h3><?php $this->_('AdminClients.verifyachaccount.heading_deposits');?></h3>
+            </div>
+            <?php
+            // Set partials
+            if (!empty($verification_form)) {
+                echo $verification_form;
+            } else {
+            ?>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.verifyachaccount.field_firstdeposit', true), 'first_deposit');
+                        $this->Form->fieldText('first_deposit', $vars->first_deposit ?? '', ['id' => 'first_deposit', 'class' => 'form-control', 'maxlength' => 2, 'placeholder' => $this->_('ClientAccounts.verifyach.field_firstdeposit', true)]);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.verifyachaccount.field_seconddeposit', true), 'second_deposit');
+                        $this->Form->fieldText('second_deposit', $vars->second_deposit ?? '', ['id' => 'second_deposit', 'class' => 'form-control', 'maxlength' => 2, 'placeholder' => $this->_('ClientAccounts.verifyach.field_seconddeposit', true)]);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <?php
+            }
+            ?>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.verifyachaccount.field_accountsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

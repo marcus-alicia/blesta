@@ -1,0 +1,13 @@
+{
+	"version": "1.0.0",
+	"name": "Payfast.name",
+	"description": "Payfast.description",
+	"authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "https://blesta.com/"
+        }
+    ],
+	"currencies": ["ZAR"],
+	"signup_url": "https://www.payfast.co.za/registration"
+}

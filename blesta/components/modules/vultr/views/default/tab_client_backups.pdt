@@ -1,0 +1,81 @@
+    <h4><?php $this->_('Vultr.tab_client_backups.backups'); ?></h4>
+
+    <?php
+    if (($service_options->enable_backup ?? null) == 'enable') {
+        $this->Form->create();
+        $this->Form->fieldHidden('backupid', '', ['id' => 'backupid']);
+        $this->Form->fieldHidden('action', '', ['id' => 'action']);
+
+        if (!empty($backups)) {
+        ?>
+    <div class="table-responsive">
+        <table class="table table-curved table-striped-alt table-hover">
+            <thead>
+                <tr>
+                    <th><?php $this->_('Vultr.tab_client_backups.backup_id'); ?></th>
+                    <th><?php $this->_('Vultr.tab_client_backups.date_created'); ?></th>
+                    <th><?php $this->_('Vultr.tab_client_backups.description'); ?></th>
+                    <th><?php $this->_('Vultr.tab_client_backups.options'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($backups as $backup) {
+                ?>
+                <tr>
+                    <td><strong><?php echo (isset($backup->id) ? $this->Html->safe($backup->id) : null); ?></strong></td>
+                    <td><?php echo (isset($backup->date_created) ? $this->Html->safe($backup->date_created) : null); ?></td>
+                    <td><?php echo (isset($backup->description) ? $this->Html->safe($backup->description) : null); ?></td>
+                    <td>
+                        <a class="btn btn-xs btn-success restore-backup" href="#" data-id="<?php echo (isset($backup->id) ? $this->Html->safe($backup->id) : null); ?>" data-toggle="modal" data-target="#restore-backup<?php echo $backup->id; ?>">
+                            <i class="fas fa-check"></i>
+                            <?php $this->_('Vultr.tab_client_backups.restore_backup'); ?>
+                        </a>
+                        <div id="restore-backup<?php echo $backup->id; ?>" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="global_modal_title"><?php $this->_('Vultr.tab_client_backups.heading_restore_backup', false, ($backup->id ?? null)); ?></h4>
+                                    </div>
+                                    <div class="modal-body"><?php $this->_('Vultr.tab_client_backups.confirm_restore_backup'); ?></div>
+                                    <div class="modal-footer">
+                                        <?php
+                                        $this->Form->fieldButton('cancel', $this->_('Vultr.tab_client_backups.cancel', true), ['class' => 'btn btn-default', 'data-dismiss' => 'modal']);
+                                        $this->Form->fieldButton('submit', $this->_('Vultr.tab_client_backups.restore_backup', true), ['class' => 'btn btn-primary', 'type' => 'submit']);
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('a.restore-backup').on('click', function() {
+                $('#backupid').val($(this).attr('data-id'));
+                $('#action').val('restore');
+                $($(this).attr('data-target')).modal('show');
+            });
+        });
+    </script>
+        <?php
+        } else {
+        ?>
+    <div class="alert alert-info"><p><?php $this->_('Vultr.tab_client_backups.no_backups'); ?></p></div>
+        <?php
+        }
+        $this->Form->end();
+    } else {
+    ?>
+    <div class="alert alert-info"><p><?php $this->_('Vultr.tab_client_backups.backups_disabled'); ?></p></div>
+    <?php
+    }
+    ?>
+

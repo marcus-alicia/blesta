@@ -1,0 +1,9 @@
+{
+    "name": "blesta/quantum_gateway",
+    "description": "Quantum Gateway",
+    "license": "proprietary",
+    "type": "blesta-gateway-merchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

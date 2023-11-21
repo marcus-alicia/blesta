@@ -1,0 +1,122 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.makepayment.boxtitle_makepayment', true), ['id' => 'admin_clients_makepayment'], (isset($render_section) ? $render_section : null));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="title_row first">
+                <h3><?php $this->_('AdminClients.makepayment.heading_paymentaccount');?></h3>
+            </div>
+            <div class="pad clear">
+                <ul>
+                    <li>
+                        <?php
+                        $attr = ['id' => 'pay_with_account'];
+                        if (!(isset($payment_accounts) ? $payment_accounts : null) || (isset($require_passphrase) ? $require_passphrase : null)) {
+                            $attr['disabled'] = 'disabled';
+                            $vars->pay_with = 'details';
+                        }
+
+                        $this->Form->fieldRadio('pay_with', 'account', (isset($vars->pay_with) ? $vars->pay_with : 'account') == 'account', $attr);
+                        unset($attr);
+                        $this->Form->label($this->_('AdminClients.makepayment.field_useaccount', true), 'pay_with_account', ['class' => 'inline']);
+
+                        if ((isset($payment_accounts) ? $payment_accounts : null)) {
+                            $this->Form->fieldSelect('payment_account', $payment_accounts, (isset($vars->payment_account) ? $vars->payment_account : null));
+                        }
+                        ?>
+                    </li>
+                    <?php
+                    if (!empty($payment_types)) {
+                    ?>
+                    <li>
+                        <?php
+                        $this->Form->fieldRadio('pay_with', 'details', (isset($vars->pay_with) ? $vars->pay_with : null) == 'details', ['id' => 'pay_with_details']);
+                        $this->Form->label($this->_('AdminClients.makepayment.field_newdetails', true), 'pay_with_details', ['class' => 'inline']);
+                        $this->Form->fieldSelect('payment_type', $payment_types, (isset($vars->payment_type) ? $vars->payment_type : 'cc'));
+                        ?>
+                    </li>
+                    <?php
+                    }
+                    ?>
+
+                    <li>
+                        <h4 class="no_pad">
+                            <?php
+                            if ((isset($invoice) ? $invoice : null)) {
+                            ?>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/recordpayment/' . (isset($invoice->client_id) ? $invoice->client_id : null) . '/' . (isset($invoice->id) ? $invoice->id : null) . '/');?>">
+                                <?php $this->_('AdminClients.makepayment.record_invoice', false, (isset($invoice->id_code) ? $invoice->id_code : null));?>
+                            </a>
+                            <?php
+                            } else {
+                            ?>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/recordpayment/' . (isset($client->id) ? $client->id : null) . '/');?>">
+                                <?php $this->_('AdminClients.makepayment.record_payment');?>
+                            </a>
+                            <?php
+                            }
+                            ?>
+                        </h4>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="payment_details">
+                <?php echo (isset($contact_info) ? $contact_info : null);?>
+                <div id="payment_details_cc">
+                    <?php echo (isset($cc_info) ? $cc_info : null);?>
+                </div>
+                <div id="payment_details_ach">
+                    <?php echo (isset($ach_info) ? $ach_info : null);?>
+                </div>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.makepayment.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#payment_details").hide();
+        $("#payment_details_cc").hide();
+        $("#payment_details_ach").hide();
+
+        togglePay($("#right_container input[name='pay_with']:checked").val());
+
+        $("#right_container input[name='pay_with']").change(function() {
+            togglePay($(this).val());
+        });
+
+        $("#right_container select[name='payment_type']").change(function() {
+            togglePayDetails($(this).val());
+        });
+    });
+
+    function togglePayDetails(val) {
+        if (val == "cc") {
+            $("#payment_details_ach").hide();
+            $("#payment_details_cc").show();
+        }
+        else {
+            $("#payment_details_cc").hide();
+            $("#payment_details_ach").show();
+        }
+    }
+
+    function togglePay(val) {
+        if (val == "details") {
+            $("#payment_details").show();
+            togglePayDetails($("#right_container select[name='payment_type']").val());
+        }
+        else
+            $("#payment_details").hide();
+    }
+</script>

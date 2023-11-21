@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html dir="<?php echo (in_array($this->_('AppController.lang.dir', true), ['ltr', 'rtl']) ? $this->_('AppController.lang.dir', true) : 'ltr');?>">
+    <head>
+        <meta name="referrer" content="never" />
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="<?php echo $this->view_dir;?>images/favicon.ico" />
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/application.min.css">
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/font-awesome.min.css">
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/font-awesome-shims.min.css">
+        <title><?php (print (isset($title) ? $this->Html->safe($title) : null));?></title>
+    </head>
+    <body>
+        <?php echo (isset($content) ? $content : null);?>
+
+        <script src="<?php echo $this->Html->safe($this->view_dir . 'javascript/jquery.min.js');?>"></script>
+        <script src="<?php echo $this->Html->safe($this->view_dir . 'javascript/jquery-migrate.min.js');?>"></script>
+        <script src="<?php echo $this->Html->safe($this->view_dir . 'javascript/bootstrap.min.js');?>"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                displayParts();
+                $("input[name='agree']").change(displayParts);
+
+                function displayParts() {
+                    if ($("input[name='agree']").is(':checked')) {
+                        $(".requirements").show();
+                        $(".db_info").show();
+                    }
+                    else {
+                        $(".requirements").hide();
+                        $(".db_info").hide();
+                    }
+                }
+
+                $("form").submit(function(e) {
+                    $("input[type='submit']").hide();
+                    $(".install_progress .progress").show();
+
+                    setInterval(animateProgress, 500);
+                });
+
+                $("#reload").click(function () {
+                    $("#reload").prop('type', 'submit');
+                    $("#reload").submit();
+                });
+
+                var progressWidth = 0;
+                function animateProgress() {
+                    var step = 5;
+                    var elem = $(".install_progress .progress-bar");
+                    progressWidth = Math.min(95, progressWidth + step);
+                    elem.width(progressWidth + '%');
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,118 @@
+
+        <?php
+        $tabs = [
+            ['name'=>$this->_('PhpidsManagePlugin.index.tab_settings', true), 'current'=>true, 'attributes'=>['href'=>$this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $plugin_id : null)]],
+            ['name'=>$this->_('PhpidsManagePlugin.index.tab_logs', true), 'attributes'=>['href'=>$this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $plugin_id : null) . '/?action=logs']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('PhpidsManagePlugin.index.boxtitle_phpids', true));
+        $this->Form->create();
+        ?>
+
+        <div class="inner">
+
+            <div class="title_row first">
+                <h3><?php $this->_('PhpidsManagePlugin.index.heading_general');?></h3>
+            </div>
+
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('compound_impact', 'true', (isset($vars->compound_impact) ? $vars->compound_impact : null) == 'true', ['id' => 'compound_impact']);
+                        $this->Form->label($this->_('PhpidsManagePlugin.index.field.compound_impact', true), 'compound_impact', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('PhpidsManagePlugin.index.field.rotate_impact', true), 'rotate_impact');
+                        $this->Form->fieldSelect('rotate_impact', $intervals, (isset($vars->rotate_impact) ? $vars->rotate_impact : null), ['id' => 'rotate_impact']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="title_row">
+                <h3><?php $this->_('PhpidsManagePlugin.index.heading_logging');?></h3>
+            </div>
+
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('PhpidsManagePlugin.index.field.log_min_score', true), 'log_min_score');
+                        $this->Form->fieldText('log_min_score', (isset($vars->log_min_score) ? $vars->log_min_score : null), ['id' => 'log_min_score', 'class' => 'small']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('PhpidsManagePlugin.index.field.log_rotate_freq', true), 'log_rotate_freq');
+                        $this->Form->fieldSelect('log_rotate_freq', $log_days, (isset($vars->log_rotate_freq) ? $vars->log_rotate_freq : null), ['id' => 'log_rotate_freq']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="title_row">
+                <h3><?php $this->_('PhpidsManagePlugin.index.heading_email');?></h3>
+            </div>
+
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('PhpidsManagePlugin.index.field.email_min_score', true), 'email_min_score');
+                        $this->Form->fieldText('email_min_score', (isset($vars->email_min_score) ? $vars->email_min_score : null), ['id' => 'email_min_score', 'class' => 'small']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('PhpidsManagePlugin.index.field.email_addresses', true), 'email_addresses');
+                        $this->Form->fieldTextArea('email_addresses', (isset($vars->email_addresses) ? $vars->email_addresses : null), ['id' => 'email_addresses']);
+                        ?>
+                    </li>
+                    <li>
+                        <h4>
+                            <i class="fa fa-envelope-open-text"></i>
+                            <span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/emails/edittemplate/' . (isset($email_group->id) ? $email_group->id : null) . '/');?>"><?php $this->_('PhpidsManagePlugin.index.text.edit_template');?></a></span>
+                        </h4>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="title_row">
+                <h3><?php $this->_('PhpidsManagePlugin.index.heading_redirect');?></h3>
+            </div>
+
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('PhpidsManagePlugin.index.field.redirect_min_score', true), 'redirect_min_score');
+                        $this->Form->fieldText('redirect_min_score', (isset($vars->redirect_min_score) ? $vars->redirect_min_score : null), ['id' => 'redirect_min_score', 'class' => 'small']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('PhpidsManagePlugin.index.field.redirect_url', true), 'redirect_url');
+                        $this->Form->fieldText('redirect_url', (isset($vars->redirect_url) ? $vars->redirect_url : null), ['id' => 'redirect_url']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('PhpidsManagePlugin.index.field.submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

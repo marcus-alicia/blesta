@@ -1,0 +1,9 @@
+{
+    "name": "blesta/blue_pay",
+    "description": "Blue Pay",
+    "license": "proprietary",
+    "type": "blesta-gateway-merchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

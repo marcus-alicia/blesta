@@ -1,0 +1,143 @@
+        <?php
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php
+            if ((isset($message) ? $message : null)) {
+                echo (isset($message) ? $message : null);
+            }
+
+            $tabs = [
+                [
+                    'name' => $this->_('AdminExcludedPackages.index.tab_available_packages', true),
+                    'current' => (($tab ?? 'available_packages') == 'available_packages'),
+                    'attributes' => [
+                        'class' => 'available_packages',
+                        'href' => '#'
+                    ]
+                ],
+                [
+                    'name' => $this->_('AdminExcludedPackages.index.tab_hidden_packages', true),
+                    'current' => (($tab ?? null) == 'hidden_packages'),
+                    'attributes' => [
+                        'class' => 'hidden_packages',
+                        'href' => '#'
+                    ]
+                ]
+            ];
+            ?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'order_form_styles']);
+                $this->Widget->create($this->_('AdminExcludedPackages.index.boxtitle_excluded_packages', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+
+                ?>
+                <div class="inner">
+                    <div class="order_tab" id="tab_available_packages">
+                        <?php
+                        if (!empty($packages)) {
+                        ?>
+                        <div class="title_row first">
+                            <h3><?php $this->_('AdminExcludedPackages.index.heading_available_packages');?></h3>
+                        </div>
+                        <div class="pad">
+                            <div class="row">
+                                <?php
+                                foreach ($packages as $package) {
+                                ?>
+                                <div class="col-md-6 col-lg-4">
+                                    <?php
+                                    $this->Form->fieldCheckbox('package_' . $package->id, $package->id, (isset($vars['package_' . $package->id]) ? $vars['package_' . $package->id] : null) == $package->id, ['id' => 'package_' . $package->id]);
+                                    $this->Form->label($package->name, 'package_' . $package->id, ['class' => 'inline']);
+                                    ?>
+                                    <small><?php echo $this->Html->safe(isset($package->module_name) ? '(' . $package->module_name . ')' : null);?></small>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminExcludedPackages.index.field_updatesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                        </div>
+                        <?php
+                        } else {
+                        ?>
+                        <div class="empty_section">
+                            <div class="empty_box"><?php $this->_('AdminExcludedPackages.index.text_no_packages');?></div>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="order_tab" id="tab_hidden_packages">
+                        <?php
+                        if (!empty($hidden_packages)) {
+                        ?>
+                        <div class="title_row first">
+                            <h3><?php $this->_('AdminExcludedPackages.index.heading_hidden_packages');?></h3>
+                        </div>
+                        <div class="pad">
+                            <div class="row">
+                                <?php
+                                foreach ($hidden_packages as $hidden_package) {
+                                ?>
+                                <div class="col-md-6 col-lg-4">
+                                    <?php
+                                    $this->Form->fieldCheckbox('package_' . $hidden_package->id, $hidden_package->id, (isset($vars['package_' . $hidden_package->id]) ? $vars['package_' . $hidden_package->id] : null) == $hidden_package->id, ['id' => 'package_' . $hidden_package->id]);
+                                    $this->Form->label($hidden_package->name, 'package_' . $hidden_package->id, ['class' => 'inline']);
+                                    ?>
+                                    <small><?php echo $this->Html->safe(isset($hidden_package->module_name) ? '(' . $hidden_package->module_name . ')' : null);?></small>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminExcludedPackages.index.field_updatesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                        </div>
+                        <?php
+                        } else {
+                        ?>
+                        <div class="empty_section">
+                            <div class="empty_box"><?php $this->_('AdminExcludedPackages.index.text_no_packages');?></div>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Set tabs
+        $('.tabs_content .order_tab').hide();
+        $('.tabs_content #tab_<?php echo ($tab ?? 'available_packages');?>').show();
+        $('.tab_slider ul li').on('click', function() {
+            var tab = $(this).find('a').attr('class');
+
+            $('.tab_slider ul li').removeClass('current');
+            $(this).addClass('current');
+            $('.tabs_content .order_tab').hide();
+            $('.tabs_content .order_tab#tab_' + tab).show();
+        });
+    });
+
+</script>

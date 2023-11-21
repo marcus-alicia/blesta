@@ -1,0 +1,22 @@
+
+    <div id="change_password">
+        <h4><?php $this->_('Apnscp.tab_client_actions.change_password'); ?></h4>
+
+        <?php
+        $this->Form->create($this->base_uri . 'services/manage/' . (isset($service_id) ? $service_id : null) . '/tabClientActions/');
+        ?>
+        <div class="col-md-12">
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('Apnscp.tab_client_actions.field_apnscp_password', true), 'apnscp_password');
+                $this->Form->fieldPassword('apnscp_password', ['id' => 'apnscp_password', 'class' => 'form-control', 'placeholder' => $this->_('Apnscp.tab_client_actions.field_apnscp_password', true)]);
+                ?>
+            </div>
+        </div>
+        <button class="btn btn-light float-right">
+            <i class="fas fa-edit"></i> <?php $this->_('Apnscp.tab_client_actions.field_password_submit'); ?>
+        </button>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>

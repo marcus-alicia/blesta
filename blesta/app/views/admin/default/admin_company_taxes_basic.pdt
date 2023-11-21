@@ -1,0 +1,68 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyTaxes.basic.boxtitle_basic', true));
+                $this->Form->create();
+                ?>
+                <div class="inner">
+                    <div class="title_row first"><h3><?php $this->_('AdminCompanyTaxes.basic.heading_general');?></h3></div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('enable_tax', 'true', (isset($vars['enable_tax']) && ($vars['enable_tax'] == 'true') ? true : false), ['id' => 'enable_tax']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.basic.field_enable_tax', true), 'enable_tax', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.basic.note_enable_tax');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('cascade_tax', 'true', (isset($vars['cascade_tax']) && ($vars['cascade_tax'] == 'true') ? true : false), ['id' => 'cascade_tax']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.basic.field_cascade_tax', true), 'cascade_tax', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.basic.note_cascade_tax');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('setup_fee_tax', 'true', (isset($vars['setup_fee_tax']) && ($vars['setup_fee_tax'] == 'true') ? true : false), ['id' => 'setup_fee_tax']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.basic.field_setup_fee_tax', true), 'setup_fee_tax', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.basic.note_setup_fee_tax');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('cancelation_fee_tax', 'true', (isset($vars['cancelation_fee_tax']) && ($vars['cancelation_fee_tax'] == 'true') ? true : false), ['id' => 'cancelation_fee_tax']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.basic.field_cancelation_fee_tax', true), 'cancelation_fee_tax', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyTaxes.basic.note_cancelation_fee_tax');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyTaxes.basic.field_taxid', true), 'tax_id');?>
+                                <?php $this->Form->fieldText('tax_id', ($vars['tax_id'] ?? null), ['id' => 'tax_id']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <?php
+                    if (count($tax_fields ?? []) > 0) {
+                        foreach ($tax_fields as $tax_field) {
+                    ?>
+                    <div class="title_row"><h3><?php $this->_('AdminCompanyTaxes.basic.heading_tax_provider', false, $tax_field['name']);?></h3></div>
+                    <div class="pad">
+                        <ul>
+                            <?php echo $tax_field['fields'];?>
+                        </ul>
+                    </div>
+                    <?php
+                        }
+                    }
+                    ?>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyTaxes.basic.field_addsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

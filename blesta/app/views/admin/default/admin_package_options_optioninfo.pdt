@@ -1,0 +1,94 @@
+        <?php
+        if (!empty($package_option->values)) {
+            $display_class = ((isset($package_option->type) ? $package_option->type : null) == 'quantity') ? '' : ' style="display:none;"';
+            $show_status = in_array((isset($package_option->type) ? $package_option->type : null), ['radio', 'select']);
+        ?>
+        <div class="group_title_row">
+            <div class="title_row first">
+                <h3><?php $this->_('AdminPackageOptions.optioninfo.heading_options');?></h3>
+            </div>
+            <table class="table option_table">
+                <thead>
+                    <tr class="heading_row">
+                        <td></td>
+                        <td><span><?php $this->_('AdminPackageOptions.optioninfo.heading_name');?></span></td>
+                        <td><span><?php $this->_('AdminPackageOptions.optioninfo.heading_value');?></span></td>
+                        <td<?php echo $display_class;?>><span><?php $this->_('AdminPackageOptions.optioninfo.heading_min');?></span></td>
+                        <td<?php echo $display_class;?>><span><?php $this->_('AdminPackageOptions.optioninfo.heading_max');?></span></td>
+                        <td<?php echo $display_class;?>><span><?php $this->_('AdminPackageOptions.optioninfo.heading_step');?></span></td>
+                        <?php
+                        if ($show_status) {
+                        ?>
+                        <td><span><?php $this->_('AdminPackageOptions.optioninfo.heading_status');?></span></td>
+                        <?php
+                        }
+                        ?>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                // Display all package options
+                $i = 0;
+                foreach ((isset($package_option->values) ? $package_option->values : []) as $value) {
+                ?>
+                    <tr class="<?php echo $this->Html->concat(' ', ($i++ % 2 == 1) ? 'odd_row' : '', 'option_row');?>" id="values_<?php (print (isset($value->id) ? $this->Html->safe($value->id) : null));?>">
+                        <td style="width:17px;" class="center"><i class="fas fa-arrows-alt movable"></i></td>
+                        <td><?php (print (isset($value->name) ? $this->Html->safe($value->name) : null));?></td>
+                        <td><?php (print (isset($value->value) ? $this->Html->safe($value->value) : null));?></td>
+                        <td<?php echo $display_class;?>><?php (print (isset($value->min) ? $this->Html->safe($value->min) : null));?></td>
+                        <td<?php echo $display_class;?>><?php (print (isset($value->max) ? $this->Html->safe($value->max) : null));?></td>
+                        <td<?php echo $display_class;?>><?php (print (isset($value->step) ? $this->Html->safe($value->step) : null));?></td>
+                        <?php
+                        if ($show_status) {
+                            $temp_status = (isset($value->status) ? $value->status : null);
+                        ?>
+                        <td><?php echo $this->Html->safe((isset($value_statuses[$temp_status]) ? $value_statuses[$temp_status] : null));?></td>
+                        <?php
+                        }
+                        ?>
+                    </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box"><?php $this->_('AdminPackageOptions.optioninfo.no_results');?></div>
+        </div>
+        <?php
+        }
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Allow sort of options
+        var options = {
+            // Sort items on the list
+            update: function(event, ui) {
+                var params = {
+                    option_id: $(this).closest("tr.expand_details").attr("id").replace("package_option_", ""),
+                    _csrf_token: "<?php echo $this->Form->getCsrfToken();?>",
+                }
+
+                $(this).blestaRequest("POST", '<?php echo $this->Html->safe($this->base_uri . 'package_options/ordervalues/');?>', $(this).sortable("serialize") + "&" + $.param(params),
+                // Success
+                null,
+                // Error
+                null,
+                {dataType: 'json'});
+            }
+        }
+        $('table.table.option_table tbody').blestaSortable(false, options);
+        $('.option_table tbody tr').hover(
+            function() {
+                $('.movable', this).show();
+            },
+            function() {
+                $('.movable', this).hide();
+            }
+        );
+    });
+</script>

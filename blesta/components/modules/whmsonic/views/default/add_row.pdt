@@ -1,0 +1,50 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons([]);
+        $this->Widget->create($this->_('Whmsonic.add_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('Whmsonic.add_row.basic_title');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Whmsonic.row_meta.server_name', true), 'server_name');
+                        $this->Form->fieldText('server_name', (isset($vars->server_name) ? $vars->server_name : null));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Whmsonic.row_meta.ip_address', true), 'ip_address');
+                        $this->Form->fieldText('ip_address', (isset($vars->ip_address) ? $vars->ip_address : null));
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('use_ssl', 'true', (isset($vars->use_ssl) ? $vars->use_ssl : 'true') == 'true', ['id' => 'use_ssl']);
+                        $this->Form->label($this->_('Whmsonic.row_meta.use_ssl', true), 'use_ssl', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Whmsonic.row_meta.password', true), 'password');
+                        $this->Form->fieldPassword('password', (isset($vars->password) ? $vars->password : null));
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="button_row"><a class="btn btn-primary pull-right submit" href="#"><?php $this->_('Whmsonic.add_row.add_btn');?></a></div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

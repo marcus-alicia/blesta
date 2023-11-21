@@ -1,0 +1,53 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('Logicboxes.add_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('Logicboxes.add_row.basic_title');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Logicboxes.row_meta.registrar', true), 'registrar');
+                        $this->Form->fieldText('registrar', (isset($vars->registrar) ? $vars->registrar : null), ['id' => 'registrar']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Logicboxes.row_meta.reseller_id', true), 'reseller_id');
+                        $this->Form->fieldText('reseller_id', (isset($vars->reseller_id) ? $vars->reseller_id : null), ['id' => 'reseller_id']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Logicboxes.row_meta.key', true), 'key');
+                        $this->Form->fieldText('key', (isset($vars->key) ? $vars->key : null), ['id' => 'key']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('sandbox', 'true', (isset($vars->sandbox) ? $vars->sandbox : null) == 'true', ['id' => 'sandbox']);
+                        $this->Form->label($this->_('Logicboxes.row_meta.sandbox', true), 'sandbox', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Logicboxes.!tooltip.row_meta.sandbox');?></div></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('Logicboxes.add_row.add_btn', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

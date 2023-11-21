@@ -1,0 +1,10 @@
+{
+    "name": "blesta/stripe_payments",
+    "description": "Stripe Payments",
+    "license": "proprietary",
+    "type": "blesta-gateway-merchant",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "stripe/stripe-php": "~7.0"
+    }
+}

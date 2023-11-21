@@ -1,0 +1,35 @@
+                    <?php
+                    // Display custom client fields
+                    if (!empty($custom_fields)) {
+                        foreach ($custom_fields as $field) {
+                        ?>
+                    <li>
+                            <?php
+                            // Set a unique field ID
+                            $field_id = ($custom_field_prefix ?? null) . ($field->id ?? null);
+
+                            // Show each custom field
+                            switch ($field->type) {
+                                case 'text':
+                                    $this->Form->label(($field->real_name ?? null), $field_id, null, true);
+                                    $this->Form->fieldText($field_id, ($vars->{$field_id} ?? ($field->default ?? null)), ['id' => $field_id]);
+                                    break;
+                                case 'select':
+                                    $this->Form->label(($field->real_name ?? null), $field_id, null, true);
+                                    $this->Form->fieldSelect($field_id, ($field->values ?? []), ($vars->{$field_id} ?? ($field->default ?? null)), ['id' => $field_id]);
+                                    break;
+                                case 'textarea':
+                                    $this->Form->label(($field->real_name ?? null), $field_id, null, true);
+                                    $this->Form->fieldTextarea($field_id, ($vars->{$field_id} ?? ($field->default ?? null)), ['id' => $field_id]);
+                                    break;
+                                case 'checkbox':
+                                    $this->Form->fieldCheckbox($field_id, ($field->values ?? null), ($vars->{$field_id} ?? ($field->default ?? null)), ['id' => $field_id]);
+                                    $this->Form->label(($field->real_name ?? null), $field_id, ['class' => 'inline'], true);
+                                    break;
+                            }
+                            ?>
+                    </li>
+                        <?php
+                        }
+                    }
+                    ?>

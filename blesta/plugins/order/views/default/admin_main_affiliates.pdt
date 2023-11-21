@@ -1,0 +1,185 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            [
+                'name' => $this->_('AdminMain.affiliates.boxtitle_client', true, (isset($client->id_code) ? $this->Html->safe($client->id_code) : null), (isset($client->first_name) ? $this->Html->safe($client->first_name) : null), (isset($client->last_name) ? $this->Html->safe($client->last_name) : null)),
+                'attributes' => ['href' => $this->Html->safe($this->base_uri . 'clients/view/' . (isset($client->id) ? $client->id : null))]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinks($links);
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->create($this->_('AdminMain.affiliates.boxtitle_affiliates', true), ['id' => 'admin_main'], (isset($render_section) ? $render_section : null));
+        $this->Form->create($this->Html->safe($this->base_uri) . 'plugin/order/admin_main/updateaffiliatesettings/' . (isset($client->id) ? $client->id : null), ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="title_row first"><h3><?php $this->_('AdminMain.affiliates.heading_statistics');?></h3></div>
+            <svg id="graph_affiliate" class="graph"></svg>
+
+            <div class="title_row"><h3><?php $this->_('AdminMain.affiliates.heading_affiliates');?></h3></div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.affiliates.field_order_frequency', true), 'order_frequency', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminMain.affiliates.tooltip_order_frequency', true));?></div></span>
+                        <?php
+                        $this->Form->fieldSelect('order_frequency', (isset($order_frequencies) ? $order_frequencies : []), (isset($vars['order_frequency']) ? $vars['order_frequency'] : null), ['id' => 'order_frequency', 'class' => 'block']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('order_recurring', 'true', (isset($vars['order_recurring']) ? $vars['order_recurring'] : 'false') == 'true', ['id' => 'order_recurring']);
+                        $this->Form->label($this->_('AdminMain.affiliates.field_order_recurring', true), 'order_recurring', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminMain.affiliates.tooltip_order_recurring', true));?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.affiliates.field_maturity_days', true), 'maturity_days', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminMain.affiliates.tooltip_maturity_days', true));?></div></span>
+                        <?php
+                        $this->Form->fieldText('maturity_days', (isset($vars['maturity_days']) ? $vars['maturity_days'] : null), ['id' => 'maturity_days', 'class' => 'block']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.affiliates.field_commission_type', true), 'commission_type', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminMain.affiliates.tooltip_commission_type', true));?></div></span>
+                        <?php
+                        $this->Form->fieldSelect('commission_type', (isset($commission_types) ? $commission_types : []), (isset($vars['commission_type']) ? $vars['commission_type'] : null), ['id' => 'commission_type', 'class' => 'block']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.affiliates.field_commission_amount', true), 'commission_amount', ['class' => 'inline']);
+                        $this->Form->fieldText('commission_amount', (isset($vars['commission_amount']) ? $vars['commission_amount'] : null), ['id' => 'commission_amount', 'class' => 'block']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.affiliates.field_min_withdrawal_amount', true), 'min_withdrawal_amount');
+                        $this->Form->fieldText('min_withdrawal_amount', (isset($vars['min_withdrawal_amount']) ? $vars['min_withdrawal_amount'] : null), ['id' => 'min_withdrawal_amount']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.affiliates.field_max_withdrawal_amount', true), 'max_withdrawal_amount');
+                        $this->Form->fieldText('max_withdrawal_amount', (isset($vars['max_withdrawal_amount']) ? $vars['max_withdrawal_amount'] : null), ['id' => 'max_withdrawal_amount']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.affiliates.field_withdrawal_currency', true), 'withdrawal_currency');
+                        $this->Form->fieldSelect('withdrawal_currency', (isset($currencies) ? $currencies : []), (isset($vars['withdrawal_currency']) ? $vars['withdrawal_currency'] : null), ['id' => 'withdrawal_currency']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row"><h3><?php $this->_('AdminMain.affiliates.heading_referral_link');?></h3></div>
+            <div class="pad">
+                <p><?php echo (isset($referral_link) ? $this->Html->safe($referral_link) : null);?></p>
+                <p><?php $this->_('AdminMain.affiliates.text_code_order_form', false, (isset($affiliate->code) ? $affiliate->code : '[code]'));?></p>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.affiliates.submit_settings', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+                <a class="btn btn-default pull-right ajax" href="<?php echo $this->Html->safe($this->base_uri);?>plugin/order/admin_main/affiliates/<?php echo (isset($client->id) ? $this->Html->safe($client->id) : null);?>"><?php $this->_('AdminMain.affiliates.submit_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript" src="<?php echo $this->Html->safe(VENDORWEBDIR . 'd3/d3.min.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->Html->safe(VENDORWEBDIR . 'nvd3/nv.d3.min.js');?>"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->Html->safe(VENDORWEBDIR . 'nvd3/nv.d3.min.css?ver=1.4.0');?>" />
+
+<script type="text/javascript">
+    var statistics = [
+        <?php
+        foreach ($statistics as $key => $values) {
+            if (!empty($values)) {
+        ?>
+        {
+            "key" : "<?php $this->_('AdminMain.affiliates.graph_' . $key);?>",
+            "values" : [
+                <?php
+                foreach ($values as $timestamp => $value) {
+                    echo '[' . $timestamp . ', ' . $value . '], ';
+                }
+                ?>
+            ]
+        },
+        <?php
+            }
+        }
+        ?>
+    ];
+
+    var colors = d3.scale.category20c().range();
+    var chart;
+
+    nv.addGraph(function() {
+        chart = nv.models.stackedAreaWithFocusChart()
+            .useInteractiveGuideline(true)
+            .x(function(d) { return d[0] })
+            .y(function(d) { return d[1] })
+            .controlLabels({stacked: "Stacked"})
+            .duration(300);
+        chart.brushExtent(
+            [
+                <?php echo $date_range['start']; ?>,
+                <?php echo $date_range['end']; ?>
+            ]
+        );
+
+        chart.xAxis.tickFormat(function(d) { return d3.time.format('%x')(new Date(d * 1000)) });
+        chart.x2Axis.tickFormat(function(d) { return d3.time.format('%x')(new Date(d * 1000)) });
+        chart.yAxis.tickFormat(d3.format('d'));
+        chart.y2Axis.tickFormat(d3.format('d'));
+        chart.legend.vers('furious');
+
+        // Set line colors
+        chart.color(function (d, i) {
+            return colors[i % colors.length];
+        });
+        // Line interpolation between points
+        chart.interpolate("basis");
+        // Set total language
+        chart.totalLabel('<?php $this->_('AppController.graphs.label.total');?>');
+        // Set control label language
+        chart.controlLabels({
+            "stacked":"<?php $this->_('AppController.graphs.control_label.stacked');?>",
+            "stream":"<?php $this->_('AppController.graphs.control_label.stream');?>",
+            "expanded":"<?php $this->_('AppController.graphs.control_label.expanded');?>"
+        });
+
+        d3.select('#graph_affiliate')
+            .datum(statistics)
+            .transition()
+            .duration(1000)
+            .call(chart)
+            .each('start', function() {
+                setTimeout(function() {
+                    d3.selectAll('#graph_affiliate *').each(function() {
+                        if(this.__transition__)
+                            this.__transition__.duration = 1;
+                    })
+                }, 0)
+            });
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+    });
+</script>

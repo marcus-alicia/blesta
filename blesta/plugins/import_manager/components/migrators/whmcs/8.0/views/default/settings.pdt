@@ -1,0 +1,57 @@
+
+    <ul>
+        <?php
+        if (!extension_loaded("gmp")) {
+        ?>
+        <li>
+            <h4><?php $this->_("Whmcs8_0.!notice.gmp");?></h4>
+        </li>
+        <?php
+        }
+        ?>
+        <li>
+            <?php
+            $this->Form->fieldHidden("step", "settings");
+            $this->Form->label($this->_("Whmcs8_0.settings.host", true), "host");
+            $this->Form->fieldText("host", (isset($vars->host) ? $vars->host : null), array('id' => "host"));
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_("Whmcs8_0.settings.database", true), "database");
+            $this->Form->fieldText("database", (isset($vars->database) ? $vars->database : null), array('id' => "database"));
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_("Whmcs8_0.settings.user", true), "user");
+            $this->Form->fieldText("user", (isset($vars->user) ? $vars->user : null), array('id' => "user"));
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_("Whmcs8_0.settings.pass", true), "pass");
+            $this->Form->fieldPassword("pass", array('id' => "pass", 'value' => (isset($vars->pass) ? $vars->pass : null)));
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_("Whmcs8_0.settings.key", true), "key");
+            $this->Form->fieldText("key", (isset($vars->key) ? $vars->key : null), array('id' => "key"));
+            ?>
+            <span class="tooltip"><?php $this->_("AppController.tooltip.text");?><div><?php $this->_("Whmcs8_0.settings.key.info");?></div></span>
+        </li>
+        <li>
+            <?php
+            $this->Form->fieldCheckbox("balance_credit", "true", (isset($vars->balance_credit) ? $vars->balance_credit : "true") == "true", array('id' => "balance_credit"));
+            $this->Form->label($this->_("Whmcs8_0.settings.balance_credit", true), "balance_credit", array('class' => "inline"));
+            ?>
+            <span class="tooltip"><?php $this->_("AppController.tooltip.text");?><div><?php $this->_("Whmcs8_0.settings.balance_credit.info");?></div></span>
+        </li>
+        <li>
+            <?php
+            $this->Form->fieldCheckbox("enable_debug", "true", (isset($vars->enable_debug) ? $vars->enable_debug : null) == "true", array('id' => "enable_debug"));
+            $this->Form->label($this->_("Whmcs8_0.settings.enable_debug", true), "enable_debug", array('class' => "inline"));
+            ?>
+        </li>
+    </ul>

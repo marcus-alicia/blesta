@@ -1,0 +1,13 @@
+{
+    "version": "1.0.1",
+    "name": "AuthorizeNetAcceptjs.name",
+    "description": "AuthorizeNetAcceptjs.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "currencies": ["CAD", "GBP", "EUR", "USD"],
+    "signup_url": "http://go.evopayments.us/blesta"
+}

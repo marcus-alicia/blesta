@@ -1,0 +1,10 @@
+{
+    "name": "blesta/teamspeak",
+    "description": "TeamSpeak",
+    "license": "proprietary",
+    "type": "blesta-module",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "phillipsdata/priority-schedule":"^1.0"
+    }
+}

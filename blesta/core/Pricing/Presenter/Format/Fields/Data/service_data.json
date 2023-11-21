@@ -1,0 +1,8 @@
+{
+    "name":"name",
+    "pricing_id":"pricing_id",
+    "qty":"qty",
+    "price":"override_price",
+    "currency":"override_currency",
+    "options":"configoptions"
+}

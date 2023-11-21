@@ -1,0 +1,9 @@
+{
+    "name": "blesta/skrill",
+    "description": "Skrill",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "version": "2.11.3",
+    "type": "registrar",
+    "name": "Enom.name",
+    "description": "Enom.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        },
+        {
+            "name": "Sponsored by 1983 Ltd (London, UK)",
+            "url": "http://83.io"
+        }
+    ],
+    "package": {
+        "name_key": "domain"
+    },
+    "service": {
+        "name_key": "domain"
+    },
+    "module": {
+        "row": "Enom.module_row",
+        "rows": "Enom.module_row_plural",
+        "row_key": "user"
+    },
+    "email_tags": {
+        "module": [],
+        "package": [],
+        "service": ["domain"]
+    }
+}

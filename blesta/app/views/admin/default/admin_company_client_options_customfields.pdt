@@ -1,0 +1,96 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminCompanyClientOptions.customfields.categorylink_addfield', true),
+                            'href' => $this->base_uri . 'settings/company/clientoptions/addcustomfield/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinks([['name' => ''], 'attributes' => ['href' => '']]);
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminCompanyClientOptions.customfields.boxtitle_browse', true));
+
+                // Determine how many custom fields are displayed on this page
+                $num_custom_fields = 0;
+
+                if (is_array($groups) && ($num_groups = count($groups)) > 0) {
+                    for ($i = 0, $k = 0; $i < $num_groups; $i++) {
+                        // Skip client groups with no custom fields
+                        if (empty($groups[$i]->fields)) {
+                            continue;
+                        }
+
+                        $num_custom_fields++;
+                        ?>
+                        <div class="title_row<?php echo ($k++ == 0) ? ' first' : ''; ?>"><h3><?php (print (isset($groups[$i]->name) ? $this->Html->safe($groups[$i]->name) : null));?></h3></div>
+                        <table class="table custom_fields">
+                            <tr class="heading_row">
+                                <td><span><?php $this->_('AdminCompanyClientOptions.customfields.text_name');?></span></td>
+                                <td><span><?php $this->_('AdminCompanyClientOptions.customfields.text_type');?></span></td>
+                                <td><span><?php $this->_('AdminCompanyClientOptions.customfields.text_required');?></span></td>
+                                <td><span><?php $this->_('AdminCompanyClientOptions.customfields.text_visible');?></span></td>
+                                <td><span><?php $this->_('AdminCompanyClientOptions.customfields.text_read_only');?></span></td>
+                                <td class="last"><span><?php $this->_('AdminCompanyClientOptions.customfields.text_options');?></span></td>
+                            </tr>
+                            <?php
+                            if (is_array($groups[$i]->fields)) {
+                                $fields = $groups[$i]->fields;
+                                for ($j = 0, $num_fields = count($fields); $j < $num_fields; $j++) {
+                            ?>
+                            <tr<?php echo ($j % 2 == 1) ? ' class="odd_row"' : '';?>>
+                                <td><?php (print (isset($fields[$j]->real_name) ? $this->Html->safe(strip_tags($fields[$j]->real_name)) : null));?></td>
+                                <td><?php echo (isset($types[$fields[$j]->type]) ? $types[$fields[$j]->type] : null);?></td>
+                                <td><i class="fas fa-<?php echo !empty($fields[$j]->regex) ? 'check' : 'times';?>"></i></td>
+                                <td><i class="fas fa-<?php echo ((isset($fields[$j]->show_client) ? $this->Html->safe($fields[$j]->show_client) : null) == 1) ? 'check' : 'times';?>"></i></td>
+                                <td><i class="fas fa-<?php echo ((isset($fields[$j]->read_only) ? $this->Html->safe($fields[$j]->read_only) : null) == 1) ? 'check' : 'times';?>"></i></td>
+                                <td class="last">
+                                    <a href="<?php echo $this->base_uri . 'settings/company/clientoptions/editcustomfield/' . $fields[$j]->id . '/';?>"><?php $this->_('AdminCompanyClientOptions.customfields.option_edit');?></a>,
+                                    <?php
+                                    $this->Form->create($this->base_uri . 'settings/company/clientoptions/deletecustomfield/');
+                                    $this->Form->fieldHidden('id', (isset($fields[$j]->id) ? $this->Html->safe($fields[$j]->id) : null));
+                                    ?>
+                                    <a class="manage" href="<?php echo $this->base_uri . 'settings/company/clientoptions/deletecustomfield/' . (isset($fields[$j]->id) ? $this->Html->safe($fields[$j]->id) : null) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminCompanyClientOptions.customfields.confirm_delete', true));?>"><?php $this->_('AdminCompanyClientOptions.customfields.option_delete');?></a>
+                                    <?php
+                                    $this->Form->end();
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </table>
+                        <?php
+                    }
+                }
+
+                if ($num_custom_fields == 0) {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminCompanyClientOptions.customfields.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Handle confirmation
+                $('table.custom_fields a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

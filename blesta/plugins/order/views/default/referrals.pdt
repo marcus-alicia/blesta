@@ -1,0 +1,80 @@
+    <?php
+    // Don't show this container when only rendering the widget section
+    if (!(isset($render_section) ? $render_section : null)) {
+    ?>
+    <div class="col-md-3">
+        <?php echo (isset($tabs) ? $tabs : null);?>
+    </div>
+    <div class="col-md-9">
+    <?php
+    }
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            ['name'=>$this->_('Referrals.index.category_mature', true) . ' <span class="badge">' . (isset($status_count['mature']) ? $this->Html->safe($status_count['mature']) : null) . '</span>', 'current'=>((isset($status) ? $status : null) == 'mature' ? true : false), 'attributes'=>['href'=>$this->base_uri . 'order/referrals/index/mature/', 'class'=>'ajax']],
+            ['name'=>$this->_('Referrals.index.category_pending', true) . ' <span class="badge">' . (isset($status_count['pending']) ? $this->Html->safe($status_count['pending']) : null) . '</span>', 'current'=>((isset($status) ? $status : null) == 'pending' ? true : false), 'attributes'=>['href'=>$this->base_uri . 'order/referrals/index/pending/', 'class'=>'ajax']],
+            ['name'=>$this->_('Referrals.index.category_canceled', true) . ' <span class="badge">' . (isset($status_count['canceled']) ? $this->Html->safe($status_count['canceled']) : null) . '</span>', 'current'=>((isset($status) ? $status : null) == 'canceled' ? true : false), 'attributes'=>['href'=>$this->base_uri . 'order/referrals/index/canceled/', 'class'=>'ajax']]
+        ];
+
+        $this->WidgetClient->clear();
+        $this->WidgetClient->setLinks($links);
+        $this->WidgetClient->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'order_form_styles']);
+        $this->WidgetClient->create($this->_('Referrals.index.boxtitle_referrals', true), ['id' => 'referrals'], (isset($render_section) ? $render_section : null));
+        $this->WidgetClient->startBody();
+
+        if ((isset($referrals) ? $referrals : false) && ($num_referrals = count($referrals)) > 0) {
+        ?>
+        <div class="table-responsive">
+            <table class="table table-curved table-striped">
+                <thead>
+                    <tr>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/referrals/index/' . (isset($status) ? $status : null) . '/?sort=order_number&order=' . ($sort == 'order_number' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'order_number' ? ' ' . $order : '');?>"><?php $this->_('Referrals.index.heading_order');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/referrals/index/' . (isset($status) ? $status : null) . '/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('Referrals.index.heading_name');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/referrals/index/' . (isset($status) ? $status : null) . '/?sort=amount&order=' . ($sort == 'amount' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'amount' ? ' ' . $order : '');?>"><?php $this->_('Referrals.index.heading_amount');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/referrals/index/' . (isset($status) ? $status : null) . '/?sort=currency&order=' . ($sort == 'currency' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'currency' ? ' ' . $order : '');?>"><?php $this->_('Referrals.index.heading_currency');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/referrals/index/' . (isset($status) ? $status : null) . '/?sort=commission&order=' . ($sort == 'commission' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'commission' ? ' ' . $order : '');?>"><?php $this->_('Referrals.index.heading_commission');?></a></th>
+                        <th><a href="<?php echo $this->Html->safe($this->base_uri . 'order/referrals/index/' . (isset($status) ? $status : null) . '/?sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('Referrals.index.heading_date_added');?></a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($referrals as $referral) {
+                        ?>
+                        <tr>
+                            <td><?php echo $this->Html->safe($referral->order_number);?></td>
+                            <td><?php echo $this->Html->safe($referral->name);?></td>
+                            <td><?php echo $this->CurrencyFormat->format($referral->amount, $referral->currency);?></td>
+                            <td><?php echo $this->Html->safe($referral->currency);?></td>
+                            <td><?php echo $this->CurrencyFormat->format($referral->commission, $referral->currency);?></td>
+                            <td><?php echo $this->Date->cast((isset($referral->date_added) ? $this->Html->safe($referral->date_added) : null));?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        } else {
+        ?>
+        <div class="alert alert-info">
+            <p><?php $this->_('Referrals.index.no_results');?></p>
+        </div>
+        <?php
+        }
+
+        $this->WidgetClient->endBody();
+        if ($this->Pagination->hasPages()) {
+            $this->WidgetClient->startFooter();
+            $this->Pagination->build();
+            $this->WidgetClient->endFooter();
+        }
+        $this->WidgetClient->end();
+
+    // Don't show this container when only rendering the widget section
+    if (!(isset($render_section) ? $render_section : null)) {
+    ?>
+    </div>
+    <?php
+    }
+    ?>

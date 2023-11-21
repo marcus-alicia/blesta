@@ -1,0 +1,71 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php
+            if (!(isset($render_section) ? $render_section : null)) {
+                echo (isset($message) ? $message : null);
+            }
+            ?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminPayouts.edit.boxtitle_edit_payout', true), ['id'=>'admin_payouts_edit'], (isset($render_section) ? $render_section : null));
+
+                $this->Form->create();
+                ?>
+                <div class="inner">
+                    <div class="title_row first"><h3><?php $this->_('AdminPayouts.edit.heading_payout_request');?></h3></div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminPayouts.edit.field_payment_method_id', true), 'payment_method_id');
+                                $this->Form->fieldSelect('payment_method_id', (isset($payment_methods) ? $payment_methods : []), (isset($vars->payment_method_id) ? $vars->payment_method_id : null), ['id' => 'payment_method_id']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminPayouts.edit.field_requested_amount', true), 'requested_amount');
+                                $this->Form->fieldText('requested_amount', (isset($vars->requested_amount) ? $vars->requested_amount : null), ['id' => 'requested_amount']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminPayouts.edit.field_requested_currency', true), 'requested_currency');
+                                $this->Form->fieldSelect('requested_currency', (isset($currencies) ? $currencies : []), (isset($vars->requested_currency) ? $vars->requested_currency : null), ['id' => 'requested_currency']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminPayouts.edit.field_status', true), 'status');
+                                $this->Form->fieldSelect('status', (isset($statuses) ? $statuses : []), (isset($vars->status) ? $vars->status : null), ['id' => 'status']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminPayouts.edit.modify_payout', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>

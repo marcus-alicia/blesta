@@ -1,0 +1,132 @@
+            <!-- Steps -->
+            <div class="col-md-12 hidden-xs hidden-sm">
+                <div class="card card-blesta card-steps">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/main/index/' . (isset($order_form->label) ? $order_form->label : null));?>" class="active"><strong><?php $this->_('Main.steps.step_1_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_1_description');?></em></p>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/config/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_2_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_2_description');?></em></p>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/cart/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_3_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_3_description');?></em></p>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/checkout/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_4_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_4_description');?></em></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Packages and Cart -->
+            <div class="col-md-9">
+                <?php
+                echo (isset($message) ? $message : null);
+                ?>
+                <?php
+                $this->WidgetClient->clear();
+                $this->WidgetClient->create((isset($package_group->name) ? $package_group->name : null));
+                ?>
+                    <div class="card-body">
+                        <?php
+                        $j=0;
+                        foreach ($packages as $package) {
+                            // Only render package if there are pricing options available
+                            if (empty($package->pricing)) {
+                                continue;
+                            }
+                        ?>
+                            <?php
+                            if ($j++ > 0) {
+                            ?>
+                                <hr />
+                            <?php
+                            }
+                            ?>
+                            <strong><?php echo (isset($package->name) ? $this->Html->safe($package->name) : null);?></strong>
+                            <div class="pkg-description">
+                                <?php echo ((isset($package->description_html) ? $package->description_html : null) != '' ? $package->description_html : $this->TextParser->encode($parser_syntax, $package->description));?>
+                            </div>
+                            <div class="float-right">
+                                <?php
+                                $this->Form->create(null, ['class' => 'form-inline disable-on-submit', 'role' => 'form']);
+
+                                $sold_out = (isset($package->qty) ? $package->qty : null) == '0';
+                                $limit_reached = $package->client_qty !== null && $package->client_qty <= (isset($package_counts[$package->id]) ? $package_counts[$package->id] : 0);
+
+                                // Prevent sold out packages from being submitted
+                                if (!$sold_out && !$limit_reached) {
+                                    $this->Form->fieldHidden('group_id', $package_group->id);
+                                }
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $prices = [];
+                                    foreach ($package->pricing as $price) {
+                                        if ((isset($price->period) ? $price->period : null) == 'onetime') {
+                                            $period = (isset($periods[$price->period]) ? $periods[$price->period] : null);
+                                        } else {
+                                            $term = (isset($price->term) ? $this->Html->safe($price->term) : null);
+                                            $period = $this->Html->concat(' ', $term, ($term == 1 ? (isset($periods[$price->period]) ? $periods[$price->period] : null) : (isset($periods[$price->period . '_plural']) ? $periods[$price->period . '_plural'] : null)));
+                                        }
+
+                                        // Set the pricing text to include or not include renewal pricing
+                                        $prices[$price->id] = (($price->period ?? null) == 'onetime' || (($price->price ?? null) == ($price->price_renews ?? null))
+                                            ? $this->_('Main.index.package_price', true, $period, $this->CurrencyFormat->format(($price->price ?? null), ($price->currency ?? null), ['decimals' => $price->precision]))
+                                            : $this->_('Main.index.package_price_recurring', true, $period, $this->CurrencyFormat->format(($price->price ?? null), ($price->currency ?? null), ['decimals' => $price->precision]), $this->CurrencyFormat->format(($price->price_renews ?? null), ($price->currency ?? null), ['decimals' => $price->precision]))
+                                        );
+                                    }
+                                    $this->Form->fieldSelect('pricing_id', $prices, null, ['class' => 'form-control input-sm']);
+                                    ?>
+                                </div>
+                                <?php
+                                if ($sold_out) {
+                                ?>
+                                <div disabled="disabled" class="btn btn-danger btn-sm form-group"><i class="fas fa-ban"></i> <?php $this->_('Main.index.sold_out');?></div>
+                                <?php
+                                } elseif ($limit_reached) {
+                                ?>
+                                <div disabled="disabled" class="btn btn-danger btn-sm form-group"><i class="fas fa-ban"></i> <?php $this->_('Main.index.client_limit');?></div>
+                                <?php
+                                } else {
+                                ?>
+                                <button type="submit" class="btn btn-light btn-sm form-group"><i class="fas fa-shopping-cart"></i> <?php $this->_('Main.index.select_btn');?></button>
+                                <?php
+                                }
+
+                                $this->Form->end();
+                                ?>
+                            </div>
+                            <div class="clearfix"></div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                <?php
+                $this->WidgetClient->end();
+                ?>
+
+            </div>
+            <div class="col-md-3" id="summary_section"></div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(this).blestaRequest('GET', '<?php echo $this->Html->safe($this->base_uri . 'order/summary/index/' . (isset($order_form->label) ? $order_form->label : null));?>', null,
+            function(data) {
+                $("#summary_section").html(data);
+            }
+        );
+    });
+</script>

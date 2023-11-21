@@ -1,0 +1,37 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('GoGetSSL.tab_reissue.heading_reissue');?></h3>
+    </div>
+    <div class="pad">
+        <?php
+        $this->Form->create($this->base_uri . 'clients/servicetab/' . (isset($client_id) ? $client_id : null) . '/' . (isset($service_id) ? $service_id : null) . '/tabClientReissue/');
+        ?>
+        <ul>
+            <li>
+                <?php
+                $this->Form->label($this->_('GoGetSSL.service_field.gogetssl_approver_email', true), 'gogetssl_approver_email');
+                $this->Form->fieldSelect('gogetssl_approver_email', (isset($gogetssl_approver_emails) ? $gogetssl_approver_emails : null), (isset($vars->gogetssl_approver_email) ? $vars->gogetssl_approver_email : null), ['id' => 'gogetssl_approver_email']);
+                ?>
+            </li>
+            <li>
+                <?php
+                $this->Form->label($this->_('GoGetSSL.service_field.gogetssl_csr', true), 'gogetssl_csr');
+                $this->Form->fieldTextArea('gogetssl_csr', (isset($vars->gogetssl_csr) ? $vars->gogetssl_csr : null), ['id' => 'gogetssl_csr']);
+                ?>
+            </li>
+            <li>
+                <?php
+                $this->Form->label($this->_('GoGetSSL.service_field.gogetssl_webserver_type', true), 'gogetssl_webserver_type');
+                $this->Form->fieldSelect('gogetssl_webserver_type', (isset($gogetssl_webserver_types) ? $gogetssl_webserver_types : null), (isset($vars->gogetssl_webserver_type) ? $vars->gogetssl_webserver_type : null), ['id' => 'gogetssl_webserver_type']);
+                ?>
+            </li>
+        </ul>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('GoGetSSL.tab_reissue.heading_reissue', true), ['class' => 'btn btn-primary float-right']);
+            ?>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>

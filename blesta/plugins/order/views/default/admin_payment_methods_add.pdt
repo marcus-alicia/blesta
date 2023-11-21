@@ -1,0 +1,96 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php
+            if (!(isset($render_section) ? $render_section : null)) {
+                echo (isset($message) ? $message : null);
+            }
+            ?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $this->Widget->clear();
+                $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'order_form_styles']);
+                $this->Widget->create($this->_('AdminPaymentMethods.add.boxtitle_add_payment_method', true));
+                $this->Form->create(null, ['id' => 'admin_payment_methods_add', 'class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <div class="tab_content inverse">
+                                    <ul class="tabs">
+                                        <?php
+                                        foreach ($languages as $lang) {
+                                            ?>
+                                            <li<?php echo ((isset($lang->code) ? $lang->code : null) == Configure::get('Blesta.language') ? ' class="current"' : '');?>>
+                                                <a href="#"><?php echo (isset($lang->name) ? $this->Html->safe($lang->name) : null);?></a>
+                                            </li>
+                                            <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                    <div class="inner_content">
+                                        <?php
+                                        foreach ($languages as $i => $lang) {
+                                            // Get the name and description for this language
+                                            $name_value = '';
+                                            $description_value = '';
+
+                                            foreach ((array)(isset($vars->names) ? $vars->names : null) as $name) {
+                                                $name = (object) $name;
+                                                if ((isset($name->lang) ? $name->lang : null) == $lang->code) {
+                                                    $name_value = (isset($name->name) ? $name->name : null);
+                                                    break;
+                                                }
+                                            }
+                                            ?>
+                                            <div>
+                                                <ul>
+                                                    <li>
+                                                        <?php
+                                                        $this->Form->label($this->_('AdminPaymentMethods.add.field_name', true), 'name_' . (isset($lang->code) ? $lang->code : null));
+                                                        $this->Form->fieldHidden('names[' . $i . '][lang]', (isset($lang->code) ? $lang->code : null));
+                                                        ?>
+                                                        <div><?php $this->Form->fieldText('names[' . $i . '][name]', (isset($name_value) ? $name_value : null), ['id' => 'name_' . (isset($lang->code) ? $lang->code : null)]);?></div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminPaymentMethods.add.field_payment_methodsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+
+                $this->Javascript->setInline("
+                    $(document).ready(function() {
+                        $('div.tab_content').blestaTabbedContent();
+                    });
+                ");
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>

@@ -1,0 +1,37 @@
+    <h4><?php $this->_('Apnscp.tab_client_stats.info_title');?></h4>
+
+    <label><?php $this->_('Apnscp.tab_client_stats.disk_title');?></label>
+    <?php
+    $disk = [
+        'used' => round($stats->disk['used'] ?? 0, 2),
+        'limit' => round($stats->disk['total'] ?? 0, 2)
+    ];
+    $unlimited = empty($disk['limit']);
+    $percent_used = ($unlimited ? 0 : round(($disk['used'] / $disk['limit']) * 100, 0));
+    ?>
+    <small>
+        <?php echo ($unlimited ? $this->_('Apnscp.tab_client_stats.usage_unlimited', true, $this->Html->safe($disk['used'])) : $this->_('Apnscp.tab_client_stats.usage', true, $this->Html->safe($disk['used']), $this->Html->safe($disk['limit'])));?>
+    </small>
+    <div class="progress">
+        <div class="progress-bar progress-bar-success"  role="progressbar" aria-valuenow="<?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>%">
+            <span class="sr-only"><?php echo ($unlimited ? $this->_('Apnscp.tab_client_stats.usage_unlimited', true, $this->Html->safe($disk['used'])) : $this->_('Apnscp.tab_client_stats.usage', true, $this->Html->safe($disk['used']), $this->Html->safe($disk['limit'])));?></span>
+        </div>
+    </div>
+
+    <label><?php $this->_('Apnscp.tab_client_stats.bandwidth_title');?></label>
+    <?php
+    $bandwidth = [
+        'used' => round($stats->bandwidth['used'] ?? 0, 2),
+        'limit' => round($stats->bandwidth['total'] ?? 0, 2)
+    ];
+    $unlimited = empty($bandwidth['limit']);
+    $percent_used = ($unlimited ? 0 : round(($bandwidth['used'] / $bandwidth['limit']) * 100, 0));
+    ?>
+    <small>
+        <?php echo ($unlimited ? $this->_('Apnscp.tab_client_stats.usage_unlimited', true, $this->Html->safe($bandwidth['used'])) : $this->_('Apnscp.tab_client_stats.usage', true, $this->Html->safe($bandwidth['used']), $this->Html->safe($bandwidth['limit'])));?>
+    </small>
+    <div class="progress">
+        <div class="progress-bar progress-bar-danger"  role="progressbar" aria-valuenow="<?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>%">
+            <span class="sr-only"><?php echo ($unlimited ? $this->_('Apnscp.tab_client_stats.usage_unlimited', true, $this->Html->safe($bandwidth['used'])) : $this->_('Apnscp.tab_client_stats.usage', true, $this->Html->safe($bandwidth['used']), $this->Html->safe($bandwidth['limit'])));?></span>
+        </div>
+    </div>

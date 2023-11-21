@@ -1,0 +1,163 @@
+
+        <?php
+        $this->Form->create($this->Html->safe($this->base_uri) . 'widget/billing_overview/admin_main/update/');
+        ?>
+        <div class="inner">
+            <div class="title_row first"><h3><?php $this->_('AdminMain.settings.heading_statistics');?></h3></div>
+            <div class="pad">
+                <p><?php $this->_('AdminMain.settings.text_options');?></p>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('revenue_today', '1', ((isset($vars['revenue_today']) ? $vars['revenue_today'] : 0) == 1), ['id' => 'revenue_today']);
+                        $this->Form->label($this->_('AdminMain.settings.revenue_today', true), 'revenue_today', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('revenue_month', '1', ((isset($vars['revenue_month']) ? $vars['revenue_month'] : 0) == 1), ['id' => 'revenue_month']);
+                        $this->Form->label($this->_('AdminMain.settings.revenue_month', true), 'revenue_month', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('revenue_year', '1', ((isset($vars['revenue_year']) ? $vars['revenue_year'] : 0) == 1), ['id' => 'revenue_year']);
+                        $this->Form->label($this->_('AdminMain.settings.revenue_year', true), 'revenue_year', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('credits_today', '1', ((isset($vars['credits_today']) ? $vars['credits_today'] : 0) == 1), ['id' => 'credits_today']);
+                        $this->Form->label($this->_('AdminMain.settings.credits_today', true), 'credits_today', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('credits_month', '1', ((isset($vars['credits_month']) ? $vars['credits_month'] : 0) == 1), ['id' => 'credits_month']);
+                        $this->Form->label($this->_('AdminMain.settings.credits_month', true), 'credits_month', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('credits_year', '1', ((isset($vars['credits_year']) ? $vars['credits_year'] : 0) == 1), ['id' => 'credits_year']);
+                        $this->Form->label($this->_('AdminMain.settings.credits_year', true), 'credits_year', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('invoiced_today', '1', ((isset($vars['invoiced_today']) ? $vars['invoiced_today'] : 0) == 1), ['id' => 'invoiced_today']);
+                        $this->Form->label($this->_('AdminMain.settings.invoiced_today', true), 'invoiced_today', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('invoiced_today_proforma', '1', ((isset($vars['invoiced_today_proforma']) ? $vars['invoiced_today_proforma'] : 0) == 1), ['id' => 'invoiced_today_proforma']);
+                        $this->Form->label($this->_('AdminMain.settings.invoiced_today_proforma', true), 'invoiced_today_proforma', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('invoiced_month', '1', ((isset($vars['invoiced_month']) ? $vars['invoiced_month'] : 0) == 1), ['id' => 'invoiced_month']);
+                        $this->Form->label($this->_('AdminMain.settings.invoiced_month', true), 'invoiced_month', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('invoiced_month_proforma', '1', ((isset($vars['invoiced_month_proforma']) ? $vars['invoiced_month_proforma'] : 0) == 1), ['id' => 'invoiced_month_proforma']);
+                        $this->Form->label($this->_('AdminMain.settings.invoiced_month_proforma', true), 'invoiced_month_proforma', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('balance_outstanding', '1', ((isset($vars['balance_outstanding']) ? $vars['balance_outstanding'] : 0) == 1), ['id' => 'balance_outstanding']);
+                        $this->Form->label($this->_('AdminMain.settings.balance_outstanding', true), 'balance_outstanding', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('balance_overdue', '1', ((isset($vars['balance_overdue']) ? $vars['balance_overdue'] : 0) == 1), ['id' => 'balance_overdue']);
+                        $this->Form->label($this->_('AdminMain.settings.balance_overdue', true), 'balance_overdue', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('scheduled_cancelation', '1', ((isset($vars['scheduled_cancelation']) ? $vars['scheduled_cancelation'] : 0) == 1), ['id' => 'scheduled_cancelation']);
+                        $this->Form->label($this->_('AdminMain.settings.scheduled_cancelation', true), 'scheduled_cancelation', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('services_active', '1', ((isset($vars['services_active']) ? $vars['services_active'] : 0) == 1), ['id' => 'services_active']);
+                        $this->Form->label($this->_('AdminMain.settings.services_active', true), 'services_active', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('services_added_today', '1', ((isset($vars['services_added_today']) ? $vars['services_added_today'] : 0) == 1), ['id' => 'services_added_today']);
+                        $this->Form->label($this->_('AdminMain.settings.services_added_today', true), 'services_added_today', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('services_canceled_today', '1', ((isset($vars['services_canceled_today']) ? $vars['services_canceled_today'] : 0) == 1), ['id' => 'services_canceled_today']);
+                        $this->Form->label($this->_('AdminMain.settings.services_canceled_today', true), 'services_canceled_today', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row"><h3><?php $this->_('AdminMain.settings.heading_graphs');?></h3></div>
+            <div class="pad">
+                <p><?php $this->_('AdminMain.settings.text_graphs');?></p>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('graph_revenue', '1', ((isset($vars['graph_revenue']) ? $vars['graph_revenue'] : 0) == 1), ['id' => 'graph_revenue']);
+                        $this->Form->label($this->_('AdminMain.settings.graph_revenue', true), 'graph_revenue', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('graph_revenue_year', '1', ((isset($vars['graph_revenue_year']) ? $vars['graph_revenue_year'] : 0) == 1), ['id' => 'graph_revenue_year']);
+                        $this->Form->label($this->_('AdminMain.settings.graph_revenue_year', true), 'graph_revenue_year', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('graph_invoiced', '1', ((isset($vars['graph_invoiced']) ? $vars['graph_invoiced'] : 0) == 1), ['id' => 'graph_invoiced']);
+                        $this->Form->label($this->_('AdminMain.settings.graph_invoiced', true), 'graph_invoiced', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row"><h3><?php $this->_('AdminMain.settings.heading_graph_settings');?></h3></div>
+            <div class="pad">
+                <p><?php $this->_('AdminMain.settings.text_graph_settings');?></p>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('show_legend', '1', ((isset($vars['show_legend']) ? $vars['show_legend'] : 0) == 1), ['id' => 'show_legend']);
+                        $this->Form->label($this->_('AdminMain.settings.show_legend', true), 'show_legend', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.settings.date_range', true), 'date_range');
+                        $this->Form->fieldSelect('date_range', (isset($date_ranges) ? $date_ranges : null), (isset($vars['date_range']) ? $vars['date_range'] : null), ['id' => 'date_range']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.settings.submit_settings', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+                <a class="btn btn-default pull-right ajax" href="<?php echo $this->Html->safe($this->base_uri);?>widget/billing_overview/admin_main/index/return"><?php $this->_('AdminMain.settings.submit_cancel');?></a>
+            </div>
+        </div>
+
+        <?php
+        $this->Form->end();
+        ?>

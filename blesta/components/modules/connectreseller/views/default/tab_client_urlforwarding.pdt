@@ -1,0 +1,65 @@
+
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="row panel-fix">
+        <div class="col-md-12">
+            <h4><?php $this->_('Connectreseller.tab_client_urlforwarding.heading_current_rules');?></h4>
+            <div class="table-responsive mb-3">
+                <table class="table table-curved table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php $this->_('Connectreseller.tab_client_urlforwarding.heading_source');?></th>
+                            <th><?php $this->_('Connectreseller.tab_client_urlforwarding.heading_destination');?></th>
+                            <th><?php $this->_('Connectreseller.tab_client_urlforwarding.heading_options');?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (!empty($domain_rule->websiteName)) {
+                        ?>
+                        <tr>
+                            <td><?php echo $this->Html->safe($domain_rule->websiteName);?></td>
+                            <td><?php echo $this->Html->safe($domain_rule->rewrite ?? $domain_rule->proxyPass);?></td>
+                            <td>
+                                <button class="btn btn-danger btn-xs" type="submit" name="delete">
+                                    <i class="fas fa-ban fa-fw"></i> <?php $this->_('Connectreseller.tab_client_urlforwarding.option_delete');?>
+                                </button>
+                            </td>
+                        </tr>
+                        <?php
+                        } else {
+                        ?>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="alert alert-info w-100" role="alert">
+                                        <?php $this->_('Connectreseller.tab_client_urlforwarding.text_no_forwarding_rules');?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4><?php $this->_('Connectreseller.tab_client_urlforwarding.heading_add_rule');?></h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <?php
+                        $this->Form->label($this->_('Connectreseller.tab_client_urlforwarding.field_destination', true), 'destination');
+                        $this->Form->fieldText('destination', ($vars->destination ?? ''), ['id' => 'destination', 'class'=>'form-control', 'placeholder' => 'http://example.com']);
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-light float-right" type="submit">
+        <i class="fas fa-edit"></i> <?php $this->_('Connectreseller.tab_client_urlforwarding.field_submit');?>
+    </button>
+    <?php
+    $this->Form->end();
+    ?>

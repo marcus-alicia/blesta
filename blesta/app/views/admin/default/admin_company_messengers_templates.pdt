@@ -1,0 +1,84 @@
+        <?php
+        if ((isset($show_left_nav) ? $show_left_nav : null)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        }
+        ?>
+
+        <div<?php echo (isset($show_left_nav) ? $show_left_nav : null) ? ' id="right_outer"' : '';?>>
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyMessengers.templates.boxtitle_message_templates', true));
+                ?>
+                <div class="inner">
+                <?php
+                if ((isset($groups) ? $groups : true)) {
+                    $k = 0;
+                    foreach ($groups as $type => $templates) {
+                        // Display group heading
+                        ?>
+                        <div class="title_row<?php echo ($k++ > 0 ? '' : ' first');?>"><h3><?php $this->_('AdminCompanyMessengers.templates.heading_' . (isset($type) ? $this->Html->safe($type) : null));?></h3></div>
+                        <?php
+                        // List all templates
+                        if (!empty($templates)) {
+                            // Clear heading
+                            ?>
+                            <div class="clear"></div>
+                            <table class="table">
+                                <tr class="heading_row">
+                                    <td><span><?php $this->_('AdminCompanyMessengers.templates.text_name');?></span></td>
+                                    <?php
+                                    // Show plugin column if set
+                                    if ((isset($type) ? $this->Html->safe($type) : null) == 'plugins') {
+                                    ?>
+                                    <td><span><?php $this->_('AdminCompanyMessengers.templates.text_plugin');?></span></td>
+                                    <?php
+                                    }
+                                    ?>
+                                    <td><span><?php $this->_('AdminCompanyMessengers.templates.text_description');?></span></td>
+                                    <td class="last"><span><?php $this->_('AdminCompanyMessengers.templates.text_options');?></span></td>
+                                </tr>
+                                <?php
+                                // Display templates for this group
+                                for ($i = 0, $num_templates = count((isset($templates) ? $templates : [])); $i < $num_templates; $i++) {
+                                ?>
+                                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                                        <td><a href="<?php echo $this->base_uri . 'settings/company/messengers/edittemplate/' . (isset($templates[$i]->message_group_id) ? $this->Html->safe($templates[$i]->message_group_id) : null) . '/';?>"><?php (print (isset($templates[$i]->group_name) ? $this->Html->safe($templates[$i]->group_name) : null));?></a></td>
+                                        <?php
+                                        // Show plugin name if set
+                                        if ((isset($type) ? $this->Html->safe($type) : null) == 'plugins') {
+                                        ?>
+                                        <td><span><?php (print (isset($templates[$i]->plugin_name) ? $this->Html->safe($templates[$i]->plugin_name) : null));?></span></td>
+                                        <?php
+                                        }
+                                        ?>
+                                        <td><?php (print (isset($templates[$i]->group_desc) ? $this->Html->safe($templates[$i]->group_desc) : null));?></td>
+                                        <td class="last"><a href="<?php echo $this->base_uri . 'settings/company/messengers/edittemplate/' . (isset($templates[$i]->message_group_id) ? $this->Html->safe($templates[$i]->message_group_id) : null) . '/';?>"><?php $this->_('AdminCompanyMessengers.templates.option_edit');?></a></td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                            </table>
+                            <?php
+                        } else {
+                        ?>
+                        <div class="empty_section">
+                            <div class="empty_box">
+                                <?php $this->_('AdminCompanyMessengers.templates.no_results');?>
+                            </div>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                        <div class="clearfix"></div>
+                    <?php
+                    }
+                }
+                ?>
+                </div>
+                <?php
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

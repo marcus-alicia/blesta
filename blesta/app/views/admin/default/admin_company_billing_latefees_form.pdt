@@ -1,0 +1,77 @@
+
+                        <ul>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('late_fee_total_amount', '1', (isset($vars['late_fee_total_amount']) ? $vars['late_fee_total_amount'] : null) == '1', ['id' => 'late_fee_total_amount', 'class' => 'inline']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.latefees.field.late_fee_total_amount', true), 'late_fee_total_amount', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.late_fee_total_amount');?></div></span>
+                            </li>
+                            <li>
+                                <table class="table">
+                                    <tbody>
+                                        <tr class="heading_row">
+                                            <td><span><?php $this->_('AdminCompanyBilling.latefees.text_enabled');?></span></td>
+                                            <td><span><?php $this->_('AdminCompanyBilling.latefees.text_currency');?></span></td>
+                                            <td><span><?php $this->_('AdminCompanyBilling.latefees.text_fee_type');?></span></td>
+                                            <td><span><?php $this->_('AdminCompanyBilling.latefees.text_amount');?></span></td>
+                                            <td class="last"><span><?php $this->_('AdminCompanyBilling.latefees.text_minimum');?></span></td>
+                                        </tr>
+                                        <?php
+                                        $i = 0;
+                                        foreach ((isset($currencies) ? $currencies : []) as $currency) {
+                                            $disabled = [];
+                                            if ((isset($vars['late_fees'][$currency->code]['fee_type']) ? $vars['late_fees'][$currency->code]['fee_type'] : null) == 'fixed') {
+                                                $disabled = ['disabled' => 'disabled'];
+                                            }
+                                            ?>
+                                            <tr<?php echo (($i % 2 == 1) ? ' class="odd_row"' : '');?>>
+                                                <td class="fixed_small center">
+                                                    <?php $this->Form->fieldCheckbox('late_fees[' . $currency->code . '][enabled]', 'true', (isset($vars['late_fees'][$currency->code]['enabled']) ? $vars['late_fees'][$currency->code]['enabled'] : null) == 'true', ['id' => 'enabled_' . $currency->code]);?>
+                                                </td>
+                                                <td class="fixed_small center"><?php (print (isset($currency->code) ? $this->Html->safe($currency->code) : null));?></td>
+                                                <td>
+                                                    <?php $this->Form->fieldRadio('late_fees[' . $currency->code . '][fee_type]', 'percent', (isset($vars['late_fees'][$currency->code]['fee_type']) ? $vars['late_fees'][$currency->code]['fee_type'] : 'percent') == 'percent', ['id' => 'fee_type_percent_' . $currency->code, 'class' => 'fee_type']);?>
+                                                    <?php $this->Form->label($this->_('AdminCompanyBilling.latefees.field.percent', true), 'fee_type_percent_' . $currency->code, ['class' => 'inline']);?>
+
+                                                    <?php $this->Form->fieldRadio('late_fees[' . $currency->code . '][fee_type]', 'fixed', (isset($vars['late_fees'][$currency->code]['fee_type']) ? $vars['late_fees'][$currency->code]['fee_type'] : 'percent') == 'fixed', ['id' => 'fee_type_fixed_' . $currency->code, 'class' => 'fee_type']);?>
+                                                    <?php $this->Form->label($this->_('AdminCompanyBilling.latefees.field.fixed', true), 'fee_type_fixed_' . $currency->code, ['class' => 'inline']);?>
+                                                </td>
+                                                <td>
+                                                    <?php $this->Form->fieldText('late_fees[' . $currency->code . '][amount]', (isset($vars['late_fees'][$currency->code]['amount']) ? $vars['late_fees'][$currency->code]['amount'] : null), ['class' => 'amount stretch', 'id' => 'amount_' . $currency->code]); ?>
+                                                </td>
+                                                <td>
+                                                    <?php $this->Form->fieldText('late_fees[' . $currency->code . '][minimum]', (isset($vars['late_fees'][$currency->code]['minimum']) ? $vars['late_fees'][$currency->code]['minimum'] : null), array_merge(['class' => 'minimum stretch', 'id' => 'minimum_' . $currency->code], $disabled)); ?>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                            $i++;
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </li>
+                        </ul>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    // Disable the minimum field if the fee type is fixed
+    $('.fee_type').on('change', function() {
+        var minimum_field = $(this).parent().parent().find('.minimum');
+        
+        if ($(this).val() == 'fixed') {
+            minimum_field.prop('disabled', true);
+        } else {
+            minimum_field.prop('disabled', false);
+        }
+    });
+    
+    // Force a number in the amount and minimum fields
+    $('.amount, .minimum').on('change', function() {
+        var value = $(this).val();
+        
+        if (isNaN(value)) {
+            $(this).val('');
+        }
+    });
+});
+");
+?>

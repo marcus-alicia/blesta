@@ -1,0 +1,145 @@
+
+            <div class="title_row first">
+                <h3><?php (print (isset($package_group->name) ? $this->Html->safe($package_group->name) : null));?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <label><?php $this->_('AdminClients.addservice_confirm.field_invoice_method');?></label>
+                        <?php $this->_('AdminClients.addservice_confirm.field_invoice_method_' . $vars->invoice_method, false, (isset($invoice->id_code) ? $invoice->id_code : null));?>
+                    </li>
+                    <li>
+                        <label><?php $this->_('AdminClients.addservice_confirm.field_notify_order');?></label>
+                        <?php $this->_('AdminClients.addservice_confirm.field_notify_order_' . (isset($vars->notify_order) ? $vars->notify_order : 'false'));?>
+                    </li>
+                    <li>
+                        <label><?php $this->_('AdminClients.addservice_confirm.field_status');?></label>
+                        <?php (print (isset($status[$vars->status]) ? $this->Html->safe($status[$vars->status]) : null));?>
+                    </li>
+                </ul>
+            </div>
+            <table class="table">
+                <tbody>
+                    <tr class="heading_row">
+                        <td><?php $this->_('AdminClients.addservice_confirm.description');?></td>
+                        <td><?php $this->_('AdminClients.addservice_confirm.qty');?></td>
+                        <td><?php $this->_('AdminClients.addservice_confirm.price');?></td>
+                    </tr>
+                    <?php
+                    $i = 0;
+                    foreach ((isset($items) ? $items : null) as $item) {
+                    ?>
+                    <tr<?php echo $i % 2 == 1 ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($item['description']) ? $this->Html->safe($item['description']) : null));?></td>
+                        <td><?php echo (isset($item['qty']) ? $item['qty'] : 1);?></td>
+                        <td><?php (print (isset($item['price']) ? $this->Html->safe($item['price']) : null));?></td>
+                    </tr>
+                        <?php
+                        $i++;
+                    }
+                    unset($i);
+                    ?>
+                </tbody>
+            </table>
+
+            <?php
+            // Add-ons
+            if ((isset($addons) ? $addons : null)) {
+                foreach ($addons as $addon) {
+            ?>
+                <div class="title_row">
+                    <h3><?php (print (isset($addon['name']) ? $this->Html->safe($addon['name']) : null));?></h3>
+                </div>
+                <table class="table">
+                    <tbody>
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminClients.addservice_confirm.description');?></td>
+                            <td><?php $this->_('AdminClients.addservice_confirm.qty');?></td>
+                            <td><?php $this->_('AdminClients.addservice_confirm.price');?></td>
+                        </tr>
+                        <?php
+                        $i = 0;
+                        foreach ((isset($addon['items']) ? $addon['items'] : []) as $addon_item) {
+                        ?>
+                        <tr<?php echo $i % 2 == 1 ? ' class="odd_row"' : '';?>>
+                            <td><?php (print (isset($addon_item['description']) ? $this->Html->safe($addon_item['description']) : null));?></td>
+                            <td><?php echo (isset($addon_item['qty']) ? $addon_item['qty'] : 1);?></td>
+                            <td><?php (print (isset($addon_item['price']) ? $this->Html->safe($addon_item['price']) : null));?></td>
+                        </tr>
+                            <?php
+                            $i++;
+                        }
+                        unset($i);
+                        ?>
+                    </tbody>
+                </table>
+            <?php
+                }
+            }
+            ?>
+
+            <?php
+            $this->Form->create(null, ['class' => 'disable-on-submit']);
+            $this->Form->fieldHidden('order_info', (isset($order_info) ? $order_info : null));
+            $this->Form->fieldHidden('set_coupon', 'true');
+            ?>
+                <div class="pad reverse">
+                    <div class="date_section">
+                        <div class="line">
+                            <?php
+                            $this->Form->label($this->_('AdminClients.addservice_confirm.field_coupon_code', true), 'coupon_code');
+                            $this->Form->fieldText('coupon_code', (isset($vars->coupon_code) ? $vars->coupon_code : null), ['id' => 'coupon_code', 'class' => 'medium']);
+
+                            $this->Form->fieldSubmit('save', $this->_('AdminClients.addservice_confirm.field_update_coupon', true), ['class' => 'btn btn-primary btn-xs']);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php
+            $this->Form->end();
+            ?>
+
+            <?php
+            $this->Form->create(null, ['class' => 'disable-on-submit']);
+            $this->Form->fieldHidden('order_info', (isset($order_info) ? $order_info : null));
+            ?>
+                <div class="sub_total_box">
+                    <div class="line">
+                        <span><?php $this->_('AdminClients.addservice_confirm.subtotal');?></span>
+                        <em><?php (print (isset($line_totals['subtotal']) ? $this->Html->safe($line_totals['subtotal']) : null));?></em>
+                    </div>
+                    <?php
+                    if ((isset($line_totals['discount']) ? $line_totals['discount'] : null)) {
+                    ?>
+                    <div class="line">
+                        <span><?php $this->_('AdminClients.addservice_confirm.discount');?></span>
+                        <em><?php (print (isset($line_totals['discount']) ? $this->Html->safe($line_totals['discount']) : null));?></em>
+                    </div>
+                    <?php
+                    }
+                    if ((isset($line_totals['tax']) ? $line_totals['tax'] : null)) {
+                        foreach ($line_totals['tax'] as $description => $tax) {
+                    ?>
+                        <div class="line">
+                            <span><?php (print (isset($description) ? $this->Html->safe($description) : null));?></span>
+                            <em><?php (print (isset($tax) ? $this->Html->safe($tax) : null));?></em>
+                        </div>
+                    <?php
+                        }
+                    }
+                    ?>
+                    <div class="line total">
+                        <span></span>
+                        <strong><em><?php (print (isset($line_totals['total_without_exclusive_tax']) ? $this->Html->safe($line_totals['total_without_exclusive_tax']) : null));?></em></strong>
+                    </div>
+                </div>
+
+                <div class="button_row">
+                    <?php
+                    $this->Form->fieldSubmit('save', $this->_('AdminClients.addservice_confirm.field_add', true), ['class' => 'btn btn-primary pull-right']);
+                    $this->Form->fieldSubmit('submit_edit', $this->_('AdminClients.addservice_confirm.field_edit', true), ['class' => 'btn btn-default pull-right']);
+                    ?>
+                </div>
+            <?php
+            $this->Form->end();
+            ?>

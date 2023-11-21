@@ -1,0 +1,328 @@
+
+                <?php
+                // Don't show this container when only rendering the widget section
+                if (!(isset($render_section) ? $render_section : null)) {
+                ?>
+            <div class="col-md-12">
+                <?php
+                }
+                echo (isset($message) ? $message : null);
+
+                $this->WidgetClient->clear();
+                $this->WidgetClient->setStyleSheet($this->view_dir . 'css/dropzone.css', ['id' => 'support_manager_dropzone_styles']);
+                $this->WidgetClient->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'support_manager_styles']);
+                $this->WidgetClient->create($this->_('ClientTickets.reply.boxtitle_reply', true, (isset($ticket->code) ? $ticket->code : null)), ['id' => 'client_ticket_reply']);
+                $this->WidgetClient->startBody();
+
+                $ticket_priority = (isset($ticket->priority) ? $ticket->priority : null);
+                $priority_class = (isset($priority_classes[$ticket_priority]) ? $priority_classes[$ticket_priority] : null);
+                if (empty($priority_class)) {
+                    $priority_class = 'default';
+                }
+                ?>
+                <div class="card p-3 mb-3 bg-light">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label><?php $this->_('ClientTickets.reply.heading_summary');?></label>
+                            <p><?php echo (isset($ticket->summary) ? $this->Html->safe($ticket->summary) : null);?></p>
+                            <hr />
+                        </div>
+                        <div class="col-md-3">
+                            <label><?php $this->_('ClientTickets.reply.heading_department');?></label>
+                            <p><?php echo (isset($ticket->department_name) ? $this->Html->safe($ticket->department_name) : null);?></p>
+                        </div>
+                        <div class="col-md-3">
+                            <label><?php $this->_('ClientTickets.reply.heading_priority');?></label>
+                            <p><span class="badge badge-<?php echo (isset($priority_class) ? $this->Html->safe($priority_class) : null);?>"><?php echo (isset($priorities[$ticket->priority]) ? $priorities[$ticket->priority] : null)?></span></p>
+                        </div>
+                        <div class="col-md-3">
+                            <label><?php $this->_('ClientTickets.reply.heading_status');?></label>
+                            <p><?php echo (isset($statuses[$ticket->status]) ? $statuses[$ticket->status] : null);?></p>
+                        </div>
+                        <div class="col-md-3">
+                            <label><?php $this->_('ClientTickets.reply.heading_date_added');?></label>
+                            <p><?php echo $this->Date->cast((isset($ticket->date_added) ? $ticket->date_added : null), 'date_time');?></p>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $this->Form->create(null, ['id' => 'create_ticket', 'enctype' => 'multipart/form-data', 'class' => 'disable-on-submit']);
+                if ((isset($sid) ? $sid : null)) {
+                    $this->Form->fieldHidden('sid', (isset($sid) ? $sid : null));
+                }
+                ?>
+                <div class="form-group">
+                    <label for="details" id="details"><?php $this->_('ClientTickets.reply.heading_reply');?></label>
+                    <textarea class="form-control" rows="5" name="details" id="details" data-markdown-editor="" placeholder="<?php $this->_('ClientTickets.reply.placeholder_reply');?>"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_('ClientTickets.reply.field_attachments', true), 'attachment[]');
+                    ?>
+                    <div class="dz-message text-secondary border-secondary bg-light rounded"><i class="fas fa-upload"></i> <?php $this->_('ClientTickets.reply.dropzone_drop_files_here');?></div>
+                    <div class="fallback">
+                        <div id="file_attachment">
+                            <?php
+                            $this->Form->fieldFile('attachment[]', ['class' => 'martop5']);
+                            ?>
+                        </div>
+                        <a href="#" id="add_attachment_field"><i class="fas fa-plus-circle"></i> <?php $this->_('ClientTickets.reply.text_add_attachment');?></a>
+                    </div>
+                    <div class="dropzone-previews"></div>
+                    <div class="custom_fields mt-4"><?php echo $department_fields ?? '';?></div>
+                </div>
+
+                <div class="btn-group float-right">
+                    <button type="submit" class="btn btn-light" value="reply"><i class="fas fa-reply"></i> <?php $this->_('ClientTickets.reply.field_replysubmit');?></button>
+                    <?php
+                    $this->Form->fieldHidden('action_type', 'reply', ['id' => 'action_type']);
+                    if ((isset($ticket->status) ? $ticket->status : null) != 'closed') {
+                    ?>
+                    <button type="submit" class="btn btn-danger" value="close" rel="<?php echo $this->Html->safe($this->_('ClientTickets.reply.confirm_close', true));?>">
+                        <i class="fas fa-ban fa-fw"></i> <?php $this->_('ClientTickets.reply.field_closesubmit');?>
+                    </button>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <?php
+                $this->Form->end();
+                ?>
+                <div class="clearfix"></div>
+                <hr />
+                <?php
+                foreach ((isset($ticket->replies) ? $ticket->replies : []) as $reply) {
+                    if ((isset($reply->staff_id) ? $reply->staff_id : null) != '') {
+                        $first_name = (isset($reply->first_name) ? $reply->first_name : $this->_('ClientTickets.reply.system', true));
+                        $last_name = (isset($reply->last_name) ? $reply->last_name : null);
+                    } else {
+                        $first_name = (isset($reply->first_name) ? $reply->first_name : $ticket->email);
+                        $last_name = (isset($reply->last_name) ? $reply->last_name : null);
+                    }
+                    $first_name = $this->Html->safe($first_name);
+                    $last_name = $this->Html->safe($last_name);
+
+                    if ((isset($reply->type) ? $reply->type : null) == 'reply') {
+                ?>
+                <div class="row ticket-reply">
+                    <div class="col-md-12 top-bar<?php echo ((isset($reply->staff_id) ? $reply->staff_id : null) != '' ? ' staff-reply' : '');?>">
+                        <p><?php $this->_('ClientTickets.reply.reply_date', false, $this->Date->cast((isset($reply->date_added) ? $reply->date_added : null), Configure::get('SupportManager.reply_date_format')), $first_name, $last_name);?></p>
+                    </div>
+                    <div class="col-md-2 col-3 replier">
+                        <img src="//www.gravatar.com/avatar/<?php echo md5(strtolower(trim((isset($reply->email) ? $this->Html->safe($reply->email) : ''))));?>" class="img-thumbnail w-100" />
+                        <p class="text-center">
+                            <strong><?php echo $this->Html->concat(' ', $first_name, $last_name);?></strong>
+                            <?php
+                            if ((isset($reply->staff_id) ? $reply->staff_id : null) != '' && (isset($reply->staff_id) ? $reply->staff_id : null) != 0) {
+                                $staff_title = $this->_('ClientTickets.reply.staff_title', true);
+                                if ((isset($staff_settings[$reply->staff_id]) ? $staff_settings[$reply->staff_id] : false) && !empty($staff_settings[$reply->staff_id]['title'])) {
+                                    $staff_title = $this->Html->safe($staff_settings[$reply->staff_id]['title']);
+                                }
+                            ?>
+                            <br />
+                            <small><?php echo $staff_title;?></small>
+                            <?php
+                            }
+                            ?>
+                        </p>
+                    </div>
+                    <div class="col-md-10 col-9 response">
+                        <?php
+                        // Show attachments
+                        if (!empty($reply->attachments)) {
+                        ?>
+                        <div class="attachments">
+                            <p>
+                                <?php
+                                foreach ($reply->attachments as $attachment) {
+                                ?>
+                                <span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/client_tickets/getattachment/' . (isset($attachment->id) ? $attachment->id : null) . '/' . ((isset($sid) ? $sid : null) ? '?sid=' . rawurlencode((isset($sid) ? $sid : null)) : ''));?>"><i class="fas fa-paperclip"></i> <?php echo (isset($attachment->name) ? $this->Html->safe($attachment->name) : null);?></a></span>
+                                <?php
+                                }
+                                ?>
+                            </p>
+                        </div>
+                        <hr />
+                        <?php
+                        }
+
+                        echo $this->TextParser->encode('markdown', (isset($reply->details) ? $reply->details : null));
+
+                        if ((isset($reply->images) ? $reply->images : null)) {
+                        ?>
+                        <div class="image-attachments">
+                            <div class="row equal">
+                                <?php
+                                $index = 0;
+                                $columns = max(1, (int)(isset($thumbnails_per_row) ? $thumbnails_per_row : 0));
+                                foreach ($reply->images as $id => $name) {
+                                    if ($index % $columns == 0 && $index != 0) {
+                                    ?>
+                            </div>
+                            <div class="row equal">
+                                    <?php
+                                    }
+                                    ?>
+                                    <div class="col-md-2 col-xs-4">
+                                        <img src="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/client_tickets/getattachment/' . $id . '/');?>" data-slide="<?php echo $index;?>" alt="<?php echo $this->Html->safe($name);?>" title="<?php echo $this->Html->safe($name);?>" style="max-width: 100%;">
+                                    </div>
+                                    <?php
+                                    $index++;
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+                <?php
+                    } elseif ((isset($reply->type) ? $reply->type : null) == 'log') {
+                    ?>
+                <div class="col-md-12 marbot10">
+                    <div class="alert alert-info">
+                        <p>
+                            <?php echo (isset($reply->details) ? $this->Html->safe($reply->details) : null);?>
+                            <em><?php $this->_('ClientTickets.reply.log_date', false, $this->Date->cast((isset($reply->date_added) ? $reply->date_added : null), Configure::get('SupportManager.reply_date_format')), $first_name, $last_name);?></em>
+                        </p>
+                    </div>
+                </div>
+                    <?php
+                    }
+                }
+                $this->WidgetClient->endBody();
+                $this->WidgetClient->end();
+                ?>
+
+                <div id="attachment-lightbox" class="support_manager_modal">
+                    <span class="support_manager_close cursor"><i class="fas fa-times"></i></span>
+                    <div class="modal-content" data-index="0">
+                        <div class="slides bg-light rounded shadow"></div>
+                    </div>
+                    <!-- Next/previous controls -->
+                    <a class="support_manager_prev"><i class="fas fa-angle-left"></i></a>
+                    <a class="support_manager_next"><i class="fas fa-angle-right"></i></a>
+                </div>
+
+                <?php
+                // Don't show this container when only rendering the widget section
+                if (!(isset($render_section) ? $render_section : null)) {
+                ?>
+            </div>
+                <?php
+                }
+                $this->Javascript->setInline("
+                    $(document).ready(function() {
+                        // Initialize dropzone
+                        $('#create_ticket').dropzone({
+                            paramName: 'dropzone[]',
+                            clickable: '.dz-message',
+                            addRemoveLinks: true,
+                            dictRemoveFile: '" . $this->_('ClientTickets.reply.dropzone_remove_file', true) . "',
+                            complete: function(file) {
+                                var fields = ['name', 'type', 'size'];
+
+                                fields.forEach(function(field, index) {
+                                    $('<input>', {
+                                        type: 'hidden',
+                                        name: 'dropzone[' + field + '][' + file.name + ']',
+                                        value: file[field]
+                                    }).appendTo('.dropzone');
+                                });
+
+                                $('.dz-progress').hide();
+                            },
+                            removedfile: function(file) {
+                                var fields = ['name', 'type', 'size'];
+
+                                fields.forEach(function(field, index) {
+                                    $('input[name=\"dropzone[' + field + '][' + file.name + ']\"]').remove();
+                                });
+
+                                $(file.previewElement).remove();
+                            },
+                            previewsContainer: '.dropzone-previews'
+                        });
+                        $('#create_ticket').addClass('dropzone');
+
+                        $('#add_attachment_field').click(function() {
+                            var attachment = $('#file_attachment input:first').clone();
+                            $(attachment).val('');
+                            $(attachment).insertAfter($('#file_attachment input:last'));
+                            return false;
+                        });
+
+                        $('button[type=\"submit\"]').click(function() {
+                            $('#action_type').val($(this).val());
+                        });
+
+                        $('.support_manager_close').on('click', function () {
+                            closeModal();
+                        });
+
+                        showSlides($('#attachment-lightbox .modal-content').data('index'));
+
+                        // Next/previous controls
+                        $('.support_manager_next').on('click', function () {
+                            var slideIndex = parseInt($('#attachment-lightbox .modal-content').data('index'));
+                            showSlides(slideIndex += 1);
+                        });
+
+                        $('.support_manager_prev').on('click', function () {
+                            var slideIndex = parseInt($('#attachment-lightbox .modal-content').data('index'));
+                            showSlides(slideIndex -= 1);
+                        });
+
+                        $('.image-attachments img').on('click', function () {
+                            $('#attachment-lightbox .modal-content').html('');
+                            $(this).parents('.image-attachments').find('img').each(function () {
+                                $('#attachment-lightbox .modal-content').append('<div class=\"slides bg-light rounded shadow\">' + this.outerHTML + '</div>');
+                            });
+
+                            var slideIndex = parseInt($(this).attr('data-slide'));
+                            showSlides(slideIndex);
+                            openModal();
+                        });
+
+                        // Format form
+                        $('#create_ticket').submit(function() {
+                            // Submit unchecked checkboxes
+                            $('#create_ticket input[type=\"checkbox\"]:not(:checked)').each(function() {
+                                $(this).prop('disabled', true);
+                                $('<input>', {
+                                    type: 'hidden',
+                                    name: $(this).attr('name'),
+                                    value: '0'
+                                }).appendTo($(this).parent());
+                            });
+                        });
+                    });
+
+                    // Open the Modal
+                    function openModal() {
+                        $('#attachment-lightbox').show();
+                    }
+
+                    // Close the Modal
+                    function closeModal() {
+                        $('#attachment-lightbox').hide();
+                    }
+
+                    function showSlides(n) {
+                        var i;
+                        var slides = $('.slides');
+
+                        console.log(slides.size());
+                        if (n >= slides.size()) {
+                            n = 0
+                        } else if (n < 0) {
+                            n = slides.size() - 1
+                        }
+
+                        slides.hide();
+                        $(slides[n]).show();
+                        $('.modal-content').data('index', n);
+                    }
+                ");

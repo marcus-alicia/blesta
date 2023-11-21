@@ -1,0 +1,46 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('Vpsdotnet.add_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('Vpsdotnet.add_row.basic_title');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Vpsdotnet.row_meta.server_name', true), 'server_name');
+                        $this->Form->fieldText('server_name', (isset($vars->server_name) ? $vars->server_name : null), ['id' => 'server_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Vpsdotnet.row_meta.email', true), 'email');
+                        $this->Form->fieldText('email', (isset($vars->email) ? $vars->email : null), ['id' => 'email']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Vpsdotnet.row_meta.key', true), 'key');
+                        $this->Form->fieldText('key', (isset($vars->key) ? $vars->key : null), ['id' => 'key']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('Vpsdotnet.add_row.add_btn', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

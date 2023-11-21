@@ -1,0 +1,237 @@
+
+        <?php
+        echo ($message ?? null);
+
+        $widget_title = $this->_('AdminMain.add.boxtitle_root', true, $this->_('AdminMain.!text.root_directory', true));
+        if (!empty($category))
+            $widget_title = $this->_('AdminMain.add.boxtitle_add', true, ($category->name ?? null));
+
+        $this->Widget->clear();
+        $this->Widget->create($widget_title);
+
+        $this->Form->create(null, ['id' => 'add_download', 'enctype' => 'multipart/form-data']);
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldRadio('type', 'public', ((isset($vars->type) ? $vars->type : 'public') == 'public'), ['id' => 'public', 'class' => 'type']);
+                        $this->Form->label($this->_('AdminMain.add.field_public', true), 'public', ['class' => 'inline']);
+                        $this->Form->fieldRadio('type', 'logged_in', ((isset($vars->type) ? $vars->type : null) == 'logged_in'), ['id' => 'logged_in', 'class' => 'type']);
+                        $this->Form->label($this->_('AdminMain.add.field_logged_in', true), 'logged_in', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li class="download_logged_in" style="display:none;">
+                        <?php
+                        $this->Form->fieldCheckbox('available_to_client_groups', '1', ((isset($vars->available_to_client_groups) ? $vars->available_to_client_groups : null) == '1'), ['id' => 'available_to_client_groups']);
+                        $this->Form->label($this->_('AdminMain.add.field_available_to_client_groups', true), 'available_to_client_groups', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li id="download_client_groups" style="display:none;">
+                        <table id="assign_client_groups">
+                            <tr>
+                                <td><?php $this->Form->label($this->_('AdminMain.add.text_clientgroups', true), 'assigned');?></td>
+                                <td></td>
+                                <td><?php $this->Form->label($this->_('AdminMain.add.text_availableclientgroups', true), 'available');?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('file_groups[]', (isset($vars->file_groups) ? $vars->file_groups : null), [], ['id' => 'assigned_client_groups']);?>
+                                </td>
+                                <td><a href="#" class="client_group move_left">&nbsp;</a> &nbsp; <a href="#" class="client_group move_right">&nbsp;</a></td>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('available_client_groups[]', (isset($client_groups) ? $client_groups : null), [], ['id' => 'available_client_groups']);?>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li class="download_logged_in" style="display:none;">
+                        <?php
+                        $this->Form->fieldCheckbox('available_to_packages', '1', ((isset($vars->available_to_packages) ? $vars->available_to_packages : null) == '1'), ['id' => 'available_to_packages']);
+                        $this->Form->label($this->_('AdminMain.add.field_available_to_packages', true), 'available_to_packages', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li id="download_packages" style="display:none;">
+                        <table id="assign_packages">
+                            <tr>
+                                <td><?php $this->Form->label($this->_('AdminMain.add.text_packagegroups', true), 'assigned');?></td>
+                                <td></td>
+                                <td><?php $this->Form->label($this->_('AdminMain.add.text_availablepackages', true), 'available');?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('file_packages[]', (isset($vars->file_packages) ? $vars->file_packages : null), [], ['id' => 'assigned_packages']);?>
+                                </td>
+                                <td><a href="#" class="packages move_left">&nbsp;</a> &nbsp; <a href="#" class="packages move_right">&nbsp;</a></td>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('available_packages[]', (isset($packages) ? $packages : null), [], ['id' => 'available_packages']);?>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminMain.add.field_name', true), 'name');?>
+                        <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldRadio('file_type', 'upload', ((isset($vars->file_type) ? $vars->file_type : 'upload') == 'upload'), ['id' => 'upload', 'class' => 'file_path']);
+                        $this->Form->label($this->_('AdminMain.add.field_upload', true), 'upload', ['class' => 'inline']);
+                        $this->Form->fieldRadio('file_type', 'path', ((isset($vars->file_type) ? $vars->file_type : null) == 'path'), ['id' => 'path', 'class' => 'file_path']);
+                        $this->Form->label($this->_('AdminMain.add.field_path', true), 'path', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li id="file_upload" style="display:none;">
+                        <?php $this->Form->label($this->_('AdminMain.add.field_file', true), 'file');?>
+                        <?php $this->Form->fieldFile('file', ['id' => 'file']);?>
+                    </li>
+                    <li id="file_full_path" style="display:none;">
+                        <?php $this->Form->label($this->_('AdminMain.add.field_file_name', true), 'file_name');?>
+                        <?php $this->Form->fieldText('file_name', (isset($vars->file_name) ? $vars->file_name : null), ['id' => 'file_name']);?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?> <div><?php $this->_('AdminMain.!tooltip.path_to_file');?></div></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.add.submit_add', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+                <a class="btn btn-default pull-right" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/' . ($category->id ?? null));?>"><?php $this->_('AdminMain.add.submit_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#add_download').submit(function() {
+        $('#assigned_client_groups option').prop('selected', true);
+        $('#assigned_packages option').prop('selected', true);
+    });
+
+    // Show selected fields
+    if ($('#logged_in').prop('checked'))
+        showLoggedInFields(true);
+    if ($('#path').prop('checked'))
+        showFileFields("path", true);
+    if ($('#upload').prop('checked'))
+        showFileFields("upload", true);
+
+    // Move client groups from right to left
+    $('.client_group.move_left').click(function() {
+        $('#available_client_groups option:selected').appendTo($('#assigned_client_groups'));
+        return false;
+    });
+    // Move client_groups from left to right
+    $('.client_group.move_right').click(function() {
+        $('#assigned_client_groups option:selected').appendTo($('#available_client_groups'));
+        return false;
+    });
+
+    // Move packages from right to left
+    $('.packages.move_left').click(function() {
+        $('#available_packages option:selected').appendTo($('#assigned_packages'));
+        return false;
+    });
+    // Move packages from left to right
+    $('.packages.move_right').click(function() {
+        $('#assigned_packages option:selected').appendTo($('#available_packages'));
+        return false;
+    });
+
+    // Hide/show logged in fields
+    $('.type').change(function() {
+        if ($(this).val() == "logged_in")
+            showLoggedInFields(true);
+        else
+            showLoggedInFields(false);
+    });
+
+    // Hide/show client groups/packages
+    $('#available_to_client_groups').change(function() {
+        if ($(this).prop('checked'))
+            showAvailableGroups("client_groups", true);
+        else
+            showAvailableGroups("client_groups", false);
+    });
+    $('#available_to_packages').change(function() {
+        if ($(this).prop('checked'))
+            showAvailableGroups("packages", true);
+        else
+            showAvailableGroups("packages", false);
+    });
+
+    // Hide/show file fields
+    $('.file_path').change(function() {
+        if ($(this).val() == "path")
+            showFileFields("path", true);
+        else
+            showFileFields("upload", true);
+    });
+});
+
+function showLoggedInFields(show) {
+    if (show) {
+        // Show checkboxes
+        $('.download_logged_in').show();
+
+        // Show available/selected items
+        if ($('#available_to_client_groups').prop('checked'))
+            showAvailableGroups("client_groups", true);
+        if ($('#available_to_packages').prop('checked'))
+            showAvailableGroups("packages", true);
+    }
+    else {
+        // Hide checkboxes
+        $('.download_logged_in').hide();
+        showAvailableGroups("client_groups", false);
+        showAvailableGroups("packages", false);
+    }
+}
+
+function showAvailableGroups(type, show) {
+    switch (type) {
+        case "client_groups":
+            if (show)
+                $('#download_client_groups').show();
+            else
+                $('#download_client_groups').hide();
+            break;
+        case "packages":
+            if (show)
+                $('#download_packages').show();
+            else
+                $('#download_packages').hide();
+            break;
+    }
+}
+
+function showFileFields(type, show) {
+    switch (type) {
+        case "path":
+            if (show) {
+                $('#file_full_path').show();
+                $('#file_upload').hide();
+            }
+            else {
+                $('#file_full_path').hide();
+                $('#file_upload').show();
+            }
+            break;
+        case "upload":
+            if (show) {
+                $('#file_upload').show();
+                $('#file_full_path').hide();
+            }
+            else {
+                $('#file_upload').hide();
+                $('#file_full_path').show();
+            }
+            break;
+    }
+}
+</script>

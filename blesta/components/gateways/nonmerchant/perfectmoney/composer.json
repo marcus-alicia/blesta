@@ -1,0 +1,9 @@
+{
+    "name": "blesta/perfectmoney",
+    "description": "Perfect Money",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

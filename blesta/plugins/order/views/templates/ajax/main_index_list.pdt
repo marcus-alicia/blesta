@@ -1,0 +1,167 @@
+                    <?php
+                    foreach ($package_groups as $group_id => $package_group) {
+                        if (!array_key_exists($group_id, $packages)) {
+                            continue;
+                        }
+                    ?>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="section-title">
+                                    <h3><?php echo (isset($package_group->name) ? $this->Html->safe($package_group->name) : null);?></h3>
+                                    <?php
+                                    if (empty($package_group->description)) {
+                                    ?>
+                                    <p class="format"><?php $this->_('Main.index.group_heading');?></p>
+                                    <?php
+                                    } else {
+                                        echo $this->TextParser->encode($parser_syntax, $package_group->description);
+                                    }
+
+                                    if (in_array($group_id, $order_form->meta['package_groups'] ?? []) && $cart_has_eligible_domain) {
+                                    ?>
+                                    <span class="badge badge-info"><i class="fab fa-creative-commons-zero"></i> <?php $this->_('Main.index.domain_bundle_eligble');?></span>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <?php
+                                if (count((isset($order_form->currencies) ? $order_form->currencies : [])) > 1) {
+                                ?>
+                                <div class="currency">
+
+                                    <?php
+                                    $this->Form->setCsrfOptions(['set_on_create' => false]);
+                                    $this->Form->create(null, ['method' => 'GET', 'class' => 'form-inline']);
+                                    $this->Form->fieldHidden('group_id', (isset($package_group->id) ? $package_group->id : null));
+                                    ?>
+                                        <label for="change_currency_<?php echo (isset($package_group->id) ? $this->Html->safe($package_group->id) : null);?>">
+                                            <?php $this->_('Main.index.field_currency');?>
+                                        </label>
+                                        <?php
+                                        $this->Form->fieldSelect('currency', $this->Form->collapseObjectArray($order_form->currencies, 'currency', 'currency'), (isset($currency) ? $currency : null), ['class' => 'form-control input-sm change_currency', 'id' => 'change_currency_' . (isset($package_group->id) ? $this->Html->safe($package_group->id) : null)]);
+                                        ?>
+                                    <?php
+                                    $this->Form->end();
+                                    $this->Form->setCsrfOptions(['set_on_create' => true]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="mb-5">
+                            <?php
+                            foreach ($packages[$group_id] as $package) {
+                            ?>
+                                <div class="card bg-light p-3 card-order package-list">
+                                <?php
+                                $this->Form->setCsrfOptions(['set_on_create' => false]);
+                                $this->Form->create($this->base_uri . 'order/main/packages/' . $order_form->label, ['class' => 'form-inline', 'role' => 'form', 'method' => 'GET', 'class' => 'disable-on-submit']);
+
+                                $sold_out = (isset($package->qty) ? $package->qty : null) == '0';
+                                $limit_reached = $package->client_qty !== null && $package->client_qty <= (isset($package_counts[$package->id]) ? $package_counts[$package->id] : 0);
+
+                                // Prevent sold out packages from being submitted
+                                if (!$sold_out && !$limit_reached) {
+                                    $this->Form->fieldHidden('group_id', $group_id);
+                                }
+                                ?>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-6 col-xs-12 package-item">
+                                        <h3><?php echo (isset($package->name) ? $this->Html->safe($package->name) : null);?></h3>
+                                        <div>
+                                            <div class="instructions"><?php $this->_('Main.index.field_pricing_id');?> <i class="fas fa-share fa-rotate-90"></i></div>
+                                            <?php
+                                            $prices = [];
+                                            foreach ($package->pricing as $price) {
+                                                if ((isset($price->period) ? $price->period : null) == 'onetime') {
+                                                    $period = (isset($periods[$price->period]) ? $periods[$price->period] : null);
+                                                } else {
+                                                    $term = (isset($price->term) ? $this->Html->safe($price->term) : null);
+                                                    $period = $this->Html->concat(' ', $term, ($term == 1 ? (isset($periods[$price->period]) ? $periods[$price->period] : null) : (isset($periods[$price->period . '_plural']) ? $periods[$price->period . '_plural'] : null)));
+                                                }
+                                                $display_price = $this->CurrencyFormat->format($price->price, $price->currency, ['decimals' => $price->precision]);
+
+                                                // Set the pricing text to include or not include renewal pricing
+                                                $prices[$price->id] = ((isset($price->period) ? $price->period : null) == 'onetime' || ((isset($price->price) ? $price->price : null) == (isset($price->price_renews) ? $price->price_renews : null))
+                                                    ? $this->_('Main.index.package_price', true, $period, $display_price)
+                                                    : $this->_('Main.index.package_price_recurring', true, $period, $display_price, $this->CurrencyFormat->format((isset($price->price_renews) ? $price->price_renews : null), (isset($price->currency) ? $price->currency : null), ['decimals' => $price->precision]))
+                                                );
+
+                                                $option_attributes[$price->id] = ['data-period' => $this->_('Main.index.package_price', true, $period, null), 'data-display-price' => $display_price];
+                                            }
+                                            $this->Form->fieldSelect('pricing_id', $prices, null, ['class' => 'form-control'], $option_attributes);
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 package-description">
+                                        <?php
+                                        if (!empty($package->description_html) || !empty($package->description)) {
+                                        ?>
+                                            <?php echo ((isset($package->description_html) ? $package->description_html : null) != '' ? $package->description_html : $this->TextParser->encode($parser_syntax, $package->description));?>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12 col-xs-12 package-item">
+                                        <h3 class="float-right"><small class="term"></small> <span class="price"></span></h3>
+                                        <div class="clearfix"></div>
+                                        <div class="float-right">
+                                            <?php
+                                            if ($sold_out) {
+                                            ?>
+                                            <div class="btn btn-lg btn-danger float-right" disabled="disabled"><?php $this->_('Main.index.sold_out');?></div>
+                                            <?php
+                                            } elseif ($limit_reached) {
+                                            ?>
+                                            <div class="btn btn-lg btn-danger float-right" disabled="disabled"><?php $this->_('Main.index.client_limit');?></div>
+                                            <?php
+                                            } else {
+                                            ?>
+                                            <button type="submit" class="btn btn-lg btn-success float-right"><?php $this->_('Main.index.button_order');?> <i class="fas fa-angle-double-right"></i></button>
+                                            <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                                <div class="clearfix"></div>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    <?php
+                    }
+                    ?>
+
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $("form select[name='pricing_id']").each(function() {
+                                displaySelectedPrice($(this));
+                            });
+                            $("form").on("change", "select[name='pricing_id']", function() {
+                                displaySelectedPrice($(this));
+                            });
+
+                            function displaySelectedPrice(field) {
+                                var display = field.closest(".package-list");
+
+                                $(".term", display).html(field.find(":selected").attr('data-period'));
+                                $(".price", display).html(field.find(":selected").attr('data-display-price'));
+                            }
+
+                            // Process change currency request
+                            $(".change_currency").change(function() {
+                                $(this).closest("form").attr('action', window.location.href);
+                                $(this).closest("form").submit();
+                            });
+                        });
+                    </script>

@@ -1,0 +1,13 @@
+{
+	"version": "1.2.0",
+	"name": "Kassacompleet.name",
+	"description": "Kassacompleet.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["EUR"],
+	"signup_url": "https://portal.kassacompleet.nl/auth/signup"
+}

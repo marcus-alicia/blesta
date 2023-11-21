@@ -1,0 +1,41 @@
+{
+  "name": "bitpay/sdk",
+  "description": "Complete version of the PHP library for the new cryptographically secure BitPay API",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "keywords": [
+    "bitpay",
+    "bitcoin",
+    "cash",
+    "payment",
+    "gateway"
+  ],
+  "homepage": "https://github.com/bitpay/php-bitpay-client-v2",
+  "require": {
+    "bitpay/key-utils": "^1.0",
+    "php": "^7.1 || ^8.0",
+    "guzzlehttp/guzzle": "^6.3 || ^7.0",
+    "ext-json": "*",
+    "ext-reflection": "*",
+    "symfony/yaml": "^3.0 || ^4.3 || ^5.0"
+  },
+  "authors": [
+    {
+      "name": "Antonio Buedo",
+      "email": "solutions-engineering@bitpay.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "^7.5 || ^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "BitPaySDK\\": "src/BitPaySDK"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "BitPaySDK\\Test\\": "tests/BitPaySDK"
+    }
+  }
+}

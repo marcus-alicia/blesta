@@ -1,0 +1,19 @@
+        <?php
+        // Show the nav
+        echo (isset($left_nav) ? $left_nav : null);
+        ?>
+
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create($this->Html->safe($plugin->name), ['id' => 'admin_company_plugins_settings'], (isset($render_section) ? $render_section : null));
+
+                echo (isset($tab) ? $tab : null);
+
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

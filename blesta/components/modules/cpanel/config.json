@@ -1,0 +1,24 @@
+{
+    "version": "2.19.0",
+    "name": "Cpanel.name",
+    "description": "Cpanel.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "service": {
+        "name_key": "cpanel_domain"
+    },
+    "module": {
+        "row": "Cpanel.module_row",
+        "rows": "Cpanel.module_row_plural",
+        "row_key": "server_name"
+    },
+    "email_tags": {
+        "module": ["host_name", "name_servers"],
+        "package": ["type", "package", "acl", "account_limit"],
+        "service": ["cpanel_username", "cpanel_password", "cpanel_domain", "cpanel_ip"]
+    }
+}

@@ -1,0 +1,17 @@
+{
+	"version": "1.5.0",
+	"name": "Skrill.name",
+	"description": "Skrill.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		},
+        {
+            "name": "Nirays Technologies",
+            "url": "http://nirays.com"
+        }
+	],
+	"currencies": ["AED","AUD","BGN","CAD","CHF","CZK","DKK","EEK", "EUR","GBP","HKD","HRK","HUF","ILS","INR","ISK", "JOD","JPY","KRW","LTL","MAD","MYR","NOK","NZD", "OMR","PLN","QAR","RON","RSD","SAR","SEK","SGD", "SKK","THB","TND","TRY","TWD","USD","ZAR"],
+	"signup_url": "https://account.skrill.com/wallet/account/sign-up"
+}

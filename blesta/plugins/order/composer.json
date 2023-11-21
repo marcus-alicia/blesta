@@ -1,0 +1,10 @@
+{
+    "name": "blesta/order",
+    "description": "Order",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "maxmind/minfraud": "~1.0"
+    }
+}

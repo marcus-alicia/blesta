@@ -1,0 +1,198 @@
+<?php
+echo (isset($message) ? $message : null);
+
+$links = [
+    ['name' => $this->_('AdminMain.calendar.category_month', true), 'current' => ((isset($show_view) ? $show_view : 'dayGridMonth') == 'dayGridMonth'), 'attributes' => ['href' => '#dayGridMonth', 'class' => 'ajax fc-button-dayGridMonth']],
+    ['name' => $this->_('AdminMain.calendar.category_week', true), 'current' => ((isset($show_view) ? $show_view : false) == 'timeGridWeek'), 'attributes' => ['href' => '#timeGridWeek', 'class' => 'ajax fc-button-timeGridWeek']],
+    ['name' => $this->_('AdminMain.calendar.category_day', true), 'current' => ((isset($show_view) ? $show_view : false) == 'timeGridDay'), 'attributes' => ['href' => '#timeGridDay', 'class' => 'ajax fc-button-timeGridDay']]
+];
+$link_buttons = [
+    [
+        'icon' => 'fas fa-plus',
+        'name' => '',
+        'attributes' => [
+            'title' => $this->_('AdminMain.calendar.categorylink_addevent', true),
+            'href' => '#',
+            'id' => 'create_event'
+        ]
+    ]
+];
+
+$this->Widget->clear();
+$this->Widget->setLinks($links);
+$this->Widget->setLinkButtons($link_buttons);
+$this->Widget->create($this->_('AdminMain.calendar.boxtitle_calendar', true), ['id' => 'admin_calendar'], (isset($render_section) ? $render_section : null));
+
+// Create a placeholder form for JS to use to fetch the CSRF token
+$this->Form->create(null, ['id' => 'calendar_form']);
+$this->Form->end();
+?>
+
+<div class="calendar_container">
+    <div class="inner">
+        <div id="calendar"></div>
+    </div>
+</div>
+
+<?php
+$this->Widget->end();
+?>
+
+<script type="text/javascript">
+    var modal_width = 600;
+
+    $(document).ready(function() {
+        var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: '<?php echo (isset($show_view) ? $show_view : 'dayGridMonth');?>',
+            initialDate: <?php echo 1000 * strtotime(
+                (isset($show_year) ? $show_year : date('Y')) . '-' .
+                (isset($show_month) ? $show_month : date('m')) . '-' .
+                (isset($show_day) ? $show_day : date('d'))
+            );?>,
+            headerToolbar: {
+                start: 'today prev,next title',
+                end: null
+            },
+            firstDay: <?php (print (isset($calendar_start_day) ? $this->Html->safe($calendar_start_day) : null));?>,
+            locale: '<?php echo substr(Configure::get('Blesta.language'), 0, 2);?>',
+            slotLabelFormat: {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: false
+            },
+            slotDuration: '00:<?php (print (isset($calendar_time_interval) ? $this->Html->safe($calendar_time_interval) : null));?>:00',
+            slotLabelInterval: '01:00:00',
+            timeZone: 'UTC',
+            selectable: true,
+            editable: true,
+            eventStartEditable: true,
+            eventDurationEditable: true,
+            eventResizableFromStart: true,
+            eventSources: [
+                {
+                    url: '<?php echo $this->Html->safe($this->base_uri . 'main/getevents/');?>',
+                    method: 'GET'
+                }
+            ],
+            select: function(date) {
+                createEvent(calendar, date.start, date.allDay, date.end);
+            },
+            eventClick: function(event) {
+                event.jsEvent.preventDefault();
+
+                if (event.event.durationEditable) {
+                    $('#calendar .fc-view-harness').blestaModal({
+                        title: '<?php $this->_('AdminMain.editevent.boxtitle_editevent');?>',
+                        close: '<?php $this->_('AppController.modal.text_close');?>',
+                        url: '<?php echo $this->base_uri;?>main/editevent/' + event.event.id + '/' + event.event.title + '/',
+                        min_width: modal_width,
+                        max_width: modal_width
+                    });
+                }
+            },
+            eventResize: function(event) {
+                event.jsEvent.preventDefault();
+
+                var data = {
+                    start_date: event.event.start,
+                    end_date: event.event.end,
+                    _csrf_token: $('#calendar_form').find('input[name=_csrf_token]').val()
+                };
+
+                if (data.end_date == null) {
+                    data.end_date = event.event.start;
+                }
+
+                updateEvent(event.event.id, data);
+            },
+            eventDragStart: function(event) {
+              event.jsEvent.preventDefault();
+            },
+            eventDrop: function(event) {
+                event.jsEvent.preventDefault();
+
+                var data = {
+                    start_date: event.event.start,
+                    end_date: event.event.end,
+                    _csrf_token: $('#calendar_form').find('input[name=_csrf_token]').val(),
+                    all_day: event.event.allDay ? 1 : 0
+                };
+
+                if (data.end_date == null) {
+                    data.end_date = event.event.start;
+                }
+
+                updateEvent(event.event.id, data);
+            }
+        });
+        calendar.render();
+
+        // Change tab
+        $('.fc-button-dayGridMonth, .fc-button-timeGridWeek, .fc-button-timeGridDay').click(function() {
+            var current_view = $(this).attr('href').replace(/#/, '');
+            var current_section = $('.links_row li a.fc-button-' + current_view);
+
+            calendar.changeView($(this).attr('href').replace(/#/, ''));
+
+            $('.links_row li').removeClass('current');
+            $(current_section).parents('li').addClass('current');
+
+            return false;
+        });
+
+        // Create an event
+        $('#create_event').click(function() {
+            createEvent(calendar, null, null, null);
+        });
+    });
+
+    /**
+     * Generates the create event dialog
+     */
+    function createEvent(calendar, date_start, all_day, date_end) {
+        var all_day_event = 0;
+        var calendar_view = calendar.getCurrentData().viewSpec.singleUnit;
+        var url = '<?php echo $this->base_uri;?>main/addevent/' + calendar_view + '/';
+        var data = {};
+
+        if (date_start != null) {
+            data.start = date_start;
+
+            if (all_day != null) {
+                if (all_day)
+                    all_day_event = 1;
+                data.all_day = all_day_event;
+            }
+
+            if (date_end != null) {
+                data.end = date_end;
+            }
+        }
+
+        // Create an event
+        $('#calendar .fc-view-harness').blestaModal({
+            title: '<?php $this->_('AdminMain.addevent.boxtitle_addevent');?>',
+            close: '<?php $this->_('AppController.modal.text_close');?>',
+            url: url,
+            data: data,
+            min_width: modal_width,
+            max_width: modal_width,
+            open: true
+        });
+    }
+
+    /**
+     * Updates a calendar event
+     */
+    function updateEvent(event_id, data) {
+        $(this).blestaRequest("post", '<?php echo $this->Html->safe($this->base_uri . 'main/editeventrange/');?>' + event_id, data,
+            function(data) {
+                // success
+            },
+            function(data) {
+                // error
+            },
+            {dataType: "json"}
+        );
+    }
+</script>

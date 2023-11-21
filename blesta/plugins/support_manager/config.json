@@ -1,0 +1,11 @@
+{
+	"version": "2.31.0",
+	"name": "SupportManagerPlugin.name",
+	"description": "SupportManagerPlugin.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://blesta.com"
+		}
+	]
+}

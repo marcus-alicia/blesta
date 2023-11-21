@@ -1,0 +1,24 @@
+{
+    "name": "phillipsdata/csv",
+    "description": "CSV Reader and Writer",
+    "keywords": ["csv", "tab", "delimited", "file", "parser"],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8",
+        "squizlabs/php_codesniffer": "~2.3",
+        "satooshi/php-coveralls": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhillipsData\\Csv\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhillipsData\\Csv\\Tests\\": "tests/"
+        }
+    }
+}

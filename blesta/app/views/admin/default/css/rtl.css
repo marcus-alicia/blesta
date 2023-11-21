@@ -1,0 +1,315 @@
+/* RTL BOOTSTRAP */
+body {
+    direction: rtl;
+}
+th {
+    text-align: right;
+}
+.col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+    float: right;
+}
+.nav {
+    padding-right: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.pull-left {
+    float: right !important;
+}
+.pull-right {
+    float: left !important;
+}
+.text-left {
+    text-align: right;
+}
+.text-right {
+    text-align: left;
+}
+.dropdown-menu {
+    float: right;
+    text-align: right;
+}
+.dropdown-menu-right {
+    right: auto;
+    left: 0;
+}
+
+.nav-tabs > li {
+    float: right;
+    margin-bottom: -1px;
+}
+.pagination li {
+    padding-left : auto;
+    padding-right: 0 ;
+}
+.radio, .checkbox{
+    padding-left : auto;
+    padding-right: 20px ;
+}
+input[type=radio].radio, .radio-inline input[type=radio], input[type=checkbox].checkbox, .checkbox-inline input[type=checkbox]{
+    float: right;
+    margin-left : auto;
+    margin-right: -20px ;
+}
+.list-group-item > .badge {
+    float: left;
+}
+
+.ui-tooltip-content {
+    text-align: right;
+}
+
+.dp-choose-date {
+    padding-right: 0;
+}
+
+@media (min-width: 768px) {
+    .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
+        float: right;
+    }
+    .navbar-nav {
+        float: right;
+        margin: 0;
+    }
+    .navbar-nav > li {
+        float: right;
+    }
+    .navbar-right .dropdown-menu {
+        right: auto;
+        left: 0;
+    }
+    .navbar-right .dropdown-menu-left {
+        right: 0;
+        left: auto;
+    }
+    .navbar-nav.navbar-right:last-child {
+        ;
+    }
+    .navbar-left {
+        float: right !important;
+    }
+    .navbar-right {
+        float: left !important;
+    }
+}
+@media (min-width: 992px) {
+    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
+        float: right;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+        float: right;
+    }
+    .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
+        float: right;
+    }
+}
+
+/*** RTL STYLES ***/
+
+.logo {
+    float: right;
+    margin: 13px 0 3px 15px;
+}
+
+.title {
+    float: right;
+}
+
+.title .container {
+    padding-right: 0;
+    padding-left: auto;
+}
+
+.nav-content .container {
+    padding-right: 5px;
+    padding-left: auto;
+}
+
+div.panel-body div.alert {
+    clear: both;
+}
+
+.col-border {
+    border-right: 1px solid #efefef;
+    border-left: 0px ;
+}
+/* Loading */
+.loading_container {
+    left: auto;
+    right: 0;
+}
+/* Order Page */
+.well-order .total-due {
+    text-align: left;
+}
+
+ul.dropdown-menu {
+    right: 0;
+}
+#left_container {
+    float: right;
+}
+#right_outer {
+    margin: 0 297px 0 0;
+}
+.btn.pull-right {
+    margin-left: auto;
+    margin-right: 4px;
+}
+.left {
+    float: right !important;
+}
+.right {
+    float: left !important;
+}
+.icon-line {
+    padding-left: initial;
+    padding-right: 1.25em;
+}
+.icon-line i {
+    left: auto;
+    right: 0;
+}
+.settings_detail_box ul li {
+    padding: 4px 12px 0 0;
+}
+.settings_detail_box li.heading a,
+.settings_detail_box li.parent a {
+    margin-right: 5px;
+}
+.quick_links ul li div {
+    float: right;
+}
+
+.common_box h3 {
+    margin-right: 10px;
+}
+.common_box .button_row_inline {
+    float: left;
+    top: 0;
+    right: auto;
+    padding: 22px 0 0 5px;
+    left: 0;
+}
+.common_box .button_row.pad_top .actions input.date {
+    margin-left: 0px;
+    margin-right: 8px;
+}
+.common_box .content_section .inner .itemlist ul {
+    margin-left: 300px;
+    margin-right: 150px;
+}
+.common_box .content_section .inner .itemlist .logo {
+    float: right;
+    margin: 0 10px 0 0;
+}
+.common_box .content_section .inner .itemlist.manage_widgets ul {
+    margin-left: 0;
+    margin-right: 150px;
+}
+.common_box h2 span {
+    float: right;
+    padding: 10px 17px 0 0;
+}
+.common_box h2 a {
+    float: left;
+    margin: 4px 0 3px 5px;
+}
+.common_box .links_row ul {
+    float: right;
+}
+.tabs_row ul li {
+    float: right;
+    padding-left: unset;
+    padding-right: 4px;
+}
+.tabs_row .tabs_nav {
+    float: left;
+    border-right: 1px solid #e1e1e1;
+    border-left: none;
+}
+.tabs_row .tabs_nav a.prev {
+    margin-right: 3px;
+    margin-left: unset;
+    border-right: 1px solid #e1e1e1;
+}
+.tabs_row .tabs_nav a.next {
+    margin-left: unset;
+    margin-right: 4px;
+}
+
+.client_detail_box .member_txt {
+    float: right;
+    padding: 0 15px 9px 0;
+}
+.currency_amounts .amounts ul li p {
+    float: right;
+}
+.currency_amounts .amounts ul li span {
+    float: left;
+}
+
+/* Header Styles */
+.header .container {
+    padding-right: 0;
+    padding-left: auto;
+}
+header#main_header h1 {
+    float: right;
+}
+header#main_header .right_section {
+    float: left;
+}
+header#main_header .top_nav {
+    float: left;
+}
+header#main_header .form_row {
+    float: left;
+}
+header#main_header .menu ul.nav > li {
+    float: right;
+}
+header#main_header .breadcrumbs {
+    padding: 12px 41px 0 0;
+}
+header#main_header .serach_block {
+    padding: 5px 33px 0px;
+}
+
+/* Table Styles */
+.table td {
+    text-align: right;
+}
+.table .heading_row td.last {
+    border-right: unset;
+    border-left: 0;
+}
+.table .heading_row td.last span {
+    float: right;
+}
+.table .heading_row td span a.asc::after,
+.table .heading_row td span a.desc::after {
+    padding-left: unset;
+    padding-right: 6px;
+}
+
+.table-curved th:first-child {
+    border-radius: 0;
+}
+.table-curved td, .table-curved th {
+    border-right: 1px solid #e1e1e1;
+    border-top: 1px solid #e1e1e1;
+}
+.table-curved tbody > tr > td {
+    border-right: 1px solid transparent;
+}
+.table-curved tbody > tr > td:last-child {
+    border-left: 1px solid #e1e1e1;
+}
+.table-curved tbody > tr > td:first-child {
+    border-left: none;
+}

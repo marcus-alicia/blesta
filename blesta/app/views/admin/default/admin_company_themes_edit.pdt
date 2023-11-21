@@ -1,0 +1,68 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyThemes.edit.boxtitle_edittheme', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyThemes.edit.field_name', true), 'name');
+                                $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);
+                                ?>
+                            </li>
+                            <?php
+                            // Display each color
+                            foreach ((isset($colors) ? $colors : []) as $key => $color_field) {
+                            ?>
+                            <li class="colors">
+                                <?php
+                                $for = (is_array($color_field) && isset($color_field[0]) ? $color_field[0] : $color_field);
+                                $this->Form->label($this->_('AdminCompanyThemes.edit.field_' . (isset($key) ? $key : null), true), 'colors[' . (isset($for) ? $for : null) . ']');
+
+                                foreach ($color_field as $color) {
+                                    $this->Form->fieldText('colors[' . (isset($color) ? $color : null) . ']', (isset($vars->colors[$color]) ? $vars->colors[$color] : null), ['id' => 'colors[' . (isset($color) ? $color : null) . ']', 'class' => 'color_well']);
+                                }
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyThemes.!theme.tooltip_' . (isset($key) ? $key : null));?></div></span>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyThemes.edit.field_logo_url', true), 'logo_url');
+                                $this->Form->fieldText('logo_url', (isset($vars->logo_url) ? $vars->logo_url : null), ['id' => 'logo_url']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyThemes.!theme.tooltip_logo_url');?></div></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyThemes.edit.field_editthemesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    // Set the color picker for each color field
+    $('li.colors input.color_well').each(function() {
+        $(this).blestaColorPicker();
+    });
+});
+");
+?>

@@ -1,0 +1,42 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminCompanyBilling.acceptedtypes.boxtitle_types', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+
+                // Set a placeholder value so that data is submitted if no checkboxes are set
+                $this->Form->fieldHidden('update', 'true');
+                ?>
+                <div class="inner">
+                    <?php echo (isset($partial_payment_types) ? $partial_payment_types : null);?>
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyBilling.acceptedtypes.client_settings');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('update_clients', 'true', false, ['id' => 'update_clients']);
+                                $this->Form->label($this->_('AdminCompanyBilling.acceptedtypes.field_update_clients', true), 'update_clients', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.acceptedtypes.tooltip_update_clients');?></div></span>
+                            </li>
+                        <ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyBilling.acceptedtypes.field_typessubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

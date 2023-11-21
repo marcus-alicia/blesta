@@ -1,0 +1,20 @@
+<ul>
+    <li>
+        <?php
+            $this->Form->label($this->_('Square.application_id', true), 'application_id');
+            $this->Form->fieldText('application_id', (isset($meta['application_id']) ? $meta['application_id'] : null), ['id' => 'application_id']);
+        ?>
+    </li>
+    <li>
+        <?php
+            $this->Form->label($this->_('Square.access_token', true), 'access_token');
+            $this->Form->fieldText('access_token', (isset($meta['access_token']) ? $meta['access_token'] : null), ['id' => 'access_token']);
+        ?>
+    </li>
+    <li>
+        <?php
+            $this->Form->label($this->_('Square.location_id', true), 'location_id');
+            $this->Form->fieldText('location_id', (isset($meta['location_id']) ? $meta['location_id'] : null), ['id' => 'location_id']);
+        ?>
+    </li>
+</ul>

@@ -1,0 +1,27 @@
+
+<ul>
+    <li>
+        <?php
+        $this->Form->label($this->_('Braintree.merchant_id', true), 'merchant_id');
+        $this->Form->fieldText('merchant_id', (isset($meta['merchant_id']) ? $meta['merchant_id'] : null), ['id' => 'merchant_id']);
+        ?>
+    </li>
+    <li>
+        <?php
+        $this->Form->label($this->_('Braintree.public_key', true), 'public_key');
+        $this->Form->fieldText('public_key', (isset($meta['public_key']) ? $meta['public_key'] : null), ['id' => 'public_key']);
+        ?>
+    </li>
+    <li>
+        <?php
+        $this->Form->label($this->_('Braintree.private_key', true), 'private_key');
+        $this->Form->fieldText('private_key', (isset($meta['private_key']) ? $meta['private_key'] : null), ['id' => 'private_key']);
+        ?>
+    </li>
+    <li>
+        <?php
+        $this->Form->fieldCheckbox('live_mode', 'true', ((isset($meta['live_mode']) ? $meta['live_mode'] : 'false') == 'true'), ['id' => 'live_mode']);
+        $this->Form->label($this->_('Braintree.live_mode', true), 'live_mode', ['class' => 'inline']);
+        ?>
+    </li>
+</ul>

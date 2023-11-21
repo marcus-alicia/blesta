@@ -1,0 +1,45 @@
+
+    <?php
+    $this->Form->create();
+
+    foreach ($whois_fields ?? [] as $name => $field) {
+        if ($field['type'] == 'hidden') {
+            call_user_func_array([$this->Form, $field['type']], [$name, ($vars->{$name} ?? $field['options'] ?? '')]);
+        }
+    }
+
+    $i = 0;
+    foreach ($sections ?? [] as $index => $key) {
+    ?>
+    <div class="title_row<?php echo ($i == 0 ? ' first' : '');?>">
+        <h3><?php $this->_('Connectreseller.tab_whois.section_' . $key);?></h3>
+    </div>
+
+    <div class="pad">
+        <ul>
+            <?php
+            foreach ($whois_fields ?? [] as $name => $field) {
+            ?>
+            <li>
+                <?php
+                $this->Form->label($field['label'], $name);
+                $this->Form->fieldText($key . '[' . $name . ']', ($vars->{$key}[$name] ?? ''), ['id' => $name, 'placeholder' => $field['label']]);
+                ?>
+            </li>
+            <?php
+            }
+            ?>
+        </ul>
+    </div>
+    <?php
+    }
+    ?>
+
+    <div class="button_row">
+        <?php
+        $this->Form->fieldSubmit(null, $this->_('Connectreseller.tab_whois.field_submit', true), ['class' => 'btn btn-primary float-right']);
+        ?>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>

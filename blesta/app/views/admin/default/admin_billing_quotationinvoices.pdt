@@ -1,0 +1,37 @@
+
+                    <?php
+                    if (($invoices ?? false) && ($num_invoices = count($invoices)) > 0) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td class="fixed_small border_none"><i class="fas fa-share fa-flip-vertical"></i></td>
+                            <td class="border_left"><?php $this->_('AdminBilling.quotationinvoices.headingexpand_invoice');?></td>
+                            <td><?php $this->_('AdminBilling.quotationinvoices.headingexpand_amount');?></td>
+                            <td><?php $this->_('AdminBilling.quotationinvoices.headingexpand_paid');?></td>
+                            <td><?php $this->_('AdminBilling.quotationinvoices.headingexpand_date_billed');?></td>
+                            <td class="last"><?php $this->_('AdminBilling.quotationinvoices.headingexpand_options');?></td>
+                        </tr>
+                        <?php
+                        for ($i = 0; $i < $num_invoices; $i++) {
+                        ?>
+                        <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                            <td>&nbsp;</td>
+                            <td><?php (print (isset($invoices[$i]->id_code) ? $this->Html->safe($invoices[$i]->id_code) : null));?></td>
+                            <td><?php echo $this->CurrencyFormat->format((isset($invoices[$i]->total) ? $this->Html->safe($invoices[$i]->total) : null), (isset($invoices[$i]->currency) ? $this->Html->safe($invoices[$i]->currency) : null), ['html_code' => true]);?></td>
+                            <td><?php echo $this->CurrencyFormat->format((isset($invoices[$i]->paid) ? $this->Html->safe($invoices[$i]->paid) : null), (isset($invoices[$i]->currency) ? $this->Html->safe($invoices[$i]->currency) : null), ['html_code' => true]);?></td>
+                            <td><?php echo $this->Date->cast((isset($invoices[$i]->date_billed) ? $this->Html->safe($invoices[$i]->date_billed) : null), 'date_time');?></td>
+                            <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/editinvoice/' . ($client->id ?? null) . '/' . ($invoices[$i]->id ?? null) . '/');?>"><?php $this->_('AdminBilling.quotationinvoices.option_view');?></a></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box"><?php $this->_('AdminBilling.quotationinvoices.invoices_no_results');?></div>
+                    </div>
+                    <?php
+                    }
+                    ?>

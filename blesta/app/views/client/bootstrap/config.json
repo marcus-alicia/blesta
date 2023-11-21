@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"name": "Bootstrap",
+	"description": "Built on Bootstrap 4.6.",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"require": {
+		"blesta": ">=5.0.0"
+	}
+}

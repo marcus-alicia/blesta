@@ -1,0 +1,27 @@
+                <div class="navfix"></div>
+                <div class="col-md-12">
+                    <?php
+                    if ((isset($order_form->template_style) ? $order_form->template_style : null) != 'list') {
+                    ?>
+                    <div class="section-title">
+                        <h3><?php $this->_('Main.index.heading');?></h3>
+                        <p><?php $this->_('Main.index.subheading');?></p>
+                    </div>
+                    <?php
+                    }
+                    ?>
+
+                    <?php
+                    echo (isset($message) ? $message : null);
+                    echo (isset($package_group_partial) ? $package_group_partial : null);
+                    ?>
+                </div>
+                <?php
+                if ((isset($cart['items']) ? $cart['items'] : null) && !empty($cart['items'])) {
+                ?>
+                <div class="col-md-12">
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'order/cart/index/' . (isset($order_form->label) ? $order_form->label : null));?>" class="btn btn-secondary btn-sm float-right"><i class="fas fa-shopping-cart"></i> <?php $this->_('Main.index.show_cart_btn');?></a>
+                </div>
+                <?php
+                }
+                ?>

@@ -1,0 +1,46 @@
+{
+    "version": "3.17.0",
+    "name": "Solusvm.name",
+    "description": "Solusvm.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "solusvm_hostname"
+    },
+    "service": {
+        "name_key": "solusvm_hostname"
+    },
+    "module": {
+        "row": "Solusvm.module_row",
+        "rows": "Solusvm.module_row_plural",
+        "row_key": "server_name",
+        "group": "Solusvm.module_group"
+    },
+    "email_tags": {
+        "module": ["host", "port"],
+        "package": [],
+        "service": ["solusvm_vserver_id",
+            "solusvm_console_user",
+            "solusvm_console_password",
+            "solusvm_hostname",
+            "solusvm_main_ip_address",
+            "solusvm_internal_ip",
+            "solusvm_extra_ip_addresses",
+            "solusvm_node",
+            "solusvm_username",
+            "solusvm_password",
+            "solusvm_plan",
+            "solusvm_root_password",
+            "solusvm_template",
+            "solusvm_type",
+            "solusvm_virt_id",
+            "solusvm_vnc_ip",
+            "solusvm_vnc_port",
+            "solusvm_vnc_password"
+        ]
+    }
+}

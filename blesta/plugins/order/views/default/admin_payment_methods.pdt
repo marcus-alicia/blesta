@@ -1,0 +1,86 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php
+            if (!(isset($render_section) ? $render_section : null)) {
+                echo (isset($message) ? $message : null);
+            }
+            ?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminPaymentMethods.index.affiliate_payment_method_add', true),
+                            'href' => $this->Html->safe($this->base_uri . 'plugin/order/admin_payment_methods/add/')
+                        ]
+                    ]
+                ];
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminPaymentMethods.index.boxtitle_payment_methods', true), ['id'=>'admin_payment_methods'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($payment_methods) ? $payment_methods : null) && !empty($payment_methods)) {
+                ?>
+                <table class="table" id="payment_methods">
+                    <tr class="heading_row">
+                        <td><span><?php $this->_('AdminPaymentMethods.index.heading_name');?></span></td>
+                        <td class="last"><span><?php $this->_('AdminPaymentMethods.index.heading_options');?></span></td>
+                    </tr>
+                    <?php
+                    // Display all affiliates
+                    $i = 0;
+                    foreach ($payment_methods as $payment_method) {
+                    ?>
+                    <tr<?php echo ($i++ % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php echo (isset($payment_method->name) ? $this->Html->safe($payment_method->name) : null);?></td>
+                        <td>
+                            <a href="<?php echo $this->base_uri . 'plugin/order/admin_payment_methods/edit/' . (isset($payment_method->id) ? $this->Html->safe($payment_method->id) : null) . '/';?>"><?php $this->_('AdminPaymentMethods.index.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'plugin/order/admin_payment_methods/delete/');
+                            $this->Form->fieldHidden('id', (isset($payment_method->id) ? $payment_method->id : null));
+                            ?>
+                            <a href="<?php echo $this->base_uri . 'plugin/order/admin_payment_methods/delete/' . (isset($payment_method->id) ? $this->Html->safe($payment_method->id) : null) . '/';?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminPaymentMethods.index.confirm_delete', true));?>"><?php $this->_('AdminPaymentMethods.index.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminPaymentMethods.index.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#payment_methods a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+    });
+</script>

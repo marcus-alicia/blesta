@@ -1,0 +1,102 @@
+.order-listing .card {
+    background-color: #fff;
+    margin-bottom: 20px;
+}
+
+.order-listing .head-item {
+    padding: 5px 15px;
+}
+
+.order-listing .head-item h3 {
+    margin-top: 0px;
+}
+
+#groups, #available {
+    display: block;
+    margin-top: 5px;
+    vertical-align: top;
+    width: auto;
+    height: 250px;
+    min-width: 250px;
+    background-color: #e1e1e1;
+}
+
+#groups .ui-sortable-placeholder, #available .ui-sortable-placeholder {
+    background-color: #e1e1e1;
+    visibility: visible;
+}
+
+#groups td, #available td {
+    min-width: 250px;
+    border-bottom: solid 1px #e1e1e1;
+    border-right: solid 1px #e1e1e1;
+    background-color: #fff;
+}
+
+#groups td:hover, #available td:hover {
+    background-color: #f1f1f1;
+}
+
+#groups tr:first-child td:hover, #available tr:first-child td:hover {
+    background-color: #fff;
+}
+
+#orders .icon .fas.fa-times-circle {
+    color: #cb0000;
+}
+
+#orders .icon .fas.fa-check-circle {
+    color: #60cb00;
+}
+
+table tr.non-sortable td {
+    font-size: 10px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.text-middle, table tr td.text-middle {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.package-group-arrows {
+    vertical-align: bottom;
+    margin-bottom: 125px;
+}
+
+.connected-sortable {
+    height: 100%;
+    display: block;
+    overflow: hidden auto;
+    word-break: break-word;
+}
+
+.affiliate_boxes {
+    display: flex;
+    justify-content: center;
+    justify-content: space-around;
+    word-break: break-word;
+}
+
+.affiliate_boxes .card {
+    padding: 10px;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 10px;
+    min-height: 110px;
+}
+
+.card input.referral_link {
+    background-color: #fff;
+}
+
+#graph_affiliate {
+    height: 400px;
+}
+
+.text-center {
+    text-align: center;
+}

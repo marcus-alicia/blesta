@@ -1,0 +1,73 @@
+
+    <?php
+    $this->Form->create();
+    ?>
+    <h4><?php $this->_('Connectreseller.tab_client_settings.heading_settings');?></h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group mb-0">
+                <?php
+                $this->Form->label($this->_('Connectreseller.tab_client_settings.field_registrar_lock', true), 'registrarlock');
+                ?>
+            </div>
+            <div class="form-group mb-0">
+                <?php
+                $this->Form->fieldRadio('registrarlock', '1', ($vars->isThiefProtected ?? null) == '1', ['id' => 'registrarlock_yes']);
+                $this->Form->label($this->_('Connectreseller.tab_client_settings.field_registrar_lock_yes', true), 'registrarlock_yes', ['class' => 'inline']);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                $this->Form->fieldRadio('registrarlock', '0', ($vars->isThiefProtected ?? null) == '0', ['id' => 'registrarlock_no']);
+                $this->Form->label($this->_('Connectreseller.tab_client_settings.field_registrar_lock_no', true), 'registrarlock_no', ['class' => 'inline']);
+                ?>
+            </div>
+
+            <?php
+            if ($id_protection ?? false) {
+            ?>
+            <div class="form-group mb-0">
+                <?php
+                $this->Form->label($this->_('Connectreseller.tab_client_settings.field_whois_privacy', true), 'privatewhois');
+                ?>
+            </div>
+            <div class="form-group mb-0">
+                <?php
+                $this->Form->fieldRadio('privatewhois', '1', ($vars->isPrivacyProtection ?? null) == '1', ['id' => 'privatewhois_yes']);
+                $this->Form->label($this->_('Connectreseller.tab_client_settings.field_whois_privacy_state_yes', true), 'privatewhois_yes', ['class' => 'inline']);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                $this->Form->fieldRadio('privatewhois', '0', ($vars->isPrivacyProtection ?? null) == '0', ['id' => 'privatewhois_no']);
+                $this->Form->label($this->_('Connectreseller.tab_client_settings.field_whois_privacy_state_no', true), 'privatewhois_no', ['class' => 'inline']);
+                ?>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+    </div>
+
+    <?php
+    if ($epp_code ?? false) {
+    ?>
+    <h4><?php $this->_('Connectreseller.tab_client_settings.heading_auth_code');?></h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p><?php $this->_('Connectreseller.tab_client_settings.text_auth_code');?></p>
+                <div class="badge badge-info mt-2"><?php echo $this->Html->safe($vars->authCode ?? '');?></div>
+            </div>
+        </div>
+    </div>
+    <?php
+    }
+    ?>
+
+    <button class="btn btn-light float-right" type="submit">
+        <i class="fas fa-edit"></i> <?php $this->_('Connectreseller.tab_client_settings.field_submit');?>
+    </button>
+    <?php
+    $this->Form->end();
+    ?>

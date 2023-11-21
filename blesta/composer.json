@@ -1,0 +1,196 @@
+{
+    "name": "blesta/blesta",
+    "type": "project",
+    "description": "The Billing Platform for Hosting Providers.",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.2.0",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-curl": "*",
+        "ext-openssl": "*",
+
+        "blesta/alipay": "~1.3.0",
+        "blesta/authorize_net_acceptjs": "^1.0.1",
+        "blesta/authorize_net": "~1.9.1",
+        "blesta/bitpay": "~2.1.0",
+        "blesta/blue_pay": "~1.3.0",
+        "blesta/braintree": "~1.4.2",
+        "blesta/btcpay_server": "^1.0.0",
+        "blesta/ccavenue": "~2.3.0",
+        "blesta/checkout2": "~3.2.0",
+        "blesta/coingate": "~1.4.0",
+        "blesta/coinbase_commerce": "~1.0.1",
+        "blesta/coin_payments": "~1.5.0",
+        "blesta/converge": "~1.4.0",
+        "blesta/cornerstone": "~1.2.0",
+        "blesta/eway": "~1.4.0",
+        "blesta/gocardless": "~1.4.1",
+        "blesta/hubtel": "~1.4.0",
+        "blesta/kassacompleet": "~1.2.0",
+        "blesta/kassacompleetideal": "~1.2.0",
+        "blesta/offline": "~1.3.0",
+        "blesta/pagseguro": "~1.4.0",
+        "blesta/payfast": "^1.0.0",
+        "blesta/payflow": "~1.3.0",
+        "blesta/payjunction": "~1.4.0",
+        "blesta/paypal_checkout": "~1.0.2",
+        "blesta/paypal_payments_standard": "~1.7.0",
+        "blesta/paystack": "~1.3.0",
+        "blesta/payumoney": "~1.2.1",
+        "blesta/perfectmoney": "~1.1.0",
+        "blesta/quantum_gateway": "~1.4.0",
+        "blesta/razorpay": "~1.1.1",
+        "blesta/skrill": "~1.5.0",
+        "blesta/stripe_gateway": "~1.8.0",
+        "blesta/stripe_payments": "~1.7.2",
+        "blesta/square": "~1.5.0",
+        "blesta/widepay": "~1.2.0",
+
+        "blesta/apnscp": "~1.5.2",
+        "blesta/blesta_license": "~1.5.0",
+        "blesta/centovacast": "~1.9.2",
+        "blesta/centoswebpanel": "~2.6.0",
+        "blesta/connectreseller": "~1.0.0",
+        "blesta/cpanel": "~2.19.0",
+        "blesta/cwatch": "~2.8.0",
+        "blesta/cyberpanel": "~2.7.0",
+        "blesta/direct_admin": "~2.15.1",
+        "blesta/enom": "~2.11.3",
+        "blesta/generic_domains": "~1.1.1",
+        "blesta/gogetssl": "~2.9.1",
+        "blesta/internetbs": "^1.1.3",
+        "blesta/interworx": "~2.12.0",
+        "blesta/ispconfig": "~1.9.0",
+        "blesta/ispmanager": "~1.4.0",
+        "blesta/logicboxes": "~2.11.2",
+        "blesta/multicraft": "~2.6.1",
+        "blesta/namecheap": "~2.11.2",
+        "blesta/namesilo": "~3.1.1",
+        "blesta/none": "~1.0.0",
+        "blesta/opensrs": "^1.0.2",
+        "blesta/ovh_domains": "^1.0.2",
+        "blesta/plesk": "~2.15.2",
+        "blesta/proxmox": "~3.0.0",
+        "blesta/pterodactyl": "^1.8.2",
+        "blesta/solusvm": "~3.17.0",
+        "blesta/teamspeak": "~1.8.0",
+        "blesta/tcadmin": "~1.9.0",
+        "blesta/thesslstore_module": "~1.10.0",
+        "blesta/universal_module": "~1.10.0",
+        "blesta/vesta": "~1.9.1",
+        "blesta/virtualmin": "~1.8.0",
+        "blesta/vpsdotnet": "~2.12.0",
+        "blesta/vultr": "~2.0.0",
+        "blesta/whmsonic": "~1.8.0",
+
+        "blesta/auto_cancel": "~1.4.0",
+        "blesta/billing_overview": "~1.12.0",
+        "blesta/client_cards": "~1.2.0",
+        "blesta/client_documents": "~2.6.0",
+        "blesta/cms": "~2.8.0",
+        "blesta/domains": "~1.10.0",
+        "blesta/download_manager": "~2.10.1",
+        "blesta/extension_generator": "~2.0.1",
+        "blesta/feed_reader": "~2.8.0",
+        "blesta/import_manager": "~1.17.2",
+        "blesta/ip_unblocker": "~1.2.0",
+        "blesta/mass_mailer": "~1.7.0",
+        "blesta/order": "~2.36.7",
+        "blesta/phpids": "~2.0.0",
+        "blesta/reassign_pricing": "~1.6.0",
+        "blesta/shared_login": "~1.4.0",
+        "blesta/softaculous": "~1.5.3",
+        "blesta/support_manager": "~2.31.0",
+        "blesta/system_overview": "~1.11.0",
+        "blesta/system_status": "~1.13.0",
+        "blesta/thesslstore": "~1.3.0",
+
+        "blesta/amazon-s3-php-class": "~0.6.0",
+        "blesta/binary-to-text-php": "~2.0.0",
+        "blesta/ckeditor": "~2.1.0",
+        "blesta/consoleation": "~1.0.0",
+        "blesta/h2o": "~0.7.0",
+        "blesta/items": "~1.1.0",
+        "blesta/parsedown": "~2.0.1",
+        "blesta/pricing": "~3.4.0",
+        "blesta/proration": "~2.0.0",
+
+        "blesta/twilio": "~2.1.0",
+
+        "bitpay/sdk": "^5.0",
+        "direte/microftps": "~1.1",
+        "geoip2/geoip2": "~2.13.0",
+        "google/recaptcha": "~1.2.4",
+        "gregwar/captcha": "~1.1.9",
+        "html2text/html2text": "~4.3.1",
+        "io-developer/php-whois": "^4.1.10",
+        "ircmaxell/password-compat": "~1.0.4",
+        "jeroendesloovere/vcard": "~1.7.3",
+        "minphp/bridge": "~3.0.0",
+        "monolog/monolog": "~2.9.1",
+        "phillipsdata/priority-schedule": "~1.0.2",
+        "phpseclib/phpseclib": "2.0.12",
+        "ph-7/eu-vat-validator": "~2.9",
+        "symfony/polyfill-php73": "~1.27.0",
+        "symfony/polyfill-php80": "~1.27.0",
+        "symfony/mailer": "^5.4",
+        "tecnickcom/tcpdf": "~6.6.2"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "~2.2",
+        "phpunit/phpunit": "~8.5"
+    },
+    "suggest": {
+        "ext-gd": "The gd extension is recommended for better image support during PDF generation.",
+        "ext-gmp": "The gmp extension is highly recommended for better performance.",
+        "ext-imap": "The imap extension is required to send and receive mail via SMTP and IMAP.",
+        "ext-libxml": "The libxml extension is highly recommended as it may be required to interface with some systems.",
+        "ext-mailparse": "The mailparse extension is required to parse incoming emails.",
+        "ext-mbstring": "The mbstring extension is required by some optional features.",
+        "ext-simplexml": "The simplexml extension is highly recommended as it may be required to interface with some systems.",
+        "ext-zlib": "The zlib extension is highly recommend for better performance."
+    },
+    "config": {
+        "vendor-dir": "vendors",
+        "preferred-install": "dist",
+        "platform": {
+            "php": "7.2.34"
+        },
+        "allow-plugins": {
+            "composer/installers": true,
+            "blesta/composer-installer": true
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://composer.blesta.com"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/phillipsdata/microftps"
+        }
+    ],
+    "extra": {
+        "installer-paths": {
+            "plugins/{$name}": ["type:blesta-plugin"],
+            "components/gateways/merchant/{$name}": ["type:blesta-gateway-merchant"],
+            "components/gateways/nonmerchant/{$name}": ["type:blesta-gateway-nonmerchant"],
+            "components/messengers/{$name}": ["type:blesta-messenger"],
+            "components/modules/{$name}": ["type:blesta-module"],
+            "components/invoice_templates/{$name}": ["type:blesta-invoice-template"],
+            "components/reports/{$name}": ["type:blesta-reports"]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Blesta\\Core\\": "core/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Blesta\\Tests\\": "../tests/"
+        }
+    }
+}

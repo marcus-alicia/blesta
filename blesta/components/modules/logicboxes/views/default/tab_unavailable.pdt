@@ -1,0 +1,6 @@
+
+    <div class="pad">
+        <div class="empty_section">
+            <div class="empty_box"><?php $this->_('Logicboxes.tab_unavailable.message');?></div>
+        </div>
+    </div>

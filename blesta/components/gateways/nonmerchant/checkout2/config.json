@@ -1,0 +1,13 @@
+{
+	"version": "3.2.0",
+	"name": "Checkout2.name",
+	"description": "Checkout2.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["AED", "ARS", "AUD", "BRL", "CAD", "CHF", "DKK", "EUR", "GBP", "HKD", "ILS", "INR", "JPY", "LTL", "MXN", "MYR", "NOK", "NZD", "PHP", "RON", "RUB", "SEK", "SGD", "TRY", "USD", "ZAR"],
+	"signup_url": "https://www.2checkout.com/referral?r=47bb7d9a74"
+}

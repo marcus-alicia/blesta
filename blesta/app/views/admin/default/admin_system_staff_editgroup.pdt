@@ -1,0 +1,143 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemStaff.editgroup.boxtitle_editgroup', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminSystemStaff.editgroup.heading_general');?></h3>
+                    </div>
+
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.editgroup.field_name', true), 'name');?>
+                                <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.editgroup.field_company', true), 'company_id');?>
+                                <?php $this->Form->fieldSelect('company_id', (isset($companies) ? $companies : null), (isset($vars->company_id) ? $vars->company_id : null), ['id' => 'company_id']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('session_lock', '1', (isset($vars->session_lock) ? $vars->session_lock : null) == '1', ['id' => 'session_lock']);?>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.addgroup.field_session_lock', true), 'session_lock', ['class' => 'inline']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminSystemStaff.editgroup.heading_permissions');?></h3>
+                    </div>
+
+                    <div class="pad">
+                        <dl class="acl_groups">
+                        <?php
+                        $first = true;
+                        foreach ((isset($permissions) ? $permissions : []) as $group) {
+                        ?>
+                            <div>
+                                <dt<?php echo ($first && !($first = false) ? ' class="first"' : '');?>>
+                                <?php $this->Form->fieldCheckbox('permission_group[]', (isset($group->id) ? $this->Html->safe($group->id) : null), in_array((isset($group->id) ? $this->Html->safe($group->id) : null), (array)(isset($vars->permission_group) ? $vars->permission_group : null)), ['id' => 'permission_group_' . (isset($group->id) ? $this->Html->safe($group->id) : null)]);?>
+                                <?php $this->Form->label($group->name_trans, 'permission_group_' . (isset($group->id) ? $this->Html->safe($group->id) : null), ['class' => 'inline']);?>
+                                    <span class="check_all"><?php $this->_('AdminSystemStaff.!groups.text_group_start');?><a class="check" href="#"><?php $this->_('AdminSystemStaff.addgroup.text_check_all');?></a> <?php $this->_('AdminSystemStaff.!groups.text_separator');?> <a class="uncheck" href="#"><?php $this->_('AdminSystemStaff.addgroup.text_uncheck_all');?></a><?php $this->_('AdminSystemStaff.!groups.text_group_end');?></span>
+                                </dt>
+                                <?php
+                                foreach ($group->permissions as $permission) {
+                                ?>
+                                <dd>
+                                <?php $this->Form->fieldCheckbox('permission[]', (isset($permission->id) ? $this->Html->safe($permission->id) : null), in_array($permission->id, (array)(isset($vars->permission) ? $vars->permission : null)), ['id' => 'permission_' . (isset($permission->id) ? $this->Html->safe($permission->id) : null)]);?>
+                                <?php $this->Form->label($permission->name_trans, 'permission_' . (isset($permission->id) ? $this->Html->safe($permission->id) : null), ['class' => 'inline']);?>
+                                </dd>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        <?php
+                        }
+                        ?>
+                        </dl>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminSystemStaff.editgroup.heading_email_notices');?></h3>
+                    </div>
+
+                    <div class="pad">
+                        <dl>
+                            <?php
+                            foreach ((isset($bcc_notices) ? $bcc_notices : []) as $email_group) {
+                            ?>
+                            <dd>
+                                <?php $this->Form->fieldCheckbox('notices[]', (isset($email_group->action) ? $this->Html->safe($email_group->action) : null), in_array((isset($email_group->action) ? $this->Html->safe($email_group->action) : null), (array)(isset($vars->notices) ? $vars->notices : null)), ['id' => 'notice_' . (isset($email_group->id) ? $this->Html->safe($email_group->id) : null)]);?>
+                                <?php $this->Form->label($email_group->lang, 'notice_' . (isset($email_group->id) ? $this->Html->safe($email_group->id) : null), ['class' => 'inline']);?>
+                                <?php
+                                if (!empty($email_group->lang_description)) {
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php (print (isset($email_group->lang_description) ? $this->Html->safe($email_group->lang_description) : null));?></div></span>
+                                <?php
+                                }
+                                ?>
+                            </dd>
+                            <?php
+                            }
+                            unset($email_group);
+                            ?>
+                        </dl>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminSystemStaff.editgroup.heading_subscription_email_notices');?></h3>
+                    </div>
+
+                    <div class="pad">
+                        <dl>
+                            <?php
+                            foreach ((isset($subscription_notices) ? $subscription_notices : []) as $email_group) {
+                            ?>
+                            <dd>
+                                <?php $this->Form->fieldCheckbox('notices[]', (isset($email_group->action) ? $this->Html->safe($email_group->action) : null), in_array((isset($email_group->action) ? $this->Html->safe($email_group->action) : null), (array)(isset($vars->notices) ? $vars->notices : null)), ['id' => 'notice_' . (isset($email_group->id) ? $this->Html->safe($email_group->id) : null)]);?>
+                                <?php $this->Form->label($email_group->lang, 'notice_' . (isset($email_group->id) ? $this->Html->safe($email_group->id) : null), ['class' => 'inline']);?>
+                                <?php
+                                if (!empty($email_group->lang_description)) {
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php (print (isset($email_group->lang_description) ? $this->Html->safe($email_group->lang_description) : null));?></div></span>
+                                <?php
+                                }
+                                ?>
+                            </dd>
+                            <?php
+                            }
+                            unset($email_group);
+                            ?>
+                        </dl>
+                    </div>
+                    <div class="button_row"><a class="btn btn-primary pull-right submit" href="#"<?php echo (isset($is_assigned_group) ? $is_assigned_group : null) ? ' rel="' . $this->Html->safe($this->_('AdminSystemStaff.editgroup.dialog_confirm_edit_assigned', true)) . '"' : '';?>><?php $this->_('AdminSystemStaff.editgroup.field_groupsubmit');?></a></div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+
+        // Handle confirmation on delete action
+        $('#right_container a.btn.submit[rel]').blestaModalConfirm({base_url: '" . $this->base_uri . "', close: '" . $this->_('AppController.modal.text_close', true) . "', submit: true});
+
+        $('.check').click(function() {
+            $(this).closest('div').find('input').prop('checked', true);
+            return false;
+        });
+        $('.uncheck').click(function() {
+            $(this).closest('div').find('input').prop('checked', false);
+            return false;
+        });
+    });
+");
+?>

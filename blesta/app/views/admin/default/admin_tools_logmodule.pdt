@@ -1,0 +1,69 @@
+
+        <?php
+        $tabs = [];
+        foreach ((isset($link_tabs) ? $link_tabs : []) as $tab) {
+            $tabs[] = [
+                'name' => $tab['name'],
+                'current' => ($tab['uri'] == 'module'),
+                'attributes' => [
+                    'href' => $this->base_uri . 'tools/logs/' . $tab['uri'] . '/',
+                    'class' => 'ajax'
+                ]
+            ];
+        }
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('AdminTools.logs.boxtitle_logs', true), ['id' => 'admin_tools_logmodule'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="inner">
+            <?php
+            if ((isset($module_logs) ? $module_logs : false) && ($num_logs = count($module_logs)) > 0) {
+            ?>
+            <table class="table">
+                <tr class="heading_row">
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/logs/module/?sort=module_name&order=' . ($sort == 'module_name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'module_name' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.logmodule.text_name');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/logs/module/?sort=staff_first_name&order=' . ($sort == 'staff_first_name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'staff_first_name' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.logmodule.text_staffname');?></a></span></td>
+                    <td class="last"><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/logs/module/?sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.logmodule.text_date');?></a></span></td>
+                </tr>
+                <?php
+                for ($i = 0; $i < $num_logs; $i++) {
+                ?>
+                <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'expand', 'module_list');?>">
+                    <td><a href="<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'settings/company/modules/manage/' . (isset($module_logs[$i]->module_id) ? $this->Html->safe($module_logs[$i]->module_id) : null) . '/';?>"><?php (print (isset($module_logs[$i]->module_name) ? $this->Html->safe($module_logs[$i]->module_name) : null));?></a></td>
+                    <td><?php echo (isset($module_logs[$i]->staff_first_name) ? $this->Html->safe($module_logs[$i]->staff_first_name) : null) . ' ' . (isset($module_logs[$i]->staff_last_name) ? $this->Html->safe($module_logs[$i]->staff_last_name) : null);?></td>
+                    <td><?php echo $this->Date->cast((isset($module_logs[$i]->date_added) ? $this->Html->safe($module_logs[$i]->date_added) : null), 'date_time');?></td>
+                </tr>
+                <tr class="expand_details" id="group_<?php (print (isset($module_logs[$i]->group) ? $this->Html->safe($module_logs[$i]->group) : null));?>">
+                    <td colspan="3" class="subtable">
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+            <?php
+                $this->Pagination->build();
+            } else {
+            ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminTools.logmodule.no_results');?>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Fetch all module logs applied to the given module log group
+        $(".module_list").click(function() {
+            $(this).blestaUpdateRow("<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'tools/moduleloglist/';?>" + $(this).next("tr").attr("id").split("_")[1], ".subtable");
+        });
+    });
+</script>

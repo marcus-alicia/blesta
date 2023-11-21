@@ -1,0 +1,11 @@
+/* Mass Mailer */
+.replacement_tags {
+    max-height: 250px;
+    overflow: auto;
+    background-color: #fff;
+    font-size: 12px;
+}
+
+.replacement_tags .table {
+    margin:4px 0 4px 0;
+}

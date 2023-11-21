@@ -1,0 +1,9 @@
+{
+    "name": "blesta/feed_reader",
+    "description": "Feed Reader",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

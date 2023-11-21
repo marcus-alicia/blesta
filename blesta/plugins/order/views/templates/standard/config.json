@@ -1,0 +1,18 @@
+{
+	"version": "1.0.0",
+	"name": "Standard Template Pack",
+	"description": "Standard order form template pack for the Order plugin.",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"styles": {
+		"default": {
+			"name": "Standard",
+			"thumbnail": "images/thumb_default.png",
+			"screenshot": "images/full_default.png"
+		}
+	}
+}

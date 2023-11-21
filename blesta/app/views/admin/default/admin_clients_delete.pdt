@@ -1,0 +1,58 @@
+
+<div class="common_box">
+    <div class="content_section">
+        <?php
+        echo (isset($message) ? $message : null);
+        ?>
+        <div id="client_deletion_error"></div>
+        <div class="inner">
+            <?php
+            $this->Form->create(null, ['id' => 'admin_client_delete']);
+            ?>
+            <ul>
+                <li>
+                    <?php $this->Form->label($this->_('AdminClients.delete.field_password', true), 'password');?>
+                    <?php $this->Form->fieldPassword('password', (isset($vars->password) ? $vars->password : null), ['id' => 'password']);?>
+                    <?php $this->Form->fieldHidden('client_id', (isset($client_id) ? $client_id : null), ['id' => 'client_id']);?>
+                </li>
+            </ul>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('submit', $this->_('AdminClients.delete.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#admin_client_delete').submit(function(event) {
+            // Disable form submission to ensure single submission
+            if ($(this).blestaDisableFormSubmission($(this))) {
+                $(this).blestaRequest(
+                    "POST",
+                    $(this).attr('action'),
+                    $(this).serialize(),
+                    // On success
+                    function(data) {
+                        if (data.error) {
+                            // Show the error and enable submission
+                            $('#client_deletion_error').html(data.error);
+                            $('#admin_client_delete').blestaEnableFormSubmission($('#admin_client_delete'));
+                        } else if (data.redirect) {
+                            // Redirect on success
+                            window.location.replace(data.redirect);
+                        }
+                    },
+                    null,
+                    {dataType: 'json'}
+                );
+            }
+
+            return false;
+        });
+    });
+</script>

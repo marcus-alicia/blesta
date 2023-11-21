@@ -1,0 +1,61 @@
+
+        <div class="common_box slim">
+            <div class="content_section">
+                <div class="inner">
+                    <?php
+                    $this->Form->create(null, ['class' => 'disable-on-submit']);
+                    ?>
+                    <ul>
+                        <li>
+                            <?php $this->Form->label($this->_('AdminMain.editevent.field_title', true), 'title');?>
+                            <?php $this->Form->fieldText('title', (isset($vars->title) ? $vars->title : null), ['id' => 'title']);?>
+                        </li>
+                        <li>
+                            <?php $this->Form->fieldCheckbox('all_day', '1', ((isset($vars->all_day) ? $vars->all_day : '0') == '1'), ['id' => 'all_day']);?>
+                            <?php $this->Form->label($this->_('AdminMain.editevent.field_all_day', true), 'all_day', ['class' => 'inline']);?>
+                        </li>
+                        <li>
+                            <?php $this->Form->label($this->_('AdminMain.editevent.field_start_date', true), 'start_date');?>
+                            <?php $this->Form->fieldText('start_date', (isset($vars->start_date) ? $vars->start_date : null), ['id' => 'start_date', 'class' => 'date']);?>
+                            <?php $this->Form->fieldSelect('start_time', (isset($date_times) ? $date_times : null), (isset($vars->start_time) ? $vars->start_time : null), ['id' => 'start_time']);?>
+                        </li>
+                        <li>
+                            <?php $this->Form->label($this->_('AdminMain.editevent.field_end_date', true), 'end_date');?>
+                            <?php $this->Form->fieldText('end_date', (isset($vars->end_date) ? $vars->end_date : null), ['id' => 'end_date', 'class' => 'date']);?>
+                            <?php $this->Form->fieldSelect('end_time', (isset($date_times) ? $date_times : null), (isset($vars->end_time) ? $vars->end_time : null), ['id' => 'end_time']);?>
+                        </li>
+                        <li>
+                            <?php $this->Form->fieldCheckbox('shared', '1', ((isset($vars->shared) ? $vars->shared : '0') == '1'), ['id' => 'shared']);?>
+                            <?php $this->Form->label($this->_('AdminMain.editevent.field_shared', true), 'shared', ['class' => 'inline']);?>
+                        </li>
+                    </ul>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminMain.editevent.field_editeventsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                        <a class="btn btn-danger pull-right delete" href="<?php echo $this->Html->safe($this->base_uri . 'main/deleteevent/' . (isset($event_id) ? $event_id : null) . '/' . (isset($calendar_view) ? $calendar_view : null) . '/');?>" rel="<?php echo $this->Html->safe($this->_('AdminMain.editevent.confirm_delete', true));?>"><?php $this->_('AdminMain.editevent.field_deleteeventsubmit');?></a>
+                    </div>
+                    <?php
+                    $this->Form->end();
+
+                    $this->Form->create($this->base_uri . 'main/deleteevent/', ['id' => 'delete_event', 'class' => 'disable-on-submit']);
+                    $this->Form->fieldHidden('id', (isset($event_id) ? $event_id : null));
+                    $this->Form->fieldHidden('view', (isset($calendar_view) ? $calendar_view : null));
+                    $this->Form->end();
+                    $this->Form->end();
+                    ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('input.date').datePicker({
+            startDate:'1996-01-01',
+            firstDayOfWeek:'<?php (print (isset($calendar_begins) ? $this->Html->safe($calendar_begins) : null));?>'
+        });
+
+        $('a.delete[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', submit: true, form: $('#delete_event'), close: '<?php $this->_('AppController.modal.text_close');?>'});
+    });
+</script>

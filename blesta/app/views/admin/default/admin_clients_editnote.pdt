@@ -1,0 +1,55 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.editnote.boxtitle_editnote', true));
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editnote.field_title', true), 'title');
+                        $this->Form->fieldText('title', (isset($vars->title) ? $vars->title : null), ['id' => 'title']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('stickied', '1', ((isset($vars->stickied) ? $vars->stickied : null) == '1'), ['id' => 'stickied']);
+                        $this->Form->label($this->_('AdminClients.editnote.field_stickied', true), 'stickied', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.!notes.stickied');?></div></span>
+                    </li>
+                </ul>
+            </div>
+
+            <h4><a id="note_details" class="show_content" href="#"><i class="fas fa-caret-down"></i> <?php $this->_('AdminClients.editnote.field_description');?></a></h4>
+            <div class="pad reverse note_details<?php echo (empty($vars->description) ? ' hidden' : ' show');?>">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldTextarea('description', (isset($vars->description) ? $vars->description : null), ['id' => 'description']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="pad reverse">
+                <div class="button_row">
+                    <?php
+                    $this->Form->fieldSubmit('save', $this->_('AdminClients.editnote.field_notesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                    ?>
+                </div>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $(this).blestaBindToggleEvent('#note_details', '.note_details');
+});
+");
+?>

@@ -1,0 +1,150 @@
+    <?php
+    // Don't show this container when only rendering the widget section
+    if (!(isset($render_section) ? $render_section : null)) {
+    ?>
+    <div class="col-md-3">
+        <?php echo (isset($tabs) ? $tabs : null);?>
+    </div>
+    <div class="col-md-9">
+    <?php
+    }
+        echo (isset($message) ? $message : null);
+
+        $this->WidgetClient->clear();
+        $this->WidgetClient->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'order_form_styles']);
+        $this->WidgetClient->create($this->_('Affiliates.index.boxtitle_affiliates', true), ['id' => 'affiliates'], (isset($render_section) ? $render_section : null));
+        $this->WidgetClient->startBody();
+
+        if ((isset($affiliate->status) ? $affiliate->status : null) == 'inactive') {
+        ?>
+        <div class="alert alert-info">
+            <?php
+            $this->Form->create(null, ['class' => 'text-center']);
+            $this->Form->fieldHidden('activate', 'true');
+            ?>
+            <p><?php $this->_('Affiliates.index.inactive');?></p>
+            <?php
+            $this->Form->fieldSubmit('submit', $this->_('Affiliates.index.activate', true), ['class' => 'btn btn-light']);
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        } else {
+        ?>
+        <div class="row affiliate_boxes">
+            <div class="col-lg-4">
+                <div class="card bg-success">
+                    <p><?php $this->_('Affiliates.index.visits');?></p>
+                    <h2><?php echo (isset($affiliate->visits) ? $this->Html->safe($affiliate->visits) : null);?></h2>
+                    <p>
+                        <?php
+                        $monthly_visits = round(((isset($affiliate->visits) ? $affiliate->visits : null) / max((isset($days_active) ? $days_active : null), 1)) * 30);
+                        $this->_('Affiliates.index.monthly_visits', false, $monthly_visits);
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card bg-info">
+                    <p><?php $this->_('Affiliates.index.sales');?></p>
+                    <h2><?php echo (isset($affiliate->sales) ? $this->Html->safe($affiliate->sales) : null);?></h2>
+                    <p>
+                        <?php
+                        $monthly_sales = round(((isset($affiliate->sales) ? $affiliate->sales : null) / max((isset($days_active) ? $days_active : null), 1)) * 30);
+                        $this->_('Affiliates.index.monthly_sales', false, $monthly_sales);
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card bg-warning">
+                    <p><?php $this->_('Affiliates.index.conversion_rate');?></p>
+                    <h2><?php echo round((float)(isset($affiliate->sales) ? $affiliate->sales : null) / (float)max((isset($affiliate->visits) ? $affiliate->visits : null), 1) * 100.00, 2) . '%';?></h2>
+                    <?php
+                    if ((isset($affiliate->visits) ? $affiliate->visits : null) > 0) {
+                    ?>
+                    <p>
+                        <?php
+                        $visits_per_sale = round((isset($affiliate->visits) ? $affiliate->visits : 0) / max((isset($affiliate->sales) ? $affiliate->sales : null), 1), 0);
+                        $this->_('Affiliates.index.conversion_fraction', false, (isset($affiliate->sales) ? $affiliate->sales : null) ? 1 : 0, $visits_per_sale);
+                        ?>
+                    </p>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <h4><?php $this->_('Affiliates.index.title_details');?></h4>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td><?php $this->_('Affiliates.index.commission_type');?></td>
+                            <td>
+                                <?php
+                                $amount = $this->CurrencyFormat->format(
+                                    (isset($affiliate_settings['commission_amount']) ? $affiliate_settings['commission_amount'] : 0),
+                                    (isset($affiliate_settings['withdrawal_currency']) ? $affiliate_settings['withdrawal_currency'] : 'USD'),
+                                    ['html_code' => true]
+                                );
+                                (isset($affiliate_settings['commission_type']) ? $affiliate_settings['commission_type'] : null) == 'fixed'
+                                    ? $this->_('Affiliates.index.field.commission_fixed', false, (isset($amount) ? $amount : null))
+                                    : $this->_('Affiliates.index.field.commission_percentage', false, (isset($affiliate_settings['commission_amount']) ? $affiliate_settings['commission_amount'] : null) . '%');
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><?php $this->_('Affiliates.index.min_withdrawal_amount');?></td>
+                            <td>
+                                <?php
+                                echo $this->CurrencyFormat->format(
+                                    (isset($affiliate_settings['min_withdrawal_amount']) ? $affiliate_settings['min_withdrawal_amount'] : 0),
+                                    (isset($affiliate_settings['withdrawal_currency']) ? $affiliate_settings['withdrawal_currency'] : 'USD'),
+                                    ['html_code' => true]
+                                );
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><?php $this->_('Affiliates.index.maturity_days');?></td>
+                            <td><?php echo (isset($affiliate_settings['maturity_days']) ? $affiliate_settings['maturity_days'] : 0);?></td>
+                        </tr>
+                        <tr>
+                            <td><?php $this->_('Affiliates.index.available_payout');?></td>
+                            <td>
+                                <?php
+                                $formatted_available_payout = $this->CurrencyFormat->format(
+                                    (isset($available_payout) ? $available_payout : 0),
+                                    (isset($affiliate_settings['withdrawal_currency']) ? $affiliate_settings['withdrawal_currency'] : 'USD'),
+                                    ['html_code' => true]
+                                );
+                                echo (isset($formatted_available_payout) ? $formatted_available_payout : 0);
+                                ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center"><a class="btn btn-block btn-success" id="request-payout" href="<?php echo $this->Html->safe($this->base_uri . 'order/payouts/add/');?>"><i class="fas fa-money-bill-wave fa-fw"></i> <?php $this->_('Affiliates.index.request_payout')?></a></div>
+        </div>
+
+        <h4><?php $this->_('Affiliates.index.title_referral');?></h4>
+        <div class="card bg-light p-3">
+            <?php $this->Form->fieldText('referral_link', (isset($referral_link) ? $referral_link : null), ['class' => 'form-control referral_link', 'readonly' => true]);?>
+            <div class="martop10"><?php $this->_('Affiliates.index.text_code_order_form', false, (isset($affiliate->code) ? $affiliate->code : '[code]'));?></div>
+        </div>
+        <?php
+        }
+
+        $this->WidgetClient->endBody();
+        $this->WidgetClient->end();
+
+    // Don't show this container when only rendering the widget section
+    if (!(isset($render_section) ? $render_section : null)) {
+    ?>
+    </div>
+    <?php
+    }

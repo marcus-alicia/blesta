@@ -1,0 +1,152 @@
+        <?php
+        if ((isset($show_left_nav) ? $show_left_nav : null)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        }
+
+        $tabs = [];
+        foreach ((isset($link_tabs) ? $link_tabs : []) as $tab) {
+            $tabs[] = [
+                'name' => $tab['name'],
+                'current' => ($tab['uri'] == 'installed'),
+                'attributes' => [
+                    'href' => $this->base_uri . 'settings/company/gateways/' . $tab['uri'] . '/',
+                    'class' => 'ajax'
+                ]
+            ];
+        }
+        ?>
+
+        <div <?php echo (isset($show_left_nav) ? $show_left_nav : null) ? 'id="right_outer"' : '';?>>
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+
+                <?php
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create(
+                    $this->_('AdminCompanyGateways.installed.boxtitle_gateway', true),
+                    ['id' => 'admin_company_gateways_installed'],
+                    (isset($render_section) ? $render_section : null)
+                );
+                ?>
+                <div class="inner pad" id="gateways">
+                    <?php
+                    if ((isset($gateway_types) ? $gateway_types : null)) {
+                        $k = 0;
+                        foreach ($gateway_types as $type) {
+                            ?>
+                            <div class="title_row<?php echo ($k++ > 0 ? '' : ' first');?>"><h3><?php $this->_('AdminCompanyGateways.installed.heading_' . $type);?></h3></div>
+                            <?php
+                            $gateway_list = [];
+                            if (isset($gateways[$type])) {
+                                $gateway_list = $gateways[$type];
+                            }
+                            $num_gateways = count($gateway_list);
+                            if ($num_gateways > 0) {
+                                // Clear heading
+                                ?>
+                                <div class="clear"></div>
+                                <?php
+                                for ($i = 0; $i < $num_gateways; $i++) {
+                                ?>
+                                <div class="itemlist<?php echo ($i == $num_gateways - 1) ? ' last' : ''; ?>">
+                                    <div class="logo">
+                                        <span><img src="<?php (print (isset($gateway_list[$i]->logo) ? $this->Html->safe($gateway_list[$i]->logo) : null));?>" /></span>
+                                    </div>
+                                    <ul>
+                                        <li>
+                                            <strong><?php (print (isset($gateway_list[$i]->name) ? $this->Html->safe($gateway_list[$i]->name) : null));?></strong>
+                                            <?php $this->_('AdminCompanyGateways.installed.text_version', false, $gateway_list[$i]->installed_version);?>
+
+                                            <?php
+                                            if ((isset($gateway_list[$i]->signup_url) ? $gateway_list[$i]->signup_url : null)) {
+                                            ?>
+                                            <a href="<?php echo $this->Html->safe($gateway_list[$i]->signup_url);?>" target="_blank"><?php $this->_('AdminCompanyGateways.installed.signup_url');?></a>
+                                            <?php
+                                            }
+                                            ?>
+                                        </li>
+                                        <li>
+                                            <?php $this->_('AdminCompanyGateways.installed.text_author');?>
+                                            <?php
+                                            foreach ((array)(isset($gateway_list[$i]->authors) ? $gateway_list[$i]->authors : null) as $index => $author) {
+                                            ?>
+                                            <a href="<?php (print (isset($author['url']) ? $this->Html->safe($author['url']) : null));?>" target="_blank"><?php (print (isset($author['name']) ? $this->Html->safe($author['name']) : null));?></a><?php echo isset($gateway_list[$i]->authors[$index + 1]) ? ',' : '';?>
+                                            <?php
+                                            }
+                                            ?>
+                                        </li>
+                                        <?php
+                                        if ($type == 'merchant') {
+                                        ?>
+                                        <li>
+                                            <?php $this->_('AdminCompanyGateways.installed.text_supports');?>
+                                            <?php
+                                            if (isset($gateway_list[$i]->interfaces) && is_array($gateway_list[$i]->interfaces)) {
+                                                $num_interfaces = count($gateway_list[$i]->interfaces);
+
+                                                for ($j = 0; $j < $num_interfaces; $j++) {
+                                                    echo ($j > 0 ? ', ' : '') . $this->_('AdminCompanyGateways.installed.text_' . strtolower($gateway_list[$i]->interfaces[$j]), true);
+                                                }
+                                            }
+                                            ?>
+                                        </li>
+                                        <?php
+                                        }
+                                        ?>
+                                        <li><?php echo nl2br((isset($gateway_list[$i]->description) ? $this->Html->safe($gateway_list[$i]->description) : ''))?></li>
+                                    </ul>
+                                    <div class="button_row_inline">
+                                        <?php
+                                        $this->Form->create($this->base_uri . 'settings/company/gateways/uninstall/');
+                                        $this->Form->fieldHidden('id', (isset($gateway_list[$i]->id) ? $gateway_list[$i]->id : null));
+                                        ?>
+                                        <a class="btn btn-danger pull-right manage" href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/gateways/uninstall/' . (isset($gateway_list[$i]->id) ? $gateway_list[$i]->id : null) . '/');?>" rel="<?php echo $this->Html->safe($this->_('AdminCompanyGateways.installed.confirm_uninstall', true));?>"><?php $this->_('AdminCompanyGateways.installed.btn_uninstall');?></a>
+                                        <?php
+                                        $this->Form->end();
+                                        ?>
+                                        <?php
+                                        if ((isset($gateway_list[$i]->version) ? $gateway_list[$i]->version : null) == (isset($gateway_list[$i]->installed_version) ? $gateway_list[$i]->installed_version : null)) {
+                                        ?>
+                                        <a class="btn btn-default pull-right" href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/gateways/manage/' . (isset($gateway_list[$i]->id) ? $gateway_list[$i]->id : null) . '/');?>"><?php $this->_('AdminCompanyGateways.installed.btn_manage');?></a>
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <?php
+                                            $this->Form->create($this->base_uri . 'settings/company/gateways/upgrade/' . (isset($gateway_list[$i]->id) ? $gateway_list[$i]->id : null) . '/', ['class' => 'disable-on-submit']);
+                                            $this->Form->fieldHidden('id', (isset($gateway_list[$i]->id) ? $gateway_list[$i]->id : null));
+                                            $this->Form->fieldSubmit('save', $this->_('AdminCompanyGateways.installed.btn_upgrade', true), ['class' => 'btn btn-primary pull-right']);
+                                            $this->Form->end();
+                                            ?>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            <?php
+                                }
+                            } else {
+                            ?>
+                                <div class="empty_section">
+                                    <div class="empty_box">
+                                        <?php $this->_('AdminCompanyGateways.installed.text_' . $type . '_none');?>
+                                    </div>
+                                </div>
+                            <?php
+                            }
+                        }
+                    }
+                    ?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        // Handle confirmation on delete action
+        $('#gateways a.manage[rel]').blestaModalConfirm({base_url: '" . $this->base_uri . "', close: '" . $this->_('AppController.modal.text_close', true) . "', submit: true});
+    });
+");
+?>

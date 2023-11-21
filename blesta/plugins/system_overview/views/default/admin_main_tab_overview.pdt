@@ -1,0 +1,148 @@
+
+            <div class="tabs_content">
+                <div class="system_graph_area">
+                    <div class="graphs">
+                        <?php
+                        // Create a section for each graph
+                        foreach ((isset($graphs['graphs']) ? $graphs['graphs'] : []) as $graph_type => $graph) {
+                        ?>
+                        <div class="graph_box">
+                            <h5><?php echo (isset($graph['name']) ? $this->Html->safe($graph['name']) : null);?></h5>
+                            <svg id="<?php echo (isset($graph_type) ? $this->Html->safe($graph_type) : null);?>" class="graph"></svg>
+                        </div>
+                        <div class="clear"></div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+<link rel="stylesheet" type="text/css" href="<?php echo $this->Html->safe(VENDORWEBDIR . 'nvd3/nv.d3.min.css?ver=1.4.0');?>" />
+
+<script type="text/javascript">
+$(document).ready(function() {
+    systemOverviewInitialize();
+});
+
+/**
+ * Initalize the graphs
+ */
+function systemOverviewInitialize() {
+    // Retrieve the required scripts
+    $.when(
+        $.ajax({
+            url: '<?php echo $this->Html->safe(VENDORWEBDIR . 'd3/d3.min.js');?>',
+            dataType: "script",
+            cache: true,
+            ifModified: false
+        }),
+        $.Deferred(function(deferred) {
+            $(deferred.resolve);
+        })
+    ).done(function() {
+        $.ajax({
+            url: '<?php echo $this->Html->safe(VENDORWEBDIR . 'nvd3/nv.d3.min.js');?>',
+            dataType: "script",
+            cache: true,
+            ifModified: false
+        }).done(function() {
+            buildSystemOverviewGraphs();
+        });
+    });
+}
+
+function buildSystemOverviewGraphs() {
+    var chart;
+    var points;
+    var colors = d3.scale.category20c().range();
+
+    <?php
+    foreach ((isset($graphs['graphs']) ? $graphs['graphs'] : []) as $graph_type => $graph) {
+    ?>
+    nv.addGraph(function() {
+        points = [
+            <?php
+            // Build the line name and point values
+            foreach ($graph['data'] as $i => $data) {
+            ?>
+            {
+                "key":"<?php echo str_replace('"', '\"', (isset($data['name']) ? $data['name'] : null));?>",
+                "values":<?php echo (isset($data['points']) ? $data['points'] : '[]');?>
+            }<?php echo isset($graph['data'][$i + 1]) ? ',' : '';?>
+            <?php
+            }
+            ?>
+        ];
+
+        chart = nv.models.stackedAreaChart()
+            // Allows some interactive functionality, and also  displays all items in tooltip
+            .useInteractiveGuideline(true)
+            .x(function(d) { return d[0] })
+            .y(function(d) { return d[1] })
+            .controlLabels({stacked: "Stacked"})
+            .duration(300);
+
+        // Format the axes
+        chart.xAxis.tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)) });
+        chart.yAxis.tickFormat(d3.format('d'));
+
+        chart.legend.vers('furious');
+        // Set line colors
+        chart.color(function (d, i) {
+            return colors[i % colors.length];
+        });
+        // Line interpolation between points
+        chart.interpolate("basis");
+        // Message to display if there is no data
+        chart.noData("There is no data to display");
+        // Hide the ability to switch from stacked, stream, expanded
+        chart.showControls(true);
+        // Show the x axis
+        chart.showXAxis(true);
+        // Show the y axis
+        chart.showYAxis(true);
+        // Force minimum Y-axis value
+        chart.forceY([0]);
+        // Show legend
+        chart.showLegend(<?php echo (((isset($graphs['settings']['show_legend']) ? $graphs['settings']['show_legend'] : 0) == 1) ? 'true' : 'false');?>);
+        // Show total in graph
+        chart.showTotalInTooltip(true);
+        // Set total language
+        chart.totalLabel('<?php $this->_('AppController.graphs.label.total');?>');
+        // Set control label language
+        chart.controlLabels({
+            "stacked":"<?php $this->_('AppController.graphs.control_label.stacked');?>",
+            "stream":"<?php $this->_('AppController.graphs.control_label.stream');?>",
+            "expanded":"<?php $this->_('AppController.graphs.control_label.expanded');?>"
+        });
+        // Decrease left margin since y-values will be small
+        chart.margin({
+            "top":30,
+            "right":25,
+            "bottom":50,
+            "left":35
+        });
+
+        d3.select('#<?php echo (isset($graph_type) ? $this->Html->safe($graph_type) : null);?>')
+            .datum(points)
+            .transition()
+            .duration(1000)
+            .call(chart)
+            .each('start', function() {
+                setTimeout(function() {
+                    d3.selectAll('#<?php echo (isset($graph_type) ? $this->Html->safe($graph_type) : null);?> *').each(function() {
+                        if(this.__transition__)
+                            this.__transition__.duration = 1;
+                    })
+                }, 0)
+            });
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+    });
+    <?php
+    }
+    ?>
+}
+</script>

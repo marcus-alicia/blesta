@@ -1,0 +1,10 @@
+    <table class="table">
+        <tr class="heading_row">
+            <td class="fixed_small center border_none"><i class="fas fa-level-up-alt fa-rotate-90"></i></td>
+            <td class="border_left last"><?php $this->_('Solusvm.service_info.solusvm_main_ip_address');?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><?php echo (isset($service_fields->solusvm_main_ip_address) ? $this->Html->safe($service_fields->solusvm_main_ip_address) : null);?></td>
+        </tr>
+    </table>

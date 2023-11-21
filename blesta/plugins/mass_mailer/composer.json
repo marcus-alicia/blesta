@@ -1,0 +1,15 @@
+{
+    "name": "blesta/mass_mailer",
+    "description": "Mass Mailer",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "phillipsdata/csv": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Blesta\\MassMailer\\": ""
+        }
+    }
+}

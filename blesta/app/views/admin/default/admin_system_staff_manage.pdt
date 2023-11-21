@@ -1,0 +1,103 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $links = [
+                    ['name' => $this->_('AdminSystemStaff.manage.category_active', true) . ' <span>(' . (isset($status_count['active']) ? $this->Html->safe($status_count['active']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'active' ? true : false), 'attributes' => ['href' => $this->base_uri . 'settings/system/staff/manage/active/', 'class' => 'ajax']],
+                    ['name' => $this->_('AdminSystemStaff.manage.category_inactive', true) . ' <span>(' . (isset($status_count['inactive']) ? $this->Html->safe($status_count['inactive']) : null) . ')</span>','current' => ((isset($status) ? $status : null) == 'inactive' ? true : false), 'attributes' => ['href' => $this->base_uri . 'settings/system/staff/manage/inactive/', 'class' => 'ajax']]
+                ];
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminSystemStaff.manage.categorylink_addstaff', true),
+                            'href' => $this->base_uri . 'settings/system/staff/add/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinks($links);
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminSystemStaff.manage.boxtitle_manage', true), ['id' => 'admin_system_staff_manage'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($staff) ? $staff : false) && ($num_staff = count($staff)) > 0) {
+                ?>
+                <table class="table" id="staff">
+                    <tr class="heading_row">
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/staff/manage/' . (isset($status) ? $status : null) . '/?sort=first_name&order=' . ($sort == 'first_name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'first_name' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemStaff.manage.heading_name');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/staff/manage/' . (isset($status) ? $status : null) . '/?sort=email&order=' . ($sort == 'email' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'email' ? ' ' . $order : '');?>"><?php $this->_('AdminSystemStaff.manage.heading_email');?></a></span></td>
+                        <td class="last"><span><?php $this->_('AdminSystemStaff.manage.heading_options');?></span></td>
+                    </tr>
+                    <?php
+                    for ($i = 0; $i < $num_staff; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php echo $this->Html->concat(' ', (isset($staff[$i]->first_name) ? $this->Html->safe($staff[$i]->first_name) : null), (isset($staff[$i]->last_name) ? $this->Html->safe($staff[$i]->last_name) : null));?></td>
+                        <td><?php (print (isset($staff[$i]->email) ? $this->Html->safe($staff[$i]->email) : null));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'settings/system/staff/edit/' . (isset($staff[$i]->id) ? $this->Html->safe($staff[$i]->id) : null) . '/';?>"><?php $this->_('AdminSystemStaff.manage.option_edit');?></a>
+                            <?php
+                            $this->Form->create($this->base_uri . 'settings/system/staff/status/');
+                            $this->Form->fieldHidden('id', (isset($staff[$i]->id) ? $staff[$i]->id : null));
+                            $this->Form->fieldHidden('status', $status == 'active' ? 'inactive' : 'active');
+                            ?>
+                                <?php
+                                if ($status == 'active') {
+                                    // Do not show the deactivate link for the current staff user
+                                    if ((isset($staff_id) ? $staff_id : null) != (isset($staff[$i]->id) ? $staff[$i]->id : null)) {
+                                ?>
+                                <a class="manage" href="<?php echo $this->base_uri . 'settings/system/staff/status/' . (isset($staff[$i]->id) ? $this->Html->safe($staff[$i]->id) : null) . '/inactive/';?>" rel="<?php echo $this->Html->safe($this->_('AdminSystemStaff.manage.confirm_deactivate', true));?>"><?php $this->_('AdminSystemStaff.manage.option_deactivate');?></a>
+                                <?php
+                                    }
+                                } else {
+                                ?>
+                                <a class="manage" href="<?php echo $this->base_uri . 'settings/system/staff/status/' . (isset($staff[$i]->id) ? $this->Html->safe($staff[$i]->id) : null) . '/active/';?>" rel="<?php echo $this->Html->safe($this->_('AdminSystemStaff.manage.confirm_reactivate', true));?>"><?php $this->_('AdminSystemStaff.manage.option_reactivate');?></a>
+                                <?php
+                                }
+                                ?>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminSystemStaff.manage.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Handle confirmation
+                $('#staff a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

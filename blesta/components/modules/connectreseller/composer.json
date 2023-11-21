@@ -1,0 +1,15 @@
+{
+    "name": "blesta/connectreseller",
+    "description": "ConnectReseller is one of the largest Registrars that has created a of set completely private labeled programs for domainers.",
+    "license": "proprietary",
+    "type": "blesta-module",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    },
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "homepage": "https://blesta.com/"
+        }
+    ]
+}

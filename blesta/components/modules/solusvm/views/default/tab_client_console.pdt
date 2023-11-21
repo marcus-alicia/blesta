@@ -1,0 +1,143 @@
+
+    <h4><?php $this->_('Solusvm.tab_client_console.heading_console');?></h4>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tbody>
+                <?php
+                // Display the console fields
+                if ((isset($type) ? $type : null) == 'console') {
+                ?>
+                <tr>
+                    <td><?php $this->_('Solusvm.tab_client_console.console_username');?></td>
+                    <td><?php echo (isset($console->username) ? $this->Html->safe($console->username) : null);?></td>
+                </tr>
+                <tr>
+                    <td><?php $this->_('Solusvm.tab_client_console.console_password');?></td>
+                    <td><?php echo (isset($console->password) ? $this->Html->safe($console->password) : null);?></td>
+                </tr>
+                <?php
+                } else {
+                    // Display the VNC fields
+                ?>
+                <tr>
+                    <td><?php $this->_('Solusvm.tab_client_console.vnc_password');?></td>
+                    <td><?php echo (isset($console->vncpassword) ? $this->Html->safe($console->vncpassword) : null);?></td>
+                </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <?php
+            // Display the console applet
+            if ((isset($type) ? $type : null) == 'console') {
+            ?>
+            <!-- Do nothing for now.  We'll want to include a console here at some point. -->
+            <?php
+            } else {
+            ?>
+            <!-- actual script modules -->
+            <script type="text/javascript" src="<?php echo VENDORWEBDIR; ?>novnc/novnc/lib/vendor/promise.js"></script>
+            <script type="module" crossorigin="anonymous">
+                import RFB from '<?php echo VENDORWEBDIR; ?>novnc/novnc/core/rfb.js';
+                let rfb;
+                let desktopName;
+
+                $(document).on('ready', function () {
+                    $('#sendCtrlAltDelButton').on('click', sendCtrlAltDel);
+
+                    // Set WebSocket credentials
+                    let host = '<?php echo (isset($console->sockethost) ? $this->Html->safe($console->sockethost) : null); ?>';
+                    let port = '<?php echo (isset($console->socketport) ? $this->Html->safe($console->socketport) : null); ?>';
+                    let password = '<?php echo (isset($console->socketpassword) ? $this->Html->safe($console->socketpassword) : null); ?>';
+                    let token = '<?php echo (isset($console->sockethash) ? $this->Html->safe($console->sockethash) : null);?>';
+
+                    // | | |         | | |
+                    // | | | Connect | | |
+                    // v v v         v v v
+
+                    status("Connecting");
+
+                    // Build the websocket URL used to connect
+                    let url;
+                    url = (window.location.protocol === "https:" ? 'wss' : 'ws');
+                    url += '://' + host;
+                    url += (port ? ':' + port : '');
+                    url += (token ? '?token=' + token : '');
+
+                    // Creating a new RFB object will start a new connection
+                    rfb = new RFB(
+                        document.getElementById('screen'),
+                        url,
+                        {
+                            credentials: { 'password': password },
+                            wsProtocols: ['binary', 'base64']
+                        }
+                    );
+
+                    // Add listeners to important events from the RFB module
+                    rfb.addEventListener("connect",  connectedToServer);
+                    rfb.addEventListener("disconnect", disconnectedFromServer);
+                    rfb.addEventListener("desktopname", updateDesktopName);
+
+                    // Set parameters that can be changed on an active connection
+                    rfb.viewOnly = false;
+                    rfb.scaleViewport = true;
+                });
+
+                // When this function is called we have successfully connected to a server
+                function connectedToServer(e) {
+                    status("Connected to " + desktopName);
+                }
+
+                // This function is called when we are disconnected
+                function disconnectedFromServer(e) {
+                    if (e.detail.clean) {
+                        status("Disconnected");
+                    } else {
+                        status("Something went wrong, connection is closed");
+                    }
+                }
+
+
+                // When this function is called we have received a desktop name from the server
+                function updateDesktopName(e) {
+                    desktopName = e.detail.name;
+                }
+
+                // Since most operating systems will catch Ctrl+Alt+Del
+                // before they get a chance to be intercepted by the browser,
+                // we provide a way to emulate this key sequence.
+                function sendCtrlAltDel() {
+                    rfb.sendCtrlAltDel();
+                    return false;
+                }
+
+                // Show a status text in the top bar
+                function status(text) {
+                    document.getElementById('status').textContent = text;
+                }
+            </script>
+            <div id="top_bar">
+                <div>
+                    <span id="status">Loading</span>
+                    <button class="btn btn-primary float-right" id="sendCtrlAltDelButton">Send CtrlAltDel</button>
+                </div>
+            </div>
+            <div id="screen">
+                <!-- This is where the remote screen will appear -->
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+    </div>
+<script type="text/javascript">
+        $(document).ready(function () {
+          $(this).blestaSetHeadTag("link", {media: "screen", type: "text/css", rel: "stylesheet", href: "<?php echo $this->Html->safe($this->view_dir . 'css/styles.css'); ?>"});
+        });
+</script>

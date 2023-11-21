@@ -1,0 +1,143 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyEmails.templates.boxtitle_templates', true));
+
+                $this->Form->create(null, ['id' => 'templates', 'class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                <?php
+                if ((isset($groups) ? $groups : true)) {
+                    $k = 0;
+                    foreach ($groups as $type => $templates) {
+                        // Display group heading
+                        ?>
+                        <div class="title_row<?php echo ($k++ > 0 ? '' : ' first');?>"><h3><?php $this->_('AdminCompanyEmails.templates.heading_' . (isset($type) ? $this->Html->safe($type) : null));?></h3></div>
+                        <?php
+                        // List all templates
+                        if (!empty($templates)) {
+                            // Clear heading
+                            ?>
+                            <div class="clear"></div>
+                            <table class="table">
+                                <tr class="heading_row">
+                                    <td class="fixed_small center"><?php $this->Form->fieldCheckbox('template_id[]', 'all', (($vars->template_id[$k] ?? null) == 'all'));?></td>
+                                    <td>&nbsp;</td>
+                                    <td><span><?php $this->_('AdminCompanyEmails.templates.text_name');?></span></td>
+                                    <?php
+                                    // Show plugin column if set
+                                    if ((isset($type) ? $this->Html->safe($type) : null) == 'plugins') {
+                                    ?>
+                                    <td><span><?php $this->_('AdminCompanyEmails.templates.text_plugin');?></span></td>
+                                    <?php
+                                    }
+                                    ?>
+                                    <td><span><?php $this->_('AdminCompanyEmails.templates.text_description');?></span></td>
+                                    <td class="last"><span><?php $this->_('AdminCompanyEmails.templates.text_options');?></span></td>
+                                </tr>
+                            <?php
+                            // Display templates for this group
+                            for ($i = 0, $num_templates = count((isset($templates) ? $templates : [])); $i < $num_templates; $i++) {
+                                $icon = ((isset($templates[$i]->status) ? $this->Html->safe($templates[$i]->status) : null) == 'active') ? 'check' : 'ban';
+                            ?>
+                                <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                                    <td class="fixed_small center"><?php $this->Form->fieldCheckbox('template_id[]', ($templates[$i]->email_group_id ?? null), in_array(($templates[$i]->email_group_id ?? null), $vars->template_id ?? []));?></td>
+                                    <td class="icon"><i class="fas fa-<?php (print (isset($icon) ? $this->Html->safe($icon) : null));?>"></i></td>
+                                    <td><a href="<?php echo $this->base_uri . 'settings/company/emails/edittemplate/' . (isset($templates[$i]->email_group_id) ? $this->Html->safe($templates[$i]->email_group_id) : null) . '/';?>"><?php (print (isset($templates[$i]->group_name) ? $this->Html->safe($templates[$i]->group_name) : null));?></a></td>
+                                    <?php
+                                    // Show plugin name if set
+                                    if ((isset($type) ? $this->Html->safe($type) : null) == 'plugins') {
+                                    ?>
+                                    <td><span><?php (print (isset($templates[$i]->plugin_name) ? $this->Html->safe($templates[$i]->plugin_name) : null));?></span></td>
+                                    <?php
+                                    }
+                                    ?>
+                                    <td><?php (print (isset($templates[$i]->group_desc) ? $this->Html->safe($templates[$i]->group_desc) : null));?></td>
+                                    <td class="last"><a href="<?php echo $this->base_uri . 'settings/company/emails/edittemplate/' . (isset($templates[$i]->email_group_id) ? $this->Html->safe($templates[$i]->email_group_id) : null) . '/';?>"><?php $this->_('AdminCompanyEmails.templates.option_edit');?></a></td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
+                            </table>
+                            <?php
+                        } else {
+                        ?>
+                        <div class="empty_section">
+                            <div class="empty_box">
+                                <?php $this->_('AdminCompanyEmails.templates.no_results');?>
+                            </div>
+                        </div>
+                        <?php
+                        }
+                    }
+                }
+                ?>
+                </div>
+
+                <div id="template_action" class="button_row pad_top email">
+                    <?php
+                    $this->Form->fieldSubmit('save', $this->_('AdminCompanyEmails.templates.field_templatesubmit', true), ['class' => 'btn btn-primary pull-right btn-sm']);
+                    $this->Form->fieldText('from', ($vars->from ?? null), ['class' => 'action']);
+                    $this->Form->fieldSelect('action', ($template_actions ?? null), ($vars->type ?? null));
+                    ?>
+                </div>
+
+                <?php
+                $this->Form->end();
+                $this->Widget->end()
+                ?>
+            </section>
+        </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#templates input').click(function() {
+            // Show/hide action input
+            if ($('#templates input:checked').size() > 0) {
+                // Check all checkboxes
+                var table = $(this).parents('table');
+                if ($(this).val() == 'all') {
+                    if ($(this).prop('checked')) {
+                        // Check all checkboxes
+                        table.find('input').each(function() {
+                            $(this).prop('checked', true);
+                        });
+
+                        // Show action input
+                        $('#template_action').show();
+                    } else {
+                        // Uncheck all checkboxes
+                        table.find('input').each(function() {
+                            $(this).prop('checked', false);
+                        });
+
+                        // Hide action input
+                        if ($('#templates input:checked').size() < 1) {
+                            $('#template_action').hide();
+                        }
+                    }
+                } else {
+                    // Check individual checkboxes
+                    if ($(this).prop('checked')) {
+                        $('#template_action').show();
+                    } else {
+                        // Uncheck 'all'
+                        $('#templates input[value=all]').prop('checked', false);
+                    }
+                }
+            } else if ($('#templates input:checked').size() < 1) {
+                // Hide action input
+                $('#template_action').hide();
+            }
+        });
+
+        if ($('#templates input:checked').size() > 0) {
+            // Show action input
+            $('#template_action').show();
+        }
+    });
+</script>

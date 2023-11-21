@@ -1,0 +1,84 @@
+            <?php
+            if (!empty($languages)) {
+            ?>
+                <div class="tab_content inverse">
+                    <ul class="tabs">
+                        <?php
+                        foreach ($languages as $lang) {
+                        ?>
+                        <li<?php echo ((isset($lang->code) ? $lang->code : null) == Configure::get('Blesta.language') ? ' class="current"' : '');?>>
+                            <a href="#"><?php echo (isset($lang->name) ? $this->Html->safe($lang->name) : null);?></a>
+                        </li>
+                        <?php
+                        }
+                        ?>
+                    </ul>
+                    <div id="article_content" class="inner_content">
+                        <?php
+                        foreach ($languages as $i => $lang) {
+                            $lang_code = (isset($lang->code) ? $lang->code : null);
+                        ?>
+                        <div>
+                            <?php
+                            $this->Form->fieldHidden('content[' . $i . '][lang]', $lang_code);
+                            ?>
+                            <ul>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminKnowledgebase.article_content.title', true), 'content[' . $i . '][title]');
+                                    $this->Form->fieldText('content[' . $i . '][title]', (isset($vars[$lang_code]->title) ? $vars[$lang_code]->title : null));
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminKnowledgebase.article_content.content_type', true));
+
+                                    foreach ((isset($content_types) ? $content_types : []) as $key => $content_type) {
+                                        $this->Form->fieldRadio('content[' . $i . '][content_type]', $key, (isset($vars[$lang_code]->content_type) ? $vars[$lang_code]->content_type : ($key == 'text' ? $key : '')) == $key, ['id' => 'type_' . $key . '-' . $i, 'class' => 'content_type']);
+                                        $this->Form->label($content_type, 'type_' . $key . '-' . $i, ['class' => 'inline']);
+                                    }
+                                    ?>
+                                </li>
+                                <?php
+                                $type = (isset($vars[$lang_code]->content_type) ? $vars[$lang_code]->content_type : 'text');
+                                foreach ((isset($content_types) ? $content_types : []) as $key => $content_type) {
+                                    $body_type = 'body_' . $key;
+                                    $textarea_attributes = ($key == 'text' ? ['data-markdown-editor' => ''] : []);
+                                ?>
+                                <li class="<?php echo (isset($key) ? $this->Html->safe($key) : null);?>"<?php echo $key == $type ? '' : ' style="display:none;"';?>>
+                                    <?php
+                                    $value = ((isset($vars[$lang_code]->content_type) ? $vars[$lang_code]->content_type : null) == $key) ? (isset($vars[$lang_code]->body) ? $vars[$lang_code]->body : null) : (isset($vars[$lang_code]->{$body_type}) ? $vars[$lang_code]->{$body_type} : null);
+                                    $this->Form->label($this->_('AdminKnowledgebase.article_content.body', true), 'content[' . $i . '][' . $body_type . ']');
+                                    $this->Form->fieldTextarea('content[' . $i . '][' . $body_type . ']', $value, array_merge(['class' => $key], $textarea_attributes));
+                                    ?>
+                                </li>
+                                <?php
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+            <?php
+                $this->Javascript->setInline("
+                $(document).ready(function() {
+                    $('div.tab_content').blestaTabbedContent();
+
+                    $('#article_content textarea.html').blestaBindWysiwygEditor({language: '" . substr(Configure::get('Blesta.language'), 0, 2) . "'});
+
+                    $('#article_content .content_type').on('change', function() {
+                        if ($(this).val() == 'html') {
+                            $(this).parents('ul').find('li.text').hide();
+                            $(this).parents('ul').find('li.html').show();
+                        }
+                        else {
+                            $(this).parents('ul').find('li.text').show();
+                            $(this).parents('ul').find('li.html').hide();
+                        }
+                    });
+                });
+                ");
+            }

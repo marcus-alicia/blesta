@@ -1,0 +1,15 @@
+{
+    "name": "blesta/coinbase_commerce",
+    "description": "Coinbase Commerce lets you integrate cryptocurrency payments into your business, and let customers pay you directly from their computer or mobile device using the blockchain.",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    },
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "homepage": "http://www.blesta.com"
+        }
+    ]
+}

@@ -1,0 +1,78 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->create($this->_('AdminMain.index.boxtitle_extension_generator', true));
+
+        echo (isset($progress_bar) ? $progress_bar : null);
+
+        $this->Form->create(null, ['id' => 'general_extension_form']);
+        ?>
+        <div class="inner">
+            <div class="title_row first"><h3><?php $this->_('AdminMain.general.heading_general_settings');?></h3></div>
+            <div class="type_warning" style="display:none;">
+                <?php echo (isset($type_warning) ? $type_warning : null);?>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.general.name', true), 'name');
+                        $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name', 'placeholder' => $this->_('AdminMain.general.placeholder_name', true)]);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminMain.general.tooltip_name');?></div></span>
+                    </li>
+                    <li>
+                        <div>
+                            <?php
+                            $this->Form->label($this->_('AdminMain.general.type', true), null, ['class' => 'inline']);
+                            ?>
+                            <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminMain.general.tooltip_type');?></div></span>
+                        </div>
+                        <?php
+                        foreach ((isset($extension_types) ? $extension_types : []) as $extension_type => $label) {
+                            $this->Form->fieldRadio('type', $extension_type, (isset($vars->type) ? $vars->type : 'module') == $extension_type, ['class' => 'inline type', 'id' => 'type_' . $extension_type]);
+                            $this->Form->label($label, 'type_' . $extension_type, ['class' => 'inline']);
+                        }
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminMain.general.form_type', true), 'form_type', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminMain.general.tooltip_form_type');?></div></span>
+                        <?php
+                        $this->Form->fieldSelect('form_type', (isset($form_types) ? $form_types : []), (isset($vars->form_type) ? $vars->form_type : null), ['class' => 'block', 'id' => 'form_type']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('code_examples', '1', (isset($vars->code_examples) ? $vars->code_examples : '1') == '1', ['class' => 'inline', 'id' => 'code_examples']);
+                        $this->Form->label($this->_('AdminMain.general.code_examples', true), 'code_examples', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminMain.general.tooltip_code_examples');?></div></span>
+                    </li>
+                </ul>
+            </div>
+            <div class="button_row">
+                <?php $this->Form->fieldSubmit('submit', $this->_('AdminMain.general.basic_info', true), ['class' => 'btn btn-primary pull-right']);?>
+            </div>
+        </div>
+        <?php
+
+        $this->Form->end();
+
+        $this->Widget->end();
+        ?>
+<script>
+    $(document).ready(function () {
+        $('.type').change(function () {
+            if ($(this).val() !== '<?php echo (isset($vars->type) ? $vars->type : null);?>' && '<?php echo (isset($vars->type) ? $vars->type : null);?>' !== '') {
+                $('.type_warning').show();
+            } else {
+                $('.type_warning').hide();
+            }
+        });
+    });
+</script>

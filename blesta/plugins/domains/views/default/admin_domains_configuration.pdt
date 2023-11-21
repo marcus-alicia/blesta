@@ -1,0 +1,224 @@
+<?php
+if (!($is_ajax ?? false)) {
+    echo ($left_nav ?? null);
+?>
+<div id="right_outer">
+    <?php
+    if (!($render_section ?? null)) {
+        echo ($message ?? null);
+    }
+    ?>
+    <section id="right_container">
+<?php
+}
+
+    $this->Widget->clear();
+    $this->Widget->setTabs($tabs ?? []);
+    $this->Widget->create($this->_('AdminDomains.configuration.boxtitle', true), ['id' => 'admin_domains_configuration'], ($render_section ?? null));
+
+    $this->Form->create(null, ['id' => 'configuration', 'class' => 'disable-on-submit']);
+    ?>
+
+    <div class="inner">
+        <div class="tab" id="tab_general">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_spotlight_tlds', true), 'spotlight_tlds', ['class' => 'inline']); ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_spotlight_tlds');?></div></span><br/>
+                        <?php
+                        foreach (($tlds ?? []) as $tld) {
+                            $this->Form->fieldCheckbox('domains_spotlight_tlds[' . $tld->tld . ']', '1', ($vars['domains_spotlight_tlds'][$tld->tld] ?? null) === '1', ['id' => 'spotlight_tld_' . $tld->tld, 'class' => 'inline']);
+                            $this->Form->label($tld->tld, 'spotlight_tld_' . $tld->tld, ['class' => 'inline']);
+                        }
+                        ?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_renewal_days_before_expiration', true), 'renewal_days_before_expiration', ['class' => 'inline']); ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_renewal_days_before_expiration');?></div></span>
+                        <?php $this->Form->fieldSelect('domains_renewal_days_before_expiration', ($renewal_days ?? null), ($vars['domains_renewal_days_before_expiration'] ?? null), ['id' => 'renewal_days_before_expiration', 'class' => 'block']); ?>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tab" id="tab_notifications">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_first_reminder_days_before', true), 'first_reminder_days_before', ['class' => 'inline']); ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_first_reminder_days_before');?></div></span>
+                        <?php $this->Form->fieldSelect('domains_first_reminder_days_before', ($first_reminder_days ?? null), ($vars['domains_first_reminder_days_before'] ?? null), ['id' => 'first_reminder_days_before', 'class' => 'block']); ?>
+                    </li>
+                    <li>
+                        <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->base_uri . 'settings/company/emails/edittemplate/' . ($first_reminder_template->id ?? null)?>"><?php echo $this->_('AdminDomains.configuration.link_template'); ?></a></span></h4>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_second_reminder_days_before', true), 'second_reminder_days_before', ['class' => 'inline']); ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_second_reminder_days_before');?></div></span>
+                        <?php $this->Form->fieldSelect('domains_second_reminder_days_before', ($second_reminder_days ?? null), ($vars['domains_second_reminder_days_before'] ?? null), ['id' => 'second_reminder_days_before', 'class' => 'block']); ?>
+                    </li>
+                    <li>
+                        <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->base_uri . 'settings/company/emails/edittemplate/' . ($second_reminder_template->id ?? null)?>"><?php echo $this->_('AdminDomains.configuration.link_template'); ?></a></span></h4>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_expiration_notice_days_after', true), 'expiration_notice_days_after', ['class' => 'inline']); ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_expiration_notice_days_after');?></div></span>
+                        <?php $this->Form->fieldSelect('domains_expiration_notice_days_after', ($expiration_notice_days ?? null), ($vars['domains_expiration_notice_days_after'] ?? null), ['id' => 'expiration_notice_days_after', 'class' => 'block']); ?>
+                    </li>
+                    <li>
+                        <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->base_uri . 'settings/company/emails/edittemplate/' . ($expiration_notice_template->id ?? null)?>"><?php echo $this->_('AdminDomains.configuration.link_template'); ?></a></span></h4>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tab" id="tab_advanced">
+            <div class="title_row first"><h3><?php $this->_('AdminDomains.configuration.heading_taxes');?></h3></div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('domains_taxable', '1', (($vars['domains_taxable'] ?? 0) == 1), ['id' => 'taxable']);
+                        $this->Form->label($this->_('AdminDomains.configuration.field_taxable', true), 'taxable', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row"><h3><?php $this->_('AdminDomains.configuration.heading_package_options');?></h3></div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_dns_management_option_group', true), 'dns_management_option_group', ['class' => 'inline']); ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_dns_management_option_group');?></div></span>
+                        <?php $this->Form->fieldSelect('domains_dns_management_option_group', ($package_option_groups ?? null), (isset($vars['domains_dns_management_option_group']) ? $vars['domains_dns_management_option_group'] : null), ['id' => 'dns_management_option_group', 'class' => 'block']); ?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_email_forwarding_option_group', true), 'email_forwarding_option_group', ['class' => 'inline']); ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_email_forwarding_option_group');?></div></span>
+                        <?php $this->Form->fieldSelect('domains_email_forwarding_option_group', ($package_option_groups ?? null), (isset($vars['domains_email_forwarding_option_group']) ? $vars['domains_email_forwarding_option_group'] : null), ['id' => 'email_forwarding_option_group', 'class' => 'block']); ?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_id_protection_option_group', true), 'id_protection_option_group', ['class' => 'inline']); ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_id_protection_option_group');?></div></span>
+                        <?php $this->Form->fieldSelect('domains_id_protection_option_group', ($package_option_groups ?? null), (isset($vars['domains_id_protection_option_group']) ? $vars['domains_id_protection_option_group'] : null), ['id' => 'id_protection_option_group', 'class' => 'block']); ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('domains_override_price', '1', (($vars['domains_override_price'] ?? 0) == 1), ['id' => 'override_price']);
+                        $this->Form->label($this->_('AdminDomains.configuration.field_override_price', true), 'override_price', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDomains.configuration.tooltip_override_price');?></div></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="tab" id="tab_tld_sync">
+            <div class="title_row first"><h3><?php $this->_('AdminDomains.configuration.heading_markup');?></h3></div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminDomains.configuration.field_sync_price_markup', true), 'sync_price_markup');
+                        $this->Form->fieldText('domains_sync_price_markup', ($vars['domains_sync_price_markup'] ?? null), ['id' => 'sync_price_markup']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminDomains.configuration.field_sync_renewal_markup', true), 'sync_renewal_markup');
+                        $this->Form->fieldText('domains_sync_renewal_markup', ($vars['domains_sync_renewal_markup'] ?? null), ['id' => 'sync_renewal_markup']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminDomains.configuration.field_sync_transfer_markup', true), 'sync_transfer_markup');
+                        $this->Form->fieldText('domains_sync_transfer_markup', ($vars['domains_sync_transfer_markup'] ?? null), ['id' => 'sync_transfer_markup']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('domains_enable_rounding', '1', ((isset($vars['domains_enable_rounding']) ? $vars['domains_enable_rounding'] : 0) == 1), ['id' => 'enable_rounding']);
+                        $this->Form->label($this->_('AdminDomains.configuration.field_enable_rounding', true), 'enable_rounding', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li class="markup_rounding_div">
+                        <?php
+                        $this->Form->label($this->_('AdminDomains.configuration.field_markup_rounding', true), 'markup_rounding');
+                        $this->Form->fieldSelect('domains_markup_rounding', $rounding_options, ($vars['domains_markup_rounding'] ?? null), ['id' => 'markup_rounding']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row"><h3><?php $this->_('AdminDomains.configuration.heading_automation');?></h3></div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('domains_automatic_sync', '1', ((isset($vars['domains_automatic_sync']) ? $vars['domains_automatic_sync'] : 0) == 1), ['id' => 'automatic_sync']);
+                        $this->Form->label($this->_('AdminDomains.configuration.field_automatic_sync', true), 'automatic_sync', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li class="domains_sync_frequency">
+                        <?php $this->Form->label($this->_('AdminDomains.configuration.field_sync_frequency', true), 'sync_frequency'); ?>
+                        <?php $this->Form->fieldSelect('domains_sync_frequency', ($sync_days ?? null), (isset($vars['domains_sync_frequency']) ? $vars['domains_sync_frequency'] : null), ['id' => 'sync_frequency', 'class' => 'block']); ?>
+                    </li>
+                    <li>
+                        <h4><a id="manual_sync_title" href="#" class="show_content"><i class="fas fa-chevron-down"></i> <?php $this->_('AdminDomains.configuration.text_manual_sync_title');?></a></h4>
+                        <div id="manual_sync" class="pad_top hidden">
+                            <?php $this->_('AdminDomains.configuration.text_manual_sync');?>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="button_row">
+            <button class="btn btn-primary pull-right">
+                <i class="fa fa-edit"></i> <?php $this->_('AdminDomains.configuration.field_submit');?>
+            </button>
+        </div>
+    </div>
+    <?php
+    $this->Form->end();
+    $this->Widget->end();
+    ?>
+<?php
+if (!(isset($is_ajax) ? $is_ajax : false)) {
+?>
+    </section>
+</div>
+<?php
+}
+?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#html').blestaBindWysiwygEditor({language: '<?php echo substr(Configure::get('Blesta.language'), 0, 2); ?>'});
+
+        // Set tabs
+        $('.tabs_content .tab').hide();
+        $('.tabs_content #tab_<?php echo ($tab ?? 'general');?>').show();
+        $('.tab_slider ul li').on('click', function() {
+            var tab = $(this).find('a').attr('class');
+
+            $('.tab_slider ul li').removeClass('current');
+            $(this).addClass('current');
+            $('.tabs_content .tab').hide();
+            $('.tabs_content .tab#tab_' + tab).show();
+        });
+
+        checkboxToggle('#enable_rounding', '.markup_rounding_div');
+        checkboxToggle('#automatic_sync', '.domains_sync_frequency');
+
+        $(this).blestaBindToggleEvent('#manual_sync_title', '#manual_sync');
+    });
+
+    function checkboxToggle(checkbox_selector, section_selector) {
+        $(checkbox_selector).change(function () {
+            if ($(this).is(':checked')) {
+                $(section_selector).show();
+            } else {
+                $(section_selector).hide();
+            }
+        });
+        $(checkbox_selector).change();
+    }
+</script>

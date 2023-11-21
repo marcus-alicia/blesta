@@ -1,0 +1,28 @@
+{
+    "version": "1.9.0",
+    "name": "Ispconfig.name",
+    "description": "Ispconfig.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "ispconfig_domain"
+    },
+    "service": {
+        "name_key": "ispconfig_domain"
+    },
+    "module": {
+        "row": "Ispconfig.module_row",
+        "rows": "Ispconfig.module_row_plural",
+        "row_key": "server_name",
+        "group": "Ispconfig.module_group"
+    },
+    "email_tags": {
+        "module": ["host_name", "name_servers"],
+        "package": ["package"],
+        "service": ["ispconfig_domain", "ispconfig_username", "ispconfig_password"]
+    }
+}

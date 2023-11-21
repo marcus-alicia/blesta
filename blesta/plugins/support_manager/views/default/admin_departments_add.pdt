@@ -1,0 +1,809 @@
+
+                <?php
+                echo (isset($message) ? $message : null);
+
+                $tabs = [
+                    [
+                        'name' => $this->_('AdminDepartments.add.tab_general', true),
+                        'current' => (($tab ?? 'basic') == 'basic'),
+                        'attributes' => [
+                            'class' => 'general',
+                            'href' => '#'
+                        ]
+                    ],
+                    [
+                        'name' => $this->_('AdminDepartments.add.tab_custom_fields', true),
+                        'current' => (($tab ?? null) == 'module'),
+                        'attributes' => [
+                            'class' => 'custom_fields',
+                            'href' => '#'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'support_manager_styles']);
+                $this->Widget->create($this->_('AdminDepartments.add.boxtitle_adddepartment', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['id'=>'department', 'class' => 'disable-on-submit']);?>
+                    <div class="department_tab" id="tab_general">
+                        <div class="pad">
+                            <ul>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_name', true), 'name');
+                                    $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_description', true), 'description');
+                                    $this->Form->fieldTextarea('description', (isset($vars->description) ? $vars->description : null), ['id' => 'description', 'data-markdown-editor' => '']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->fieldCheckbox('clients_only', '1', (isset($vars->clients_only) ? $vars->clients_only : null) == '1', ['id' => 'clients_only']);
+                                    $this->Form->label($this->_('AdminDepartments.add.field_clients_only', true), 'clients_only', ['class' => 'inline']);
+                                    ?>
+                                </li>
+                                <li class="require_captcha" style="display:none;">
+                                    <?php
+                                    $this->Form->fieldCheckbox('require_captcha', '1', (isset($vars->require_captcha) ? $vars->require_captcha : null) == '1', ['id' => 'require_captcha', 'disabled' => 'disabled']);
+                                    $this->Form->label($this->_('AdminDepartments.add.field_require_captcha', true), 'require_captcha', ['class' => 'inline']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_email', true), 'email');
+                                    $this->Form->fieldText('email', (isset($vars->email) ? $vars->email : null), ['id' => 'email']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->fieldCheckbox('override_from_email', '1', (isset($vars->override_from_email) ? $vars->override_from_email : null) == '1', ['id' => 'override_from_email']);
+                                    $this->Form->label($this->_('AdminDepartments.add.field_override_from_email', true), 'override_from_email', ['class' => 'inline']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->fieldCheckbox('send_ticket_received', '1', (isset($vars->send_ticket_received) ? $vars->send_ticket_received : '1') == '1', ['id' => 'send_ticket_received']);
+                                    $this->Form->label($this->_('AdminDepartments.add.field_send_ticket_received', true), 'send_ticket_received', ['class' => 'inline']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.send_ticket_received');?></div></span>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->fieldCheckbox('automatic_transition', '1', (isset($vars->automatic_transition) ? $vars->automatic_transition : '1') == '1', ['id' => 'automatic_transition']);
+                                    $this->Form->label($this->_('AdminDepartments.add.field_automatic_transition', true), 'automatic_transition', ['class' => 'inline']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.automatic_transition', false, (isset($ticket_statuses['awaiting_reply']) ? $ticket_statuses['awaiting_reply'] : null));?></div></span>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_default_priority', true), 'default_priority');
+                                    $this->Form->fieldSelect('default_priority', (isset($priorities) ? $priorities : null), (isset($vars->default_priority) ? $vars->default_priority : null), ['id' => 'default_priority']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_method', true), 'method');
+                                    $this->Form->fieldSelect('method', (isset($methods) ? $methods : null), (isset($vars->method) ? $vars->method : null), ['id' => 'method']);
+                                    ?>
+                                </li>
+                                <li id="piping" style="display:none;">
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_piping_config', true), 'piping_config');
+                                    $this->Form->fieldText('piping_config', (isset($piping_config) ? $piping_config : null), ['id'=>'piping_config', 'readonly'=>'readonly']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.piping_config');?></div></span>
+                                </li>
+                            </ul>
+                            <ul id="pop3_fields">
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_security', true), 'security');
+                                    $this->Form->fieldSelect('security', (isset($security_types) ? $security_types : null), (isset($vars->security) ? $vars->security : null), ['id' => 'security']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_box_name', true), 'box_name');
+                                    $this->Form->fieldText('box_name', (isset($vars->box_name) ? $vars->box_name : null), ['id' => 'box_name']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_mark_messages', true), 'mark_messages');
+                                    $this->Form->fieldSelect('mark_messages', (isset($message_types) ? $message_types : null), (isset($vars->mark_messages) ? $vars->mark_messages : null), ['id' => 'mark_messages']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_host', true), 'host');
+                                    $this->Form->fieldText('host', (isset($vars->host) ? $vars->host : null), ['id' => 'host']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_user', true), 'user');
+                                    $this->Form->fieldText('user', (isset($vars->user) ? $vars->user : null), ['id' => 'user']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_pass', true), 'pass');
+                                    $this->Form->fieldPassword('pass', ['id' => 'pass', 'value' => (isset($vars->pass) ? $vars->pass : null)]);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_port', true), 'port');
+                                    $this->Form->fieldText('port', (isset($vars->port) ? $vars->port : null), ['id' => 'port', 'maxlength' => '6', 'class' => 'small']);
+                                    ?>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_close_ticket_interval', true), 'close_ticket_interval');
+                                    $this->Form->fieldSelect('close_ticket_interval', (isset($close_ticket_intervals) ? $close_ticket_intervals : []), (isset($vars->close_ticket_interval) ? $vars->close_ticket_interval : null), ['id' => 'close_ticket_interval']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.close_ticket_interval', false, (isset($ticket_statuses['in_progress']) ? $ticket_statuses['in_progress'] : null));?></div></span>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_delete_ticket_interval', true), 'delete_ticket_interval');
+                                    $this->Form->fieldSelect('delete_ticket_interval', (isset($delete_ticket_intervals) ? $delete_ticket_intervals : null), (isset($vars->delete_ticket_interval) ? $vars->delete_ticket_interval : null), ['id' => 'delete_ticket_interval']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.delete_ticket_interval', false, (isset($ticket_statuses['trash']) ? $ticket_statuses['trash'] : null));?></div></span>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_reminder_ticket_interval', true), 'reminder_ticket_interval');
+                                    $this->Form->fieldSelect('reminder_ticket_interval', (isset($reminder_ticket_intervals) ? $reminder_ticket_intervals : null), (isset($vars->reminder_ticket_interval) ? $vars->reminder_ticket_interval : null), ['id' => 'reminder_ticket_interval']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.reminder_ticket_interval', false, (isset($ticket_statuses['closed']) ? $ticket_statuses['closed'] : null));?></div></span>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_reminder_ticket_status', true), 'reminder_ticket_status');
+
+                                    // Set checkboxes for each ticket status
+                                    foreach ((isset($ticket_statuses) ? $ticket_statuses : []) as $ticket_status => $language) {
+                                        if ($ticket_status !== 'closed' && $ticket_status !== 'trash') {
+                                            $setting_value = isset($vars->reminder_ticket_status[$ticket_status]) ? $vars->reminder_ticket_status[$ticket_status] : '';
+                                            $this->Form->fieldCheckbox('reminder_ticket_status[' . $ticket_status . ']', 'true', ($setting_value == 'true'), ['id' => 'reminder_ticket_status[' . $ticket_status . ']']);
+                                            $this->Form->label($language, 'reminder_ticket_status[' . $ticket_status . ']', ['class' => 'inline']);
+                                        }
+                                    }
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_reminder_ticket_priority', true), 'reminder_ticket_priority');
+
+                                    // Set checkboxes for each ticket priority
+                                    foreach ((isset($priorities) ? $priorities : []) as $priority => $language) {
+                                        $setting_value = isset($vars->reminder_ticket_priority[$priority]) ? $vars->reminder_ticket_priority[$priority] : '';
+                                        $this->Form->fieldCheckbox('reminder_ticket_priority[' . $priority . ']', 'true', ($setting_value == 'true'), ['id' => 'reminder_ticket_priority[' . $priority . ']']);
+                                        $this->Form->label($language, 'reminder_ticket_priority[' . $priority . ']', ['class' => 'inline']);
+                                    }
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->fieldCheckbox('include_attachments', '1', (isset($vars->include_attachments) ? $vars->include_attachments : null) == '1', ['id' => 'include_attachments']);
+                                    $this->Form->label($this->_('AdminDepartments.add.field_include_attachments', true), 'include_attachments', ['class' => 'inline']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.include_attachments');?></div></span>
+                                </li>
+                                <li class="attachment_settings">
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_attachment_types', true), 'attachment_types', ['class' => 'inline']);
+                                    ?>
+                                    <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.attachment_types');?></div></span>
+                                    <?php
+                                    $this->Form->fieldText('attachment_types', isset($vars->attachment_types) ? $vars->attachment_types : null, ['id' => 'attachment_types', 'class' => 'block']);
+                                    ?>
+                                </li>
+                                <li class="attachment_settings">
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_max_attachment_size', true), 'max_attachment_size', ['class' => 'inline']);
+                                    ?>
+                                    <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminDepartments.!tooltip.max_attachment_size');?></div></span>
+                                    <?php
+                                    $this->Form->fieldText('max_attachment_size', isset($vars->max_attachment_size) ? $vars->max_attachment_size : null, ['id' => 'max_attachment_size', 'class' => 'block']);
+                                    ?>
+                                </li>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_response_id', true), 'response_id');
+                                    $this->Form->fieldHidden('response_id', (isset($vars->response_id) ? $vars->response_id : null), ['id'=>'response_id']);
+                                    ?>
+                                    <div class="box_left">
+                                        <div id="selected_response"><?php echo (isset($response->name) ? $this->Html->safe($response->name) : null);?></div>
+                                    </div>
+                                    <div class="box_left" id="remove_response">
+                                        <a href="#" class="remove"><i class="fas fa-times"></i> <?php $this->_('AdminDepartments.!text.remove_response');?></a>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div id="no_selected_response" style="display:none;">
+                                        <em><?php $this->_('AdminDepartments.!text.no_selected_response');?></em>
+                                    </div>
+                                    <h4><a id="add_predefined_response" class="show_content" href="#"><?php $this->_('AdminDepartments.!text.add_response');?></a></h4>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="predefined_responses" style="display:none;">
+                            <?php echo (isset($predefined_responses) ? $predefined_responses : null);?>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="pad">
+                            <ul>
+                                <li>
+                                    <?php
+                                    $this->Form->label($this->_('AdminDepartments.add.field_status', true), 'status');
+                                    $this->Form->fieldSelect('status', (isset($statuses) ? $statuses : null), (isset($vars->status) ? $vars->status : null), ['id' => 'status']);
+                                    ?>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="department_tab" id="tab_custom_fields">
+                        <div class="links_row">
+                            <a class="btn btn-default pull-right btn-sm field_row_add" href="#"><span><?php $this->_('AdminDepartments.add.field_add_field');?></span></a>
+                        </div>
+                        <table class="table fields_table">
+                            <thead>
+                                <tr class="heading_row">
+                                    <td></td>
+                                    <td><?php $this->_('AdminDepartments.add.heading_label');?></td>
+                                    <td><?php $this->_('AdminDepartments.add.heading_description');?></td>
+                                    <td><?php $this->_('AdminDepartments.add.heading_visibility');?></td>
+                                    <td><?php $this->_('AdminDepartments.add.heading_type');?></td>
+                                    <td class="quantity_option"><?php $this->_('AdminDepartments.add.heading_min');?></td>
+                                    <td class="quantity_option"><?php $this->_('AdminDepartments.add.heading_max');?></td>
+                                    <td class="quantity_option"><?php $this->_('AdminDepartments.add.heading_step');?></td>
+                                    <td><?php $this->_('AdminDepartments.add.heading_client_add');?><span class="tooltip"><?php $this->_('AppController.tooltip.text');?> <div><?php $this->_('AdminDepartments.!tooltip.client_add');?></div></span></td>
+                                    <td><?php $this->_('AdminDepartments.add.heading_encrypted');?></td>
+                                    <td><?php $this->_('AdminDepartments.add.heading_auto_delete');?><span class="tooltip"><?php $this->_('AppController.tooltip.text');?> <div><?php $this->_('AdminDepartments.!tooltip.auto_delete');?></div></span></td>
+                                    <td class="last"><?php $this->_('AdminDepartments.add.heading_options');?></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="expand" style="display: none;">
+                                    <td style="width:17px;" class="center"><i class="fas fa-arrows-alt movable"></i></td>
+                                    <td><?php $this->Form->fieldText('fields[label][]', null, ['class' => 'fields_label', 'disabled' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldTextarea('fields[description][]', null, ['class' => 'fields_description', 'style' => 'height: 40px;', 'disabled' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldSelect('fields[visibility][]', ($visibility_options ?? null), '', ['class' => 'fields_visibility', 'disabled' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldSelect('fields[type][]', ($field_types ?? null), 'text', ['class' => 'fields_type', 'disabled' => 'disabled']);?></td>
+                                    <td class="quantity_option small"><?php $this->Form->fieldText('fields[min][]', null, ['class' => 'stretch', 'disabled' => 'disabled']);?></td>
+                                    <td class="quantity_option small"><?php $this->Form->fieldText('fields[max][]', null, ['class' => 'stretch', 'disabled' => 'disabled']);?></td>
+                                    <td class="quantity_option small"><?php $this->Form->fieldText('fields[step][]', null, ['class' => 'stretch', 'disabled' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('fields[client_add][]', '1', null, ['disabled' => 'disabled', 'class' => 'client_add']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('fields[encrypted][]', '1', null, ['disabled' => 'disabled', 'class' => 'encrypted']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('fields[auto_delete][]', '1', null, ['disabled' => 'disabled', 'class' => 'auto_delete']);?></td>
+                                    <td class="last"><a href="#" class="manage field_row_remove"><?php $this->_('AdminDepartments.add.text_delete');?></a></td>
+                                </tr>
+                                <tr class="expand_details">
+                                    <td colspan="12" class="subtable">
+                                        <table class="table options_table">
+                                            <thead>
+                                                <tr class="heading_row">
+                                                    <td><?php $this->_('AdminDepartments.add.heading_name');?></td>
+                                                    <td><?php $this->_('AdminDepartments.add.heading_value');?></td>
+                                                    <td><?php $this->_('AdminDepartments.add.heading_default');?></td>
+                                                    <td class="last"><?php $this->_('AdminDepartments.add.heading_options');?></td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="option_row">
+                                                    <td><?php $this->Form->fieldText('fields[options][][name][]', null, ['class' => 'fields_label', 'disabled' => 'disabled']);?></td>
+                                                    <td><?php $this->Form->fieldText('fields[options][][value][]', null, ['class' => 'fields_label', 'disabled' => 'disabled']);?></td>
+                                                    <td><?php $this->Form->fieldRadio('fields[options][][default][]', '1', null, ['disabled' => 'disabled']);?></td>
+                                                    <td class="last">
+                                                        <a href="#" class="field_row_option_add"><?php $this->_('AdminDepartments.add.text_add');?></a>,
+                                                        <a href="#" class="manage field_row_option_remove"><?php $this->_('AdminDepartments.add.text_delete');?></a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <?php
+                                $rows = 0;
+                                if ($vars->fields['label'] ?? false) {
+                                    $rows = count($vars->fields['label']);
+                                }
+                                ?>
+                                <tr id="fields_empty_section"<?php echo ($rows == 0 ? '' : ' style="display: none;"');?>>
+                                    <td colspan="12">
+                                        <div class="empty_section">
+                                            <div class="empty_box"><?php $this->_('AdminDepartments.edit.no_results');?></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
+                                for ($i = 0; $i < $rows; $i++) {
+                                ?>
+                                    <tr class="field_row <?php echo ($i % 2 == 1 ) ? ' odd_row' : '';?>">
+                                        <td style="width:17px;" class="center"><i class="fas fa-arrows-alt movable"></i></td>
+                                        <td><?php $this->Form->fieldText('fields[label][]', ($vars->fields['label'][$i] ?? null), ['class' => 'fields_label']);?></td>
+                                        <td><?php $this->Form->fieldTextarea('fields[description][]', ($vars->fields['description'][$i] ?? null), ['class' => 'fields_description', 'style' => 'height: 40px;']);?></td>
+                                        <td><?php $this->Form->fieldSelect('fields[visibility][]', ($visibility_options ?? null), ($vars->fields['visibility'][$i] ?? ''), ['class' => 'fields_visibility']);?></td>
+                                        <td><?php $this->Form->fieldSelect('fields[type][]', ($field_types ?? null), ($vars->fields['type'][$i] ?? 'text'), ['class' => 'fields_type']);?></td>
+                                        <td class="quantity_option small"><?php $this->Form->fieldText('fields[min][]', ($vars->fields['min'][$i] ?? null), ['class' => 'stretch']);?></td>
+                                        <td class="quantity_option small"><?php $this->Form->fieldText('fields[max][]', ($vars->fields['max'][$i] ?? null), ['class' => 'stretch']);?></td>
+                                        <td class="quantity_option small"><?php $this->Form->fieldText('fields[step][]', ($vars->fields['step'][$i] ?? null), ['class' => 'stretch']);?></td>
+                                        <td><?php $this->Form->fieldCheckbox('fields[client_add][]', '1', ($vars->fields['client_add'][$i] ?? null) == '1', ['class' => 'client_add']);?></td>
+                                        <td><?php $this->Form->fieldCheckbox('fields[encrypted][]', '1', ($vars->fields['encrypted'][$i] ?? null) == '1', ['class' => 'encrypted']);?></td>
+                                        <td><?php $this->Form->fieldCheckbox('fields[auto_delete][]', '1', ($vars->fields['auto_delete'][$i] ?? null) == '1', ['class' => 'auto_delete']);?></td>
+                                        <td class="last"><a href="#" class="manage field_row_remove"><?php $this->_('AdminDepartments.add.text_delete');?></a></td>
+                                    </tr>
+                                    <?php
+                                    if (!empty($vars->fields['options'][$i])) {
+                                    ?>
+                                        <tr class="expand_details">
+                                            <td colspan="12" class="subtable">
+                                                <table class="table options_table">
+                                                    <thead>
+                                                        <tr class="heading_row">
+                                                            <td><?php $this->_('AdminDepartments.add.heading_name');?></td>
+                                                            <td><?php $this->_('AdminDepartments.add.heading_value');?></td>
+                                                            <td><?php $this->_('AdminDepartments.add.heading_default');?></td>
+                                                            <td class="last"><?php $this->_('AdminDepartments.add.heading_options');?></td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php
+                                                    $options_rows = 0;
+                                                    if ($vars->fields['options'][$i]['name'] ?? false) {
+                                                        $options_rows = count($vars->fields['options'][$i]['name']);
+                                                    }
+                                                    for ($j = 0; $j < $options_rows; $j++) {
+                                                    ?>
+                                                        <tr class="option_row <?php echo ($j % 2 == 1 ) ? ' odd_row' : '';?>">
+                                                            <td><?php $this->Form->fieldText('fields[options][][name][]', ($vars->fields['options'][$i]['name'][$j] ?? null), ['class' => 'fields_options_name']);?></td>
+                                                            <td><?php $this->Form->fieldText('fields[options][][value][]', ($vars->fields['options'][$i]['value'][$j] ?? null), ['class' => 'fields_options_value']);?></td>
+                                                            <td><?php $this->Form->fieldRadio('fields[options][' . $i . '][default][]', '1', ($vars->fields['options'][$i]['default'][$j] ?? null) == '1', ['class' => 'fields_options_default']);?></td>
+                                                            <td class="last">
+                                                                <a href="#" class="field_row_option_add"><?php $this->_('AdminDepartments.add.text_add');?></a>,
+                                                                <a href="#" class="manage field_row_option_remove"><?php $this->_('AdminDepartments.add.text_delete');?></a>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <tr class="expand_details">
+                                            <td colspan="12" class="subtable">
+                                                <table class="table options_table">
+                                                    <thead>
+                                                        <tr class="heading_row">
+                                                            <td><?php $this->_('AdminDepartments.add.heading_name');?></td>
+                                                            <td><?php $this->_('AdminDepartments.add.heading_value');?></td>
+                                                            <td><?php $this->_('AdminDepartments.add.heading_default');?></td>
+                                                            <td class="last"><?php $this->_('AdminDepartments.add.heading_options');?></td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="option_row">
+                                                            <td><?php $this->Form->fieldText('fields[options][][name][]', null, ['class' => 'fields_options_name']);?></td>
+                                                            <td><?php $this->Form->fieldText('fields[options][][value][]', null, ['class' => 'fields_options_value']);?></td>
+                                                            <td><?php $this->Form->fieldRadio('fields[options][][default][]', '1', null, ['class' => 'fields_options_default']);?></td>
+                                                            <td class="last">
+                                                                <a href="#" class="field_row_option_add"><?php $this->_('AdminDepartments.add.text_add');?></a>,
+                                                                <a href="#" class="manage field_row_option_remove"><?php $this->_('AdminDepartments.add.text_delete');?></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminDepartments.add.field_addsubmit', true), ['class' => 'btn btn-primary float-right']);
+                        ?>
+                    </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    // Set tabs
+    $('.tabs_content .department_tab').hide();
+    $('.tabs_content #tab_" . ($tab ?? 'general') . "').show();
+    $('.tab_slider ul li').on('click', function() {
+        var tab = $(this).find('a').attr('class');
+
+        $('.tab_slider ul li').removeClass('current');
+        $(this).addClass('current');
+        $('.tabs_content .department_tab').hide();
+        $('.tabs_content .department_tab#tab_' + tab).show();
+    });
+
+    if ($('#selected_response').text() == '') {
+        $('#no_selected_response').show();
+        $('#remove_response').hide();
+    }
+
+    showPop3Fields();
+    $('#method').change(function() {
+        showPop3Fields();
+    });
+
+    // Select piping command
+    $('#piping_config').focusin(function() {
+        $(this).select();
+    });
+
+    // Toggle predefined responses
+    $(this).blestaBindToggleEvent('#add_predefined_response', '#predefined_responses');
+    $('#add_predefined_response').click(function() {
+        if ($(this).hasClass('show_content')) {
+            setPredefinedResponses(null);
+        }
+    });
+
+    // Toggle captcha field
+    $('#clients_only').change(function () {
+        if ($(this).prop('checked')) {
+            $('.require_captcha').hide();
+            $('.require_captcha input').prop('disabled', 'disabled');
+        } else {
+            $('.require_captcha').show();
+            $('.require_captcha input').prop('disabled', false);
+        }
+    });
+    $('#clients_only').change();
+
+    // Toggle attachment fields
+    $('#include_attachments').change(function () {
+        if ($(this).prop('checked')) {
+            $('.attachment_settings').show();
+            $('.attachment_settings input').prop('disabled', false);
+        } else {
+            $('.attachment_settings').hide();
+            $('.attachment_settings input').prop('disabled', 'disabled');
+        }
+    });
+    $('#include_attachments').change();
+
+    // Switch between response categories
+    $(document).on('click', '#responses .category a.text_link, #responses .up_level a.text_link', function(e) {
+        var match = $(this).attr('id').match(/(\d+)$/);
+        var cat_id = match ? parseInt(match[0], 10) : null;
+        setPredefinedResponses(cat_id);
+        return false;
+    });
+
+    // Add the predefined response
+    $(document).on('click', '#responses .response_item a.text_link', function(e) {
+        var match = $(this).attr('id').match(/(\d+)$/);
+        var response_id = match ? parseInt(match[0], 10) : null;
+        setPredefinedResponse(response_id);
+        return false;
+    });
+
+    $('#remove_response').click(function() {
+        $('#remove_response').hide();
+        $('#no_selected_response').show();
+        $('#selected_response').text('');
+        $('#response_id').val('');
+        return false;
+    });
+
+    // Add custom field
+    $('.field_row_add').click(function() {
+        // Clone the first field and expand row
+        var field_row = $('.fields_table tbody tr:first').clone(true);
+        var expand_row = $('.fields_table tbody tr:first').next('tr.expand_details').clone(true);
+
+        // Remove input text/hidden and textarea data
+        field_row.show().addClass('field_row');
+        field_row.find('input[type=\"text\"], input[type=\"hidden\"], textarea').val('');
+        field_row.find('input,textarea,select').prop('disabled', false);
+
+        expand_row.find('input[type=\"text\"], input[type=\"hidden\"], textarea').val('');
+        expand_row.find('input,textarea,select').prop('disabled', false);
+
+        // Remove checkbox/radio data
+        field_row.find('input:checkbox,input:radio').prop('checked', false);
+        expand_row.find('input:checkbox,input:radio').prop('checked', false);
+
+        $('table.fields_table > tbody').children('tr:last').after(field_row);
+        $('table.fields_table > tbody').children('tr:last').after(expand_row);
+
+        if ($('.field_row').length < 1) {
+            $('#fields_empty_section').show();
+        } else {
+            $('#fields_empty_section').hide();
+        }
+        $('#fields_empty_section').removeClass('odd_row');
+
+        updateZebraStriping($('table.table.fields_table .field_row'));
+        hideFieldOptions();
+        showQuantityOptions();
+        updateOptionsOrder();
+    });
+
+    // Add field option
+    $('.field_row_option_add').click(function() {
+        var option_row = $(this).parent().parent().clone(true);
+
+        // Remove input text/hidden and textarea data
+        option_row.find('input[type=\"text\"], input[type=\"hidden\"], textarea').val('');
+
+        $(this).parent().parent().parent().children('tr:last').after(option_row);
+
+        updateZebraStriping($('.field_row + .expand_details table.options_table tr:not(:first)'));
+        updateOptionsOrder();
+    });
+
+    // Remove custom field
+    $('.field_row_remove').click(function() {
+        var field_row = $(this).parent().parent();
+
+        field_row.next('tr.expand_details').remove();
+        field_row.remove();
+
+        if ($('.field_row').length < 1) {
+            $('#fields_empty_section').show();
+        } else {
+            $('#fields_empty_section').hide();
+        }
+
+        updateZebraStriping($('table.table.fields_table .field_row'));
+        hideFieldOptions();
+        showQuantityOptions();
+        updateOptionsOrder();
+        $('#fields_empty_section').removeClass('odd_row');
+    });
+
+    // Remove custom option
+    $('.field_row_option_remove').click(function() {
+        if ($(this).parent().parent().parent().find('tr').length > 1) {
+            $(this).parent().parent().remove();
+            updateZebraStriping($('.field_row + .expand_details table.options_table tr:not(:first)'));
+            updateOptionsOrder();
+        }
+    });
+
+    // Allow sort of custom fields
+    $('table.table.fields_table tbody').blestaSortable(false, {
+        cancel: 'tr.expand_details,input,textarea,button,select,option,.empty_box',
+        start: function(event, ui) {
+            child = ui.item.next().next('.expand_details');
+            $(ui.placeholder).height('65px');
+        },
+        stop: function(event, ui) {
+            // If insert happened between expandable details, reposition
+            if (ui.item.next().hasClass('expand_details')) {
+                ui.item.next().insertBefore(ui.item);
+            }
+            child.insertAfter(ui.item);
+            updateZebraStriping($('table.table.fields_table .field_row'));
+            updateOptionsOrder();
+        }
+    });
+
+    $('.fields_table tbody tr .movable', this).hide();
+    $('.fields_table tbody tr').hover(
+        function() {
+            $('.movable', this).show();
+        },
+        function() {
+            $('.movable', this).hide();
+        }
+    );
+
+    // Disable Client Add checkboxes if visibility is set to Staff Only
+    disableClientAdd();
+    $('.fields_visibility').change(function () {
+        disableClientAdd();
+    });
+
+    // Hide field options if the field type isn't select or radio
+    hideFieldOptions();
+    $('.fields_type').change(function () {
+        hideFieldOptions();
+    });
+
+    // Show quantity options if the field type is set to quantity
+    showQuantityOptions();
+    $('.fields_type').change(function () {
+        showQuantityOptions();
+    });
+
+    // Format form
+    $('#department').submit(function() {
+        // Update custom field options order
+        updateOptionsOrder();
+
+        // Submit unchecked checkboxes
+        $('table.fields_table tr.field_row input[type=\"checkbox\"]:not(:checked), table.fields_table tr.expand_details input[type=\"radio\"]:not(:checked):not(:disabled)').each(function() {
+            $(this).prop('disabled', true);
+            $('<input>', {
+                type: 'hidden',
+                name: $(this).attr('name'),
+                value: '0'
+            }).appendTo($(this).parent());
+        });
+    });
+    $('.fields_options_default').click(function() {
+        updateOptionsOrder();
+    });
+});
+
+function disableClientAdd() {
+    $('.fields_visibility').each(function () {
+        var field_row = $(this).parent().parent();
+
+        if ($(this).val() == 'staff') {
+            field_row.find('input.client_add').prop('disabled', true);
+        } else {
+            field_row.find('input.client_add').prop('disabled', false);
+        }
+    });
+}
+
+function hideFieldOptions() {
+    $('.fields_type').each(function () {
+        var field_row = $(this).parent().parent();
+        var expand_row = field_row.next('tr.expand_details');
+
+        if ($(this).val() == 'select' || $(this).val() == 'radio') {
+            expand_row.find('input').prop('disabled', false);
+            expand_row.show();
+            field_row.addClass('expanded').addClass('expand');
+        } else {
+            expand_row.find('input').prop('disabled', true);
+            expand_row.hide();
+            field_row.removeClass('expanded').removeClass('expand');
+        }
+    });
+}
+
+function showQuantityOptions() {
+    $('.quantity_option').hide();
+
+    $('.fields_type').each(function () {
+        var field_row = $(this).parent().parent();
+
+        if ($(this).val() == 'quantity') {
+            field_row.find('.quantity_option').show();
+            field_row.find('.quantity_option input').prop('disabled', false);
+            field_row.find('.fields_type').parent().attr('colspan', 0);
+        } else {
+            field_row.find('.quantity_option').hide();
+            field_row.find('.quantity_option input').prop('disabled', true);
+        }
+    });
+
+    $('.fields_type').each(function () {
+        var field_row = $(this).parent().parent();
+
+        if ($(this).val() == 'quantity') {
+            field_row.find('.fields_type').parent().attr('colspan', 0);
+        } else {
+            field_row.find('.fields_type').parent().attr('colspan', 4);
+        }
+    });
+
+    if ($('.field_row .quantity_option input:enabled').length < 1) {
+        $('thead .quantity_option').hide();
+        $('.fields_type').parent().attr('colspan', 0);
+    } else {
+        $('thead .quantity_option').show();
+    }
+}
+
+function updateOptionsOrder() {
+    // Set a unique index to each radio button to preserve the value
+    var row = $('input[type=\"radio\"]:not(:disabled)').length + 1;
+    $('table.fields_table tr.field_row').each(function() {
+        var radio = $(this).next('tr.expand_details').find('input[type=\"radio\"]');
+        $(radio).each(function() {
+            $(this).prop('name', $(this).prop('name').replace(/fields\[options\](\[\d+\])/, 'fields[options][' + row + ']'));
+            $(this).prop('name', $(this).prop('name').replace('fields[options][]', 'fields[options][' + row + ']'));
+            row++;
+        });
+    });
+
+    // Set proper indices
+    var row = 0;
+    $('table.fields_table tr.field_row').each(function() {
+        var input = $(this).find('input, select, textarea');
+        var options = $(this).next('tr.expand_details').find('input, select, textarea');
+
+        $(input).each(function() {
+            $(this).prop('name', $(this).prop('name').replace(/(\[\d+\])/, '[' + row + ']'));
+            $(this).prop('name', $(this).prop('name').replace('[]', '[' + row + ']'));
+        });
+
+        $(options).each(function() {
+            $(this).prop('name', $(this).prop('name').replace(/fields\[options\](\[\d+\])/, 'fields[options][' + row + ']'));
+            $(this).prop('name', $(this).prop('name').replace('fields[options][]', 'fields[options][' + row + ']'));
+        });
+
+        row++;
+    });
+}
+
+function showPop3Fields() {
+    if ($('#method').val() != 'pipe' && $('#method').val() != 'none') {
+        $('#pop3_fields').show();
+        $('input,select', '#pop3_fields').attr('disabled', false);
+    } else {
+        $('#pop3_fields').hide();
+        $('input,select', '#pop3_fields').attr('disabled', 'disabled');
+    }
+
+    if ($('#method').val() == 'pipe') {
+        $('#piping').show();
+    } else {
+        $('#piping').hide();
+    }
+
+    return false;
+}
+
+function setPredefinedResponse(response_id) {
+    $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/getresponse/') . "' + response_id, {},
+        function(data) {
+            if (data) {
+                $('#response_id').val(data.id);
+                $('#selected_response').text(data.name);
+                $('#no_selected_response').hide();
+                $('#remove_response').show();
+            }
+        },
+        null,
+        {dataType:'json'}
+    );
+}
+
+function setPredefinedResponses(category_id) {
+    $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_departments/getresponselisting/') . "' + category_id, {},
+        function(data) {
+            if (data) {
+                $('#predefined_responses').html(data);
+            }
+        },
+        null,
+        {dataType:'json'}
+    );
+}
+
+function updateZebraStriping(row) {
+    var i = 0;
+    $(row).each(function() {
+        if (i++%2 == 1)
+            $(this).addClass('odd_row');
+        else
+            $(this).removeClass('odd_row');
+    });
+}
+");

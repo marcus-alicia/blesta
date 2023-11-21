@@ -1,0 +1,90 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $links = [
+                    ['name' => $this->_('AdminCompanyLookandfeel.actions.category_nav_staff', true) . ' <span>(' . (isset($location_count['nav_staff']) ? $this->Html->safe($location_count['nav_staff']) : null) . ')</span>', 'current' => ((isset($location) ? $location : null) == 'nav_staff' ? true : false), 'attributes' => ['href' => $this->base_uri . 'settings/company/lookandfeel/actions/nav_staff/', 'class' => 'ajax']],
+                    ['name' => $this->_('AdminCompanyLookandfeel.actions.category_nav_client', true) . ' <span>(' . (isset($location_count['nav_client']) ? $this->Html->safe($location_count['nav_client']) : null) . ')</span>','current' => ((isset($location) ? $location : null) == 'nav_client' ? true : false), 'attributes' => ['href' => $this->base_uri . 'settings/company/lookandfeel/actions/nav_client/', 'class' => 'ajax']],
+                    ['name' => $this->_('AdminCompanyLookandfeel.actions.category_nav_public', true) . ' <span>(' . (isset($location_count['nav_public']) ? $this->Html->safe($location_count['nav_public']) : null) . ')</span>','current' => ((isset($location) ? $location : null) == 'nav_public' ? true : false), 'attributes' => ['href' => $this->base_uri . 'settings/company/lookandfeel/actions/nav_public/', 'class' => 'ajax']]
+                ];
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminCompanyLookandfeel.actions.categorylink_addaction', true),
+                            'href' => $this->base_uri . 'settings/company/lookandfeel/addaction/?location=' . (isset($location) ? $location : null)
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinks($links);
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminCompanyLookandfeel.actions.boxtitle_actions', true), ['id' => 'admin_company_lookandfeel_actions'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($actions) ? $actions : false) && ($num_actions = count($actions)) > 0) {
+                ?>
+                <table class="table" id="actions">
+                    <tr class="heading_row">
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/lookandfeel/actions/' . (isset($location) ? $location : null) . '/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyLookandfeel.actions.heading_name');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/lookandfeel/actions/' . (isset($location) ? $location : null) . '/?sort=url&order=' . ($sort == 'url' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'url' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyLookandfeel.actions.heading_url');?></a></span></td>
+                        <td class="last"><span><?php $this->_('AdminCompanyLookandfeel.actions.heading_options');?></span></td>
+                    </tr>
+                    <?php
+                    for ($i = 0; $i < $num_actions; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($actions[$i]->name) ? $this->Html->safe($actions[$i]->name) : null));?></td>
+                        <td><?php (print (isset($actions[$i]->url) ? $this->Html->safe($actions[$i]->url) : null));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'settings/company/lookandfeel/editaction/' . (isset($actions[$i]->id) ? $actions[$i]->id : null) . '/';?>"><?php $this->_('AdminCompanyLookandfeel.actions.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'settings/company/lookandfeel/deleteaction/');
+                            $this->Form->fieldHidden('id', (isset($actions[$i]->id) ? $this->Html->safe($actions[$i]->id) : null));
+                            ?>
+                            <a href="<?php echo $this->base_uri . 'settings/company/lookandfeel/deleteaction/' . (isset($actions[$i]->id) ? $actions[$i]->id : null) . '/';?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminCompanyLookandfeel.actions.confirm_delete', true));?>"><?php $this->_('AdminCompanyLookandfeel.actions.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminCompanyLookandfeel.actions.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Handle confirmation
+                $('#actions a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

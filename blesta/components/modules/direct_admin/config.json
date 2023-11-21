@@ -1,0 +1,34 @@
+{
+    "version": "2.15.1",
+    "name": "DirectAdmin.name",
+    "description": "DirectAdmin.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "direct_admin_domain"
+    },
+    "service": {
+        "name_key": "direct_admin_domain"
+    },
+    "module": {
+        "row": "DirectAdmin.module_row",
+        "rows": "DirectAdmin.module_row_plural",
+        "row_key": "server_name",
+        "group": "DirectAdmin.module_group"
+    },
+    "email_tags": {
+        "module": ["host_name", "name_servers"],
+        "package": ["type", "package", "ip"],
+        "service": [
+            "direct_admin_username",
+            "direct_admin_password",
+            "direct_admin_domain",
+            "direct_admin_ip",
+            "direct_admin_email"
+        ]
+    }
+}

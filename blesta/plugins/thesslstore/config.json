@@ -1,0 +1,11 @@
+{
+    "version": "1.3.0",
+    "name": "TheSSLStore Plugin",
+    "description": "TheSSLStore Plugin.",
+    "authors": [
+        {
+            "name": "The SSL Store.",
+            "url": "https://www.thesslstore.com"
+        }
+    ]
+}

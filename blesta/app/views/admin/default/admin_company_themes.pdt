@@ -1,0 +1,168 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $tabs = [];
+                foreach ((isset($theme_types) ? $theme_types : []) as $type => $name) {
+                    $tabs[] = ['name' => $name, 'current' => ((isset($selected_type) ? $selected_type : null) == $type), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'settings/company/themes/index/' . (isset($type) ? $type : null))]];
+                }
+
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create($this->_('AdminCompanyThemes.index.boxtitle_themes', true), ['id' => 'admin_company_general_themes'], (isset($render_section) ? $render_section : null));
+                $this->Form->create($this->Html->safe($this->base_uri . 'settings/company/themes/index/' . (isset($selected_type) ? $selected_type : null) . '/'), ['class' => 'disable-on-submit']);
+                ?>
+
+                <div class="inner">
+                    <div class="links_row">
+                        <a class="btn btn-default pull-right btn-sm" title="<?php $this->_('AdminCompanyThemes.index.categorylink_addtheme');?>" href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/themes/add/' . (isset($selected_type) ? $selected_type : null) . '/');?>"><i class="fas fa-plus fa-fw"></i></a>
+                    </div>
+
+                    <?php
+                    if ((isset($themes) ? $themes : false)) {
+                    ?>
+                    <table class="table" id="themes">
+                        <tr class="heading_row">
+                            <td></td>
+                            <td><?php $this->_('AdminCompanyThemes.index.heading_id');?></td>
+                            <td><?php $this->_('AdminCompanyThemes.index.heading_color');?></td>
+                            <td><?php $this->_('AdminCompanyThemes.index.heading_name');?></td>
+                            <td class="last"><?php $this->_('AdminCompanyThemes.index.heading_options');?></td>
+                        </tr>
+                        <?php
+                        // Display theme row
+                        $i = 0;
+                        foreach ($themes as $theme) {
+                        ?>
+                        <tr<?php echo (($i++ % 2) == 1) ? ' class="odd_row"' : '';?>>
+                            <td class="extra_small"><?php $this->Form->fieldRadio('id', (isset($theme->id) ? $theme->id : null), ((isset($theme->id) ? $theme->id : true) == (isset($vars->id) ? $vars->id : false)));?></td>
+                            <td class="extra_small"><?php echo ($theme->id ?? null);?></td>
+                            <td>
+                                <ul>
+                                    <li class="colortheme">
+                                        <div>
+                                        <?php
+                                        $j = 0;
+                                        $limit = 14;
+                                        foreach ((isset($colors) ? $colors : []) as $color) {
+                                            if ($j == $limit) {
+                                                break;
+                                            }
+
+                                            if (count((isset($color) ? $color : [])) == 2) {
+                                                // Show gradient top/bottom
+                                                $top_color = (isset($theme->colors[$color[0]]) ? $theme->colors[$color[0]] : null);
+                                                $top_color = ($top_color !== 'transparent' ? '#' . $top_color : $top_color);
+                                                $bot_color = (isset($theme->colors[$color[1]]) ? $theme->colors[$color[1]] : null);
+                                                $bot_color = ($bot_color !== 'transparent' ? '#' . $bot_color : $bot_color);
+                                                $style = str_replace(['theme_top_color', 'theme_bottom_color'], [$top_color, $bot_color], "
+                                                    background-color:theme_top_color;
+                                                    background: -moz-linear-gradient(top,  theme_top_color 0%, theme_bottom_color 100%);
+                                                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,theme_top_color), color-stop(100%,theme_bottom_color));
+                                                    background: -webkit-linear-gradient(top,  theme_top_color 0%,theme_bottom_color 100%);
+                                                    background: -o-linear-gradient(top,  theme_top_color 0%,theme_bottom_color 100%);
+                                                    background: -ms-linear-gradient(top,  theme_top_color 0%,theme_bottom_color 100%);
+                                                    background: linear-gradient(to bottom,  theme_top_color 0%,theme_bottom_color 100%);
+                                                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='theme_top_color', endColorstr='theme_bottom_color',GradientType=0 );
+                                                ");
+                                            } elseif (count((isset($color) ? $color : [])) > 2) {
+                                                $top_color = (isset($theme->colors[$color[0]]) ? $theme->colors[$color[0]] : null);
+                                                $top_color = ($top_color !== 'transparent' ? '#' . $top_color : $top_color);
+                                                $percentage = 100 / count((isset($color) ? $color : null));
+                                                $gradient = '';
+                                                $c = 0;
+
+                                                foreach ($color as $sub_color) {
+                                                    $gradient .= '#' . (isset($theme->colors[$sub_color]) ? $theme->colors[$sub_color] : 'ffffff') . ' ' . ($c * $percentage) . '%,#' . (isset($theme->colors[$sub_color]) ? $theme->colors[$sub_color] : 'ffffff') . ' ' . (($c * $percentage) + $percentage) . '%,';
+                                                    $c++;
+                                                }
+                                                $gradient = rtrim($gradient, ',');
+
+                                                $style = str_replace(['theme_top_color'], [$top_color], '
+                                                    background-color: theme_top_color;
+                                                    background: linear-gradient(180deg, ' . $gradient . ');
+                                                ');
+                                            } else {
+                                                // Show single color
+                                                $bg_color = (isset($theme->colors[$color[0]]) ? $theme->colors[$color[0]] : null);
+                                                $bg_color = ($bg_color !== 'transparent' ? '#' . $bg_color : $bg_color);
+                                                $style = 'background-color:' . (isset($bg_color) ? $bg_color : null) . ';';
+                                            }
+
+                                            $j++;
+                                            ?>
+                                            <span style="<?php echo $this->Html->safe($style);?>"></span>
+                                            <?php
+                                        }
+                                        ?>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </td>
+                            <td><?php (print (isset($theme->name) ? $this->Html->safe($theme->name) : null));?></td>
+                            <td>
+                                <?php
+                                if ($theme->company_id != null) {
+                                ?>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/themes/edit/' . (isset($theme->id) ? $theme->id : true) . '/');?>"><?php $this->_('AdminCompanyThemes.index.option_edit');?></a>,
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/themes/export/' . (isset($theme->id) ? $theme->id : true) . '/');?>"><?php $this->_('AdminCompanyThemes.index.option_export');?></a>,
+                                    <a id="theme_<?php (print (isset($theme->id) ? $this->Html->safe($theme->id) : null));?>" href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/themes/delete/' . (isset($theme->id) ? $theme->id : true) . '/');?>" class="manage delete_theme" rel="<?php echo $this->Html->safe($this->_('AdminCompanyThemes.index.confirm_deletetheme', true));?>"><?php $this->_('AdminCompanyThemes.index.option_delete');?></a>
+                                <?php
+                                } else {
+                                ?>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/themes/export/' . (isset($theme->id) ? $theme->id : true) . '/');?>"><?php $this->_('AdminCompanyThemes.index.option_export');?></a>
+                                <?php
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box">
+                            <?php $this->_('AdminCompanyThemes.index.no_results');?>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyThemes.index.field_themessubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+
+                // Set delete forms for each theme
+                foreach ((isset($themes) ? $themes : []) as $theme) {
+                    if ($theme->company_id != null) {
+                        $this->Form->create($this->base_uri . 'settings/company/themes/delete/', ['id' => 'theme_form_' . (isset($theme->id) ? $theme->id : null)]);
+                        $this->Form->fieldHidden('id', (isset($theme->id) ? $theme->id : true));
+                        $this->Form->end();
+                    }
+                }
+
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('a.delete_theme[rel]').each(function() {
+        var theme_id = $(this).attr('id').split('_')[1];
+        $(this).blestaModalConfirm({base_url: '" . $this->Html->safe($this->base_uri) . "', close: '" . $this->_('AppController.modal.text_close', true) . "', submit: true, form:$('#theme_form_' + theme_id)});
+    });
+});
+");
+?>

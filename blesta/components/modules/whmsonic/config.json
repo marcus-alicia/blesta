@@ -1,0 +1,35 @@
+{
+    "version": "1.8.0",
+    "name": "Whmsonic.name",
+    "description": "Whmsonic.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "whmsonic_username"
+    },
+    "service": {
+        "name_key": "whmsonic_username"
+    },
+    "module": {
+        "row": "Whmsonic.module_row",
+        "rows": "Whmsonic.module_row_plural",
+        "row_key": "server_name",
+        "group": "Whmsonic.module_group"
+    },
+    "email_tags": {
+        "module": ["ip_address"],
+        "package": ["client_type", "bitrate", "hspace", "bandwidth", "listeners", "autodj"],
+        "service": [
+            "whmsonic_username",
+            "whmsonic_password",
+            "whmsonic_ip_address",
+            "whmsonic_ftp",
+            "whmsonic_radio_ip",
+            "whmsonic_radio_password"
+        ]
+    }
+}

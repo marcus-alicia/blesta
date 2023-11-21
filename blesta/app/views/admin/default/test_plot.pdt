@@ -1,0 +1,65 @@
+
+<link rel="stylesheet" type="text/css" href="<?php echo $this->view_dir . 'javascript/jqplot/jquery.jqplot.css';?>" />
+
+<div id="chart1" style="margin-top:20px; margin-left:20px; width:600px; height:300px;"></div>
+<div id="chart2" style="margin-top:20px; margin-left:20px; width:600px; height:300px;"></div>
+
+<script type="text/javascript">
+    $.jqplot.config.enablePlugins = true;
+
+    s1 = [['PD500',2], ['PD1500',6], ['PD2500',7], ['Blesta',10], ['Blesta Support and Updates',4]];
+    s2 = [['a', 4], ['b', 7], ['c', 6], ['d', 3]];
+    s3 = [['a', 2], ['b', 1], ['c', 3], ['d', 3]];
+    s4 = [['a', 4], ['b', 3], ['c', 2], ['d', 1]];
+
+    s5 = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+
+    plot1 = $.jqplot('chart1', [s1], {
+        seriesColors: ["#656565", "#78a8c9", "#95c057", "#66CC00", "#0066CC", "#6600CC", "#FF850A", "#CC0066"],
+        seriesDefaults:{
+            shadow: false,
+            renderer:$.jqplot.PieRenderer,
+            rendererOptions: {
+                sliceMargin: 0,
+                showGradient: true,
+                //gradientColor: ["rgba(255,255,255,1)", "rgba(0,0,0,1)"]
+                gradientColor: ["rgba(255,255,255,0.45)", "rgba(200,200,200,0)"],
+                gradientSize: 1.1,
+                gradientOffset: false
+            }
+        },
+        legend: {show:true},
+        title:'平仮名, ひらがな or ヒラガナ',
+        grid:{background:'#fff', gridLineColor:'#dbe6e7', borderWidth:2, borderColor:'#ddd', shadow: true}
+    });
+</script>
+
+<script type="text/javascript">
+    line1 = [1,4,9, 16,1,4];
+    line2 = [25, 12.5, 6.25, 3.125,25, 12.5];
+    plot2 = $.jqplot('chart2', [line1, line2], {
+        seriesColors: ["#656565", "#78a8c9", "#95c057"],
+        seriesDefaults:{
+            renderer:$.jqplot.BarRenderer,
+            rendererOptions: {
+                barDirection:'vertical',
+                showGradient: true,
+                gradientDir: "N",
+                gradientColor: ["rgba(0,0,0,0.35)", "rgba(0,0,0,0.15)", "rgba(0,0,0,0)"],
+                shadowDepth: 1,
+                shadowAlpha: 0.25,
+                shadowOffset: 6
+            }
+        },
+        legend:{show:true, location:'ne'},title:'Bar Chart',
+        series:[
+            {label:'Profits'},
+            {label:'Expenses'}
+        ],
+        axes:{
+            xaxis:{renderer:$.jqplot.CategoryAxisRenderer},
+            yaxis:{min:0}
+        },
+        grid:{background:'#fff', gridLineColor:'#dbe6e7', borderWidth:2, borderColor:'#ddd', shadow: true}
+    });
+</script>

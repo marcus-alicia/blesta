@@ -1,0 +1,58 @@
+<?php
+if (!empty($message)) {
+    ?>
+    <div class="mb-3"><?php echo $message; ?></div>
+    <?php
+}
+?>
+
+            <div class="row panel-fix">
+                <div class="col-md-12">
+                    <h4><?php $this->_('Checkout.ach_info.heading_ach');?></h4>
+                </div>
+                <div class="col-md-6">
+                    <?php
+                    if (($gateway_form ?? null)) {
+                        echo $gateway_form;
+                    } else {
+                    ?>
+                    <div class="form-group">
+                        <?php
+                        $this->Form->label($this->_('Checkout.ach_info.field_type', true), 'type');
+                        $this->Form->fieldSelect('type', ($types ?? null), ($vars->type ?? null), ['id'=>'type', 'class'=>'form-control']);
+                        ?>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $this->Form->label($this->_('Checkout.ach_info.field_accountnum', true), 'ach_account');
+                        $this->Form->fieldText('account', isset($vars->last4) ? str_pad($vars->last4, 9, '*', STR_PAD_LEFT) : ($vars->account ?? null), ['id'=>'ach_account', 'class'=>'form-control', 'placeholder'=>$this->_('Checkout.ach_info.field_accountnum', true)]);
+                        ?>
+                    </div>
+                    <div class="form-group">
+                        <?php
+                        $this->Form->label($this->_('Checkout.ach_info.field_routingnum', true), 'routing');
+                        $this->Form->fieldText('routing', isset($vars->last4) ? str_pad(null, 9, '*', STR_PAD_LEFT) : ($vars->routing ?? null), ['id'=>'routing', 'class'=>'form-control', 'placeholder'=>$this->_('Checkout.ach_info.field_routingnum', true)]);
+                        ?>
+                    </div>
+                    <?php
+                    }
+
+                    if (isset($save_account) && $save_account) {
+                    ?>
+                    <div class="checkbox my-2">
+                        <label>
+                        <?php
+                        $this->Form->fieldCheckbox('save_details', 'true', isset($vars->save_details));
+                        $this->_('Checkout.ach_info.field_savedetails');
+                        ?>
+                        </label>
+                        <a href="#" data-toggle="tooltip" title="<?php $this->_('Checkout.ach_info.tooltip_savedetails');?>"><i class="fas fa-question-circle text-primary"></i></a>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+            </div>
+<script type="text/javascript">
+    const custom_form_ach = <?php echo empty($gateway_form) ? 'false' : 'true'; ?>;
+</script>

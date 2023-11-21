@@ -1,0 +1,47 @@
+<?php
+if ((isset($show_left_nav) ? $show_left_nav : null)) {
+    echo (isset($left_nav) ? $left_nav : null);
+}
+?>
+
+<div<?php echo (isset($show_left_nav) ? $show_left_nav : null) ? ' id="right_outer"' : '';?>>
+    <?php echo (isset($message) ? $message : null);?>
+    <section id="right_container">
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminCompanyMessengers.manage.boxtitle_manage', true, $messenger_info->name));
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner" id="messenger_manage">
+            <?php
+            // Show module fields
+            if (isset($input_html) && ($messenger_field_html = $input_html->generate(null, $this->view))) {
+            ?>
+                <div class="pad">
+                <?php
+                echo $messenger_field_html;
+                ?>
+                </div>
+                <div class="button_row">
+                    <?php
+                    $this->Form->fieldSubmit('save', $this->_('AdminCompanyMessengers.manage.field_update', true), ['class' => 'btn btn-primary pull-right']);
+                    ?>
+                </div>
+            <?php
+            } else {
+            ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminCompanyMessengers.manage.none_text');?>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+    </section>
+</div>

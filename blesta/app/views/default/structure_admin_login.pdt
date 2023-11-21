@@ -1,0 +1,58 @@
+<?php
+$html_dir = (in_array($this->_('AppController.lang.dir', true), ['ltr', 'rtl']) ? $this->_('AppController.lang.dir', true) : 'ltr');
+$html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
+?><!DOCTYPE html>
+<html dir="<?php (print (isset($html_dir) ? $this->Html->safe($html_dir) : null));?>" lang="<?php (print (isset($html_lang) ? $this->Html->safe($html_lang) : null));?>" xml:lang="<?php (print (isset($html_lang) ? $this->Html->safe($html_lang) : null));?>">
+    <head>
+        <meta name="referrer" content="never" />
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            <?php
+            echo (
+                    ($page_title = (
+                            isset($page_title)
+                                ? $page_title
+                                : (str_contains($page_title_lang, '%')
+                                    ? $this->_($page_title_lang, true, $get_params)
+                                    : $this->_($page_title_lang, true)
+                                )
+                        )
+                    )
+                        ? (isset($page_title) ? $this->Html->safe($page_title) : null) . ' | '
+                        : ''
+                )
+                . (isset($system_company->name)
+                    ? $this->Html->safe($system_company->name)
+                    : null);
+            ?>
+        </title>
+        <link rel="shortcut icon" href="<?php echo $this->view_dir;?>images/favicon.ico" />
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/application.min.css" />
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/font-awesome.min.css" />
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/admin_login/login.min.css" type="text/css" media="all" />
+        <?php
+        if (isset($theme_css)) {
+        ?>
+        <link rel="stylesheet" href="<?php (print (isset($theme_css) ? $this->Html->safe($theme_css) : null));?>" type="text/css" media="screen" />
+        <?php
+        }
+        if ($this->_('AppController.lang.dir', true) == 'rtl') {
+        ?>
+        <link rel="stylesheet" href="<?php echo $this->view_dir;?>css/rtl.css" type="text/css" media="screen" />
+        <?php
+        }
+        ?>
+        <script src="<?php echo $this->Html->safe($this->view_dir . 'javascript/jquery.min.js');?>"></script>
+        <script src="<?php echo $this->Html->safe($this->view_dir . 'javascript/bootstrap.min.js');?>"></script>
+        <?php echo (isset($head) ? $head : null);?>
+    </head>
+    <body>
+        <?php echo (isset($body_start) ? $body_start : null);?>
+        <?php echo (isset($content) ? $content : null);?>
+
+        <?php echo $this->Javascript->getFiles('body');?>
+        <?php echo $this->Javascript->getInline();?>
+        <?php echo (isset($body_end) ? $body_end : null);?>
+    </body>
+</html>

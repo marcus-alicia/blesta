@@ -1,0 +1,50 @@
+            <!-- Steps -->
+            <div class="col-md-12 hidden-xs hidden-sm">
+                <div class="card card-blesta card-steps">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/main/index/' . (isset($order_form->label) ? $order_form->label : null));?>" class="active"><strong><?php $this->_('Main.steps.step_1_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_1_description');?></em></p>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/config/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_2_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_2_description');?></em></p>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/cart/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_3_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_3_description');?></em></p>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/checkout/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_4_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_4_description');?></em></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Packages and Cart -->
+            <div class="col-md-9">
+                <?php
+                echo (isset($message) ? $message : null);
+                echo (isset($package_group_partial) ? $package_group_partial : null);
+                ?>
+            </div>
+            <div class="col-md-3" id="summary_section"></div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(this).blestaRequest('GET', '<?php echo $this->Html->safe($this->base_uri . 'order/summary/index/' . (isset($order_form->label) ? $order_form->label : null));?>', null,
+            function(data) {
+                $("#summary_section").html(data);
+            }
+        );
+    });
+</script>

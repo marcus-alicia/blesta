@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head>
+        <meta charset="utf-8" >
+        <title>minPHP Framework</title>
+    </head>
+
+    <body>
+        <div>
+            <?php echo $content;?>
+        </div>
+    </body>
+</html>

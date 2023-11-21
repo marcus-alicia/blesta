@@ -1,0 +1,86 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.packages.boxtitle_packages', true));
+
+        $this->Form->create(null, ['id' => 'packages', 'class' => 'disable-on-submit']);
+        $this->Form->fieldHidden('post_data', '1');
+        ?>
+        <div class="inner">
+            <?php
+            if ((isset($packages) ? $packages : false) && ($num_packages = count($packages)) > 0) {
+            ?>
+            <table class="table">
+                <tr class="heading_row">
+                    <td class="fixed_small center"><?php $this->Form->fieldCheckbox('package_id[]', 'all', ((isset($vars->package_id[0]) ? $this->Html->safe($vars->package_id[0]) : null) == 'all'));?></td>
+                    <td><span><?php $this->_('AdminClients.packages.text_name');?></span></td>
+                    <td><span><?php $this->_('AdminClients.packages.text_module');?></span></td>
+                </tr>
+                <?php
+                // Display all restricted packages
+                for ($i = 0; $i < $num_packages; $i++) {
+                ?>
+                <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                    <td class="fixed_small center"><?php $this->Form->fieldCheckbox('package_ids[' . (isset($packages[$i]->id) ? $packages[$i]->id : null) . ']', (isset($packages[$i]->id) ? $packages[$i]->id : null), ((isset($vars->package_ids[$packages[$i]->id]) ? $vars->package_ids[$packages[$i]->id] : false) == $packages[$i]->id));?></td>
+                    <td><a href="<?php echo $this->Html->safe($this->base_uri . 'packages/edit/' . (isset($packages[$i]->id) ? $packages[$i]->id : null));?>"><?php (print (isset($packages[$i]->name) ? $this->Html->safe($packages[$i]->name) : null));?></a></td>
+                    <td><?php (print (isset($packages[$i]->module_name) ? $this->Html->safe($packages[$i]->module_name) : null));?></td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+            <div id="set_packages" class="button_row pad_top">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.packages.field_packagesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            } else {
+            ?>
+            <div class="inner">
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminClients.packages.no_results');?>
+                    </div>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+
+        $this->Javascript->setInline("
+            $(document).ready(function() {
+                // Check/uncheck packages
+                $('#packages input').click(function() {
+                    if ($('#packages input:checked').size() > 0) {
+                        // Check all checkboxes
+                        if ($(this).val() == 'all') {
+                            if ($(this).prop('checked')) {
+                                // Check all checkboxes
+                                $('#packages input').each(function() {
+                                    $(this).prop('checked', true);
+                                });
+                            }
+                            else {
+                                // Uncheck all checkboxes
+                                $('#packages input').each(function() {
+                                    $(this).prop('checked', false);
+                                });
+                            }
+                        }
+                        else {
+                            // Check individual checkboxes
+                            if (!$(this).prop('checked')) {
+                                // Uncheck 'all'
+                                $('#packages input[value=all]').prop('checked', false);
+                            }
+                        }
+                    }
+                });
+            });
+        ");
+?>

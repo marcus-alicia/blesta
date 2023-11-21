@@ -1,0 +1,11 @@
+{
+    "version": "1.13.0",
+    "name": "SystemStatusPlugin.name",
+    "description": "SystemStatusPlugin.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://blesta.com"
+        }
+    ]
+}

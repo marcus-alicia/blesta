@@ -1,0 +1,77 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Solusvm.tab_stats.heading_stats');?></h3>
+    </div>
+    <div class="pad">
+        <?php
+        $stats_available = 0;
+        $keys = ['bandwidth' => 'bandwidth', 'memory' => 'memory', 'hdd' => 'space'];
+        foreach ($keys as $key => $name) {
+            if ((isset($server->{$key}) ? $server->{$key} : false) && (isset($server->{$key}['total_' . $name]) ? $server->{$key}['total_' . $name] : null) > 0) {
+                $stats_available++;
+            }
+        }
+
+        if ($stats_available == 0) {
+        ?>
+        <p><?php $this->_('Solusvm.tab_status.no_results');?></p>
+        <?php
+        } else {
+            ?>
+            <ul class="options">
+                <?php
+                foreach ($keys as $key => $name) {
+                    if ((isset($server->{$key}) ? $server->{$key} : false) && (isset($server->{$key}['total_' . $name]) ? $server->{$key}['total_' . $name] : null) > 0) {
+                        $percent_used = (isset($server->{$key}['percent_used_' . $name]) ? $this->Html->safe($server->{$key}['percent_used_' . $name]) : null);
+                ?>
+                <li>
+                    <?php $this->_('Solusvm.tab_stats.' . $name);?>
+                    <span class="buff <?php echo $percent_used > 80 ? 'offline' : 'online';?>"><?php $this->_('Solusvm.tab_stats.' . $name . '_stats', false, (isset($server->{$key}['used_' . $name . '_formatted']) ? $this->Html->safe($server->{$key}['used_' . $name . '_formatted']) : null), (isset($server->{$key}['total_' . $name . '_formatted']) ? $this->Html->safe($server->{$key}['total_' . $name . '_formatted']) : null));?></span>
+                    <?php $this->_('Solusvm.tab_stats.' . $name . '_percent_available', false, $percent_used);?>
+                </li>
+                <?php
+                    }
+                }
+                ?>
+            </ul>
+            <?php
+        }
+        ?>
+    </div>
+    <?php
+    $graph_keys = ['trafficgraph', 'loadgraph', 'memorygraph'];
+    $graphs = false;
+    foreach ($graph_keys as $value) {
+        if ((isset($server->{$value}) ? $server->{$value} : false)) {
+            $graphs = true;
+            break;
+        }
+    }
+
+    // Display graphs
+    if ($graphs) {
+    ?>
+    <div class="title_row">
+        <h3><?php $this->_('Solusvm.tab_stats.heading_graphs');?></h3>
+    </div>
+    <div class="pad">
+        <?php
+        foreach ($graph_keys as $value) {
+            if (!(isset($server->{$value}) ? $server->{$value} : false)) {
+                continue;
+            }
+        ?>
+        <p><img src="<?php echo $this->Html->safe((isset($module_hostname) ? $module_hostname : null) . (isset($server->{$value}) ? $server->{$value} : null));?>" /></p>
+        <?php
+        }
+        ?>
+    </div>
+    <?php
+    }
+    ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(this).blestaSetHeadTag("link", {media:"screen", type:"text/css", rel:"stylesheet", href: "<?php echo $this->Html->safe($this->view_dir . 'css/styles.css');?>"});
+});
+</script>

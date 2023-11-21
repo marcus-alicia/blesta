@@ -1,0 +1,3 @@
+<?php
+header('Location: ' . $this->base_uri . 'order/signup/index/' . (isset($order_form->label) ? $order_form->label : null));
+exit;

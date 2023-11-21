@@ -1,0 +1,17 @@
+
+	<ul>
+        <li>
+            <?php
+            $this->Form->label($this->_('Pagseguro.email_id', true), 'email_id');
+            $this->Form->fieldText('email_id', (isset($meta['email_id']) ? $meta['email_id'] : null), ['id'=>'email_id']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Pagseguro.email_note');?></div></span>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Pagseguro.token', true), 'token');
+            $this->Form->fieldText('token', (isset($meta['token']) ? $meta['token'] : null), ['id'=>'token']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Pagseguro.token_note');?></div></span>
+        </li>
+   	</ul>

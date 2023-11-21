@@ -1,0 +1,6 @@
+<?php
+    $this->Widget->clear();
+    $this->Widget->setLinkButtons($link_buttons);
+    $this->Widget->create($this->_("AdminCompanyModules.manage.boxtitle_manage", true, (isset($module->name) ? $this->Html->safe($module->name) : null)), array('id'=>"manage_thesslstore"));
+    $this->Widget->end();
+?>

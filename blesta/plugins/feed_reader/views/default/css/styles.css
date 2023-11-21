@@ -1,0 +1,18 @@
+/* FeedReader plugin */
+.rss_feed_area .bottom_row > div { padding:0 14px 0 11px; font-size:10px; line-height:20px;}
+	.rss_feed_area .bottom_row > div .link { padding:0 0 0 12px; vertical-align:top;}
+	.rss_feed_area .bottom_row > div .switch_link { padding:0;}
+
+.rss_feed_area{ float:left; width:100%;}
+.rss_feed_area ul.rss_list{ list-style:none;}
+.rss_feed_area ul.rss_list li{ overflow:hidden; height:1%; display:block; padding:13px 12px 15px; font-size:13px; border-bottom:1px solid #e1e1e1;}
+.rss_feed_area ul.rss_list li span{ display:block; padding:0 0 14px;}
+.rss_feed_area ul.rss_list li p{ display:block;}
+.rss_feed_area ul.rss_list li a{ color:#429fcb; font-weight:bold;}
+.rss_feed_area .bottom_row{ float:left; width:100%; height:auto; background:#fff; margin-top: 12px;}
+.rss_feed_area .bottom_row .switch_link{ float:right; padding:0 14px 0 0; list-style:none}
+.rss_feed_area .bottom_row .switch_link li{ float:left; font-size:11px; font-weight:bold;}
+.rss_feed_area .bottom_row .switch_link li a{ float:left; color:#429fcb}
+.rss_feed_area .bottom_row .switch_link li span{ float:left; padding:2px 8px 0;}
+.rss_feed_area .bottom_row .link{ font-size:11px; color:#b6b6b6; padding:11px 0 0 12px;}
+.rss_feed_area .bottom_row .link a{ color:#b6b6b6}

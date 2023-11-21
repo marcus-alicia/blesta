@@ -1,0 +1,135 @@
+
+        <div class="system_top_row">
+            <ul class="left_nav">
+                <?php
+                foreach ((isset($statistics) ? $statistics : []) as $statistic) {
+                ?>
+                <li class="<?php echo (isset($statistic['class']) ? $this->Html->safe($statistic['class']) : null);?>">
+
+                    <div>
+                        <i class="<?php echo (isset($statistic['icon']) ? $this->Html->safe($statistic['icon']) : null);?>"></i>
+                        <?php
+                        if ((isset($statistic['url']) ? $this->Html->safe($statistic['url']) : null)) {
+                        ?>
+                        <a href="<?php echo $this->Html->safe($statistic['url']);?>">
+                        <?php
+                        }
+                        ?>
+                        <span><?php echo (isset($statistic['name']) ? $this->Html->safe($statistic['name']) : null);?></span>
+                        <span class="value"><?php echo (isset($statistic['value']) ? $this->Html->safe($statistic['value']) : null);?></span>
+                        <?php
+                        if ((isset($statistic['url']) ? $this->Html->safe($statistic['url']) : null)) {
+                        ?>
+                        </a>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </li>
+                <?php
+                }
+                ?>
+            </ul>
+            <div class="right_box">
+                <h3><i class="fas fa-fw fa-user"></i> <?php $this->_('AdminMain.overview.heading_users');?></h3>
+                <div>
+                    <?php
+                    $recent_users = (isset($recent_users) ? $recent_users : []);
+                    $num_recent_users = count($recent_users);
+
+                    foreach ($recent_users as $i => $user) {
+                    ?>
+
+                        <span class="tooltip name <?php echo (isset($user->class) ? $this->Html->safe($user->class) : null);?>">
+                            <?php
+                            if ((isset($user->client_id) ? $user->client_id : null)) {
+                            ?>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . $user->client_id . '/');?>"><?php echo $this->Html->safe((isset($user->first_name) ? $user->first_name : null) . ' ' . (isset($user->last_name) ? $user->last_name : null));?></a>
+                            <?php
+                            } else {
+                            ?>
+                                <?php echo $this->Html->safe((isset($user->first_name) ? $user->first_name : null) . ' ' . (isset($user->last_name) ? $user->last_name : null));?>
+                            <?php
+                            }
+                            ?>
+                            <div>
+                                <p>
+                                    <strong><?php $this->_('AdminMain.overview.tooltip_activity');?></strong>
+                                    <br />
+
+                                    <?php
+                                    // Show date timestamp or last activity of latest users
+                                    if ((isset($user->class) ? $user->class : null) == 'latest' || (isset($user->class) ? $user->class : null) == 'user') {
+                                        echo (isset($user->last_activity) ? $this->Html->safe($user->last_activity) : null);
+                                    } else {
+                                        echo $this->Date->cast($user->date_updated, 'date_time');
+                                    }
+                                    ?>
+                                    <br />
+                                    <?php
+                                    if ((isset($user->geo_ip['location']) ? $user->geo_ip['location'] : null)) {
+                                        $location = $user->geo_ip['location'];
+                                    ?>
+                                    <br />
+                                    <strong><?php $this->_('AdminMain.overview.tooltip_location');?></strong>
+                                    <br />
+                                    <?php echo $this->Html->safe($this->Html->concat(', ', (isset($location['city']) ? $location['city'] : null), (isset($location['region']) ? $location['region'] : null)));?>
+                                    <br />
+                                    <?php
+                                        echo (isset($location['country_name']) ? $this->Html->safe($location['country_name']) : null);
+                                    }
+                                    ?>
+                                </p>
+                            </div>
+                        </span>
+
+                    <?php
+                    }
+                    ?>
+                </div>
+
+            </div>
+        </div>
+        <div class="tabs_row">
+            <div class="tabs_nav"><a class="prev" href="#">&nbsp;</a><a class="next" href="#">&nbsp;</a></div>
+            <div id="system_overview_tabs" class="tab_slider">
+                <ul>
+                    <?php
+                    foreach ((isset($tabs) ? $tabs : []) as $tab) {
+                    ?>
+                    <li<?php echo (isset($tab['current']) ? $tab['current'] : false) ? ' class="current"' : ''?>><a href="<?php echo (isset($tab['url']) ? $this->Html->safe($tab['url']) : null);?>"><?php echo (isset($tab['name']) ? $this->Html->safe($tab['name']) : null);?></a></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+
+            </div>
+        </div>
+        <div id="system_overview_tab_content">
+            <?php echo (isset($tab_content) ? $tab_content : null);?>
+        </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#widget_system_overview_admin_main').blestaBindToolTips();
+
+        $('.tab_slider li a').click(function() {
+            var current_tab = $('#system_overview_tabs li.current');
+            var new_tab = $(this).parent();
+            if (!$(new_tab).hasClass("current")) {
+                $(this).blestaRequest("get", $(this).attr('href'), null, function(data) {
+                        // Change tabs
+                        if (data["content"]) {
+                            $(current_tab).removeClass("current");
+                            $(new_tab).addClass("current");
+                            $('#system_overview_tab_content').html(data["content"]);
+                        }
+                    },
+                    null,
+                    {dataType: "json"}
+                );
+            }
+            return false;
+        });
+    });
+</script>

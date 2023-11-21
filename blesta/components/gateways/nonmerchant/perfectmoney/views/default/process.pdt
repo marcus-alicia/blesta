@@ -1,0 +1,16 @@
+<?php
+// Disable CSRF for this form
+$this->Form->setCsrfOptions(['set_on_create' => false]);
+
+// Build payment button
+$this->Form->create($post_to);
+
+if ((isset($fields) ? $fields : null)) {
+    foreach ($fields as $key => $value) {
+        $this->Form->fieldHidden($key, $value);
+    }
+}
+
+$this->Form->fieldButton('PAYMENT_METHOD', $this->_('Perfectmoney.buildprocess.submit', true), ['type' => 'submit', 'class' => 'btn btn-danger', 'value' => 'Pay Now!']);
+
+$this->Form->end();

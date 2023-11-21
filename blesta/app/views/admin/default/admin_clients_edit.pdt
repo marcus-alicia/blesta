@@ -1,0 +1,295 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.edit.boxtitle_editclient', true));
+        ?>
+
+        <div class="inner">
+            <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+            <div class="title_row first">
+                <h3><?php $this->_('AdminClients.edit.heading_contact');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_firstname', true), 'first_name');
+                        $this->Form->fieldText('first_name', (isset($vars->first_name) ? $vars->first_name : null), ['id' => 'first_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_lastname', true), 'last_name');
+                        $this->Form->fieldText('last_name', (isset($vars->last_name) ? $vars->last_name : null), ['id' => 'last_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_company', true), 'company');
+                        $this->Form->fieldText('company', (isset($vars->company) ? $vars->company : null), ['id' => 'company']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_title', true), 'title');
+                        $this->Form->fieldText('title', (isset($vars->title) ? $vars->title : null), ['id' => 'title']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_address1', true), 'address1');
+                        $this->Form->fieldText('address1', (isset($vars->address1) ? $vars->address1 : null), ['id' => 'address1']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_address2', true), 'address2');
+                        $this->Form->fieldText('address2', (isset($vars->address2) ? $vars->address2 : null), ['id' => 'address2']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_city', true), 'city');
+                        $this->Form->fieldText('city', (isset($vars->city) ? $vars->city : null), ['id' => 'city']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_country', true), 'country');
+                        $this->Form->fieldSelect('country', (isset($countries) ? $countries : null), (isset($vars->country) ? $vars->country : null), ['id' => 'country']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_state', true), 'State');
+                        $this->Form->fieldSelect('state', (isset($states) ? $states : null), (isset($vars->state) ? $vars->state : null), ['id' => 'state']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_zip', true), 'zip');
+                        $this->Form->fieldText('zip', (isset($vars->zip) ? $vars->zip : null), ['id' => 'zip']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_email', true), 'email');
+                        $this->Form->fieldText('email', (isset($vars->email) ? $vars->email : null), ['id' => 'email']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+        <?php
+        // Set phones section
+        echo (isset($partial_phones) ? $partial_phones : null);
+        ?>
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.edit.heading_billing');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('settings[tax_exempt]', 'true', (isset($vars->settings['tax_exempt']) && $vars->settings['tax_exempt'] == 'true'), ['id' => 'tax_exempt']);
+                        $this->Form->label($this->_('AdminClients.edit.field_taxexempt', true), 'tax_exempt', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip hidden"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.!tooltip.taxexempt');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_taxid', true), 'tax_id');
+                        $this->Form->fieldText('settings[tax_id]', (isset($vars->settings['tax_id']) ? $vars->settings['tax_id'] : null), ['id' => 'tax_id']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_preferredcurrency', true), 'default_currency');
+                        $this->Form->fieldSelect('settings[default_currency]', (isset($currencies) ? $currencies : null), (isset($vars->settings['default_currency']) ? $vars->settings['default_currency'] : null), ['id' => 'default_currency']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_invoiceaddress', true), 'inv_address_to');
+                        $this->Form->fieldSelect('settings[inv_address_to]', (isset($contacts) ? $contacts : null), (isset($vars->settings['inv_address_to']) ? $vars->settings['inv_address_to'] : null), ['id' => 'inv_address_to']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.edit.heading_authentication');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <p id="field_username_note" style="display: none;"><i class="fas fa-exclamation-triangle"></i> <?php $this->_('AdminClients.!notice.force_email_usernames');?></p>
+                    <div id="field_username">
+                        <li>
+                            <?php
+                            $this->Form->fieldRadio('settings[username_type]', 'email', ((isset($vars->settings['username_type']) ? $vars->settings['username_type'] : 'email') == 'email'), ['id' => 'username_type_email']);
+                            $this->Form->label($this->_('AdminClients.edit.field_username_type_email', true), 'username_type_email', ['class' => 'inline']);
+
+                            $this->Form->fieldRadio('settings[username_type]', 'username', ((isset($vars->settings['username_type']) ? $vars->settings['username_type'] : null) == 'username'), ['id' => 'username_type_username']);
+                            $this->Form->label($this->_('AdminClients.edit.field_username_type_username', true), 'username_type_username', ['class' => 'inline']);
+                            ?>
+                        </li>
+                        <li class="username">
+                            <?php
+                            $this->Form->label($this->_('AdminClients.edit.field_username', true), 'username');
+                            $this->Form->fieldText('username', (isset($vars->username) ? $vars->username : null), ['id' => 'username']);
+                            ?>
+                        </li>
+                    </div>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_newpassword', true), 'new_password');
+                        $this->Form->fieldPassword('new_password', ['id' => 'new_password', 'class' => 'new_password']);
+                        ?>
+                        <a class="generate-password" href="#" data-options="<?php (print (isset($password_options) ? $this->Html->safe($password_options) : null));?>" data-length="10" data-base-url="<?php (print (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null));?>" data-for-class="new_password">
+                            <i class="fas fa-sync-alt"></i> <?php $this->_('AdminClients.add.text_generate_password');?>
+                        </a>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_two_factor_mode', true));
+
+                        if ((isset($vars->two_factor_mode) ? $vars->two_factor_mode : null) == 'none') {
+                            $this->Form->label($this->_('AdminClients.edit.field_two_factor_mode_off', true), null, ['class' => 'inline']);
+                        } else {
+                            $this->Form->fieldCheckbox('two_factor_mode', 'none', false, ['id' => 'two_factor_mode']);
+                            $this->Form->label($this->_('AdminClients.edit.field_two_factor_mode_on', true), 'two_factor_mode', ['class' => 'inline']);
+                        }
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.edit.heading_settings');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_language', true), 'language');
+                        $this->Form->fieldSelect('settings[language]', (isset($languages) ? $languages : null), (isset($vars->settings['language']) ? $vars->settings['language'] : null), ['id' => 'language']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edit.field_clientgroup', true), 'client_group_id');
+                        $this->Form->fieldSelect('client_group_id', (isset($client_groups) ? $client_groups : null), (isset($vars->client_group_id) ? $vars->client_group_id : null), ['id' => 'client_group_id']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php $this->Form->fieldCheckbox('receive_email_marketing', 'true', (isset($vars->settings['receive_email_marketing']) ? $vars->settings['receive_email_marketing'] : 'false') == 'true', ['id' => 'receive_email_marketing']); ?>
+                        <?php $this->Form->label($this->_('AdminClients.edit.field_receive_email_marketing', true), 'receive_email_marketing', ['class' => 'inline']);?>
+                    </li>
+                </ul>
+                <ul id="custom_fields">
+                    <?php
+                    // Display custom fields partial
+                    echo (isset($custom_fields) ? $custom_fields : null);
+                    ?>
+                </ul>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.edit.field_clientsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline('
+    $(document).ready(function() {
+        updateCustomFields({group_id:$("#client_group_id").val(),client_id:"' . (isset($client->id) ? $client->id : null) . '"});
+
+        $("#country").change(function() {
+            $(this).blestaRequest("get", "' . $this->Html->safe($this->base_uri . 'clients/getstates/') . '" + $(this).val(), null, function(data) {
+                    // Remove all existing items
+                    $("option", "#state").remove();
+
+                    // Append all new items
+                    $.each($(this).blestaSortObject(data), function(index, item) {
+                        $("#state").append(new Option(item.value, item.key));
+                    });
+                },
+                null,
+                {dataType: "json"}
+            );
+        });
+
+        $("#client_group_id").change(function() {
+            var params = {group_id:$(this).val(),client_id:"' . (isset($client->id) ? $client->id : null) . '"};
+
+            updateCustomFields(params);
+
+            return false;
+        });
+
+        if ($("#username_type_email").prop("checked"))
+            $(".username").hide();
+
+        // Show/hide the username input
+        $("#username_type_username").click(function() {
+            $(".username").show();
+        });
+        $("#username_type_email").click(function() {
+            $(".username").hide();
+        });
+        
+        // Get the custom fields
+        function updateCustomFields(params) {
+            $(this).blestaRequest("get", "' . $this->Html->safe($this->base_uri . 'clients/getcustomfields/') . '", params, function(data) {
+                    if (data.custom_fields) {
+                        $("#custom_fields").html(data.custom_fields);
+                    }
+                    
+                    if (data.force_email_usernames == "true") {
+                        $("#field_username").hide();
+                        $("#field_username_note").show();
+                    } else {
+                        $("#field_username").show();
+                        $("#field_username_note").hide();
+                    }
+                },
+                function(data) { },
+                {dataType:"json"}
+            );
+
+            return false;
+        }
+        
+        // Disable tax exempt checkbox, if tax id validation is enabled
+        function updateTaxExempt() {
+            var tax_countries = ' . json_encode(($tax_countries ?? null)) . ';
+            var tax_id = $("#tax_id").val();
+             
+            if (tax_countries.includes($("#country").val()) && tax_id !== "") {
+                $("#tax_exempt").prop("disabled", true);
+                $("#tax_exempt").parent().find(".tooltip").removeClass("hidden");
+            } else {
+                $("#tax_exempt").prop("disabled", false);
+                $("#tax_exempt").parent().find(".tooltip").addClass("hidden");
+            }
+        }
+        
+        if (' . (($tax_exemption_enabled ?? false) ? 'true' : 'false') . ') {
+            updateTaxExempt();
+
+            $("#country").change(function() {
+                updateTaxExempt();
+            });
+            
+            $("#tax_id").change(function() {
+                updateTaxExempt();
+            });
+        }
+    });
+');
+?>

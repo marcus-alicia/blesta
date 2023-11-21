@@ -1,0 +1,53 @@
+<?php
+if (!empty($notes)) {
+?>
+    <article class="sticky_note_box">
+        <ul>
+            <?php
+            // Show initial number of notes
+            $num_notes = count($notes);
+            for ($i = 0; $i < min((isset($number_notes_to_show) ? $this->Html->safe($number_notes_to_show) : null), $num_notes); $i++) {
+            ?>
+            <li>
+                <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/editnote/' . (isset($notes[$i]->client_id) ? $notes[$i]->client_id : null) . '/' . (isset($notes[$i]->id) ? $notes[$i]->id : null) . '/');?>"><?php echo $this->Date->cast((isset($notes[$i]->date_updated) ? $this->Html->safe($notes[$i]->date_updated) : null)) . $this->_('AdminClients.stickynotes.date_separator', true) . ' ' . (isset($notes[$i]->title) ? $this->Html->safe($notes[$i]->title) : null);?></a>
+                <div class="unstick" style="display:none;">
+                    <i class="fas fa-thumbtack"></i>
+                    <a href="<?php echo $this->base_uri . 'clients/stickynotes/' . (isset($notes[$i]->client_id) ? $this->Html->safe($notes[$i]->client_id) : null) . '/' . (isset($notes[$i]->id) ? $this->Html->safe($notes[$i]->id) : null) . '/';?>"><?php $this->_('AdminClients.stickynotes.text_unstick');?></a>
+                </div>
+            </li>
+            <?php
+            }
+            ?>
+        </ul>
+        <?php
+        // Show more notes
+        if ($num_notes > (isset($number_notes_to_show) ? $this->Html->safe($number_notes_to_show) : null)) {
+        ?>
+        <ul class="more_sticky_notes<?php echo ((isset($show_more) ? $this->Html->safe($show_more) : null) == 'true') ? ' show' : ' hidden';?>">
+            <?php
+            for ($i = (isset($number_notes_to_show) ? $this->Html->safe($number_notes_to_show) : null); $i < $num_notes; $i++) {
+            ?>
+            <li>
+                <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/editnote/' . (isset($notes[$i]->client_id) ? $notes[$i]->client_id : null) . '/' . (isset($notes[$i]->id) ? $notes[$i]->id : null) . '/');?>"><?php echo $this->Date->cast((isset($notes[$i]->date_updated) ? $this->Html->safe($notes[$i]->date_updated) : null)) . $this->_('AdminClients.stickynotes.date_separator', true) . ' ' . (isset($notes[$i]->title) ? $this->Html->safe($notes[$i]->title) : null);?></a>
+                <div class="unstick" style="display:none;">
+                    <i class="fas fa-thumbtack"></i>
+                    <a href="<?php echo $this->base_uri . 'clients/stickynotes/' . (isset($notes[$i]->client_id) ? $this->Html->safe($notes[$i]->client_id) : null) . '/' . (isset($notes[$i]->id) ? $this->Html->safe($notes[$i]->id) : null) . '/';?>"><?php $this->_('AdminClients.stickynotes.text_unstick');?></a>
+                </div>
+            </li>
+            <?php
+            }
+            ?>
+        </ul>
+        <h4>
+            <a id="more_sticky_notes" class="<?php echo ((isset($show_more) ? $this->Html->safe($show_more) : null) == 'true') ? 'hide_content' : 'show_content';?>" href="#">
+                <i class="fas fa-caret-down"></i>
+                <?php $this->_('AdminClients.stickynotes.text_' . (((isset($show_more) ? $this->Html->safe($show_more) : null) == 'true') ? 'less' : 'more'));?>
+            </a>
+        </h4>
+        <?php
+        }
+        ?>
+    </article>
+<?php
+}
+?>

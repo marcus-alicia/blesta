@@ -1,0 +1,187 @@
+
+            <?php
+            $this->Form->create(null, ['class' => 'disable-on-submit']);
+            if ((isset($parent_service_id) ? $parent_service_id : null)) {
+                $this->Form->fieldHidden('parent_service_id', $parent_service_id);
+            }
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('AdminClients.addservice_basic.basic_heading');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminClients.addservice_basic.field_invoice_method', true));?>
+
+                        <?php $this->Form->fieldRadio('invoice_method', 'create', !isset($vars->invoice_method) || (isset($vars->invoice_method) ? $vars->invoice_method : null) == 'create', ['id' => 'invoice_method_create']);?>
+                        <?php $this->Form->label($this->_('AdminClients.addservice_basic.field_invoice_method_create', true), 'invoice_method_create', ['class' => 'inline']);?>
+
+                        <?php
+                        if (count((isset($invoices) ? $invoices : [])) > 0) {
+                            $this->Form->fieldRadio('invoice_method', 'append', (isset($vars->invoice_method) ? $vars->invoice_method : null) == 'append', ['id' => 'invoice_method_append']);
+                            $this->Form->label($this->_('AdminClients.addservice_basic.field_invoice_method_append', true), 'invoice_method_append', ['class' => 'inline']);
+                            $this->Form->fieldSelect('invoice_id', $invoices, (isset($vars->invoice_id) ? $vars->invoice_id : null), ['class' => 'inline']);
+                        }
+                        ?>
+                        <?php $this->Form->fieldRadio('invoice_method', 'none', (isset($vars->invoice_method) ? $vars->invoice_method : null) == 'none', ['id' => 'invoice_method_none']);?>
+                        <?php $this->Form->label($this->_('AdminClients.addservice_basic.field_invoice_method_dont', true), 'invoice_method_none', ['class' => 'inline']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminClients.addservice_basic.field_term', true), 'pricing_id');?>
+                        <?php $this->Form->fieldSelect('pricing_id', ['' => $this->_('AppController.select.please', true)] + (array)(isset($terms) ? $terms : null), (isset($vars->pricing_id) ? $vars->pricing_id : null), ['id' => 'pricing_id']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminClients.addservice_basic.field_status', true));?>
+                        <?php $this->Form->fieldSelect('status', $status, (isset($vars->status) ? $vars->status : null), ['id' => 'status']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->fieldCheckbox('use_module', 'true', (isset($vars->use_module) ? $vars->use_module : 'true') === 'true', ['id' => 'use_module']);?>
+                        <?php $this->Form->label($this->_('AdminClients.addservice_basic.field_use_module', true, (isset($module_name) ? $module_name : null)), 'use_module', ['class' => 'inline']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->fieldCheckbox('notify_order', 'true', (isset($vars->notify_order) ? $vars->notify_order : 'true') === 'true', ['id' => 'notify_order']);?>
+                        <?php $this->Form->label($this->_('AdminClients.addservice_basic.field_notify_order', true), 'notify_order', ['class' => 'inline']);?>
+                    </li>
+                    <?php
+                    // Module row selector
+                    if (!empty($module_row_fields)) {
+                    ?>
+                    <li>
+                        <?php $this->Form->label((isset($module_row_name) ? $module_row_name : null), 'module_row_id');?>
+                        <?php $this->Form->fieldSelect('module_row_id', (array)(isset($module_row_fields) ? $module_row_fields : []), (isset($vars->module_row_id) ? $vars->module_row_id : null), ['id' => 'module_row_id']);?>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+
+            <?php
+            // Show module fields
+            if (isset($input_html) && ($module_field_html = $input_html->generate(null, $this->view))) {
+            ?>
+                <div class="title_row">
+                    <h3><?php $this->_('AdminClients.addservice_basic.module_heading', false, (isset($module_name) ? $module_name : null));?></h3>
+                </div>
+                <div class="pad">
+                <?php
+                echo $module_field_html;
+                ?>
+                </div>
+            <?php
+            }
+            ?>
+
+            <div class="package_options">
+                <?php
+                if (isset($vars->configoptions)) {
+                    foreach ($vars->configoptions as $key => $value) {
+                        $this->Form->fieldHidden('configoptions[' . $key . ']', $value);
+                    }
+                }
+                ?>
+            </div>
+
+            <?php
+            if ((isset($addon_groups) ? $addon_groups : null) && !empty($addon_groups)) {
+            ?>
+                <div class="title_row">
+                    <h3><?php $this->_('AdminClients.addservice_basic.addons_heading');?></h3>
+                </div>
+                <?php
+                foreach ($addon_groups as $addon_group) {
+                ?>
+                <div class="group_container">
+                    <h4><a href="#" id="addon_group_id_<?php (print (isset($addon_group->id) ? $this->Html->safe($addon_group->id) : null));?>" class="show_content toggle_addon_group"><i class="fas fa-caret-down"></i> <?php (print (isset($addon_group->name) ? $this->Html->safe($addon_group->name) : null));?></a></h4>
+                    <div class="pad reverse addon_group_content" id="addon_group_content_id_<?php (print (isset($addon_group->id) ? $this->Html->safe($addon_group->id) : null));?>">
+                        <ul>
+                            <li>
+                                <?php
+                                $field_id = 'addon_' . (isset($addon_group->id) ? $this->Html->safe($addon_group->id) : null) . '_';
+                                $this->Form->fieldRadio('addon[' . (isset($addon_group->id) ? $this->Html->safe($addon_group->id) : null) . '][id]', '', (isset($vars->addon[$addon_group->id]['id']) ? $vars->addon[$addon_group->id]['id'] : null) == '', ['id' => $field_id]);
+                                $this->Form->label($this->_('AdminClients.addservice_basic.field_default_addon', true), $field_id, ['class' => 'inline']);
+                                ?>
+                            </li>
+                            <?php
+                            foreach ($addon_group->packages as $addon_package) {
+                                $field_id = 'addon_' . (isset($addon_group->id) ? $this->Html->safe($addon_group->id) : null) . '_' . (isset($addon_package->id) ? $this->Html->safe($addon_package->id) : null);
+                            ?>
+                            <li>
+                                <?php
+                                $this->Form->fieldRadio('addon[' . (isset($addon_group->id) ? $this->Html->safe($addon_group->id) : null) . '][id]', (isset($addon_package->id) ? $this->Html->safe($addon_package->id) : null), (isset($vars->addon[$addon_group->id]['id']) ? $vars->addon[$addon_group->id]['id'] : null) == $addon_package->id, ['id' => $field_id]);
+                                $this->Form->label($addon_package->name, $field_id, ['class' => 'inline']);
+                                ?>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+            <?php
+            }
+            ?>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.addservice_basic.field_continue', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.addon_group_content').hide();
+
+        $('.addon_group_content input[type=radio]:checked').first(function() {
+            $(this).closest(".addon_group_content").show();
+        });
+
+        updateServiceStatus(<?php echo (isset($vars->use_module) ? $vars->use_module : 'true');?>, <?php echo (isset($vars->notify_order) ? $vars->notify_order : 'true');?>);
+        $('#status').change(function() {
+            updateServiceStatus(true, true);
+        });
+
+        function updateServiceStatus(use_module, notify_order) {
+            var status = $('#status').val();
+
+            // Update the checkboxes as necessary based on status
+            $('#use_module')
+                .prop('checked', ((status == "active" && use_module) || status == "pending"))
+                .prop('disabled', (status != "active"));
+
+            $('#notify_order')
+                .prop('checked', ((status == "active" && notify_order) || status == "pending"))
+                .prop('disabled', (status != "active"));
+        }
+
+        // Toggle notes and recurring sections
+        $('.group_container').each(function() {
+            $(this).blestaBindToggleEvent("#" + $(".toggle_addon_group", this).attr("id"), "#" + $(".addon_group_content", this).attr("id"));
+        });
+
+        // Fetch package options
+        packageOptions();
+        $('#pricing_id').change(function() {
+            packageOptions();
+        });
+
+        function packageOptions() {
+            var pricing_id = $('#pricing_id').val();
+
+            if (pricing_id) {
+                var params = $('[name^="configoptions"]', $('.package_options').closest('form')).serialize();
+                $(this).blestaRequest('GET', '<?php echo $this->Html->safe($this->base_uri . 'clients/packageoptions/');?>' + pricing_id, params, function(data) {
+                    $('.package_options').html(data);
+                    $('.package_options').blestaBindToolTips();
+                },
+                null,
+                {dataType: 'json'});
+            }
+        }
+    });
+</script>

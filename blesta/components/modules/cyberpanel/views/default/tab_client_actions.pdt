@@ -1,0 +1,28 @@
+
+    <div id="change_password">
+        <h4><?php $this->_('Cyberpanel.tab_client_actions.change_password'); ?></h4>
+
+        <?php
+            $this->Form->create($this->base_uri . 'services/manage/' . (isset($service_id) ? $service_id : null) . '/tabClientActions/');
+        ?>
+        <div class="w-100">
+            <div class="form-group">
+                <?php
+                    $this->Form->label($this->_('Cyberpanel.tab_client_actions.field_cyberpanel_password', true), 'cyberpanel_password');
+                    $this->Form->fieldPassword('cyberpanel_password', ['id' => 'cyberpanel_password', 'class' => 'form-control', 'placeholder' => $this->_('Cyberpanel.tab_client_actions.field_cyberpanel_password', true)]);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                    $this->Form->label($this->_('Cyberpanel.tab_client_actions.field_cyberpanel_confirm_password', true), 'cyberpanel_password');
+                    $this->Form->fieldPassword('cyberpanel_confirm_password', ['id' => 'cyberpanel_confirm_password', 'class' => 'form-control', 'placeholder' => $this->_('Cyberpanel.tab_client_actions.field_cyberpanel_confirm_password', true)]);
+                ?>
+            </div>
+        </div>
+        <button class="btn btn-light float-right">
+            <i class="fas fa-edit"></i> <?php $this->_('Cyberpanel.tab_client_actions.field_password_submit'); ?>
+        </button>
+        <?php
+            $this->Form->end();
+        ?>
+    </div>

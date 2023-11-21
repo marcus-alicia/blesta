@@ -1,0 +1,9 @@
+{
+    "name": "blesta/cornerstone",
+    "description": "Cornerstone",
+    "license": "proprietary",
+    "type": "blesta-gateway-merchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

@@ -1,0 +1,329 @@
+            <!-- Steps -->
+            <div class="col-md-12 hidden-xs hidden-sm">
+                <div class="card card-blesta card-steps">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/main/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_1_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_1_description');?></em></p>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/config/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_2_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_2_description');?></em></p>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/cart/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_3_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_3_description');?></em></p>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/checkout/index/' . (isset($order_form->label) ? $order_form->label : null));?>" class="active"><strong><?php $this->_('Main.steps.step_4_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_4_description');?></em></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <?php
+                echo (isset($message) ? $message : null);
+                ?>
+
+                <?php
+                $this->WidgetClient->clear();
+                $this->WidgetClient->create($this->_('Checkout.index.header_checkout', true));
+                $this->WidgetClient->startBody();
+                $this->Form->create($this->base_uri . 'order/checkout/index/' . (isset($order_form->label) ? $order_form->label : null) . '/' . (isset($order->order_number) ? $order->order_number : null), ['class' => 'disable-on-submit']);
+                $this->Form->fieldHidden('checkout', 'true');
+                // Determine how many columns to draw
+                $column_widths = 12;
+                $columns = 3;
+
+                if (empty($payment_accounts) || count($payment_accounts) <= 0 || (isset($require_passphrase) ? $require_passphrase : null)) {
+                    $columns--;
+                }
+                if (empty($payment_types) || count($payment_types) <= 0) {
+                    $columns--;
+                }
+                if (empty($nonmerchant_gateways)) {
+                    $columns--;
+                }
+
+                $column_widths /= ($columns == 0 ? 1 : $columns);
+
+                // No payment options available
+                if ($columns == 0) {
+                ?>
+                <div class="alert alert-info">
+                    <?php $this->_('Checkout.index.no_options');?>
+                </div>
+                <?php
+                }
+
+                // Set payment option container
+                if ($columns > 0) {
+                ?>
+                <div class="row mb-2">
+                <?php
+                }
+
+                // Show column for payment accounts, if any
+                if (!empty($payment_accounts) && !(isset($require_passphrase) ? $require_passphrase : null)) {
+                    $payment_accounts = array_merge(['' => Language::_('AppController.select.please', true)], $payment_accounts);
+                ?>
+                    <div class="mb-sm-0 mb-3 col-md-<?php echo (isset($column_widths) ? $this->Html->safe($column_widths) : null);?><?php echo $columns > 1 ? ' col-border' : '';?>">
+                        <h4><?php $this->_('Checkout.index.field_useaccount');?></h4>
+                        <?php
+                        $this->Form->fieldSelect('payment_account', (isset($payment_accounts) ? $payment_accounts : null), (isset($vars->payment_account) ? $vars->payment_account : null), ['id' => 'account', 'class'=>'form-control input-sm']);
+                        ?>
+                    </div>
+                <?php
+                }
+
+                // Show column for new payment types, if any
+                if (!empty($payment_types)) {
+                    $payment_types = array_merge(['' => Language::_('AppController.select.please', true)], $payment_types);
+                ?>
+                    <div class="col-md-<?php echo (isset($column_widths) ? $this->Html->safe($column_widths) : null);?><?php echo $columns > 2 ? ' col-border' : '';?>">
+                        <h4><?php $this->_('Checkout.index.field_newdetails');?></h4>
+                        <?php
+                        $this->Form->fieldSelect('payment_type', (isset($payment_types) ? $payment_types : null), (isset($vars->payment_type) ? $vars->payment_type : null), ['id' => 'details', 'class'=>'form-control input-sm']);
+                        ?>
+                    </div>
+                <?php
+                }
+
+                // Show column for non-merchant gateway payment options, if any
+                if (!empty($nonmerchant_gateways)) {
+                    $options_heading = $this->_('Checkout.index.heading_other_payment_options', true);
+                    if ($columns == 1) {
+                        $options_heading = $this->_('Checkout.index.heading_payment_options', true);
+                    }
+                ?>
+                    <div class="col-md-<?php echo (isset($column_widths) ? $this->Html->safe($column_widths) : null);?>">
+                        <h4><?php echo (isset($options_heading) ? $options_heading : null);?></h4>
+                        <?php
+                        // Set non-merchant gateways
+                        foreach ((isset($nonmerchant_gateways) ? $nonmerchant_gateways : []) as $gateway) {
+                        ?>
+                        <div class="radio">
+                            <label>
+                                <?php
+                                $this->Form->fieldRadio('gateway', (isset($gateway->id) ? $gateway->id : null), ((isset($vars->gateway) ? $vars->gateway : null) == (isset($gateway->id) ? $gateway->id : null)), ['class' => 'gateway']);
+                                echo (isset($gateway->name) ? $this->Html->safe($gateway->name) : null);
+                                ?>
+                            </label>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                <?php
+                }
+
+                // Close payment option container
+                if ($columns > 0) {
+                ?>
+                    <div class="clearfix mb-2"></div>
+                    <?php
+                    // Allow credits to be selected
+                    if ((isset($credits['amount']) ? $credits['amount'] : null) > 0) {
+                    ?>
+                    <div class="col-md-12 mt-2">
+                        <div class="checkbox">
+                            <label>
+                                <?php
+                                $this->Form->fieldCheckbox('apply_credit', 'true', (isset($vars->apply_credit) ? $vars->apply_credit : null) == 'true', ['id' => 'apply_credit']);
+                                $this->_('Checkout.index.apply_credit', false, $this->CurrencyFormat->format($credits['amount'], $credits['currency']));
+                                ?>
+                            <label>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <?php
+                }
+                ?>
+                <div id="payment_details" style="display:none;">
+                    <?php
+                    echo (isset($contact_info) ? $contact_info : null);
+                    ?>
+                    <div id="payment_details_cc" style="display:none;">
+                        <?php echo (isset($cc_info) ? $cc_info : null);?>
+                    </div>
+                    <div id="payment_details_ach" style="display:none;">
+                        <?php echo (isset($ach_info) ? $ach_info : null);?>
+                    </div>
+                </div>
+
+                <?php
+                if (!(isset($order->order_number) ? $order->order_number : null) && (isset($order_form->require_tos) ? $order_form->require_tos : null)) {
+                ?>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <?php
+                            $this->Form->fieldCheckbox('agree_tos', 'true', (isset($vars->agree_tos) ? $vars->agree_tos : null) == 'true');
+                            $this->_('Checkout.index.field_agree_tos', false, $this->Html->safe($order_form->tos_url));
+                            ?>
+                        </label>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+
+                <div id="payment_confirmation" class="my-2"></div>
+
+                <?php
+                // Show continue button
+                if ($columns > 0) {
+                ?>
+                <button type="submit" class="btn btn-light float-right">
+                    <i class="fas fa-arrow-circle-right"></i>
+                    <span class="confirm"><?php $this->_('Checkout.index.pay_btn');?></span>
+                    <span class="credit_confirm" style="display:none;"><?php echo $this->Html->safe($this->_('Checkout.index.pay_credit_btn', true));?></span>
+                </button>
+                <?php
+                }
+                $this->WidgetClient->endBody();
+                $this->WidgetClient->end();
+                $this->Form->end();
+                ?>
+            </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var payment_type = '<?php echo (isset($vars->payment_type) ? $vars->payment_type : null);?>';
+        if (payment_type == 'ach' || payment_type == 'cc') {
+            $("#payment_details").show();
+            $("#payment_details_" + payment_type).show();
+        }
+
+        $('#account, #details').on('change', function() {
+            $('#pay_with').val($(this).attr('id'));
+            $('.gateway').prop('checked', false);
+
+            if ($(this).attr('id') == 'details') {
+                if ($(this).val() == 'cc' || $(this).val() == 'ach') {
+                    $('#payment_details').show();
+                    togglePayDetails($(this).val());
+
+                    $('html,body').animate({scrollTop: $('#payment_details').offset().top}, 'slow');
+                } else {
+                    $('#payment_details').hide();
+                }
+
+                $('#account').val('');
+            } else {
+                $('#payment_details, #payment_details_cc, #payment_details_ach').hide();
+                $('#details').val('');
+            }
+        });
+
+        $('#payment_details, #account, #details').on('change', function() {
+            // Enable payment authorization when the payment details are changed
+            $('#payment_details').closest('form').off('submit', authorizePayment);
+            $('#payment_details').closest('form').on('submit', authorizePayment);
+        });
+
+        $('.gateway').on('change', function() {
+            $('#pay_with').val($(this).val());
+            $('#payment_details, #payment_details_cc, #payment_details_ach').hide();
+            $('#account, #details').val('');
+        });
+
+        toggleCredit();
+        $('#apply_credit').change(function() {
+            toggleCredit();
+        });
+
+        // Attempt to authorize the payment before submission
+        $('#payment_details').closest('form').on('submit', authorizePayment);
+    });
+
+    function toggleCredit() {
+        if ($('#apply_credit').prop('checked')) {
+            $('span.credit_confirm').show();
+            $('span.confirm').hide();
+        } else {
+            $('span.confirm').show();
+            $('span.credit_confirm').hide();
+        }
+    }
+
+    function togglePayDetails(val) {
+        if (val == 'cc') {
+            $("#payment_details_ach").hide();
+            $("#payment_details_cc").show();
+        } else {
+            $("#payment_details_cc").hide();
+            $("#payment_details_ach").show();
+        }
+    }
+
+    function authorizePayment(event) {
+        event.preventDefault();
+
+        // If the gateway uses a custom form, authorize the payment only if a
+        // reference id or a client reference id has been set
+        var payment_method = $('select[name="payment_type"]').val();
+        var reference_id = $('#payment_details_' + payment_method + ' input[name="reference_id"]').val();
+        var client_reference_id = $('#payment_details_' + payment_method + ' input[name="client_reference_id"]').val();
+
+        if ((payment_method === 'cc' && custom_form_cc) || (payment_method === 'ach' && custom_form_ach)) {
+            if (typeof reference_id === 'undefined') {
+                reference_id = '';
+            }
+            if (typeof client_reference_id === 'undefined') {
+                client_reference_id = '';
+            }
+
+            if ((reference_id === '' || reference_id === null) && (client_reference_id === '' || client_reference_id === null)) {
+                return false;
+            }
+        }
+
+        $.ajax({
+            method: 'POST',
+            data: $(this).closest('form').serialize(),
+            url: '<?php echo $this->Html->safe((isset($this->base_uri) ? $this->base_uri : null) . 'order/checkout/getpaymentconfirmation/' . (isset($order_form->label) ? $order_form->label : null) . '/' . (isset($order->order_number) ? $order->order_number : null));?>',
+            success: function(data) {
+                if (typeof data.redirect !== 'undefined' && data.redirect !== '' && data.redirect !== null) {
+                    // Redirect
+                    window.location.replace(data.redirect);
+                } else if (typeof data.error !== 'undefined' && data.error !== '') {
+                    // Error
+                    $('#payment_confirmation').html(data.error);
+                } else if (typeof data.form !== 'undefined') {
+                    // Disable gateway custom form, to avoid submitting the secure data twice
+                    if ((payment_method == 'cc' && custom_form_cc) || (payment_method == 'ach' && custom_form_ach)) {
+                        $('#payment_details_' + payment_method + ' script').remove();
+                        $('#payment_details_' + payment_method + ' *').attr('disabled', true);
+                        $('#payment_details_' + payment_method + ' input[name="save_details"]').attr('disabled', false);
+                    }
+
+                    // Set the payment confirmation custom form
+                    $('#payment_confirmation').html(data.form);
+
+                    // The payment was authorized, don't try and authorize it again unless the payment details change
+                    $('#payment_details').closest('form').off('submit', authorizePayment);
+
+                    // Continue submitting the form
+                    $('#payment_details').closest('form').submit();
+                }
+            },
+            dataType: 'json'
+        });
+
+        return false;
+    }
+</script>

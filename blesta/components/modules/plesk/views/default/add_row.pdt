@@ -1,0 +1,154 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->setLinkButtons([]);
+        $this->Widget->create($this->_('Plesk.add_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('Plesk.add_row.basic_title');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Plesk.row_meta.server_name', true), 'server_name');
+                        $this->Form->fieldText('server_name', (isset($vars->server_name) ? $vars->server_name : null), ['id' => 'server_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Plesk.row_meta.host_name', true), 'host_name');
+                        $this->Form->fieldText('host_name', (isset($vars->host_name) ? $vars->host_name : null), ['id' => 'host_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Plesk.row_meta.ip_address', true), 'ip_address');
+                        $this->Form->fieldText('ip_address', (isset($vars->ip_address) ? $vars->ip_address : null), ['id' => 'ip_address']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Plesk.row_meta.port', true), 'port');
+                        $this->Form->fieldText('port', (isset($vars->port) ? $vars->port : null), ['id' => 'port']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Plesk.row_meta.username', true), 'username');
+                        $this->Form->fieldText('username', (isset($vars->username) ? $vars->username : null), ['id' => 'username']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Plesk.row_meta.password', true), 'password');
+                        $this->Form->fieldPassword('password', ['id' => 'password', 'value' => (isset($vars->password) ? $vars->password : null)]);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('reseller', 'true', ((isset($vars->reseller) ? $vars->reseller : null) == 'true'), ['id' => 'reseller']);
+                        $this->Form->label($this->_('Plesk.row_meta.reseller', true), 'reseller', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Plesk.row_meta.tooltip.reseller');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Plesk.row_meta.panel_version', true), 'panel_version');
+                        $this->Form->fieldSelect('panel_version', (isset($panel_versions) ? $panel_versions : null), (isset($vars->panel_version) ? $vars->panel_version : null), ['id' => 'panel_version']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Plesk.row_meta.tooltip.version');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Plesk.row_meta.account_limit', true), 'account_limit');
+                        $this->Form->fieldText('account_limit', (isset($vars->account_limit) ? $vars->account_limit : null));
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('Plesk.add_row.name_servers_title');?></h3>
+            </div>
+            <div class="pad">
+                <div class="links_row">
+                    <a class="btn btn-default float-right btn-sm ns_row_add" href="#"><i class="fas fa-plus"></i> <span><?php $this->_('Plesk.add_row.name_server_btn');?></span></a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="heading_row">
+                            <td><?php $this->Form->label($this->_('Plesk.add_row.name_server_col', true));?></td>
+                            <td><?php $this->Form->label($this->_('Plesk.add_row.name_server_host_col', true));?></td>
+                            <td class="last"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $num_servers = count((isset($vars->name_servers) ? $vars->name_servers : []));
+                        for ($i = 0; $i < max(2, $num_servers); $i++) {
+                        ?>
+                        <tr class="ns_row<?php echo ($i % 2 == 1) ? ' odd_row' : '';?>">
+                            <td><?php $this->_('Plesk.add_row.name_server', false, '<span>' . ($i + 1) . '</span>');?></td>
+                            <td><?php $this->Form->fieldText('name_servers[]', (isset($vars->name_servers[$i]) ? $vars->name_servers[$i] : null));?></td>
+                            <td><a href="#" class="manage ns_row_remove"><?php $this->_('Plesk.add_row.remove_name_server');?></a></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('Plesk.add_row.add_btn', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+$(document).ready(function() {
+    // Add a row
+    $('.ns_row_add').click(function() {
+        var fields = $('tr.ns_row:first').clone(true);
+        $(fields).find('input').val('');
+        $('td:first span', fields).text($('tr.ns_row').length + 1);
+        $('tr.ns_row:last').after(fields);
+        updateNsRows();
+        return false;
+    });
+    // Remove a row
+    $('.ns_row_remove').click(function() {
+        if ($('tr.ns_row').length > 1) {
+            $(this).closest('tr').remove();
+            // Reorder the counts for these rows
+            let i = 1;
+            $('tr.ns_row').each(function() {
+                $('td:first span', this).text(i++);
+            });
+        }
+        updateNsRows();
+        return false;
+    });
+});
+
+// Zebra-stripe pricing rows
+function updateNsRows() {
+    let i = 0;
+    $('tr.ns_row').each(function() {
+        if (i++ % 2 == 1)
+            $(this).addClass('odd_row');
+        else
+            $(this).removeClass('odd_row');
+    });
+}
+</script>

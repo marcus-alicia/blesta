@@ -1,0 +1,76 @@
+		<?php
+        $this->Widget->clear();
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css?ver=1.4.0');
+        $this->Widget->setWidgetButton('arrow');
+        $this->Widget->create($this->_('AdminMain.index.boxtitle_feed', true), ['id' => 'widget_system_status_admin_main' . ((isset($billing) ? $billing : 'false') == 'true' ? '_billing' : '')], (isset($render_section) ? $render_section : null));
+        ?>
+
+		<div class="system_status">
+			<div id="status_chart"></div>
+			<div class="status_box">
+				<p><?php echo (isset($health_status) ? $this->Html->safe($health_status) : null);?></p>
+			</div>
+			<div class="link_area">
+				<ul>
+					<?php
+                    // Show any status messages
+                    foreach ($errors as $error) {
+                        if (!$error) {
+                            continue;
+                        }
+                    ?>
+					<li>
+                        <i class="<?php echo (isset($error['icon']) ? $this->Html->safe($error['icon']) : null);?>"></i>
+                        <?php echo (isset($error['message']) ? $this->Html->safe($error['message']) : null);?>
+                        <a class="override" href="<?php echo (isset($error['link']) ? $this->Html->safe($error['link']) : null);?>"><?php echo (isset($error['link_text']) ? $this->Html->safe($error['link_text']) : null);?></a>
+                    </li>
+					<?php
+                    }
+                    ?>
+				</ul>
+			</div>
+		</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		systemStatusInitialize();
+	});
+
+    function systemStatusInitialize() {
+        var colors = ['#cb3d3d', '#f4ee39', '#6fcb56'];
+        var percent = <?php echo ($this->Html->safe((isset($system_status) ? $system_status : 0))/100);?>;
+        var color = colors[0];
+
+        // Retrieve the required scripts
+        $.when(
+            $.ajax({
+                url: '<?php echo $this->Html->safe(VENDORWEBDIR . 'd3/d3.min.js');?>',
+                dataType: "script",
+                cache: true,
+                ifModified: false
+            }),
+            $.Deferred(function(deferred) {
+                $(deferred.resolve);
+            })
+        ).done(function() {
+            $.ajax({
+                url: '<?php echo $this->Html->safe($this->view_dir . 'js/gauge.js');?>',
+                dataType: "script",
+                cache: true,
+                ifModified: false
+            }).done(function() {
+                if (percent >= 0.5) {
+                    color = (percent >= 0.8 ? colors[2] : colors[1]);
+                }
+
+                if (typeof needle === 'object') {
+                    needle.moveTo(percent);
+                    $('#status_chart .chart-filled').css('fill', color);
+                }
+            });
+        });
+    }
+</script>
+		<?php
+        $this->Widget->end();
+        ?>

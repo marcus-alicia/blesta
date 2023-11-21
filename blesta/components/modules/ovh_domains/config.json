@@ -1,0 +1,35 @@
+{
+    "version": "1.0.2",
+    "type": "registrar",
+    "name": "OvhDomains.name",
+    "description": "OvhDomains.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "https://www.blesta.com"
+        }
+    ],
+    "module": {
+        "row": "OvhDomains.module_row",
+        "rows": "OvhDomains.module_row_plural",
+        "group": "OvhDomains.module_group",
+        "row_key": "application_key"
+    },
+    "package": {
+        "name_key": "domain"
+    },
+    "service": {
+        "name_key": "domain"
+    },
+    "email_tags": {
+        "module": [],
+        "package": [],
+        "service": ["domain"]
+    },
+    "features": {
+        "dns_management": 1,
+        "email_forwarding": 0,
+        "id_protection": 0,
+        "epp_code": 1
+    }
+}

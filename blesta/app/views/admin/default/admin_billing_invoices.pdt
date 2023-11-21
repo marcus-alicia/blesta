@@ -1,0 +1,155 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            ['name' => $this->_('AdminBilling.invoices.category_open', true) . ' <span>(' . (isset($status_count['open']) ? $this->Html->safe($status_count['open']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'open' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/invoices/open/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.invoices.category_drafts', true) . ' <span>(' . (isset($status_count['draft']) ? $this->Html->safe($status_count['draft']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'draft' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/invoices/draft/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.invoices.category_closed', true) . ' <span>(' . (isset($status_count['closed']) ? $this->Html->safe($status_count['closed']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'closed' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/invoices/closed/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.invoices.category_voided', true) . ' <span>(' . (isset($status_count['void']) ? $this->Html->safe($status_count['void']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'void' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/invoices/void/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.invoices.category_pastdue', true) . ' <span>(' . (isset($status_count['past_due']) ? $this->Html->safe($status_count['past_due']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'past_due' ? true : false), 'highlight' => true, 'attributes' => ['href' => $this->base_uri . 'billing/invoices/past_due/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.invoices.category_pending', true) . ' <span>(' . (isset($status_count['pending']) ? $this->Html->safe($status_count['pending']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'pending' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/invoices/pending/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.invoices.category_recurring', true) . ' <span>(' . (isset($status_count['recurring']) ? $this->Html->safe($status_count['recurring']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'recurring' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/invoices/recurring/', 'class' => 'ajax']]
+        ];
+
+        $this->Widget->clear();
+
+        $this->Widget->setFilters((isset($filters) ? $filters : null), $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $this->Html->safe($status) : null)), !empty($filter_vars));
+        $this->Widget->setAjaxFiltering();
+        $this->Widget->setLinks($links);
+        $this->Widget->create($this->_('AdminBilling.invoices.boxtitle_invoices', true), ['id' => 'admin_billing_invoices'], (isset($render_section) ? $render_section : null));
+
+        if ((isset($invoices) ? $invoices : false) && (($num_invoices = count($invoices)) > 0)) {
+            if ($status == 'recurring') {
+            ?>
+            <table class="table">
+                <tr class="heading_row">
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=id&order=' . ($sort == 'id' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'id' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_recurinvoice');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=client_id_code&order=' . ($sort == 'client_id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'client_id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_client');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=subtotal&order=' . ($sort == 'subtotal' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'subtotal' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_amount');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=term&order=' . ($sort == 'term' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'term' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_term');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=duration&order=' . ($sort == 'duration' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'duration' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_duration');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=count&order=' . ($sort == 'count' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'count' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_count');?></a></span></td>
+                    <td class="last"><span><?php $this->_('AdminBilling.invoices.heading_options');?></span></td>
+                </tr>
+                <?php
+                // Display all invoices
+                for ($i = 0; $i < $num_invoices; $i++) {
+                ?>
+                <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '');?>">
+                    <td><?php echo (isset($invoices[$i]->id) ? $this->Html->safe($invoices[$i]->id) : null);?></td>
+                    <td><span class="tooltip quiet"><a href="<?php echo $this->base_uri . 'clients/view/' . (isset($invoices[$i]->client_id) ? $this->Html->safe($invoices[$i]->client_id) : null);?>"><?php (print (isset($invoices[$i]->client_id_code) ? $this->Html->safe($invoices[$i]->client_id_code) : null));?></a><div><?php echo (isset($invoices[$i]->client_first_name) ? $this->Html->safe($invoices[$i]->client_first_name) : null) . ' ' . (isset($invoices[$i]->client_last_name) ? $this->Html->safe($invoices[$i]->client_last_name) : null);?><br /><?php (print (isset($invoices[$i]->client_company) ? $this->Html->safe($invoices[$i]->client_company) : null));?></div></span></td>
+                    <td>
+                        <?php
+                        if ((isset($invoices[$i]->taxable) ? $invoices[$i]->taxable : null)) {
+                            $this->_('AdminBilling.invoices.subtotal_w_tax', false, $this->CurrencyFormat->format((isset($invoices[$i]->subtotal) ? $this->Html->safe($invoices[$i]->subtotal) : null), (isset($invoices[$i]->currency) ? $this->Html->safe($invoices[$i]->currency) : null), ['html_code' => true]));
+                        } else {
+                            echo $this->CurrencyFormat->format((isset($invoices[$i]->subtotal) ? $this->Html->safe($invoices[$i]->subtotal) : null), (isset($invoices[$i]->currency) ? $this->Html->safe($invoices[$i]->currency) : null), ['html_code' => true]);
+                        }
+                        ?>
+                    </td>
+                    <td><?php $this->_((isset($invoices[$i]->term) ? $invoices[$i]->term : null) > 1 ? 'AdminBilling.invoices.term_' . (isset($invoices[$i]->period) ? $invoices[$i]->period : null) . '_plural' : 'AdminBilling.invoices.term_' . (isset($invoices[$i]->period) ? $invoices[$i]->period : null), false, $invoices[$i]->term);?></td>
+                    <td><?php $this->_((isset($invoices[$i]->duration) ? $invoices[$i]->duration : null) != null ? 'AdminBilling.invoices.duration_finite' : 'AdminBilling.invoices.duration_infinite', false, (isset($invoices[$i]->duration) ? $this->Html->safe($invoices[$i]->duration) : null));?></td>
+                    <td><?php (print (isset($invoices[$i]->count) ? $this->Html->safe($invoices[$i]->count) : null));?></td>
+                    <td><a href="<?php echo $this->base_uri . 'clients/editrecurinvoice/' . (isset($invoices[$i]->client_id) ? $this->Html->safe($invoices[$i]->client_id) : null) . '/' . (isset($invoices[$i]->id) ? $this->Html->safe($invoices[$i]->id) : null) . '/';?>"><?php $this->_('AdminBilling.invoices.option_edit');?></a></td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+            <?php
+            } else {
+            ?>
+            <table class="table">
+                <tr class="heading_row">
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=id_code&order=' . ($sort == 'id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_invoice');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=client_id_code&order=' . ($sort == 'client_id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'client_id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_client');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=total&order=' . ($sort == 'total' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'total' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_amount');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=paid&order=' . ($sort == 'paid' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'paid' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_paid');?></a></span></td>
+                    <?php
+                    if ($status == 'closed') {
+                    ?>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=date_closed&order=' . ($sort == 'date_closed' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_closed' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_dateclosed');?></a></span></td>
+                    <?php
+                    } else {
+                    ?>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=due&order=' . ($sort == 'due' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'due' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_due');?></a></span></td>
+                    <?php
+                    }
+                    ?>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=date_billed&order=' . ($sort == 'date_billed' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_billed' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_datebilled');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/invoices/' . (isset($status) ? $status : null) . '/?sort=date_due&order=' . ($sort == 'date_due' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_due' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.invoices.heading_datedue');?></a></span></td>
+                    <td class="last"><span><?php $this->_('AdminBilling.invoices.heading_options');?></span></td>
+                </tr>
+                <?php
+                // Display all invoices
+                for ($i = 0; $i < $num_invoices; $i++) {
+                    // Check whether the invoice is past due for the Open list
+                    $past_due = ((isset($status) ? $status : null) == 'open'
+                        && empty($invoices[$i]->date_closed)
+                        && $this->Date->toTime($this->Date->cast($invoices[$i]->date_due)) < $this->Date->toTime(date('c'))
+                    );
+                ?>
+                <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'expand', 'invoice_applied');?>">
+                    <td><?php echo (isset($invoices[$i]->id_code) ? $this->Html->safe($invoices[$i]->id_code) : null);?></td>
+                    <td><span class="tooltip quiet"><a href="<?php echo $this->base_uri . 'clients/view/' . (isset($invoices[$i]->client_id) ? $this->Html->safe($invoices[$i]->client_id) : null);?>"><?php (print (isset($invoices[$i]->client_id_code) ? $this->Html->safe($invoices[$i]->client_id_code) : null));?></a><div><?php echo (isset($invoices[$i]->client_first_name) ? $this->Html->safe($invoices[$i]->client_first_name) : null) . ' ' . (isset($invoices[$i]->client_last_name) ? $this->Html->safe($invoices[$i]->client_last_name) : null);?><br /><?php (print (isset($invoices[$i]->client_company) ? $this->Html->safe($invoices[$i]->client_company) : null));?></div></span></td>
+                    <td><?php echo $this->CurrencyFormat->format($invoices[$i]->total, $invoices[$i]->currency, ['html_code' => true]);?></td>
+                    <td><?php echo $this->CurrencyFormat->format($invoices[$i]->paid, $invoices[$i]->currency, ['html_code' => true]);?></td>
+                    <?php
+                    if ($status == 'closed') {
+                    ?>
+                    <td><?php echo $this->Date->cast($invoices[$i]->date_closed);?></td>
+                    <?php
+                    } else {
+                    ?>
+                    <td><?php echo $this->CurrencyFormat->format($invoices[$i]->due, $invoices[$i]->currency, ['html_code' => true]);?></td>
+                    <?php
+                    }
+                    ?>
+                    <td><?php echo $this->Date->cast($invoices[$i]->date_billed);?></td>
+                    <td<?php echo ($past_due ? ' class="red_txt"' : '');?>><?php echo $this->Date->cast($invoices[$i]->date_due);?></td>
+                    <td>
+                        <a href="<?php echo $this->base_uri . 'clients/editinvoice/' . (isset($invoices[$i]->client_id) ? $this->Html->safe($invoices[$i]->client_id) : null) . '/' . (isset($invoices[$i]->id) ? $this->Html->safe($invoices[$i]->id) : null) . '/';?>"><?php $this->_('AdminBilling.invoices.option_edit');?></a>,
+                        <a href="<?php echo $this->base_uri . 'clients/viewinvoice/' . (isset($invoices[$i]->client_id) ? $this->Html->safe($invoices[$i]->client_id) : null) . '/' . (isset($invoices[$i]->id) ? $this->Html->safe($invoices[$i]->id) : null) . '/';?>"><?php $this->_('AdminBilling.invoices.option_view');?></a><?php echo ($status == 'open' || $status == 'past_due' ? ',' : '');?>
+                            <?php
+                            if ($status == 'open' || $status == 'past_due') {
+                            ?>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/makepayment/' . (isset($invoices[$i]->client_id) ? $invoices[$i]->client_id : null) . '/' . (isset($invoices[$i]->id) ? $invoices[$i]->id : null) . '/');?>"><?php $this->_('AdminBilling.invoices.option_pay');?></a>
+                            <?php
+                            }
+                            ?>
+                    </td>
+                </tr>
+                <tr class="expand_details" id="invoices_<?php (print (isset($invoices[$i]->id) ? $this->Html->safe($invoices[$i]->id) : null));?>">
+                    <td colspan="8" class="subtable">
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+            <?php
+            }
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminBilling.invoices.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(this).blestaBindToolTips();
+
+        // Fetch all transactions applied to the given invoices
+        $(".invoice_applied").click(function() {
+            $(this).blestaUpdateRow("<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'billing/invoiceapplied/';?>" + $(this).next("tr").attr("id").split("_")[1], ".subtable");
+        });
+    });
+</script>

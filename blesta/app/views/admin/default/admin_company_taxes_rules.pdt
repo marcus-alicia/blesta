@@ -1,0 +1,142 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminCompanyTaxes.rules.categorylink_addrule', true),
+                            'href' => $this->base_uri . 'settings/company/taxes/add/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminCompanyTaxes.rules.boxtitle_rules', true));
+                ?>
+                <div class="title_row first"><h3><?php $this->_('AdminCompanyTaxes.rules.heading_level1');?></h3></div>
+                <?php
+                // Level 1 tax rules
+                if ((isset($rules['level_1']) ? $rules['level_1'] : false) && ($num_level1_rules = count($rules['level_1'])) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><span><?php $this->_('AdminCompanyTaxes.rules.text_name');?></span></td>
+                        <td><span><?php $this->_('AdminCompanyTaxes.rules.text_type');?></span></td>
+                        <td><span><?php $this->_('AdminCompanyTaxes.rules.text_amount');?></span></td>
+                        <td><span><?php $this->_('AdminCompanyTaxes.rules.text_country');?></span></td>
+                        <td><span><?php $this->_('AdminCompanyTaxes.rules.text_state');?></span></td>
+                        <td class="last"><span><?php $this->_('AdminCompanyTaxes.rules.text_options');?></span></td>
+                    </tr>
+                    <?php
+                    // Display each level 1 tax rule
+                    for ($i = 0; $i < $num_level1_rules; $i++) {
+                        $rule = $rules['level_1'][$i];
+                        $rule_type = (isset($rule->type) ? $this->Html->safe($rule->type, true) : null);
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($rule->name) ? $this->Html->safe($rule->name) : null));?></td>
+                        <td><?php echo (isset($tax_types[$rule_type]) ? $tax_types[$rule_type] : null);?></td>
+                        <td><?php (print (isset($rule->amount) ? $this->Html->safe($rule->amount) : null));?>%</td>
+                        <td><?php echo (!empty($rule->country) ? (isset($rule->country) ? $this->Html->safe($rule->country) : null) : $this->_('AdminCompanyTaxes.rules.text_all', true));?></td>
+                        <td><?php echo (!empty($rule->state) ? (isset($rule->state) ? $this->Html->safe($rule->state) : null) : $this->_('AdminCompanyTaxes.rules.text_all', true));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'settings/company/taxes/edit/' . (isset($rule->id) ? $this->Html->safe($rule->id) : null) . '/';?>"><?php $this->_('AdminCompanyTaxes.rules.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'settings/company/taxes/delete/');
+                            $this->Form->fieldHidden('id', (isset($rule->id) ? $rule->id : null));
+                            ?>
+                            <a class="manage" href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/taxes/delete/' . (isset($rule->id) ? $rule->id : null) . '/');?>" rel="<?php echo $this->Html->safe($this->_('AdminCompanyTaxes.rules.confirm_delete', true));?>"><?php $this->_('AdminCompanyTaxes.rules.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                } else {
+                ?>
+                <div class="inner">
+                    <div class="empty_section">
+                        <div class="empty_box">
+                            <?php $this->_('AdminCompanyTaxes.rules.no_results', false, 1);?>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+
+                <div class="title_row"><h3><?php $this->_('AdminCompanyTaxes.rules.heading_level2');?></h3></div>
+                <?php
+                // Level 2 tax rules
+                if ((isset($rules['level_2']) ? $rules['level_2'] : false) && ($num_level2_rules = count($rules['level_2'])) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><?php $this->_('AdminCompanyTaxes.rules.text_name');?></td>
+                        <td><?php $this->_('AdminCompanyTaxes.rules.text_type');?></td>
+                        <td><?php $this->_('AdminCompanyTaxes.rules.text_amount');?></td>
+                        <td><?php $this->_('AdminCompanyTaxes.rules.text_country');?></td>
+                        <td><?php $this->_('AdminCompanyTaxes.rules.text_state');?></td>
+                        <td class="last"><?php $this->_('AdminCompanyTaxes.rules.text_options');?></td>
+                    </tr>
+                    <?php
+                    // Display each level 2 tax rule
+                    for ($i = 0; $i < $num_level2_rules; $i++) {
+                        $rule = $rules['level_2'][$i];
+                        $rule_type = (isset($rule->type) ? $this->Html->safe($rule->type, true) : null);
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($rule->name) ? $this->Html->safe($rule->name) : null));?></td>
+                        <td><?php echo (isset($tax_types[$rule_type]) ? $tax_types[$rule_type] : null);?></td>
+                        <td><?php (print (isset($rule->amount) ? $this->Html->safe($rule->amount) : null));?>%</td>
+                        <td><?php echo (!empty($rule->country) ? (isset($rule->country) ? $this->Html->safe($rule->country) : null) : $this->_('AdminCompanyTaxes.rules.text_all', true));?></td>
+                        <td><?php echo (!empty($rule->state) ? (isset($rule->state) ? $this->Html->safe($rule->state) : null) : $this->_('AdminCompanyTaxes.rules.text_all', true));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/taxes/edit/' . (isset($rule->id) ? $rule->id : null) . '/');?>"><?php $this->_('AdminCompanyTaxes.rules.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'settings/company/taxes/delete/');
+                            $this->Form->fieldHidden('id', (isset($rule->id) ? $rule->id : null));
+                            ?>
+                            <a class="manage" href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/taxes/delete/' . (isset($rule->id) ? $rule->id : null) . '/');?>" rel="<?php echo $this->Html->safe($this->_('AdminCompanyTaxes.rules.confirm_delete', true));?>"><?php $this->_('AdminCompanyTaxes.rules.option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                } else {
+                ?>
+                <div class="inner">
+                    <div class="empty_section">
+                        <div class="empty_box">
+                            <?php $this->_('AdminCompanyTaxes.rules.no_results', false, 2);?>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Handle confirmation
+            $('#right_container a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+        });
+    </script>

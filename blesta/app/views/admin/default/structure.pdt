@@ -1,0 +1,332 @@
+<?php
+$html_dir = (in_array($this->_('AppController.lang.dir', true), ['ltr', 'rtl']) ? $this->_('AppController.lang.dir', true) : 'ltr');
+$html_lang = (!empty($language) ? substr($language, 0, 2) : 'en');
+?><!DOCTYPE html>
+<html dir="<?php (print (isset($html_dir) ? $this->Html->safe($html_dir) : null));?>" lang="<?php (print (isset($html_lang) ? $this->Html->safe($html_lang) : null));?>" xml:lang="<?php (print (isset($html_lang) ? $this->Html->safe($html_lang) : null));?>">
+<head>
+    <title>
+        <?php
+        echo (
+                ($page_title = (
+                        isset($page_title)
+                            ? $page_title
+                            : (str_contains($page_title_lang, '%')
+                                ? $this->_($page_title_lang, true, $get_params)
+                                : $this->_($page_title_lang, true)
+                            )
+                    )
+                )
+                    ? (isset($page_title) ? $this->Html->safe($page_title) : null) . ' | '
+                    : ''
+            )
+            . (isset($system_company->name)
+                ? $this->Html->safe($system_company->name)
+                : null);
+        ?>
+    </title>
+    <meta http-equiv="content-type" content="text/html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="never" />
+    <meta charset="UTF-8" />
+    <link rel="shortcut icon" href="<?php echo $this->view_dir;?>images/favicon.ico" />
+    <link href="<?php echo $this->view_dir;?>css/jquery-ui.min.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<?php echo $this->view_dir;?>css/jquery.qtip.min.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<?php echo $this->view_dir;?>css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<?php echo $this->view_dir;?>css/font-awesome-shims.min.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="<?php echo $this->view_dir;?>css/application.min.css" rel="stylesheet" type="text/css" media="screen" />
+    <?php
+    // jRating CSS
+    if (isset($jrating_css)) {
+    ?>
+    <link href="<?php (print (isset($jrating_css) ? $this->Html->safe($jrating_css) : null));?>" rel="stylesheet" type="text/css" media="screen" />
+    <?php
+    }
+    // Theme CSS
+    if (isset($theme_css)) {
+    ?>
+    <link href="<?php (print (isset($theme_css) ? $this->Html->safe($theme_css) : null));?>" rel="stylesheet" type="text/css" media="screen" />
+    <?php
+    }
+    // Large calendar
+    if (isset($calendar_css)) {
+    ?>
+    <link href="<?php (print (isset($calendar_css) ? $this->Html->safe($calendar_css) : null));?>" rel="stylesheet" type="text/css" media="screen" />
+    <?php
+    }
+    if ($this->_('AppController.lang.dir', true) == 'rtl') {
+    ?>
+    <link href="<?php echo $this->view_dir;?>css/rtl.css" rel="stylesheet" type="text/css" media="screen" />
+    <?php
+    }
+    ?>
+
+    <!--[if IE]>
+    <script>
+    document.createElement("header");
+    document.createElement("footer");
+    document.createElement("article");
+    document.createElement("nav");
+    document.createElement("section");
+    document.createElement("aside")
+    </script>
+    <![endif]-->
+    <!--[if lt IE 7]> <link rel="stylesheet" type="text/css" href="<?php echo $this->view_dir;?>css/ie.css" media="screen" /> <![endif]-->
+    <?php
+    if (isset($this->Javascript)) {
+        echo $this->Javascript->getFiles('head');
+    }
+    ?>
+    <?php echo (isset($head) ? $head : null);?>
+</head>
+<body>
+    <?php echo (isset($body_start) ? $body_start : null);?>
+    <div id="layout">
+        <header id="main_header">
+            <?php
+            if ((isset($maintenance_mode) ? $maintenance_mode : false)) {
+            ?>
+            <div class="maintenance_mode">
+                <p><i class="fas fa-exclamation-triangle"></i> <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/general/maintenance/');?>"><?php $this->_('AppController.structure.text_maintenance');?></a></p>
+            </div>
+            <?php
+            }
+            ?>
+            <section class="top_row">
+                <div class="gap_row">
+                    <h1>
+                        <a href="<?php echo $this->Html->safe($this->base_uri);?>">
+                        <?php
+                        if (!empty($theme_logo)) {
+                        ?>
+                            <img<?php echo (!empty($admin_logo_height) ? ' style="height: ' . $admin_logo_height . 'px;"' : '');?> src="<?php (print (isset($theme_logo) ? $this->Html->safe($theme_logo) : null));?>" alt="Logo" />
+                        <?php
+                        } elseif (!empty($blesta_logo)) {
+                        ?>
+                            <img<?php echo (!empty($admin_logo_height) ? ' style="height: ' . $admin_logo_height . 'px;"' : '');?> src="<?php (print (isset($blesta_logo) ? $this->Html->safe($blesta_logo) : null));?>" alt="Blesta" />
+                        <?php
+                        } else {
+                        ?>
+                            <img<?php echo (!empty($admin_logo_height) ? ' style="height: ' . $admin_logo_height . 'px;"' : '');?> src="<?php echo $this->view_dir;?>images/logo.svg" alt="Blesta" />
+                        <?php
+                        }
+                        ?>
+                        </a>
+                    </h1>
+                    <section class="right_section">
+                        <nav class="top_nav">
+                            <ul>
+                                <li>
+                                    <a href="<?php echo $this->base_uri;?>myinfo/">
+                                        <i class="fas fa-info-circle fa-fw"></i>
+                                        <?php $this->_('AppController.structure.text_myinfo');?>
+                                    </a>
+                                </li>
+                                <li><span>/</span></li>
+                                <li>
+                                    <a href="<?php echo $this->base_uri;?>settings/">
+                                        <i class="fas fa-cog fa-fw"></i>
+                                        <?php $this->_('AppController.structure.text_settings');?>
+                                    </a>
+                                </li>
+                                <li><span>/</span></li>
+                                <li>
+                                    <a href="<?php echo $this->base_uri;?>logout/">
+                                        <i class="fas fa-sign-out-alt fa-fw"></i>
+                                        <?php $this->_('AppController.structure.text_logout');?>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div class="form_row">
+                            <?php
+                            $num_companies = count((isset($system_companies) ? $system_companies : []));
+                            if ($num_companies > 1) {
+                            ?>
+                            <div class="select_box">
+                                <div id="current_company">
+                                    <span><?php (print (isset($system_company->name) ? $this->Html->safe($system_company->name) : null));?></span><a href="#"><img src="<?php echo $this->view_dir;?>images/arrow02.png" alt="" /></a>
+                                </div>
+                                <div>
+                                    <ul class="dropdown-menu" id="available_companies">
+                                        <?php
+                                        for ($i = 0; $i < $num_companies; $i++) {
+                                        ?>
+                                        <li><a href="<?php echo $this->base_uri;?>login/index/<?php (print (isset($system_companies[$i]->id) ? $this->Html->safe($system_companies[$i]->id) : null));?>/?uri=<?php (print (isset($_SERVER['REQUEST_URI']) ? $this->Html->safe($_SERVER['REQUEST_URI']) : null));?>"><?php (print (isset($system_companies[$i]->name) ? $this->Html->safe($system_companies[$i]->name) : null));?></a></li>
+                                        <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    </section>
+                </div>
+            </section>
+            <nav class="menu">
+                <ul class="nav">
+                    <?php
+                    $i = 0;
+                    foreach ((isset($nav) ? $nav : []) as $link => $value) {
+                        $attributes = [];
+                        if ($value['active']) {
+                            $attributes['class'][] = 'active';
+                        }
+
+                        if ($i == 0) {
+                            $attributes['class'][] = 'first';
+                        }
+
+                        $link_attributes = ['href' => [(isset($link) ? $this->Html->safe($link) : null)]];
+                        $dropdown = false;
+                        if ((isset($value['sub']) ? $value['sub'] : null) && is_array($value['sub'])
+                            && (count($value['sub']) > 1 || !array_key_exists($link, (array)$value['sub']))
+                        ) {
+                            $dropdown = true;
+                            $attributes['class'][] = 'dropdown';
+                            $link_attributes['class'][] = 'dropdown-toggle';
+                            $link_attributes['data-toggle'][] = 'dropdown';
+                        }
+                    ?>
+                    <li<?php echo $this->Html->buildAttributes($attributes);?>>
+                        <a<?php echo $this->Html->buildAttributes($link_attributes);?>>
+                            <?php (print (isset($value['name']) ? $this->Html->safe($value['name']) : null));?>
+                        </a>
+                        <?php
+                        if ($dropdown) {
+                        ?>
+                        <ul class="dropdown-menu">
+                            <?php
+                            foreach ($value['sub'] as $sub_link => $sub_value) {
+                                $attributes = [];
+                                if ($sub_value['active']) {
+                                    $attributes['class'][] = 'current';
+                                }
+                            ?>
+                            <li<?php echo $this->Html->buildAttributes($attributes);?>>
+                                <a href="<?php (print (isset($sub_link) ? $this->Html->safe($sub_link) : null));?>"><?php (print (isset($sub_value['name']) ? $this->Html->safe($sub_value['name']) : null));?></a>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                        <?php
+                        }
+                        ?>
+                    </li>
+                    <?php
+                        $i++;
+                    }
+                    unset($i);
+                    ?>
+                </ul>
+            </nav>
+            <section class="black_row">
+                <nav class="breadcrumbs">
+                    <a href="<?php echo $this->base_uri;?>main/updatequicklink/" id="quicklink">
+                        <i class="<?php echo (isset($quicklink_active) ? $this->Html->safe($quicklink_active) : null) ? 'fas' : 'far';?> fa-star fa-fw fa-lg"></i>
+                    </a>
+                </nav>
+                <div class="serach_block">
+                    <?php
+                    $this->Form->create($this->base_uri . 'search/', ['class' => 'disable-on-submit']);
+                    ?>
+                        <?php
+                        $this->Form->fieldHidden('search_type', (isset($default_search_option) ? $default_search_option : 'smart'));
+                        ?>
+                        <button type="button" name="toggle" value="" class="search_btn"><i class="fas fa-search"></i></button>
+                        <div class="input_box">
+                            <?php
+                            $search_option = (isset($default_search_option) ? $default_search_option : 'smart');
+                            $this->Form->fieldText('search', '', ['class' => 'search', 'placeholder' => (isset($search_options[$search_option]) ? $search_options[$search_option] : null)]);
+                            ?>
+                        </div>
+
+                        <div class="select_container">
+                            <div class="select_box">
+                                <?php
+                                if ((isset($search_options) ? $search_options : null)) {
+                                ?>
+                                <ul class="dropdown-menu" id="all_search_options">
+                                    <?php
+                                    foreach ($search_options as $option => $name) {
+                                    ?>
+                                    <li><a href="#" class="<?php (print (isset($option) ? $this->Html->safe($option) : null));?>"><?php (print (isset($name) ? $this->Html->safe($name) : null));?></a></li>
+                                    <?php
+                                    }
+                                    ?>
+                                </ul>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                    <?php
+                    $this->Form->end();
+                    ?>
+                </div>
+            </section>
+        </header>
+        <section id="body_container">
+            <div class="gap_row">
+                <?php echo (isset($content) ? $content : null);?>
+            </div>
+        </section>
+        <footer id="footer">
+            <div class="gap_row">
+                <p>
+                    Blesta &copy; 2007-<?php echo $this->Date->format('Y');?>, Phillips Data, Inc.
+                    | Licensed to <?php (print (isset($system_company->name) ? $this->Html->safe($system_company->name) : null));?>
+                    | Installed Version <?php echo BLESTA_VERSION;?>
+                </p>
+                <img src="<?php echo $this->view_dir;?>images/logo-gray.svg" alt="Blesta" />
+            </div>
+        </footer>
+    </div>
+    <?php
+    if (isset($this->Javascript)) {
+        echo $this->Javascript->getFiles('body');
+        echo $this->Javascript->getInline();
+    }
+    ?>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        // Show company drop-down
+        $("#current_company").click(function() {
+            // Show the drop-down
+            $("#available_companies").toggle();
+            return false;
+        });
+        $(document).click(function() {
+            $("#available_companies").hide();
+        });
+
+        // Show search drop-down
+        $(".search_btn").click(function() {
+            // Show the drop-down
+            $("#all_search_options").toggle();
+            return false;
+        });
+        $(document).click(function() {
+            $("#all_search_options").hide();
+        });
+
+        $("#all_search_options li").click(function() {
+            $(".serach_block input[name='search_type']").val($("a", this).attr('class'));
+            $(".serach_block input[name='search']").attr('placeholder', $("a", this).text());
+        });
+
+        // Close menu dropdown on mouse leave
+        $('#main_header .menu .dropdown').on('mouseleave', function () {
+            $(this).removeClass('show');
+            $(this).find('.dropdown-menu').removeClass('show');
+        });
+    });
+    </script>
+    <?php echo (isset($body_end) ? $body_end : null);?>
+</body>
+</html>

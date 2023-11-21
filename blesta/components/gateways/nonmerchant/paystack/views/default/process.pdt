@@ -1,0 +1,9 @@
+
+    <?php
+    // Disable CSRF for this form
+    $this->Form->setCsrfOptions(['set_on_create' => false]);
+    $this->Form->create($post_to);
+
+    $this->Form->fieldSubmit('submit', $this->_('Paystack.buildprocess.submit', true));
+
+    $this->Form->end();

@@ -1,0 +1,21 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemBackup.index.boxtitle_index', true));
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <?php $this->_('AdminSystemBackup.index.text_note');?>
+                    </div>
+                    <div class="button_row">
+                        <a class="btn btn-default pull-right icon" href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/backup/download/');?>"><span class="download"><?php $this->_('AdminSystemBackup.index.field_downloadbackup');?></a></a>
+                        <a class="btn btn-primary pull-right icon" href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/backup/upload/');?>"><span class="upload"><?php $this->_('AdminSystemBackup.index.field_uploadbackup');?></a></a>
+                    </div>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>

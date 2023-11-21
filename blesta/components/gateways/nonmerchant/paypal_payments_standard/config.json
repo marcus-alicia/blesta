@@ -1,0 +1,13 @@
+{
+	"version": "1.7.0",
+	"name": "PaypalPaymentsStandard.name",
+	"description": "PaypalPaymentsStandard.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["AUD", "BRL", "CAD", "CZK", "DKK", "EUR", "HKD", "HUF", "ILS", "JPY", "MYR", "MXN", "NOK", "NZD", "PHP", "PLN", "GBP", "SGD", "SEK", "CHF", "TWD", "THB", "TRY", "USD"],
+	"signup_url": "https://www.paypal.com/us/webapps/mpp/account-selection"
+}

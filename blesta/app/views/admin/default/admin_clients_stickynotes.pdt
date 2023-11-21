@@ -1,0 +1,43 @@
+
+        <?php
+        if (!empty($sticky_notes)) {
+        ?>
+        <div class="sticky_note_section">
+            <?php
+            // Display list of sticky notes
+            echo (isset($sticky_notes) ? $sticky_notes : null);
+            ?>
+        </div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $(document).on({
+        mouseenter: function() {
+            $(this).find(".unstick").show();
+        },
+        mouseleave: function() {
+            $(this).find(".unstick").hide();
+        }
+    }, ".sticky_note_box ul li");
+
+    // Toggle more sticky notes
+    $(this).blestaBindToggleEvent("#more_sticky_notes", ".more_sticky_notes", "<?php $this->_('AdminClients.stickynotes.text_more');?>", "<?php $this->_('AdminClients.stickynotes.text_less');?>");
+
+    $(document).on("click", ".sticky_note_box .unstick a", function() {
+        $(this).blestaRequest("POST", $(this).attr("href"), {show_more:$(".more_sticky_notes").is(":visible")},
+        // On success
+        function(data) {
+            if (data.view)
+                $(".sticky_note_section").html(data.view);
+            else
+                $(".sticky_note_section").remove();
+        },
+        null,
+        {dataType: "json"}
+        );
+        return false;
+    });
+});
+</script>
+        <?php
+        }
+        ?>

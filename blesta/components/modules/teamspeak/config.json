@@ -1,0 +1,33 @@
+{
+    "version": "1.8.0",
+    "name": "Teamspeak.name",
+    "description": "Teamspeak.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "teamspeak_name"
+    },
+    "service": {
+        "name_key": "teamspeak_name"
+    },
+    "module": {
+        "row": "Teamspeak.module_row",
+        "rows": "Teamspeak.module_row_plural",
+        "group": "Teamspeak.module_group",
+        "row_key": "server_name"
+    },
+    "email_tags": {
+        "module": ["hostname", "server_name"],
+        "package": ["maxclients"],
+        "service": [
+            "teamspeak_sid",
+            "teamspeak_token",
+            "teamspeak_name",
+            "teamspeak_port"
+        ]
+    }
+}

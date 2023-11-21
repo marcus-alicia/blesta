@@ -1,0 +1,8 @@
+			<div class="navfix"></div>
+			<div class="col-md-12">
+				<?php
+                echo (isset($message) ? $message : null);
+
+                echo $content;
+                ?>
+			</div>

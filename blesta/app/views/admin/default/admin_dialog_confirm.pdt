@@ -1,0 +1,9 @@
+
+<div class="common_box">
+    <div class="inner">
+        <?php echo (isset($message) ? $message : null);?>
+        <div class="button_row">
+            <a href="#" class="btn btn-default pull-right no"><?php $this->_('AdminDialog.confirm.text_no');?></a> <a href="#" class="btn btn-primary pull-right yes"><?php $this->_('AdminDialog.confirm.text_yes');?></a>
+        </div>
+    </div>
+</div>

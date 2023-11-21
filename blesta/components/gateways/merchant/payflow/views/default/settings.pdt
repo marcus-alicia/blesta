@@ -1,0 +1,35 @@
+
+	<ul>
+		<li>
+			<?php
+            $this->Form->label($this->_('Payflow.vendor', true), 'vendor');
+            $this->Form->fieldText('vendor', (isset($meta['vendor']) ? $meta['vendor'] : null), ['id'=>'vendor']);
+            ?>
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Payflow.password', true), 'password');
+            $this->Form->fieldText('password', (isset($meta['password']) ? $meta['password'] : null), ['id'=>'password']);
+            ?>
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Payflow.user', true), 'user');
+            $this->Form->fieldText('user', (isset($meta['user']) ? $meta['user'] : null), ['id'=>'user']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Payflow.tooltip_user');?></div></span>
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Payflow.partner', true), 'partner');
+            $this->Form->fieldText('partner', (isset($meta['partner']) ? $meta['partner'] : 'PayPal'), ['id'=>'partner']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Payflow.tooltip_partner');?></div></span>
+		</li>
+		<li>
+			<?php
+            $this->Form->fieldCheckbox('test_mode', 'true', ((isset($meta['test_mode']) ? $meta['test_mode'] : 'false') == 'true'), ['id'=>'test_mode']);
+            $this->Form->label($this->_('Payflow.test_mode', true), 'test_mode', ['class'=>'inline']);
+            ?>
+		</li>
+	</ul>

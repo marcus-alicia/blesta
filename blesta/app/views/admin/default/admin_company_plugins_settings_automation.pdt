@@ -1,0 +1,55 @@
+        <div class="inner">
+            <?php
+            if (!empty($tasks)) {
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+            ?>
+            <div class="pad">
+                <p><?php $this->_('AdminCompanyPlugins.settings.automation_description');?></p>
+            <?php
+            }
+
+            foreach ((isset($tasks) ? $tasks : []) as $task) {
+                $task_run_id = (isset($task->task_run_id) ? $task->task_run_id : null);
+            ?>
+                <section class="fieldset">
+                    <h1><?php (print (isset($task->real_name) ? $this->Html->safe($task->real_name) : null));?></h1>
+                    <?php
+                    if (!empty($task->real_description)) {
+                    ?>
+                    <p><?php (print (isset($task->real_description) ? $this->Html->safe($task->real_description) : null));?></p>
+                    <?php
+                    }
+                    ?>
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->fieldCheckbox('enabled[' . $task_run_id . ']', '1', ((isset($task->enabled) ? $task->enabled : null) == '1'), ['id' => 'enabled[' . $task_run_id . ']']);
+                            $this->Form->label($this->_('AdminCompanyPlugins.settings.field_enabled', true), 'enabled[' . $task_run_id . ']', ['class' => 'inline']);
+                            ?>
+                        </li>
+                    </ul>
+                </section>
+            <?php
+            }
+
+            if (!empty($tasks)) {
+            ?>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminCompanyPlugins.settings.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+                $this->Form->end();
+            } else {
+            ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminCompanyPlugins.settings.automation_no_results');?>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+        </div>

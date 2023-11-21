@@ -1,0 +1,16 @@
+
+        <?php
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('AdminClients.editservice.boxtitle_editservice', true, (isset($package->name) ? $package->name : null), (isset($service->name) ? $service->name : null)), ['id' => 'admin_clients_editservice'], (isset($render_section) ? $render_section : null));
+        ?>
+
+        <div class="inner">
+            <?php
+            echo (isset($tab_view) ? $tab_view : null);
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

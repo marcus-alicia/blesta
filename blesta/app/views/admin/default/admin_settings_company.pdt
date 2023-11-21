@@ -1,0 +1,92 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $tabs = [
+            ['name' => $this->_('AdminSettings.company.category_company', true), 'current' => true, 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'settings/company/'), 'class' => 'ajax']],
+            ['name' => $this->_('AdminSettings.company.category_system', true), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'settings/system/'), 'class' => 'ajax']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('AdminSettings.company.boxtitle_settings', true), ['id' => 'admin_settings_company'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="settings">
+            <div class="left">
+                <div class="section general icon-line fa-2x">
+                    <i class="fas fa-tools fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/general/"><?php $this->_('AdminSettings.company.heading_general');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_general');?></p>
+                </div>
+                <div class="section billing icon-line fa-2x">
+                    <i class="fas fa-calculator fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/billing/"><?php $this->_('AdminSettings.company.heading_billing');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_billing');?></p>
+                </div>
+                <div class="section email icon-line fa-2x">
+                    <i class="fas fa-envelope-open-text fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/emails/"><?php $this->_('AdminSettings.company.heading_emails');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_emails');?></p>
+                </div>
+                <div class="section modules icon-line fa-2x">
+                    <i class="fas fa-comment-dots fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/messengers/"><?php $this->_('AdminSettings.company.heading_messengers');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_messengers');?></p>
+                </div>
+                <div class="section currencies icon-line fa-2x">
+                    <i class="fas fa-dollar-sign fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/currencies/"><?php $this->_('AdminSettings.company.heading_currencies');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_currencies');?></p>
+                </div>
+                <div class="section groups icon-line fa-2x">
+                    <i class="fas fa-user-friends fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/groups/"><?php $this->_('AdminSettings.company.heading_clientgroups');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_clientgroups');?></p>
+                </div>
+                <div class="section plugins icon-line fa-2x">
+                    <i class="fas fa-plug fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/plugins/"><?php $this->_('AdminSettings.company.heading_plugins');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_plugins');?></p>
+                </div>
+            </div>
+            <div class="right">
+                <div class="section lookandfeel icon-line fa-2x">
+                    <i class="fas fa-pencil-ruler fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/themes/"><?php $this->_('AdminSettings.company.heading_lookandfeel');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_lookandfeel');?></p>
+                </div>
+                <div class="section automation icon-line fa-2x">
+                    <i class="fas fa-clock fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/automation/"><?php $this->_('AdminSettings.company.heading_automation');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_automation');?></p>
+                </div>
+                <div class="section modules icon-line fa-2x">
+                    <i class="fas fa-puzzle-piece fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/modules/"><?php $this->_('AdminSettings.company.heading_modules');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_modules');?></p>
+                </div>
+                <div class="section gateways icon-line fa-2x">
+                    <i class="fas fa-university fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/gateways/"><?php $this->_('AdminSettings.company.heading_gateways');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_gateways');?></p>
+                </div>
+                <div class="section taxes icon-line fa-2x">
+                    <i class="fas fa-money-bill-wave fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/taxes/"><?php $this->_('AdminSettings.company.heading_taxes');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_taxes');?></p>
+                </div>
+                <div class="section custom icon-line fa-2x">
+                    <i class="fas fa-sliders-h fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/clientoptions/"><?php $this->_('AdminSettings.company.heading_clientoptions');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_clientoptions');?></p>
+                </div>
+                <div class="section custom icon-line fa-2x">
+                    <i class="fas fa-rss fa-fw"></i>
+                    <h1><a href="<?php echo $this->base_uri;?>settings/company/feeds/"><?php $this->_('AdminSettings.company.heading_feeds');?></a></h1>
+                    <p><?php $this->_('AdminSettings.company.text_feeds');?></p>
+                </div>
+            </div>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

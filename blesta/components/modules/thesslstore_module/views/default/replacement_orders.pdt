@@ -1,0 +1,79 @@
+<?php
+        $selecteddate='';
+        if(isset($_REQUEST['date'])) {
+         $selecteddate=$_REQUEST['date'];
+        }
+		$this->Widget->clear();
+		$this->Widget->create($this->_("ThesslstoreModule.replacement_order.box_title", true));
+		?>
+		<div class="inner">
+		    <?php
+            			$this->Form->create();
+            			?>
+            			<div class="pad">
+            				<ul>
+            				    <li>
+                                    <?php
+                                    $this->Form->label($this->_("ThesslstoreModule.row_meta.replace_date", true), "replace_by_date");
+                                    $this->Form->fieldSelect("replace_by_date",array('2018-03-15'=>'03-15-2018','2018-09-13'=>'09-13-2018') ,$selecteddate, array('id' => "replace_by_date"));
+                                    ?>
+                                </li>
+            				</ul>
+            			</div>
+            			<div class="button_row"><a class="btn btn-primary submit" href="#"><?php $this->_("ThesslstoreModule.tab_generate_cert_step1.submit");?></a></div>
+            			<?php
+            			$this->Form->end();
+            			?>
+		    <div class="links_row button_row">
+			    <a target="_blank" class="float-right btn btn-default" href="<?php echo (isset($export_to_csv_link) ? $this->Html->safe($export_to_csv_link) : null); ?>"><?php $this->_("ThesslstoreModule.replacement_order.export_csv"); ?> </a>
+            </div>
+		    <table class="table">
+                <tbody>
+                    <tr class="heading_row">
+                        <td>Purchase Date</td>
+                        <td>Store ID</td>
+                        <td>Vendor ID</td>
+                        <td>Product Details</td>
+                        <td>Issued Date</td>
+                        <td>Expire Date</td>
+                        <td>Status</td>
+                        <td>Action</td>
+                        <td>Replace By Date</td>
+                    </tr>
+                    <?php
+                    if(!empty($orders)){
+                        $odd = false;
+                        foreach($orders as $order){
+                            if($odd == true){
+                                $class = "class='odd_row'";
+                                $odd = false;
+                            }
+                            elseif($odd == false){
+                                $class = '';
+                                $odd = true;
+                            }
+                            ?>
+                            <tr <?php echo $class; ?> >
+                                <td><?php echo (isset($order->PurchaseDate) ? $this->Html->safe($order->PurchaseDate) : null); ?></td>
+                                <td><?php echo (isset($order->TheSSLStoreOrderID) ? $this->Html->safe($order->TheSSLStoreOrderID) : null); ?></td>
+                                <td><?php echo (isset($order->VendorOrderID) ? $this->Html->safe($order->VendorOrderID) : null); ?></td>
+                                <td><?php echo (isset($order->ProductName) ? $this->Html->safe($order->ProductName) : null); ?></td>
+                                <td><?php echo (isset($order->CertificateStartDate) ? $this->Html->safe($order->CertificateStartDate) : null); ?></td>
+                                <td><?php echo (isset($order->CertificateEndDate) ? $this->Html->safe($order->CertificateEndDate) : null); ?></td>
+                                <td><?php echo (isset($order->Status) ? $this->Html->safe($order->Status) : null); ?></td>
+                                <td><?php echo (isset($order->Action) ? $this->Html->safe($order->Action) : null); ?></td>
+                                <td><?php echo (isset($order->ReplaceByDate) ? $this->Html->safe($order->ReplaceByDate) : null); ?></td>
+                            </tr>
+<?php
+                        }
+                        }else{ ?>
+                                                         <tr><td colspan="9"><?php echo "No records Found"; ?></td></tr>
+                                                     <?php }
+                    ?>
+                </tbody>
+            </table>
+		</div>
+
+		<?php
+            $this->Widget->end();
+        ?>

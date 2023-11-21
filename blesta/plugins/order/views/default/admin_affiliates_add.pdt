@@ -1,0 +1,103 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php
+            if (!(isset($render_section) ? $render_section : null)) {
+                echo (isset($message) ? $message : null);
+            }
+            ?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $this->Widget->clear();
+                $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'order_form_styles']);
+                $this->Widget->create($this->_('AdminAffiliates.add.boxtitle_order', true));
+                $this->Form->create(null, ['id' => 'order_affiliate', 'class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminAffiliates.add.field_client', true), 'client');
+                                ?>
+                                <p>
+                                <?php
+                                if ((isset($client) ? $client : null)) {
+                                    $this->Form->fieldHidden('client_id', (isset($client->id) ? $client->id : null), ['id' => 'client_id']);
+                                ?>
+                                    <a href="<?php echo $this->Html->safe((isset($this->base_uri) ? $this->base_uri : null) . 'clients/view/' . (isset($client->id) ? $client->id : null));?>"><?php echo (isset($client->first_name) ? $this->Html->safe($client->first_name) : null) . ' ' . (isset($client->last_name) ? $this->Html->safe($client->last_name) : null);?></a>
+                                <?php
+                                } else {
+                                    $this->Form->fieldText('client', (isset($vars->client) ? $vars->client : null), ['id' => 'client', 'placeholder' => $this->_('AdminAffiliates.add.client_placeholder', true)]);
+                                    $this->Form->fieldHidden('client_id', (isset($vars->client_id) ? $vars->client_id : null), ['id' => 'client_id']);
+                                }
+                                ?>
+                                </p>
+                                <div id="no_clients" class="empty_section" style="display:none;">
+                                    <div class="empty_box"><?php $this->_('AdminAffiliates.add.text_no_clients');?></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminAffiliates.add.field_addsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#client').autocomplete({
+            minLength: 3,
+            source: function(request, response) {
+                $(document).blestaRequest(
+                    'POST',
+                    '<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null);?>plugin/order/admin_affiliates/getclients/',
+                    { _csrf_token: $('#order_affiliate').find('input[name=_csrf_token]').val(), search: request.term},
+                    function(data) {
+                        if (data && data.clients) {
+                            // Build the response to show
+                            var clients = new Array();
+                            for (var id in data.clients) {
+                                clients.push({label:data.clients[id], value:data.clients[id], id:id});
+                            }
+                            response(clients);
+
+                            // No results
+                            if (clients.length == 0) {
+                                $('#no_clients').show();
+                            } else {
+                                $('#no_clients').hide();
+                            }
+                        }
+                    },
+                    null,
+                    {dataType:'json'}
+                );
+            },
+            select: function(event, ui) {
+                $('#client_id').val(ui.item.id);
+            }
+        });
+    });
+
+</script>

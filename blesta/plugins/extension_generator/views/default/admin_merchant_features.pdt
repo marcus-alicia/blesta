@@ -1,0 +1,44 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->create($this->_('AdminMerchant.index.boxtitle_extension_generator', true), ['id' => 'admin_merchant_features']);
+
+        echo (isset($progress_bar) ? $progress_bar : null);
+
+        $this->Form->create();
+        ?>
+        <div class="inner">
+            <div class="title_row"><h3><?php $this->_('AdminMerchant.features.heading_supported_features');?></h3></div>
+            <div class="pad">
+                <div class="row">
+                <?php
+                foreach ((isset($supported_features) ? $supported_features : []) as $supported_feature => $feature_settings) {
+                ?>
+                    <div class="col-xs-4">
+                    <?php
+                    $this->Form->fieldCheckbox('supported_features[' . $supported_feature . ']', 'true', (isset($vars['supported_features']) ? (isset($vars['supported_features'][$supported_feature]) ? $vars['supported_features'][$supported_feature] : null) : $feature_settings['enabled']) == 'true', ['class' => 'inline', 'id' => 'supported_features[' . $supported_feature . ']']);
+                    $this->Form->label($feature_settings['name'], 'supported_features[' . $supported_feature . ']', ['class' => 'inline']);
+
+                    if (!empty($feature_settings['tooltip'])) {
+                    ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo (isset($feature_settings['tooltip']) ? $this->Html->safe($feature_settings['tooltip']) : null);?></div></span>
+                    <?php
+                    }
+                    ?>
+                    </div>
+                <?php
+                }
+                ?>
+                </div>
+            </div>
+
+            <div class="button_row">
+                <?php $this->Form->fieldSubmit('submit', $this->_('AdminMerchant.features.confirm', true), ['class' => 'btn btn-primary pull-right']);?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+
+        $this->Widget->end();

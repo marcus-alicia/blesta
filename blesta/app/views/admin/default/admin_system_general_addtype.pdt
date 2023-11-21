@@ -1,0 +1,40 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemGeneral.addtype.boxtitle_addtype', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemGeneral.addtype.field_name', true), 'name');?>
+                                <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemGeneral.addtype.field_type', true), 'type', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemGeneral.!paymenttypes.type');?></div></span>
+                                <?php $this->Form->fieldSelect('type', (isset($types) ? $types : []), (isset($vars->type) ? $vars->type : null), ['id' => 'type', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('is_lang', '1', ((isset($vars->is_lang) ? $vars->is_lang : null) == '1'), ['id' => 'is_lang']);?>
+                                <?php $this->Form->label($this->_('AdminSystemGeneral.addtype.field_is_lang', true), 'is_lang', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemGeneral.!paymenttypes.is_lang');?></div></span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemGeneral.addtype.field_typesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>

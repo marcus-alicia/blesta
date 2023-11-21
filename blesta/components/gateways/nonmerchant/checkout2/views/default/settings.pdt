@@ -1,0 +1,85 @@
+
+	<ul>
+        <li>
+            <?php
+            $this->Form->label($this->_('Checkout2.api_version', true), 'Checkout2_api_version');
+            $this->Form->fieldSelect('api_version', (isset($versions) ? $versions : null), (isset($meta['api_version']) ? $meta['api_version'] : null), ['id' => 'Checkout2_api_version']);
+            ?>
+        </li>
+		<li class="2checkout_v1_field">
+			<?php
+            $this->Form->label($this->_('Checkout2.vendor_id', true), 'Checkout2_vendor_id');
+            $this->Form->fieldText('vendor_id', (isset($meta['vendor_id']) ? $meta['vendor_id'] : null), ['id'=>'Checkout2_vendor_id']);
+            ?>
+		</li>
+		<li class="2checkout_v5_field">
+			<?php
+            $this->Form->label($this->_('Checkout2.merchant_code', true), 'Checkout2_merchant_code');
+            $this->Form->fieldText('merchant_code', (isset($meta['merchant_code']) ? $meta['merchant_code'] : null), ['id'=>'Checkout2_merchant_code']);
+            ?>
+		</li>
+		<li class="2checkout_v1_field">
+			<?php
+            $this->Form->label($this->_('Checkout2.secret_word', true), 'Checkout2_secret_word');
+            $this->Form->fieldText('secret_word', (isset($meta['secret_word']) ? $meta['secret_word'] : null), ['id'=>'Checkout2_secret_word']);
+            ?>
+		</li>
+		<li class="2checkout_v5_field">
+			<?php
+            $this->Form->label($this->_('Checkout2.buy_link_secret_word', true), 'Checkout2_buy_link_secret_word');
+            $this->Form->fieldText('buy_link_secret_word', (isset($meta['buy_link_secret_word']) ? $meta['buy_link_secret_word'] : null), ['id'=>'Checkout2_buy_link_secret_word']);
+            ?>
+		</li>
+		<li class="2checkout_v5_field">
+			<?php
+            $this->Form->label($this->_('Checkout2.secret_key', true), 'Checkout2_secret_key');
+            $this->Form->fieldText('secret_key', (isset($meta['secret_key']) ? $meta['secret_key'] : null), ['id' => 'Checkout2_secret_key']);
+            ?>
+		</li>
+		<li class="2checkout_v1_field">
+			<?php
+            $this->Form->label($this->_('Checkout2.api_username', true), 'Checkout2_api_username');
+            $this->Form->fieldText('api_username', (isset($meta['api_username']) ? $meta['api_username'] : null), ['id'=>'Checkout2_api_username']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?> <div><?php $this->_('Checkout2.api_username_note');?></div></span>
+		</li>
+		<li class="2checkout_v1_field">
+			<?php
+            $this->Form->label($this->_('Checkout2.api_password', true), 'Checkout2_api_password');
+            $this->Form->fieldText('api_password', (isset($meta['api_password']) ? $meta['api_password'] : null), ['id'=>'Checkout2_api_password']);
+            ?>
+		</li>
+		<li class="2checkout_v1_field">
+			<?php
+            $this->Form->fieldCheckbox('sandbox', 'true', ((isset($meta['sandbox']) ? $meta['sandbox'] : 'false') == 'true'), ['id' => 'Checkout2_sandbox']);
+            $this->Form->label($this->_('Checkout2.sandbox', true), 'Checkout2_sandbox', ['class' => 'inline']);
+            ?>
+		</li>
+		<li>
+			<?php
+            $this->Form->fieldCheckbox('test_mode', 'true', ((isset($meta['test_mode']) ? $meta['test_mode'] : 'false') == 'true'), ['id'=>'Checkout2_test_mode']);
+            $this->Form->label($this->_('Checkout2.test_mode', true), 'Checkout2_test_mode', ['class'=>'inline']);
+            ?>
+		</li>
+	</ul>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Checkout2_api_version').change(function () {
+            if ($(this).val() === 'v1') {
+                $('.2checkout_v1_field').show();
+                $('.2checkout_v5_field').hide();
+
+                $('.2checkout_v1_field input').prop('disabled', false);
+                $('.2checkout_v5_field input').prop('disabled', true);
+            } else {
+                $('.2checkout_v1_field').hide();
+                $('.2checkout_v5_field').show();
+
+                $('.2checkout_v1_field input').prop('disabled', true);
+                $('.2checkout_v5_field input').prop('disabled', false);
+            }
+        });
+
+        $('#Checkout2_api_version').change();
+    });
+</script>

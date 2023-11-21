@@ -1,0 +1,404 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.createinvoice.boxtitle_createinvoice', true), ['id' => 'admin_clients_creatinvoice']);
+        ?>
+        <div class="inner">
+            <?php $this->Form->create(null, ['id' => 'create-invoice', 'class' => 'disable-on-submit']);?>
+            <table class="table invoice">
+                <thead>
+                    <tr class="heading_row">
+                        <td><?php $this->_('AdminClients.createinvoice.heading_description');?></td>
+                        <td><?php $this->_('AdminClients.createinvoice.heading_quantity');?></td>
+                        <td><?php $this->_('AdminClients.createinvoice.heading_unitcost');?></td>
+                        <td><?php $this->_('AdminClients.createinvoice.heading_tax');?></td>
+                        <td><?php $this->_('AdminClients.createinvoice.heading_options');?></td>
+                        <td class="icon last">&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $num_rows = max(1, count((isset($vars->line_items) ? $vars->line_items : [])));
+                    for ($i = 0; $i < $num_rows; $i++) {
+                        $tax_disabled = (isset($client->settings['tax_exempt']) ? $client->settings['tax_exempt'] : null) == 'true' ? ['disabled' => 'disabled'] : [];
+                    ?>
+                    <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'line_row');?>">
+                        <td><?php $this->Form->fieldText('lines[description][]', ($vars->line_items[$i]->description ?? null), ['class' => 'stretch line_item']);?></td>
+                        <td class="small"><?php $this->Form->fieldText('lines[qty][]', $this->CurrencyFormat->truncateDecimal(($vars->line_items[$i]->qty ?? null), 0), ['class' => 'stretch line_qty']);?></td>
+                        <td class="small"><?php $this->Form->fieldText('lines[amount][]', $this->CurrencyFormat->format(($vars->line_items[$i]->amount ?? null), (isset($vars->currency) ? $vars->currency : null), ['prefix' => false, 'suffix' => false, 'with_separator' => false, 'code' => false, 'decimals' => 4]), ['class' => 'stretch line_amount']);?></td>
+                        <td class="extra_small">
+                            <?php $this->Form->fieldHidden('lines[tax][]', (($vars->line_items[$i]->tax ?? null) == 'true') ? 'true' : 'false');?>
+                            <?php $this->Form->fieldCheckbox('tax[]', 'true', (($vars->line_items[$i]->tax ?? null) == 'true' && $client->settings['tax_exempt'] !== 'true'), $tax_disabled);?>
+                            <?php
+                            if (($client->settings['tax_exempt'] ?? null) == 'true') {
+                            ?>
+                            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.!tooltip.client_taxempt');?></div></span>
+                            <?php
+                            }
+                            ?>
+                        </td>
+                        <td class="medium"><a class="line_row_add" href="#"><?php $this->_('AdminClients.createinvoice.option_add');?></a>, <a href="#" class="manage line_row_delete"><?php $this->_('AdminClients.createinvoice.option_delete');?></a></td>
+                        <td class="last center"><i class="fas fa-arrows-alt movable"></i></td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="pad">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.createinvoice.field_datebilled', true), 'date_billed');
+                        $this->Form->fieldText('date_billed', (isset($vars->date_billed) ? $vars->date_billed : $this->Date->format('Y-m-d')), ['id' => 'date_billed', 'class' => 'date']);
+                        ?>
+                    </div>
+                    <div class="pad">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.createinvoice.field_datedue', true), 'date_due');
+                        $this->Form->fieldText('date_due', (isset($vars->date_due) ? $vars->date_due : null), ['id' => 'date_due', 'class' => 'date']);
+                        ?>
+                    </div>
+                    <div class="pad">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.createinvoice.field_currency', true), 'currency');
+                        $this->Form->fieldSelect('currency', (isset($currencies) ? $currencies : null), (isset($vars->currency) ? $vars->currency : null), ['id' => 'currency']);
+                        ?>
+                    </div>
+                    <?php
+                    if ((isset($delivery_methods) ? $delivery_methods : null)) {
+                    ?>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminClients.createinvoice.field_invoicedelivery', true), 'delivery');
+                                foreach ($delivery_methods as $method => $name) {
+                                    $this->Form->fieldCheckbox('delivery[]', $method, in_array($method, (array)(isset($vars->delivery) ? $vars->delivery : null)), ['id' => 'delivery[' . $method . ']', 'class' => 'inline']);
+                                    $this->Form->label($name, 'delivery[' . $method . ']', ['class' => 'inline']);
+                                }
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminClients.createinvoice.field_autodebit', true));
+                                $this->Form->fieldCheckbox('autodebit', '1', (isset($vars->autodebit) ? $vars->autodebit : '1') == '1', ['id' => 'autodebit', 'class' => 'inline']);
+                                $this->Form->label($this->_('AdminClients.createinvoice.field_autodebit_text', true), 'autodebit', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.createinvoice.tooltip_autodebit');?></div></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="sub_total_box">
+                        <div class="line totals_subtotal">
+                            <span><?php $this->_('AdminClients.editinvoice.price_subtotal');?></span><em></em>
+                        </div>
+                        <?php
+                        for ($i = 0; $i < 2; $i++) {
+                        ?>
+                        <div class="line totals_tax"<?php echo !isset($vars->taxes[$i]) ? ' style="display: none;"' : '';?>>
+                            <span></span><em></em>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                        <div class="line total totals_total">
+                            <span></span><strong><em></em></strong>
+                        </div>
+                        <?php
+                        if ((isset($vars->paid) ? $vars->paid : null) > 0) {
+                            $this->Form->fieldHidden('amount_paid', $vars->paid);
+                        ?>
+                        <div class="line totals_paid">
+                            <span></span><em></em>
+                        </div>
+                        <div class="line total totals_due">
+                            <span></span><strong><em></em></strong>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+
+            <h4><a id="recurring" href="#" class="show_content"><i class="fas fa-caret-down"></i> <?php $this->_('AdminClients.createinvoice.section_recurringinvoice');?></a></h4>
+            <div id="recurring_invoice">
+                <div class="pad reverse">
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td><?php $this->Form->label($this->_('AdminClients.createinvoice.heading_term', true), 'term');?></td>
+                            <td><?php $this->Form->label($this->_('AdminClients.createinvoice.heading_period', true), 'period');?></td>
+                            <td><?php $this->Form->label($this->_('AdminClients.createinvoice.heading_duration', true), 'duration');?></td>
+                            <td class="last"><?php $this->Form->label($this->_('AdminClients.createinvoice.heading_nextbilldate', true), 'recur_date_billed');?></td>
+                        </tr>
+                        <tr>
+                            <td class="small"><?php $this->Form->fieldText('term', (isset($vars->term) ? $vars->term : null), ['id' => 'term', 'class' => 'stretch']);?></td>
+                            <td class="small"><?php $this->Form->fieldSelect('period', (isset($periods) ? $periods : null), (isset($vars->period) ? $vars->period : 'month'), ['id' => 'period']);?></td>
+                            <td>
+                                <?php
+                                $this->Form->fieldRadio('duration', 'indefinitely', ((isset($vars->duration) ? $vars->duration : 'indefinitely') == 'indefinitely'), ['id' => 'indefinitely']);
+                                $this->Form->label($this->_('AdminClients.createinvoice.field_duration_indefinitely', true), 'indefinitely', ['class' => 'inline']);
+                                $this->Form->fieldRadio('duration', 'times', ((isset($vars->duration) ? $vars->duration : null) == 'times'), ['id' => 'duration']);
+                                $this->Form->fieldText('duration_time', (isset($vars->duration_time) ? $vars->duration_time : null), ['id' => 'duration_time', 'class' => 'small']);
+                                $this->Form->label($this->_('AdminClients.createinvoice.field_duration_times', true), 'duration_time', ['class' => 'inline']);
+                                ?>
+                            </td>
+                            <td class="last medium">
+                                <?php $this->Form->fieldText('recur_date_billed', (isset($vars->recur_date_billed) ? $vars->recur_date_billed : null), ['id' => 'recur_date_billed', 'class' => 'date']);?>
+                                <a href="#" class="calender"></a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <h4><a id="notes" href="#" class="show_content"><i class="fas fa-caret-down"></i> <?php $this->_('AdminClients.createinvoice.section_notes');?></a></h4>
+            <div id="notes_section">
+                <div class="pad reverse">
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminClients.createinvoice.field_notepublic', true), 'note_public');
+                            $this->Form->fieldTextarea('note_public', (isset($vars->note_public) ? $vars->note_public : null), ['id' => 'note_public']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminClients.createinvoice.field_noteprivate', true), 'note_private');
+                            $this->Form->fieldTextarea('note_private', (isset($vars->note_private) ? $vars->note_private : null), ['id' => 'note_private']);
+                            ?>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button_row">
+                <div class="auto_save"><span></span></div>
+
+                <?php
+                $this->Form->fieldHidden('invoice_id', '', ['id' => 'invoice_id']);
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.createinvoice.field_invoicesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                $this->Form->fieldSubmit('submit_draft', $this->_('AdminClients.createinvoice.field_invoicedraft', true), ['class' => 'btn btn-default pull-right']);
+                ?>
+            </div>
+
+            <?php $this->Form->end();?>
+        </div>
+
+        <?php
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+
+    var totals_uri = '" . (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'clients/calcLineTotals/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . "';
+
+    // On load calculate totals
+    $('#create-invoice').blestaSetInvTotals(totals_uri);
+
+    // Ensure the position of the recurring date billed calendar is within the view frame
+    $('#recur_date_billed').dpSetPosition($.dpConst.POS_TOP, $.dpConst.POS_RIGHT);
+
+    // Whenever the tax box is checked, we need to set the line tax to update
+    $('input[name=\"tax[]\"]').change(function() {
+        $('input[name=\"lines[tax][]\"]', $(this).parent()).val($(this).prop('checked') ? 'true' : 'false');
+        $(this).blestaSetInvTotals(totals_uri);
+    });
+
+    // Set invoice totals when amount quantity, tax status, or currency changes
+    $('input[name=\"lines[amount][]\"], input[name=\"lines[qty][]\"], #currency').change(function() {
+        $(this).blestaSetInvTotals(totals_uri);
+    });
+
+    // Allow sort of invoice lines
+    $('table.table.invoice tbody').blestaSortable();
+    $('table.table.invoice tbody tr').hover(
+        function() {
+            $('.movable', this).show();
+        },
+        function() {
+            $('.movable', this).hide();
+        }
+    );
+
+    // If enter pressed while in line item field, convert to textarea
+    $('input.line_item').keypress(function(e) {
+        if (e.keyCode == 13) {
+            var element = this;
+            var textarea = $('<textarea>');
+            for (var i=0, len=element.attributes.length; i < len; i++) {
+                if (element.attributes[i].nodeName != 'type')
+                    textarea.attr(element.attributes[i].nodeName, element.attributes[i].nodeValue);
+            }
+            textarea.insertBefore(element).focus().val($(this).val() + String.fromCharCode(e.keyCode));
+            $(element).remove();
+        }
+    });
+
+    $('#notes_section').hide();
+    $('#recurring_invoice').hide();
+
+    // Toggle notes and recurring sections
+    $(this).blestaBindToggleEvent('#notes', '#notes_section');
+    $(this).blestaBindToggleEvent('#recurring', '#recurring_invoice');
+
+    // Check the 'number of times' field
+    $('#duration_time').focus(function() {
+        $('#duration').prop('checked', true);
+    });
+
+    // Remove blank lines when the form is submitted
+    $('#create-invoice').on('submit', function() {
+        $('.line_row').each(function() {
+            if ($(this).find('input.line_item').val().length <= 0
+                && $(this).find('input.line_qty').val().length <= 0
+                && $(this).find('input.line_amount').val().length <= 0
+            ) {
+                $(this).find('.line_row_delete').trigger('click');
+            }
+        });
+    });
+
+    // Automatically add a new blank line item after entering details into another
+    $('.invoice').on('input', '.line_row input.line_item', function() {
+        // If entering data into one line item, create a new line item below it
+        if ($(this).val().length > 1) {
+            return;
+        }
+
+        var blank_line_after = $(this).parents('tr.line_row').next().find('input.line_item').val();
+        if (blank_line_after === undefined) {
+            $(this).parents('.line_row').find('a.line_row_add').trigger('click');
+        }
+    });
+
+    $('.line_row_add').click(function() {
+        var fields = $('input[type=\"text\"].line_item:first').parent().parent().clone(true);
+
+        if (fields === undefined) {
+            var fields = $('tr.line_row:first').clone(true);
+        }
+
+        // Remove input text/hidden and textarea data
+        $(fields).find('input:text,input:hidden,textarea').val('');
+        // Remove checkbox/radio data
+        $(fields).find('input:checkbox,input:radio').prop('checked', false);
+        // Unselect options
+        $(fields).find('option:selected').prop('selected', false);
+
+        // Append the row below this row, assign the new row
+        var line = $(this).closest('tr').after(fields).next();
+
+        // Remove line item ID field from duplicated row
+        $('.line_id', line).remove();
+
+        // Hide the arrow icon for moving the row
+        $('.movable', fields).hide();
+
+        formatLineRows();
+
+        return false;
+    });
+
+    $('.line_row_delete').click(function() {
+        if ($('tr.line_row').length > 1) {
+            var form = $(this).closest('form');
+
+            // Move the line item ID field, then delete the row
+            var line_item = $(this).closest('tr').find('.line_id').clone(true);
+            $('tr.line_row:last').after(line_item);
+
+            $(this).closest('tr').remove();
+
+            // Update totals
+            $(form).blestaSetInvTotals(totals_uri);
+
+            formatLineRows();
+        }
+        return false;
+    });
+
+    // Format each line item row
+    function formatLineRows() {
+        $('tr.line_row').removeClass('odd_row');
+        $('tr.line_row:nth-child(even)').addClass('odd_row');
+    }
+
+    var auto_save_interval = 60000; // 60 seconds
+
+    /**
+    * Auto save invoice
+    *
+    */
+    function autoSave() {
+
+        var form = $('#admin_clients_creatinvoice form');
+
+        form.blestaRequest(form.attr('method'), form.attr('action'), form.serialize(),
+            function(data) {
+                var text = '" . $this->Html->safe($this->_('AdminClients.createinvoice.auto_save_error', true)) . "';
+                var class_name = 'fab fa-whmcs';
+                if (data.success) {
+                    text = '" . $this->Html->safe($this->_('AdminClients.createinvoice.auto_save_saved', true)) . "';
+                    class_name = 'fas fa-check';
+
+                    // Set the invoice ID so we can continue to update it
+                    $('#invoice_id').val(data.invoice_id);
+
+                    // Remove all existing line item IDs, we're going to replace them
+                    $('.line_row .line_id').remove();
+
+                    // Set the line item ID for each line item that was created
+                    $('.line_row').each(function(index) {
+                        if (data.invoice.line_items[index]) {
+                            $(this).prepend('<input type=\"hidden\" name=\"lines[id][]\" value=\"' + data.invoice.line_items[index].id + '\" class=\"line_id\" />');
+                        }
+                    });
+                }
+
+                $('.button_row .auto_save span').text(text);
+                $('.button_row .auto_save span').html('<i class=\"' + class_name + '\"></i> ' + $('.button_row .auto_save span').text());
+
+                $('.button_row .auto_save').delay(2000).fadeOut('slow');
+
+                // Set the next auto save
+                setTimeout(autoSave, auto_save_interval);
+            },
+            function() {
+                // Set the next auto save
+                setTimeout(autoSave, auto_save_interval);
+            },
+            {
+                beforeSend: function() {
+                    $('.button_row .auto_save').html('<i class=\"fas fa-spinner fa-spin\"></i> <span></span>');
+                    $('.button_row .auto_save span').text('" . $this->Html->safe($this->_('AdminClients.createinvoice.auto_save_saving', true)) . "');
+                    $('.button_row .auto_save').show();
+                },
+                dataType: 'json'
+            }
+        );
+    }
+
+    // Begin the auto save process only after the form has gained focus on one of its input elements
+    var focused = false;
+    $('#admin_clients_creatinvoice input').focus(function() {
+        if (!focused) {
+
+            // Begin the auto save process
+            setTimeout(autoSave, auto_save_interval);
+            focused = true;
+        }
+    });
+});
+");
+?>

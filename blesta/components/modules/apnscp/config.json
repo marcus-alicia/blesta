@@ -1,0 +1,28 @@
+{
+    "version": "1.5.2",
+    "name": "Apnscp.name",
+    "description": "Apnscp.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "service": {
+        "name_key": "apnscp_domain"
+    },
+    "module": {
+        "row": "Apnscp.module_row.name",
+        "rows": "Apnscp.module_row_plural.name",
+        "group": "Apnscp.module_group.name",
+        "row_key": "server_name"
+    },
+    "package": {
+        "name_key": "apnscp_domain"
+    },
+    "email_tags": {
+        "module": ["host_name", "name_servers"],
+        "package": ["package"],
+        "service": ["apnscp_domain", "apnscp_username", "apnscp_password"]
+    }
+}

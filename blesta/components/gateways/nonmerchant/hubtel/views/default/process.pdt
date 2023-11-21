@@ -1,0 +1,3 @@
+<a href="<?php echo (isset($post_to) ? $post_to : null); ?>">
+    <img src="https://hubtel.com/wp-content/themes/hubtel/html/assets/images/buttons/image188-7.png" class="img-responsive" />
+</a>

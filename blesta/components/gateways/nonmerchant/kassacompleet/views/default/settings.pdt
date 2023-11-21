@@ -1,0 +1,10 @@
+
+    <ul>
+        <li>
+            <?php
+            $this->Form->label($this->_('Kassacompleet.api_key', true), 'api_key');
+            $this->Form->fieldText('api_key', (isset($meta['api_key']) ? $meta['api_key'] : null), ['id' => 'api_key']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?> <div><?php $this->_('Kassacompleet.tooltip.api_key');?></div></span>
+        </li>
+    </ul>

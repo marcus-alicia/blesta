@@ -1,0 +1,62 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminCompanyCurrencies.add.boxtitle_add', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyCurrencies.add.field_code', true), 'code');?>
+                                <?php $this->Form->fieldText('code', (isset($vars->code) ? $vars->code : null), ['id' => 'code', 'class' => 'small']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyCurrencies.add.field_format', true), 'format');?>
+                                <?php $this->Form->fieldSelect('format', (isset($formats) ? $formats : null), (isset($vars->format) ? $vars->format : null), ['id' => 'format'], ['class' => 'currency_value']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyCurrencies.add.field_precision', true), 'precision', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyCurrencies.!tooltip.precision');?></div></span>
+                                <?php $this->Form->fieldText('precision', (isset($vars->precision) ? $vars->precision : 4), ['id' => 'precision', 'class' => 'small block', 'maxLength' => '1']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyCurrencies.add.field_prefix', true), 'prefix');?>
+                                <?php $this->Form->fieldText('prefix', (isset($vars->prefix) ? $vars->prefix : null), ['id' => 'prefix', 'class' => 'small']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyCurrencies.add.field_suffix', true), 'suffix');?>
+                                <?php $this->Form->fieldText('suffix', (isset($vars->suffix) ? $vars->suffix : null), ['id' => 'suffix', 'class' => 'small']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyCurrencies.add.field_exchange_rate', true), 'exchange_rate');?>
+                                <?php $this->Form->fieldText('exchange_rate', (isset($vars->exchange_rate) ? $vars->exchange_rate : null), ['id' => 'exchange_rate', 'class' => 'small']);?>
+                            </li>
+                        </ul>
+                        <div class="button_row">
+                            <button type="submit" class="btn btn-primary pull-right submit" href="#" rel="<?php echo ((isset($exchange_rates_auto_update) ? $this->Html->safe($exchange_rates_auto_update) : null) == 'true') ? $this->Html->safe($this->_('AdminCompanyCurrencies.add.confirm_add', true)) : '';?>"><?php $this->_('AdminCompanyCurrencies.add.field_addsubmit');?></button>
+                            <button type="submit" class="btn btn-default pull-right" href="<?php echo $this->base_uri;?>settings/company/currencies/active/"><?php $this->_('AdminCompanyCurrencies.!cancel.field_cancel');?></button>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<?php
+// Setup confirmation if exchange rates automatically update
+if ((isset($exchange_rates_auto_update) ? $this->Html->safe($exchange_rates_auto_update) : null) == 'true') {
+    $this->Javascript->setInline("
+    $(document).ready(function() {
+        $('.button_row .submit[rel]').blestaModalConfirm({submit: true, base_url: '" . $this->base_uri . "', close: '" . $this->Html->safe($this->_('AppController.modal.text_close', true)) . "'});
+    });
+    ");
+}
+?>

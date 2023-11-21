@@ -1,0 +1,35 @@
+<?php
+// Link to the root directory
+if ((isset($current_category) ? $current_category : null) !== null) {
+?>
+<a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/');?>">
+<?php
+}
+
+$this->_('AdminKnowledgebase.!text.root_directory');
+
+if ((isset($current_category) ? $current_category : null) !== null) {
+?>
+</a>
+<?php
+}
+
+foreach ((isset($categories) ? $categories : []) as $category) {
+    $this->_('AdminKnowledgebase.!text.directory_separator');
+
+    // Link to this category as long as it's not the current category
+    if ((isset($current_category->id) ? $current_category->id : null) != (isset($category->id) ? $category->id : null)) {
+?>
+<a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/index/' . (isset($category->id) ? $category->id : null));?>">
+    <?php
+    }
+
+    // Display the category name
+    echo $this->Html->concat(' ', ' ', (isset($category->name) ? $this->Html->safe($category->name) : null));
+
+    if ((isset($current_category->id) ? $current_category->id : null) != (isset($category->id) ? $category->id : null)) {
+    ?>
+</a>
+<?php
+    }
+}

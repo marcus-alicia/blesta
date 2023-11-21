@@ -1,0 +1,25 @@
+{
+    "version": "1.8.2",
+    "name": "Pterodactyl.name",
+    "description": "Pterodactyl.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "service": {
+        "name_key": "server_name"
+    },
+    "module": {
+        "row": "Pterodactyl.module_row",
+        "rows": "Pterodactyl.module_row_plural",
+        "row_key": "server_name",
+        "group": "Pterodactyl.module_group"
+    },
+    "email_tags": {
+        "module": ["server_name", "host_name"],
+        "package": ["location_id", "nest_id", "egg_id", "image"],
+        "service": ["server_name", "server_ip", "server_port", "server_username", "server_password"]
+    }
+}

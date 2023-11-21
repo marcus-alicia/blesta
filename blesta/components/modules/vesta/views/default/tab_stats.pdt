@@ -1,0 +1,60 @@
+	
+	<div class="title_row first">
+		<h3><?php $this->_("Vesta.tab_stats");?></h3>
+	</div>
+	<div class="pad">
+		<table class="table">
+			<thead>
+				<tr class="heading_row">
+					<td style="width: 50%;"><?php $this->_("Vesta.tab_stats.info_heading.field");?></td>
+					<td class="last"><?php $this->_("Vesta.tab_stats.info_heading.value");?></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.WEB_DOMAINS");?></td>
+					<td><?php echo (isset($stats["U_WEB_DOMAINS"]) ? $this->Html->safe($stats["U_WEB_DOMAINS"]) : null);?> / <?php echo (isset($stats["WEB_DOMAINS"]) ? $this->Html->safe($stats["WEB_DOMAINS"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.WEB_ALIASES");?></td>
+					<td><?php echo (isset($stats["U_WEB_ALIASES"]) ? $this->Html->safe($stats["U_WEB_ALIASES"]) : null);?> / <?php echo (isset($stats["WEB_ALIASES"]) ? $this->Html->safe($stats["WEB_ALIASES"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.DNS_DOMAINS");?></td>
+					<td><?php echo (isset($stats["U_DNS_DOMAINS"]) ? $this->Html->safe($stats["U_DNS_DOMAINS"]) : null);?> / <?php echo (isset($stats["DNS_DOMAINS"]) ? $this->Html->safe($stats["DNS_DOMAINS"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.DNS_RECORDS");?></td>
+					<td><?php echo (isset($stats["U_DNS_RECORDS"]) ? $this->Html->safe($stats["U_DNS_RECORDS"]) : null);?> / <?php echo (isset($stats["DNS_RECORDS"]) ? $this->Html->safe($stats["DNS_RECORDS"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.MAIL_DOMAINS");?></td>
+					<td><?php echo (isset($stats["U_MAIL_DOMAINS"]) ? $this->Html->safe($stats["U_MAIL_DOMAINS"]) : null);?> / <?php echo (isset($stats["MAIL_DOMAINS"]) ? $this->Html->safe($stats["MAIL_DOMAINS"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.MAIL_ACCOUNTS");?></td>
+					<td><?php echo (isset($stats["U_MAIL_ACCOUNTS"]) ? $this->Html->safe($stats["U_MAIL_ACCOUNTS"]) : null);?> / <?php echo (isset($stats["MAIL_ACCOUNTS"]) ? $this->Html->safe($stats["MAIL_ACCOUNTS"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.DATABASES");?></td>
+					<td><?php echo (isset($stats["U_DATABASES"]) ? $this->Html->safe($stats["U_DATABASES"]) : null);?> / <?php echo (isset($stats["DATABASES"]) ? $this->Html->safe($stats["DATABASES"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.CRON_JOBS");?></td>
+					<td><?php echo (isset($stats["U_CRON_JOBS"]) ? $this->Html->safe($stats["U_CRON_JOBS"]) : null);?> / <?php echo (isset($stats["CRON_JOBS"]) ? $this->Html->safe($stats["CRON_JOBS"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.BACKUPS");?></td>
+					<td><?php echo (isset($stats["U_BACKUPS"]) ? $this->Html->safe($stats["U_BACKUPS"]) : null);?> / <?php echo (isset($stats["BACKUPS"]) ? $this->Html->safe($stats["BACKUPS"]) : null);?></td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.DISK_QUOTA");?></td>
+					<td><?php echo (isset($stats["U_DISK"]) ? $this->Html->safe($stats["U_DISK"]) : null);?> / <?php echo (isset($stats["DISK_QUOTA"]) ? $this->Html->safe($stats["DISK_QUOTA"]) : null);?> MB</td>
+				</tr>
+				<tr>
+					<td><?php $this->_("Vesta.tab_stats.info.BANDWIDTH");?></td>
+					<td><?php echo (isset($stats["U_BANDWIDTH"]) ? $this->Html->safe($stats["U_BANDWIDTH"]) : null);?> / <?php echo (isset($stats["BANDWIDTH"]) ? $this->Html->safe($stats["BANDWIDTH"]) : null);?> MB</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>

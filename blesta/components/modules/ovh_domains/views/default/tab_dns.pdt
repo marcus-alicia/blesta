@@ -1,0 +1,98 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('OvhDomains.tab_dns.heading');?></h3>
+    </div>
+    <div class="pad">
+        <?php
+        $this->Form->create();
+        ?>
+            <table class="table">
+                <tbody>
+                    <tr class="heading_row">
+                        <td><span><?php $this->_('OvhDomains.tab_dns.record_type');?></span></td>
+                        <td><span><?php $this->_('OvhDomains.tab_dns.host');?></span></td>
+                        <td><span><?php $this->_('OvhDomains.tab_dns.value');?></span></td>
+                        <td><span><?php $this->_('OvhDomains.tab_dns.ttl');?></span></td>
+                        <td class="last"><span><?php $this->_('OvhDomains.tab_dns.options');?></span></td>
+                    </tr>
+
+                    <?php
+                    $i = 0;
+                    if (count($records ?? []) > 0) {
+                        foreach ($records as $record) {
+                    ?>
+                        <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : ''; ?>>
+                            <td><?php echo $this->Html->safe($record['fieldType'] ?? '');?></td>
+                            <td><?php echo $this->Html->safe((!empty($record['subDomain']) ? $record['subDomain'] . '.' : '') . ($record['zone'] ?? ''));?></td>
+                            <td><?php echo $this->Html->safe($record['target'] ?? '');?></td>
+                            <td><?php echo $this->Html->safe($record['ttl'] ?? '');?></td>
+                            <td>
+                                <?php
+                                $this->Form->fieldButton(
+                                    'delete',
+                                    $this->_('OvhDomains.tab_dns.field_delete', true),
+                                    [
+                                        'class' => 'btn btn-sm text-danger btn-link',
+                                        'value' => ($record['id'] ?? null),
+                                        'type' => 'submit'
+                                    ]
+                                );
+                                ?>
+                            </td>
+                        </tr>
+                    <?php
+                            $i++;
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>
+
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="title_row">
+        <h3><?php $this->_('OvhDomains.tab_dns.heading_add');?></h3>
+    </div>
+    <div class="pad">
+        <ul>
+            <li>
+                <?php
+                $this->Form->label($this->_('OvhDomains.tab_dns.record_type', true), 'record_type');
+                $this->Form->fieldSelect('record_type', $record_types ?? [], ($vars->record_type ?? ''));
+                ?>
+            </li>
+            <li>
+                <?php
+                $this->Form->label($this->_('OvhDomains.tab_dns.host', true), 'host');
+                $this->Form->fieldText('host', ($vars->host ?? ''));
+                ?>
+                <div class="inline-block"><?php echo '.' . $this->Html->safe($service_fields->domain ?? '');?></div>
+            </li>
+            <li>
+                <?php
+                $this->Form->label($this->_('OvhDomains.tab_dns.value', true), 'value');
+                $this->Form->fieldText('value', ($vars->value ?? ''));
+                ?>
+            </li>
+            <li>
+                <?php
+                $this->Form->label($this->_('OvhDomains.tab_dns.ttl', true), 'ttl');
+                $this->Form->fieldText('ttl', ($vars->ttl ?? 3600));
+                ?>
+            </li>
+        </ul>
+    </div>
+
+    <div class="button_row">
+        <?php
+        $this->Form->fieldSubmit(null, $this->_('OvhDomains.tab_dns.field_add', true), ['class' => 'btn btn-primary float-right']);
+        ?>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>

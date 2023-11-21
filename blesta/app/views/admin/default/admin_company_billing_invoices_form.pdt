@@ -1,0 +1,164 @@
+
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.inv_days_before_renewal', true), 'inv_days_before_renewal', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_days_before_renewal');?></div></span>
+                                <?php $this->Form->fieldSelect('inv_days_before_renewal', (isset($invoice_days) ? $invoice_days : null), (isset($vars['inv_days_before_renewal']) ? $this->Html->safe($vars['inv_days_before_renewal']) : null), ['id' => 'inv_days_before_renewal', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.quotation_valid_days', true), 'quotation_valid_days', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.quotation_valid_days');?></div></span>
+                                <?php $this->Form->fieldSelect('quotation_valid_days', (isset($quotation_days) ? $quotation_days : null), (isset($vars['quotation_valid_days']) ? $this->Html->safe($vars['quotation_valid_days']) : null), ['id' => 'quotation_valid_days', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.quotation_dead_days', true), 'quotation_dead_days', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.quotation_dead_days');?></div></span>
+                                <?php $this->Form->fieldSelect('quotation_dead_days', (isset($quotation_days) ? $quotation_days : null), (isset($vars['quotation_dead_days']) ? $this->Html->safe($vars['quotation_dead_days']) : null), ['id' => 'quotation_dead_days', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.quotation_deposit_percentage', true), 'quotation_deposit_percentage', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.quotation_deposit_percentage');?></div></span>
+                                <?php $this->Form->fieldText('quotation_deposit_percentage', (isset($vars['quotation_deposit_percentage']) ? $this->Html->safe($vars['quotation_deposit_percentage']) : null), ['id' => 'quotation_deposit_percentage', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.autodebit_days_before_due', true), 'autodebit_days_before_due', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.autodebit_days_before_due');?></div></span>
+                                <?php $this->Form->fieldSelect('autodebit_days_before_due', (isset($autodebit_days) ? $autodebit_days : null), (isset($vars['autodebit_days_before_due']) ? $this->Html->safe($vars['autodebit_days_before_due']) : null), ['id' => 'autodebit_days_before_due', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.suspend_services_days_after_due', true), 'suspend_services_days_after_due', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.suspend_services_days_after_due');?></div></span>
+                                <?php $this->Form->fieldSelect('suspend_services_days_after_due', (isset($suspend_days) ? $suspend_days : null), (isset($vars['suspend_services_days_after_due']) ? $this->Html->safe($vars['suspend_services_days_after_due']) : null), ['id' => 'suspend_services_days_after_due', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.autodebit_attempts', true), 'autodebit_attempts', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.autodebit_attempts');?></div></span>
+                                <?php $this->Form->fieldSelect('autodebit_attempts', (isset($autodebit_attempts) ? $autodebit_attempts : null), (isset($vars['autodebit_attempts']) ? $this->Html->safe($vars['autodebit_attempts']) : null), ['id' => 'autodebit_attempts', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.service_renewal_attempts', true), 'service_renewal_attempts', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.service_renewal_attempts');?></div></span>
+                                <?php $this->Form->fieldSelect('service_renewal_attempts', (isset($service_renewal_attempts) ? $service_renewal_attempts : null), (isset($vars['service_renewal_attempts']) ? $this->Html->safe($vars['service_renewal_attempts']) : null), ['id' => 'service_renewal_attempts', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.cancel_service_changes_days', true), 'cancel_service_changes_days', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.cancel_service_changes_days');?></div></span>
+                                <?php $this->Form->fieldSelect('cancel_service_changes_days', (isset($service_change_days) ? $service_change_days : null), (isset($vars['cancel_service_changes_days']) ? $this->Html->safe($vars['cancel_service_changes_days']) : null), ['id' => 'cancel_service_changes_days', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.apply_inv_late_fees', true), 'apply_inv_late_fees', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.apply_inv_late_fees');?></div></span>
+                                <?php $this->Form->fieldSelect('apply_inv_late_fees', (isset($service_change_days) ? $service_change_days : null), (isset($vars['apply_inv_late_fees']) ? $this->Html->safe($vars['apply_inv_late_fees']) : null), ['id' => 'apply_inv_late_fees', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('autodebit', 'true', (isset($vars['autodebit']) ? $vars['autodebit'] : 'true') == 'true', ['id' => 'autodebit']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.autodebit', true), 'autodebit', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.autodebit');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('client_set_invoice', 'true', (isset($vars['client_set_invoice']) ? $vars['client_set_invoice'] : 'true') == 'true', ['id' => 'client_set_invoice']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.client_set_invoice', true), 'client_set_invoice', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.client_set_invoice');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('inv_suspended_services', 'true', (isset($vars['inv_suspended_services']) ? $vars['inv_suspended_services'] : 'true') == 'true', ['id' => 'inv_suspended_services']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.inv_suspended_services', true), 'inv_suspended_services', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_suspended_services');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('inv_group_services', 'true', (isset($vars['inv_group_services']) ? $vars['inv_group_services'] : 'true') == 'true', ['id' => 'inv_group_services']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.inv_group_services', true), 'inv_group_services', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_group_services');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('inv_append_descriptions', 'true', (isset($vars['inv_append_descriptions']) ? $vars['inv_append_descriptions'] : 'false') == 'true', ['id' => 'inv_append_descriptions']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.inv_append_descriptions', true), 'inv_append_descriptions', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_append_descriptions');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('inv_lines_verbose_option_dates', 'true', (isset($vars['inv_lines_verbose_option_dates']) ? $vars['inv_lines_verbose_option_dates'] : 'true') == 'true', ['id' => 'inv_lines_verbose_option_dates']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.inv_lines_verbose_option_dates', true), 'inv_lines_verbose_option_dates', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.inv_lines_verbose_option_dates');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('clients_cancel_services', 'true', (isset($vars['clients_cancel_services']) ? $vars['clients_cancel_services'] : 'true') == 'true', ['id' => 'clients_cancel_services']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.clients_cancel_services', true), 'clients_cancel_services', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.clients_cancel_services');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('clients_renew_services', 'true', (isset($vars['clients_renew_services']) ? $vars['clients_renew_services'] : 'true') == 'true', ['id' => 'clients_renew_services']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.clients_renew_services', true), 'clients_renew_services', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.clients_renew_services');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('synchronize_addons', 'true', (isset($vars['synchronize_addons']) ? $vars['synchronize_addons'] : 'true') == 'true', ['id' => 'synchronize_addons']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.synchronize_addons', true), 'synchronize_addons', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.synchronize_addons');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('client_create_addons', 'true', (isset($vars['client_create_addons']) ? $vars['client_create_addons'] : 'true') == 'true', ['id' => 'client_create_addons']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.client_create_addons', true), 'client_create_addons', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.client_create_addons');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('client_change_service_term', 'true', (isset($vars['client_change_service_term']) ? $vars['client_change_service_term'] : 'true') == 'true', ['id' => 'client_change_service_term']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.client_change_service_term', true), 'client_change_service_term', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.client_change_service_term');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('client_change_service_package', 'true', (isset($vars['client_change_service_package']) ? $vars['client_change_service_package'] : 'true') == 'true', ['id' => 'client_change_service_package']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.client_change_service_package', true), 'client_change_service_package', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.client_change_service_package');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('client_prorate_credits', 'true', (isset($vars['client_prorate_credits']) ? $vars['client_prorate_credits'] : 'false') == 'true', ['id' => 'client_prorate_credits']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.client_prorate_credits', true), 'client_prorate_credits', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.client_prorate_credits');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('auto_apply_credits', 'true', (isset($vars['auto_apply_credits']) ? $vars['auto_apply_credits'] : 'true') == 'true', ['id' => 'auto_apply_credits']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.auto_apply_credits', true), 'auto_apply_credits', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.auto_apply_credits');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('auto_paid_pending_services', 'true', (isset($vars['auto_paid_pending_services']) ? $vars['auto_paid_pending_services'] : 'true') == 'true', ['id' => 'auto_paid_pending_services']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.auto_paid_pending_services', true), 'auto_paid_pending_services', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.auto_paid_pending_services');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('void_invoice_canceled_service', 'true', (isset($vars['void_invoice_canceled_service']) ? $vars['void_invoice_canceled_service'] : 'true') == 'true', ['id' => 'void_invoice_canceled_service']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.void_invoice_canceled_service', true), 'void_invoice_canceled_service', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.void_invoice_canceled_service');?></div></span>
+                            </li>
+                            <li class="void_inv_canceled_service_days">
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.void_inv_canceled_service_days', true), 'void_inv_canceled_service_days', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.void_inv_canceled_service_days');?></div></span>
+                                <?php $this->Form->fieldSelect('void_inv_canceled_service_days', (isset($void_inv_canceled_service_days) ? $void_inv_canceled_service_days : null), (isset($vars['void_inv_canceled_service_days']) ? $vars['void_inv_canceled_service_days'] : null), ['id' => 'void_inv_canceled_service_days', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('show_client_tax_id', 'true', (isset($vars['show_client_tax_id']) ? $vars['show_client_tax_id'] : 'true') == 'true', ['id' => 'show_client_tax_id']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.show_client_tax_id', true), 'show_client_tax_id', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.show_client_tax_id');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('process_paid_service_changes', 'true', (isset($vars['process_paid_service_changes']) ? $vars['process_paid_service_changes'] : 'true') == 'true', ['id' => 'process_paid_service_changes']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.invoices.field.process_paid_service_changes', true), 'process_paid_service_changes', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.process_paid_service_changes');?></div></span>
+                            </li>
+                        </ul>
+
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        toggleVoidDays();
+        $('#void_invoice_canceled_service').on('change', toggleVoidDays);
+    });
+
+    function toggleVoidDays() {
+        if ($('#void_invoice_canceled_service').is(':checked')) {
+            $('.void_inv_canceled_service_days').show();
+        } else {
+            $('.void_inv_canceled_service_days').hide();
+        }
+    }
+");

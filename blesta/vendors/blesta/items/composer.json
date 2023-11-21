@@ -1,0 +1,29 @@
+{
+    "name": "blesta/items",
+    "description": "A library for items with arbitrary data.",
+    "authors": [
+        {
+            "name": "Tyson Phillips",
+            "email": "tyson@phillipsdata.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8",
+        "squizlabs/php_codesniffer": "~2.3",
+        "satooshi/php-coveralls": "~1.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Blesta\\Items\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Blesta\\Items\\Tests\\": "tests/"
+        }
+    }
+}

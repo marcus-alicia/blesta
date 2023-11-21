@@ -1,0 +1,86 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyGeneral.localization.boxtitle_localization', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.language', true), 'language', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyGeneral.!tooltip.language');?></div></span>
+                                <?php $this->Form->fieldSelect('language', (isset($languages) ? $languages : null), (isset($vars['language']) ? $vars['language'] : null), ['id' => 'language', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('client_set_lang', 'true', ((isset($vars['client_set_lang']) ? $vars['client_set_lang'] : null) == 'true'), ['id' => 'client_set_lang']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.setlanguage', true), 'client_set_lang', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyGeneral.!tooltip.client_set_lang');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.calendar', true), 'calendar_begins', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyGeneral.!tooltip.calendar_begins');?></div></span>
+                                <span class="input_span block">
+                                    <?php $this->Form->fieldRadio('calendar_begins', 'sunday', (isset($vars['calendar_begins']) ? $vars['calendar_begins'] : 'sunday') == 'sunday', ['id' => 'calendar_begins_sunday']);?>
+                                    <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.sunday', true), 'calendar_begins_sunday', ['class' => 'inline']);?>
+
+                                    <?php $this->Form->fieldRadio('calendar_begins', 'monday', (isset($vars['calendar_begins']) ? $vars['calendar_begins'] : 'sunday') == 'monday', ['id' => 'calendar_begins_monday']);?>
+                                    <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.monday', true), 'calendar_begins_monday', ['class' => 'inline']);?>
+                                </span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.timezone', true), 'timezone', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyGeneral.!tooltip.timezone');?></div></span>
+                                <span class="input_span block">
+                                    <?php
+                                    if (is_array((isset($timezones) ? $timezones : null)) && !empty($timezones)) {
+                                    ?>
+                                        <?php $this->Form->fieldSelect('timezone', (isset($timezones) ? $timezones : null), (isset($vars['timezone']) ? $vars['timezone'] : null), ['id' => 'timezone']);?>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <?php echo $this->Date->format('e');?>
+                                    <?php
+                                    }
+                                    ?>
+                                </span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.dateformat', true), 'date_format', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyGeneral.!tooltip.date_format');?></div></span>
+                                <span class="input_span block">
+                                    <?php $this->Form->fieldText('date_format', (isset($vars['date_format']) ? $vars['date_format'] : null), ['id' => 'date_format']);?>
+                                    <?php echo $this->Date->cast(time(), (isset($vars['date_format']) ? $this->Html->safe($vars['date_format']) : null));?>
+                                </span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.datetimeformat', true), 'datetime_format', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyGeneral.!tooltip.datetime_format');?></div></span>
+                                <span class="input_span block">
+                                    <?php $this->Form->fieldText('datetime_format', (isset($vars['datetime_format']) ? $this->Html->safe($vars['datetime_format']) : null), ['id' => 'datetime_format']);?>
+                                    <?php echo $this->Date->cast(time(), (isset($vars['datetime_format']) ? $this->Html->safe($vars['datetime_format']) : null));?>
+                                </span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGeneral.localization.field.country', true), 'country', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyGeneral.!tooltip.country');?></div></span>
+                                <?php $this->Form->fieldSelect('country', (isset($countries) ? $countries : null), (isset($vars['country']) ? $vars['country'] : null), ['id' => 'country', 'class' => 'block']);?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyGeneral.localization.field.localizationsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

@@ -1,0 +1,14 @@
+/* System Status plugin */
+
+.system_status{ float:left; width:100%; padding:0;}
+.system_status .status_box{ overflow:hidden; height:1%; padding:8px 15px 8px;}
+.system_status .status_box p{ font-size:12px; font-style:italic;}
+.system_status .link_area{ overflow:hidden; padding:9px 15px 0; border-top:1px solid #e1e1e1}
+.system_status .link_area ul{ list-style:none}
+.system_status .link_area ul li{ font-size:12px; font-weight:bold; float:left; width:100%; padding: 0 0 7px;}
+.system_status .link_area ul li a{ color:#429fcb;}
+
+.system_status #status_chart { width:170px; margin-left:10px;}
+.system_status #status_chart .chart-empty { fill:#dedede;}
+.system_status #status_chart .needle,
+.system_status #status_chart .needle-center { fill:#656565;}

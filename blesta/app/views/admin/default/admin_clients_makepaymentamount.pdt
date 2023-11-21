@@ -1,0 +1,83 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.makepayment.boxtitle_makepaymentamount', true), ['id' => 'admin_clients_makepaymentamount'], (isset($render_section) ? $render_section : null));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        $this->Form->fieldHidden('vars', base64_encode(serialize($vars)));
+        $this->Form->fieldHidden('step', (isset($step) ? $step : null));
+        ?>
+        <div class="inner">
+            <div class="title_row first">
+                <h3><?php $this->_('AdminClients.makepaymentamount.heading_invoices');?></h3>
+            </div>
+            <div class="pad clear">
+                <?php
+                // Show currency only when we do not have a single invoice
+                if (!(isset($invoice) ? $invoice : false)) {
+                ?>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.makepaymentamount.field_currency', true), 'currency');
+                        $this->Form->fieldSelect('currency', (isset($currencies) ? $currencies : null), (isset($vars->currency) ? $vars->currency : null), ['id' => 'currency']);
+                        ?>
+                    </li>
+                </ul>
+                <?php
+                }
+                ?>
+
+                <div id="invoices_to_pay">
+                    <?php
+                    echo (isset($invoice_info) ? $invoice_info : null);
+                    ?>
+                </div>
+            </div>
+            <div class="pad clear">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.makepaymentamount.field_credit', true), 'credit');
+                        $this->Form->fieldText('credit', (isset($vars->credit) ? $vars->credit : null), ['id' => 'credit', 'class' => 'small']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('email_receipt', 'true', (isset($vars->email_receipt) ? $vars->email_receipt : null), ['id' => 'email_receipt']);
+                        $this->Form->label($this->_('AdminClients.makepaymentamount.field_receipt', true), 'email_receipt', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.makepaymentamount.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("input[name='invoice_id[]']").on("click", function() {
+            if ($(this).val() == "all") {
+                if ($(this).prop('checked'))
+                    $("input[name='invoice_id[]']").prop('checked', true);
+                else
+                    $("input[name='invoice_id[]']").prop('checked', false);
+            }
+        });
+
+        // Swap invoices to be paid based on currency selected
+        $("#currency").change(function() {
+            $(this).blestaRequest("POST", "<?php echo $this->base_uri;?>clients/makepaymentinvoices/<?php echo $client->id;?>/", $(this).closest("form").serialize(), function(data) {
+                $("#invoices_to_pay").html(data.content);
+            },
+            null,
+            {dataType: "json"});
+        });
+    });
+</script>

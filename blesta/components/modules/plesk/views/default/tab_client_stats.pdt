@@ -1,0 +1,69 @@
+
+    <h4><?php $this->_('Plesk.tab_client_stats.info_title');?></h4>
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 50%;"><?php $this->_('Plesk.tab_client_stats.info_heading.field');?></th>
+                    <th><?php $this->_('Plesk.tab_client_stats.info_heading.value');?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            $keys = ['domain', 'ip_address'];
+            foreach ($keys as $i => $key) {
+                if (array_key_exists($key, $stats->account_info)) {
+                ?>
+                <tr>
+                    <td><?php $this->_('Plesk.tab_client_stats.info.' . $key);?></td>
+                    <td><?php echo (isset($stats->account_info[$key]) ? $this->Html->safe($stats->account_info[$key]) : null);?></td>
+                </tr>
+                <?php
+                }
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
+
+    <label><?php $this->_('Plesk.tab_client_stats.disk_title');?></label>
+    <?php
+    $disk = [
+        'used' => round($stats->disk_usage['used'] ?? 0, 2),
+        'used_formatted' => empty($stats->disk_usage['used_formatted']) ? $this->_('Plesk.tab_client_stats.not_available', true) : $stats->disk_usage['used_formatted'],
+        'limit' => round($stats->disk_usage['limit'] ?? 0, 2),
+        'limit_formatted' => empty($stats->disk_usage['limit_formatted']) ? $this->_('Plesk.tab_client_stats.not_available', true) : $stats->disk_usage['limit_formatted']
+    ];
+    $unlimited = (empty($disk['limit']) || $disk['limit'] == '-1');
+    $percent_used = ($unlimited ? 0 : round(($disk['used'] / $disk['limit']) * 100, 0));
+    ?>
+    <small>
+        <?php $this->_('Plesk.tab_client_stats.usage', false, $this->Html->safe($disk['used_formatted']), $this->Html->safe($disk['limit_formatted']));?>
+    </small>
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="<?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>%">
+            <span class="sr-only"><?php $this->_('Plesk.tab_client_stats.usage', false, $this->Html->safe($disk['used_formatted']), $this->Html->safe($disk['limit_formatted']));?></span>
+        </div>
+    </div>
+
+    <label><?php $this->_('Plesk.tab_client_stats.bandwidth_title');?></label>
+    <?php
+    $bandwidth = [
+        'used' => round($stats->bandwidth_usage['used'] ?? 0, 2),
+        'used_formatted' => empty($stats->bandwidth_usage['used_formatted']) ? $this->_('Plesk.tab_client_stats.not_available', true) : $stats->bandwidth_usage['used_formatted'],
+        'limit' => round($stats->bandwidth_usage['limit'] ?? 0, 2),
+        'limit_formatted' => empty($stats->bandwidth_usage['limit_formatted']) ? $this->_('Plesk.tab_client_stats.not_available', true) : $stats->bandwidth_usage['limit_formatted']
+    ];
+    $unlimited = (empty($bandwidth['limit']) || $bandwidth['limit'] == '-1');
+    $percent_used = ($unlimited ? 0 : round(($bandwidth['used'] / $bandwidth['limit']) * 100, 0));
+    ?>
+    <small>
+        <?php $this->_('Plesk.tab_client_stats.usage', false, $this->Html->safe($bandwidth['used_formatted']), $this->Html->safe($bandwidth['limit_formatted']));?>
+    </small>
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" aria-valuenow="<?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>%">
+            <span class="sr-only"><?php $this->_('Plesk.tab_client_stats.usage', false, $this->Html->safe($bandwidth['used_formatted']), $this->Html->safe($bandwidth['limit_formatted']));?></span>
+        </div>
+    </div>

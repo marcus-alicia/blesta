@@ -1,0 +1,142 @@
+
+    <div id="multicraft_actions">
+        <?php
+        $unknown = $this->_('Multicraft.tab_client_actions.unknown', true);
+        ?>
+        <h4><?php $this->_('Multicraft.tab_client_actions.heading_server_address');?></h4>
+        <div class="row">
+            <div class="col-md-6">
+                <label><?php $this->_('Multicraft.tab_client_actions.address_ip');?></label>
+                <p><?php echo $this->Html->safe((isset($server['ip']) ? $server['ip'] : $unknown));?></p>
+            </div>
+            <div class="col-md-6">
+                <label><?php $this->_('Multicraft.tab_client_actions.address_port');?></label>
+                <p><?php echo $this->Html->safe((isset($server['port']) ? $server['port'] : $unknown));?></p>
+            </div>
+        </div>
+        <hr />
+
+        <h4><?php $this->_('Multicraft.tab_client_actions.heading_server_status');?></h4>
+        <?php
+        $status_class = 'default';
+        $server_state = (isset($server_status['status']) ? $this->Html->safe($server_status['status']) : null);
+        $server_state = ((isset($server['suspended']) ? $server['suspended'] : null) == '1' ? 'suspended' : $server_state);
+        switch ($server_state) {
+            case 'online':
+                $status_class = 'success';
+                break;
+            case 'offline':
+                $status_class = 'danger';
+                break;
+            case 'suspended':
+                $status_class = 'warning';
+                break;
+            case 'unknown':
+            default:
+                $server_state = 'unknown';
+                break;
+        }
+
+        $online_players = ($this->Html->safe((isset($server_status['onlinePlayers']) ? $server_status['onlinePlayers'] : '0')));
+        $max_players = ($this->Html->safe((isset($server_status['maxPlayers']) ? $server_status['maxPlayers'] : '0')));
+        ?>
+        <span class="badge badge-<?php echo (isset($status_class) ? $this->Html->safe($status_class) : null);?> mb-2">
+            <i class="fas fa-lightbulb"></i> <?php $this->_('Multicraft.tab_client_actions.status_' . (isset($server_state) ? $this->Html->safe($server_state) : null), false, $online_players, $max_players);?>
+        </span>
+        <hr />
+
+        <h4><?php $this->_('Multicraft.tab_client_actions.heading_server_actions');?></h4>
+        <div class="clearfix"></div>
+        <?php
+        $online = ($server_state == 'online');
+        $suspended = ($server_state == 'suspended');
+        $allow_username_change = ((isset($service_fields->multicraft_user_name) ? $service_fields->multicraft_user_name : null) && $service_fields->multicraft_user_name == '1');
+        $this->Form->create(null, ['id' => 'actions']);
+        ?>
+        <div class="row">
+            <div class="col-md-4">
+                <button value="restart" name="submit" type="submit" class="btn btn-success btn-block"<?php echo ($suspended ? ' disabled="disabled"' : '');?>><i class="fas fa-sync-alt"></i> <?php $this->_('Multicraft.tab_client_actions.action_restart');?></button>
+                <button value="set_daytime" name="submit" type="submit" class="btn btn-warning btn-block"<?php echo ($suspended || !$online ? ' disabled="disabled"' : '');?>><i class="fas fa-sun"></i> <?php $this->_('Multicraft.tab_client_actions.action_set_daytime');?></button>
+            </div>
+            <div class="col-md-4">
+                <button value="stop" name="submit" type="submit" class="btn btn-danger btn-block"<?php echo ($suspended || !$online ? ' disabled="disabled"' : '');?>><i class="fas fa-power-off"></i> <?php $this->_('Multicraft.tab_client_actions.action_stop');?></button>
+                <button value="set_nighttime" name="submit" type="submit" class="btn btn-secondary btn-block"<?php echo ($suspended || !$online ? ' disabled="disabled"' : '');?>><i class="fas fa-moon"></i> <?php $this->_('Multicraft.tab_client_actions.action_set_nighttime');?></button>
+            </div>
+            <div class="col-md-4">
+                <button value="start" name="submit" type="submit" class="btn btn-light btn-block"<?php echo ($suspended || $online ? ' disabled="disabled"' : '');?>><i class="fas fa-power-off"></i> <?php $this->_('Multicraft.tab_client_actions.action_start');?></button>
+                <?php
+                if ($allow_username_change) {
+                ?>
+                <a href="#" class="server_name btn btn-light btn-block"><i class="fas fa-tag"></i> <?php $this->_('Multicraft.tab_client_actions.action_server_name');?></a>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>
+
+    <div id="multicraft_server_name" style="display:none;">
+        <hr />
+        <h4><?php $this->_('Multicraft.tab_client_actions.heading_server_name');?></h4>
+        <?php
+        $this->Form->create();
+        ?>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('Multicraft.tab_client_console.field_server_name', true), 'server_name');
+            $this->Form->fieldText('server_name', (isset($vars->server_name) ? $vars->server_name : ($service_fields->multicraft_server_name ?? null)), ['id'=>'server_name', 'class' => 'form-control', 'placeholder' => $this->_('Multicraft.tab_client_console.field_server_name', true)]);
+            ?>
+        </div>
+        <button class="btn btn-light float-right" type="submit">
+            <i class="fas fa-plus-circle"></i>
+            <?php $this->_('Multicraft.tab_client_actions.submit_save');?>
+        </button>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>
+
+<script type="text/javascript">
+var multicraft_refresh_rate = '<?php echo Configure::get('Multicraft.page_refresh_rate_fast');?>';
+var multicraft_old_action_data = '';
+
+$(document).ready(function() {
+    $(this).blestaSetHeadTag("link", {media:"screen", type:"text/css", rel:"stylesheet", href: "<?php echo $this->Html->safe($this->view_dir . 'css/styles.css');?>"});
+    // Refresh
+    setMulticraftInterval();
+
+    $('#multicraft_actions').on('click', 'a.server_name', function(e) {
+        e.stopPropagation();
+        $('#multicraft_server_name').toggle();
+        return false;
+    });
+});
+
+function setMulticraftInterval() {
+    var interval = '';
+    interval = setInterval(function() {
+        $(this).blestaRequest("GET", $('#actions').attr('action'), null,
+            // Success response
+            function(data) {
+                if (data.replacer && data.content) {
+                    var html = $('div', data.content).filter('#multicraft_actions').html();
+                    $('#multicraft_actions').html(html);
+                    multicraft_refresh_rate = (html == multicraft_old_action_data) ? '<?php echo Configure::get('Multicraft.page_refresh_rate');?>' : '<?php echo Configure::get('Multicraft.page_refresh_rate_fast');?>';
+
+                    clearInterval(interval);
+                    setMulticraftInterval();
+                    multicraft_old_action_data = html;
+                }
+            },
+            null,
+            {dataType: 'json'}
+        );
+
+        // Update refresh rate
+        multicraft_refresh_rate = '<?php echo Configure::get('Multicraft.page_refresh_rate');?>';
+    }, multicraft_refresh_rate);
+}
+</script>

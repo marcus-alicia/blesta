@@ -1,0 +1,52 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemCompanies.add.boxtitle_addcompany', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemCompanies.add.field_company', true), 'company_id');?>
+                                <?php $this->Form->fieldSelect('company_id', (isset($companies) ? $companies : null), (isset($vars->company_id) ? $vars->company_id : null), ['id' => 'company_id']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemCompanies.add.field_name', true), 'name');?>
+                                <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemCompanies.edit.field_hostname', true), 'hostname', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemCompanies.!tooltip.hostname');?></div></span>
+                                <?php $this->Form->fieldText('hostname', (isset($vars->hostname) ? $vars->hostname : null), ['id' => 'hostname', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemCompanies.add.field_address', true), 'address');?>
+                                <?php $this->Form->fieldTextarea('address', (isset($vars->address) ? $vars->address : null), ['id' => 'address']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemCompanies.add.field_phone', true), 'phone');?>
+                                <?php $this->Form->fieldText('phone', (isset($vars->phone) ? $vars->phone : null), ['id' => 'phone']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemCompanies.add.field_fax', true), 'fax');?>
+                                <?php $this->Form->fieldText('fax', (isset($vars->fax) ? $vars->fax : null), ['id' => 'fax']);?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AddSystemCompanies.add.field_companysubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

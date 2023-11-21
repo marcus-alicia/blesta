@@ -1,0 +1,58 @@
+
+            <?php
+            // Don't show this container when only rendering the widget section
+            if (!(isset($render_section) ? $render_section : null)) {
+            ?>
+        <div class="col-md-12">
+            <?php
+            }
+            echo (isset($message) ? $message : null);
+
+            $this->WidgetClient->clear();
+            $this->WidgetClient->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'support_manager_styles']);
+            $this->WidgetClient->create($this->_('ClientTickets.index.boxtitle_tickets', true), ['id'=>'client_tickets'], (isset($render_section) ? $render_section : null));
+            $this->WidgetClient->startBody();
+            ?>
+            <div class="row">
+                <?php
+                if (!empty($departments)) {
+                    $i = 0;
+                    foreach ((isset($departments) ? $departments : []) as $department) {
+                    ?>
+                <div class="col-md-6">
+                    <div class="list-group mb-3">
+                        <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/client_tickets/add/' . (isset($department->id) ? $department->id : null) . '/');?>" class="list-group-item p-3">
+                            <h4 class="border-0 pb-0"><?php echo (isset($department->name) ? $this->Html->safe($department->name) : null);?></h4>
+                            <?php
+                            if (!empty($department->description)) {
+                                echo $this->TextParser->encode('markdown', $department->description);
+                            }
+                            ?>
+                        </a>
+                    </div>
+                </div>
+                    <?php
+                    }
+                    unset($i);
+                } else {
+                ?>
+                <div class="col-md-12">
+                    <div class="alert alert-info">
+                        <p><?php $this->_('ClientTickets.!notice.no_departments');?></p>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+            </div>
+            <?php
+            $this->WidgetClient->endBody();
+            $this->WidgetClient->end();
+
+            // Don't show this container when only rendering the widget section
+            if (!(isset($render_section) ? $render_section : null)) {
+            ?>
+        </div>
+            <?php
+            }
+            

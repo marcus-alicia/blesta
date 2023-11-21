@@ -1,0 +1,88 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            ['name' => $this->_('AdminBilling.transactions.category_approved', true) . ' <span>(' . (isset($status_count['approved']) ? $this->Html->safe($status_count['approved']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'approved' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/transactions/approved/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.transactions.category_declined', true) . ' <span>(' . (isset($status_count['declined']) ? $this->Html->safe($status_count['declined']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'declined' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/transactions/declined/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.transactions.category_voided', true) . ' <span>(' . (isset($status_count['void']) ? $this->Html->safe($status_count['void']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'void' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/transactions/void/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.transactions.category_error', true) . ' <span>(' . (isset($status_count['error']) ? $this->Html->safe($status_count['error']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'error' ? true : false), 'highlight' => true, 'attributes' => ['href' => $this->base_uri . 'billing/transactions/error/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.transactions.category_pending', true) . ' <span>(' . (isset($status_count['pending']) ? $this->Html->safe($status_count['pending']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'pending' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/transactions/pending/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.transactions.category_refunded', true) . ' <span>(' . (isset($status_count['refunded']) ? $this->Html->safe($status_count['refunded']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'refunded' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/transactions/refunded/', 'class' => 'ajax']],
+            ['name' => $this->_('AdminBilling.transactions.category_returned', true) . ' <span>(' . (isset($status_count['returned']) ? $this->Html->safe($status_count['returned']) : null) . ')</span>', 'current' => ((isset($status) ? $status : null) == 'returned' ? true : false), 'attributes' => ['href' => $this->base_uri . 'billing/transactions/returned/', 'class' => 'ajax']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinks($links);
+
+        $this->Widget->setFilters((isset($filters) ? $filters : null), $this->Html->safe($this->base_uri . 'billing/transactions/' . (isset($status) ? $this->Html->safe($status) : null)), !empty($filter_vars));
+        $this->Widget->setAjaxFiltering();
+        $this->Widget->create($this->_('AdminBilling.transactions.boxtitle_transactions', true), ['id' => 'admin_billing_transactions'], (isset($render_section) ? $render_section : null));
+
+        if ((isset($transactions) ? $transactions : false) && ($num_transactions = count($transactions)) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/transactions/' . (isset($status) ? $status : null) . '/?sort=client_id_code&order=' . ($sort == 'client_id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'client_id_code' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.transactions.heading_client');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/transactions/' . (isset($status) ? $status : null) . '/?sort=type&order=' . ($sort == 'type' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'type' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.transactions.heading_type');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/transactions/' . (isset($status) ? $status : null) . '/?sort=amount&order=' . ($sort == 'amount' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'amount' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.transactions.heading_amount');?></a></span></td>
+                <td><span><?php $this->_('AdminBilling.transactions.heading_credit');?></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/transactions/' . (isset($status) ? $status : null) . '/?sort=applied_amount&order=' . ($sort == 'applied_amount' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'applied_amount' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.transactions.heading_applied');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/transactions/' . (isset($status) ? $status : null) . '/?sort=transaction_id&order=' . ($sort == 'transaction_id' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'transaction_id' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.transactions.heading_number');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/transactions/' . (isset($status) ? $status : null) . '/?sort=reference_id&order=' . ($sort == 'reference_id' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'reference_id' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.transactions.heading_reference_id');?></a></span></td>
+                <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'billing/transactions/' . (isset($status) ? $status : null) . '/?sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('AdminBilling.transactions.heading_date');?></a></span></td>
+                <td class="last"><span><?php $this->_('AdminBilling.transactions.heading_options');?></span></td>
+            </tr>
+            <?php
+            // Display all transactions
+            for ($i = 0; $i < $num_transactions; $i++) {
+                if ((isset($transactions[$i]->type) ? $transactions[$i]->type : null) == 'other' && (isset($transactions[$i]->gateway_type) ? $transactions[$i]->gateway_type : null) == 'nonmerchant') {
+                    $trans_type = $transactions[$i]->gateway_name;
+                } else {
+                    $trans_type = (isset($transaction_types[($transactions[$i]->type_name != '' ? $transactions[$i]->type_name : $transactions[$i]->type)]) ? $transaction_types[($transactions[$i]->type_name != '' ? $transactions[$i]->type_name : $transactions[$i]->type)] : null);
+                }
+            ?>
+            <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'expand', 'transaction_applied');?>">
+                <td><span class="tooltip quiet"><a href="<?php echo $this->base_uri . 'clients/view/' . (isset($transactions[$i]->client_id) ? $this->Html->safe($transactions[$i]->client_id) : null);?>"><?php (print (isset($transactions[$i]->client_id_code) ? $this->Html->safe($transactions[$i]->client_id_code) : null));?></a><div><?php echo (isset($transactions[$i]->client_first_name) ? $this->Html->safe($transactions[$i]->client_first_name) : null) . ' ' . (isset($transactions[$i]->client_last_name) ? $this->Html->safe($transactions[$i]->client_last_name) : null);?><br /><?php (print (isset($transactions[$i]->client_company) ? $this->Html->safe($transactions[$i]->client_company) : null));?></div></span></td>
+                <td><?php (print (isset($trans_type) ? $this->Html->safe($trans_type) : null));?></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($transactions[$i]->amount) ? $this->Html->safe($transactions[$i]->amount) : null), (isset($transactions[$i]->currency) ? $this->Html->safe($transactions[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($transactions[$i]->credited_amount) ? $this->Html->safe($transactions[$i]->credited_amount) : null), (isset($transactions[$i]->currency) ? $this->Html->safe($transactions[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($transactions[$i]->applied_amount) ? $this->Html->safe($transactions[$i]->applied_amount) : null), (isset($transactions[$i]->currency) ? $this->Html->safe($transactions[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php (print (isset($transactions[$i]->transaction_id) ? $this->Html->safe($transactions[$i]->transaction_id) : null));?></td>
+                <td><?php (print (isset($transactions[$i]->reference_id) ? $this->Html->safe($transactions[$i]->reference_id) : null));?></td>
+                <td><?php echo $this->Date->cast((isset($transactions[$i]->date_added) ? $this->Html->safe($transactions[$i]->date_added) : null), 'date_time');?></td>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/edittransaction/' . (isset($transactions[$i]->client_id) ? $transactions[$i]->client_id : null) . '/' . (isset($transactions[$i]->id) ? $transactions[$i]->id : null) . '/');?>"><?php $this->_('AdminBilling.transactions.option_edit');?></a></td>
+            </tr>
+            <tr class="expand_details" id="transactions_<?php (print (isset($transactions[$i]->id) ? $this->Html->safe($transactions[$i]->id) : null));?>">
+                <td colspan="9" class="subtable">
+                </td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+        <?php
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminBilling.transactions.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(this).blestaBindToolTips();
+
+    // Fetch all invoices the given transaction has been applied to
+    $(".transaction_applied").click(function() {
+        $(this).blestaUpdateRow("<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'billing/transactionapplied/';?>" + $(this).next("tr").attr("id").split("_")[1], ".subtable");
+    });
+});
+</script>

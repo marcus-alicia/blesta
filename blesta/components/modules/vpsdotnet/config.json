@@ -1,0 +1,38 @@
+{
+    "version": "2.12.0",
+    "name": "Vpsdotnet.name",
+    "description": "Vpsdotnet.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "vpsdotnet_hostname"
+    },
+    "service": {
+        "name_key": "vpsdotnet_hostname"
+    },
+    "module": {
+        "row": "Vpsdotnet.module_row",
+        "rows": "Vpsdotnet.module_row_plural",
+        "row_key": "server_name",
+        "group": "Vpsdotnet.module_group"
+    },
+    "email_tags": {
+        "module": [],
+        "package": [],
+        "service": [
+            "vpsdotnet_hostname",
+            "vpsdotnet_label",
+            "vpsdotnet_cloud",
+            "vpsdotnet_template",
+            "vpsdotnet_template_group",
+            "vpsdotnet_primary_ip_address",
+            "vpsdotnet_nodes",
+            "vpsdotnet_id",
+            "vpsdotnet_password"
+        ]
+    }
+}

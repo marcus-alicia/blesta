@@ -1,0 +1,11 @@
+
+            <div class="pad_side">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AgingInvoices.options.field_status', true), 'status');
+                        $this->Form->fieldSelect('status', (isset($statuses) ? $statuses : null), (isset($vars->status) ? $vars->status : null), ['id' => 'status']);
+                        ?>
+                    </li>
+                </ul>
+            </div>

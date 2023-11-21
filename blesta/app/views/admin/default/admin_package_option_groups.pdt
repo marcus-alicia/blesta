@@ -1,0 +1,65 @@
+
+        <?php
+        if (!empty($package_groups)) {
+        ?>
+        <table class="table" id="package_options">
+            <thead>
+                <tr class="heading_row">
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'package_options/index/' . (isset($type) ? $type : null) . '/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminPackageOptions.index.heading_name');?></a></span></td>
+                    <td class="last"><span><?php $this->_('AdminPackageOptions.index.heading_options');?></span></td>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            // Display all package groups
+            $i = 0;
+            foreach ((isset($package_groups) ? $package_groups : []) as $package_group) {
+            ?>
+                <tr class="<?php echo $this->Html->concat(' ', ($i++ % 2 == 1) ? 'odd_row' : '', 'expand', 'package_option_group');?>">
+                    <td><?php (print (isset($package_group->name) ? $this->Html->safe($package_group->name) : null));?></td>
+                    <td class="last">
+                        <a href="<?php echo $this->base_uri . 'package_options/editgroup/' . $this->Html->safe(($package_group->id ?? null)) . '/';?>"><?php $this->_('AdminPackageOptions.index.option_edit');?></a>,
+                        <a href="<?php echo $this->base_uri . 'package_options/logic/' . $this->Html->safe(($package_group->id ?? null)) . '/';?>"><?php $this->_('AdminPackageOptions.index.option_logic');?></a>,
+                        <?php
+                        $this->Form->create($this->base_uri . 'package_options/deletegroup/');
+                        $this->Form->fieldHidden('id', (isset($package_group->id) ? $this->Html->safe($package_group->id) : null));
+                        ?>
+                        <a href="<?php echo $this->base_uri . 'package_options/deletegroup/';?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminPackageOptions.index.confirm_delete_group'));?>"><?php $this->_('AdminPackageOptions.index.option_delete');?></a>
+                        <?php
+                        $this->Form->end();
+                        ?>
+                    </td>
+                </tr>
+                <tr class="expand_details" id="package_option_group_<?php (print (isset($package_group->id) ? $this->Html->safe($package_group->id) : null));?>">
+                    <td colspan="5" class="subtable">
+                    </td>
+                </tr>
+            <?php
+            }
+            unset($i);
+            ?>
+            </tbody>
+        </table>
+        <?php
+            // Set pagination
+            $this->Pagination->build();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php
+                $type = (isset($type) ? $type : 'groups');
+                $this->_('AdminPackageOptions.index.no_results_' . $type);
+                ?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("tr.package_option_group").click(function() {
+            $(this).blestaUpdateRow("<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'package_options/groupinfo/';?>" + $(this).next("tr").attr("id").split("_")[3], ".subtable");
+        });
+    });
+</script>

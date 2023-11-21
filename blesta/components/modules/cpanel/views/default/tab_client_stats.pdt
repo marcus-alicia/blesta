@@ -1,0 +1,65 @@
+
+    <h4><?php $this->_('Cpanel.tab_client_stats.info_title');?></h4>
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 50%;"><?php $this->_('Cpanel.tab_client_stats.info_heading.field');?></th>
+                    <th><?php $this->_('Cpanel.tab_client_stats.info_heading.value');?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            $keys = ['domain', 'ip'];
+            foreach ($keys as $i => $key) {
+                if (isset($stats->account_info->acct[0]->{$key})) {
+                ?>
+                <tr>
+                    <td><?php $this->_('Cpanel.tab_client_stats.info.' . $key);?></td>
+                    <td><?php echo $this->Html->safe($stats->account_info->acct[0]->{$key});?></td>
+                </tr>
+                <?php
+                }
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+
+    <hr />
+
+    <label><?php $this->_('Cpanel.tab_client_stats.disk_title');?></label>
+    <?php
+    $disk = [
+        'used' => round(($stats->disk_usage['used'] ?? 0), 2),
+        'limit' => round($stats->disk_usage['limit'] ?? 0, 2)
+    ];
+    $unlimited = empty($disk['limit']);
+    $percent_used = ($unlimited ? 0 : round(($disk['used'] / max($disk['limit'], 1)) * 100, 0));
+    ?>
+    <small>
+        <?php echo ($unlimited ? $this->_('Cpanel.tab_client_stats.usage_unlimited', true, $this->Html->safe($disk['used'])) : $this->_('Cpanel.tab_client_stats.usage', true, $this->Html->safe($disk['used']), $this->Html->safe($disk['limit'])));?>
+    </small>
+    <div class="progress">
+        <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>%" aria-valuenow="<?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>" aria-valuemin="0" aria-valuemax="100">
+            <span class="sr-only"><?php echo ($unlimited ? $this->_('Cpanel.tab_client_stats.usage_unlimited', true, $this->Html->safe($disk['used'])) : $this->_('Cpanel.tab_client_stats.usage', true, $this->Html->safe($disk['used']), $this->Html->safe($disk['limit'])));?></span>
+        </div>
+    </div>
+
+    <label><?php $this->_('Cpanel.tab_client_stats.bandwidth_title');?></label>
+    <?php
+    $bandwidth = [
+        'used' => round(($stats->bandwidth_usage['used'] ?? 0), 2),
+        'limit' => round($stats->bandwidth_usage['limit'] ?? 0, 2)
+    ];
+    $unlimited = empty($bandwidth['limit']);
+    $percent_used = ($unlimited ? 0 : round(($bandwidth['used'] / max($bandwidth['limit'], 1)) * 100, 0));
+    ?>
+    <small>
+        <?php echo ($unlimited ? $this->_('Cpanel.tab_client_stats.usage_unlimited', true, $this->Html->safe($bandwidth['used'])) : $this->_('Cpanel.tab_client_stats.usage', true, $this->Html->safe($bandwidth['used']), $this->Html->safe($bandwidth['limit'])));?>
+    </small>
+    <div class="progress">
+        <div class="progress-bar bg-danger" role="progressbar" style="width: <?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>%" aria-valuenow="<?php echo (isset($percent_used) ? $this->Html->safe($percent_used) : null);?>" aria-valuemin="0" aria-valuemax="100">
+            <span class="sr-only"><?php echo ($unlimited ? $this->_('Cpanel.tab_client_stats.usage_unlimited', true, $this->Html->safe($bandwidth['used'])) : $this->_('Cpanel.tab_client_stats.usage', true, $this->Html->safe($bandwidth['used']), $this->Html->safe($bandwidth['limit'])));?></span>
+        </div>
+    </div>

@@ -1,0 +1,429 @@
+
+                    <div id="refresh_message" style="display: none;">
+                        <?php echo (isset($refresh_message) ? $refresh_message : null);?>
+                    </div>
+                <?php
+                echo (isset($message) ? $message : null);
+
+                $this->Widget->clear();
+                $this->Widget->setStyleSheet($this->view_dir . 'css/dropzone.css', ['id' => 'support_manager_styles']);
+                $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'support_manager_styles']);
+                $this->Widget->create($this->_('AdminTickets.reply.boxtitle_reply', true, (isset($ticket->code) ? $ticket->code : null)), ['id' => 'admin_tickets_reply']);
+                ?>
+                <div class="inner">
+                    <?php
+                    $this->Form->create(null, ['id' => 'create_ticket', 'enctype' => 'multipart/form-data', 'class' => 'disable-on-submit']);
+                    ?>
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminTickets.reply.heading_summary');?></h3>
+                    </div>
+
+                    <p>
+                        <?php
+                        $this->Form->fieldText('summary', (isset($vars->summary) ? $vars->summary : null), ['id' => 'summary']);
+                        ?>
+                    </p>
+
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminTickets.reply.heading_client');?></td>
+                            <td><?php $this->_('AdminTickets.reply.heading_department');?></td>
+                            <td><?php $this->_('AdminTickets.reply.heading_staff_id');?></td>
+                            <td><?php $this->_('AdminTickets.reply.heading_priority');?></td>
+                            <td><?php $this->_('AdminTickets.reply.heading_status');?></td>
+                            <td><?php $this->_('AdminTickets.reply.heading_date_added');?></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <?php
+                                if (!empty($client)) {
+                                ?>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . (isset($client->id) ? $client->id : null) . '/');?>"><?php echo $this->Html->concat(' ', $this->Html->safe($client->first_name), $this->Html->safe($client->last_name));?></a>
+                                <?php
+                                } elseif (!empty($ticket->email)) {
+                                ?>
+                                <a href="mailto:<?php echo (isset($ticket->email) ? $this->Html->safe($ticket->email) : null);?>"><?php echo (isset($ticket->email) ? $this->Html->safe($ticket->email) : null);?></a>
+                                <?php
+                                }
+                                ?>
+                            </td>
+                            <td><?php $this->Form->fieldSelect('department_id', (isset($departments) ? $departments : null), (isset($vars->department_id) ? $vars->department_id : null), ['id' => 'department_id']);?></td>
+                            <td><?php $this->Form->fieldSelect('ticket_staff_id', (isset($department_staff) ? $department_staff : null), (isset($vars->ticket_staff_id) ? $vars->ticket_staff_id : null), ['id' => 'ticket_staff_id']);?></td>
+                            <td><?php $this->Form->fieldSelect('priority', (isset($priorities) ? $priorities : null), (isset($vars->priority) ? $vars->priority : null), ['id' => 'priority']);?></td>
+                            <td><?php $this->Form->fieldSelect('status', (isset($statuses) ? $statuses : null), (isset($vars->status) ? $vars->status : null), ['id' => 'status']);?></td>
+                            <td><?php echo $this->Date->cast((isset($ticket->date_added) ? $ticket->date_added : null), 'date_time');?></td>
+                        </tr>
+                    </table>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminTickets.reply.heading_reply');?></h3>
+                    </div>
+                    <div class="clear"></div>
+
+                    <h4><a id="add_predefined_response" class="show_content" href="#"><?php $this->_('AdminTickets.reply.text_add_response');?></a></h4>
+                    <div id="predefined_responses" style="display:none;">
+                        <?php echo (isset($predefined_responses) ? $predefined_responses : null);?>
+                    </div>
+
+                    <div class="pad clear">
+                        <ul>
+                            <li>
+                                <?php $this->Form->fieldHidden('reply_type', (isset($vars->reply_type) ? $vars->reply_type : 'reply'), ['id' => 'reply_type']);?>
+                                <div class="tab_content">
+                                    <ul class="tabs">
+                                        <li class="current">
+                                            <a href="#" class="reply"><?php $this->Form->label($this->_('AdminTickets.reply.field_reply', true), 'reply');?></a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="note"><?php $this->Form->label($this->_('AdminTickets.reply.field_note', true), 'note');?></a>
+                                        </li>
+                                    </ul>
+                                    <div class="inner_content">
+                                        <div>
+                                            <?php
+                                            $staff_signature = '';
+                                            if ((isset($staff_id) ? $staff_id : false) && (isset($staff_settings[$staff_id]) ? $staff_settings[$staff_id] : false) && !empty($staff_settings[$staff_id]['signature'])) {
+                                                $staff_signature = "\n\n" . (isset($staff_settings[$staff_id]['signature']) ? $staff_settings[$staff_id]['signature'] : null);
+                                            }
+
+                                            $this->Form->fieldTextarea('details', (isset($vars->details) ? $vars->details : $staff_signature), ['id' => 'reply_details', 'data-markdown-editor' => '']);
+                                            ?>
+                                        </div>
+                                        <div>
+                                            <?php $this->Form->fieldTextarea('notes', (isset($vars->notes) ? $vars->notes : null), ['id' => 'note_details', 'data-markdown-editor' => '']);?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dz-message-container"><div class="dz-message"><i class="fas fa-upload"></i> <?php $this->_('AdminTickets.reply.dropzone_drop_files_here');?></div></div>
+                                <div class="martop10 fallback">
+                                    <ul>
+                                        <li id="file_attachment">
+                                            <?php
+                                            $this->Form->label($this->_('AdminTickets.reply.field_attachments', true), 'attachment[]');
+                                            $this->Form->fieldFile('attachment[]');
+                                            ?>
+                                        </li>
+                                        <li id="add_attachment_field">
+                                            <a href="#">
+                                                <i class="fas fa-plus"></i>
+                                                <span><?php $this->_('AdminTickets.reply.text_add_attachment');?></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="dropzone-previews"></div>
+                            </li>
+                            <li id="custom_fields"><?php echo $department_fields ?? '';?></li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminTickets.reply.field_replysubmit', true), ['class' => 'btn btn-primary float-right']);
+                        ?>
+                    </div>
+                    <?php
+                    $this->Form->end();
+                    ?>
+                    <div class="clear"></div>
+
+                    <div id="ticket_reply_section" data-reply_count="<?php echo count((isset($ticket->replies) ? $ticket->replies : []))?>"><?php echo (isset($ticket_replies) ? $ticket_replies : null);?></div>
+                </div>
+                <?php
+                $this->Widget->end();
+                ?>
+
+                <div id="attachment-lightbox" class="support_manager_modal">
+                    <span class="support_manager_close cursor"><i class="fas fa-times"></i></span>
+                    <div class="modal-content" data-index="0">
+                        <div class="slides bg-light rounded shadow"></div>
+                    </div>
+                    <!-- Next/previous controls -->
+                    <a class="support_manager_prev"><i class="fas fa-angle-left"></i></a>
+                    <a class="support_manager_next"><i class="fas fa-angle-right"></i></a>
+                </div>
+
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        if ($('#reply_type').val() == 'note') {
+            $('.tab_content .tabs li').attr('class', '');
+            $(this).find('a.note').parent('li').attr('class', 'current');
+        }
+
+        // Quote replies
+        $('body').on('submit', 'form#ticket_replies', function(e) {
+            if ($('#reply_action').val() == 'quote') {
+                var reply_ids = [];
+
+                $('.replies').each(function() {
+                    if ($(this).prop('checked')) {
+                        reply_ids.push($(this).val());
+                        $(this).prop('checked', false);
+                    }
+                }).trigger('change');
+
+                reply_ids = reply_ids.join();
+                $(document).blestaRequest('POST', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getquotedreplies/' . (isset($ticket->id) ? $ticket->id : null) . '/') . "',
+                    { _csrf_token: $(this).find('input[name=_csrf_token]').val(), reply_ids:reply_ids},
+                    function(data) {
+                        $('#reply_details').focus();
+
+                        if (data) {
+                            $('#reply_details').val(($('#reply_details').val() + data + '\\n\\n'));
+                        }
+
+                        $('#reply_details').scrollTop($('#reply_details')[0].scrollHeight);
+
+                    },
+                    null,
+                    {dataType:'json'}
+                );
+
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Toggle predefined responses
+        $(this).blestaBindToggleEvent('#add_predefined_response', '#predefined_responses');
+        $('#add_predefined_response').click(function() {
+            if ($(this).hasClass('show_content')) {
+                setPredefinedResponses(null);
+            }
+        });
+
+        // Switch between response categories
+        $(document).on('click', '#responses .category a.text_link, #responses .up_level a.text_link', function() {
+            var match = $(this).attr('id').match(/(\d+)$/);
+            var cat_id = match ? parseInt(match[0], 10) : null;
+            setPredefinedResponses(cat_id);
+            return false;
+        });
+
+        // Add the predefined response
+        $(document).on('click', '#responses .response_item a.text_link', function() {
+            var match = $(this).attr('id').match(/(\d+)$/);
+            var response_id = match ? parseInt(match[0], 10) : null;
+            setPredefinedResponse(response_id);
+            return false;
+        });
+
+        $('.tab_content .tabs a').click(function() {
+            $('#reply_type').val($(this).attr('class'));
+        });
+
+        // Initialize dropzone
+        $('#create_ticket').dropzone({
+            paramName: 'dropzone[]',
+            clickable: '.dz-message',
+            addRemoveLinks: true,
+            dictRemoveFile: '" . $this->_('AdminTickets.reply.dropzone_remove_file', true) . "',
+            complete: function(file) {
+                var fields = ['name', 'type', 'size'];
+
+                fields.forEach(function(field, index) {
+                    $('<input>', {
+                        type: 'hidden',
+                        name: 'dropzone[' + field + '][' + file.name + ']',
+                        value: file[field]
+                    }).appendTo('.dropzone');
+                });
+
+                $('.dz-progress').hide();
+            },
+            removedfile: function(file) {
+                var fields = ['name', 'type', 'size'];
+
+                fields.forEach(function(field, index) {
+                    $('input[name=\"dropzone[' + field + '][' + file.name + ']\"]').remove();
+                });
+
+                $(file.previewElement).remove();
+            },
+            previewsContainer: '.dropzone-previews',
+            timeout: 180000
+        });
+        $('#create_ticket').addClass('dropzone');
+
+        $('#add_attachment_field a').click(function() {
+            var attachment = $('#file_attachment input:first').clone();
+            $(attachment).val('');
+            $('<li></li>').insertBefore($('#add_attachment_field')).html($(attachment));
+            return false;
+        });
+
+        $('div.tab_content').blestaTabbedContent();
+
+        $('#department_id').change(function() {
+            setDepartmentStaff($(this).val());
+        });
+
+        $('.replies').change(function() {
+            if ($('.replies:checked').length > 0)
+                $('#ticket_actions').show();
+            else
+                $('#ticket_actions').hide();
+        });
+
+        $('.support_manager_close').on('click', function () {
+            closeModal();
+        });
+
+        showSlides($('.modal-content').data('index'));
+
+        // Next/previous controls
+        $('.support_manager_next').on('click', function () {
+            var slideIndex = parseInt($('.modal-content').data('index'));
+            showSlides(slideIndex += 1);
+        });
+
+        $('.support_manager_prev').on('click', function () {
+            var slideIndex = parseInt($('.modal-content').data('index'));
+            showSlides(slideIndex -= 1);
+        });
+
+        $('.image-attachments img').on('click', function () {
+            $('.modal-content').html('');
+            $(this).parents('.row').parent().find('img').each(function () {
+                $('.modal-content').append('<div class=\"slides bg-light rounded shadow\">' + this.outerHTML + '</div>');
+            });
+
+            var slideIndex = parseInt($(this).attr('data-slide'));
+            showSlides(slideIndex);
+            openModal();
+        });
+
+        $('#refresh_message').hide();
+        $('#refresh_message').prependTo('body');
+        var interval = setInterval(checkNewMessages, 10000);
+        $('#refresh_message .close').click(function () {
+            $('#refresh_message').hide();
+            return false;
+        });
+
+        $('#refresh_message p a').click(function () {
+            checkNewMessages(true);
+            $('#refresh_message').hide();
+        });
+
+        $('#create_ticket').on('submit', function () {
+            clearInterval(interval);
+        });
+
+        // Format form
+        $('#create_ticket').submit(function() {
+            // Submit unchecked checkboxes
+            $('#create_ticket input[type=\"checkbox\"]:not(:checked)').each(function() {
+                $(this).prop('disabled', true);
+                $('<input>', {
+                    type: 'hidden',
+                    name: $(this).attr('name'),
+                    value: '0'
+                }).appendTo($(this).parent());
+            });
+        });
+    });
+
+    function setPredefinedResponse(response_id) {
+        $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getresponse/') . "' + response_id, {},
+            function(data) {
+                if (data) {
+                    if ($('.tab_content .tabs .current a').attr('class') == 'reply') {
+                        $('#reply_details').val($('#reply_details').val() + data);
+                        $('#reply_details').scrollTop($('#reply_details')[0].scrollHeight);
+                    }
+                    else if ($('.tab_content .tabs .current a').attr('class') == 'note') {
+                        $('#note_details').val($('#note_details').val() + data);
+                        $('#note_details').scrollTop($('#note_details')[0].scrollHeight);
+                    }
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+
+    function setPredefinedResponses(category_id) {
+        $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getresponselisting/') . "' + category_id, {},
+            function(data) {
+                if (data) {
+                    $('#predefined_responses').html(data);
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+
+    function setDepartmentStaff(department_id) {
+        $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getdepartmentstaff/') . "' + department_id, {},
+            function(data) {
+                if (data.department_staff) {
+                    $('#ticket_staff_id option').remove();
+
+                    var default_option = '';
+                    for (var value in data.department_staff) {
+                        $('#ticket_staff_id').append(new Option(data.department_staff[value], value));
+
+                        if (default_option == value)
+                            $('#ticket_staff_id option:last-child').prop('selected', true);
+                    }
+                }
+
+                if (data.hasOwnProperty('department_fields')) {
+                    $('#custom_fields').html(data.department_fields);
+                } else {
+                    $('#custom_fields').html('');
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+
+    // Open the Modal
+    function openModal() {
+        $('#attachment-lightbox').show();
+    }
+
+    // Close the Modal
+    function closeModal() {
+        $('#attachment-lightbox').hide();
+    }
+
+    function showSlides(n) {
+        var i;
+        var slides = $('.slides');
+
+        if (n >= slides.length) {
+            n = 0
+        } else if (n < 0) {
+            n = slides.length - 1
+        }
+
+        slides.hide();
+        $(slides[n]).show();
+        $('.modal-content').data('index', n);
+    }
+
+    function checkNewMessages(refresh = false) {
+        $(document).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/checkReplies/' . $ticket->id) . "', {},
+            function(data) {
+                if (data) {
+                    if (refresh) {
+                        $('#ticket_reply_section').html(data.ticket_replies);
+                    } else if (data.reply_count > $('#ticket_reply_section').data('reply_count')) {
+                        $('#refresh_message').show();
+                    }
+
+                    $('#ticket_reply_section').data('reply_count', data.reply_count);
+                }
+            },
+            null,
+            {dataType:'json'}
+        );
+    }
+");

@@ -1,0 +1,10 @@
+<?php
+    $this->Widget->clear();
+    $this->Widget->create($this->_("AdminCompanyModules.manage.boxtitle_manage", true, (isset($module->name) ? $this->Html->safe($module->name) : null)), array('id'=>"manage_thesslstore"));
+    ?>
+        <div class="inner">
+            <div class="error_box error"><?php $this->_("ThesslstoreModule.!error.invalid_screen"); ?></div>
+        </div>
+    <?php
+    $this->Widget->end();
+?>

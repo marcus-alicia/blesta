@@ -1,0 +1,10 @@
+{
+    "name": "blesta/client_cards",
+    "description": "Client Cards",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "php": ">=7.2.0",
+        "blesta/composer-installer": "~1.0"
+    }
+}

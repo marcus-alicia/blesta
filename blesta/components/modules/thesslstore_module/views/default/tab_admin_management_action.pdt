@@ -1,0 +1,48 @@
+<div class="pad">
+    <?php if(($orderMajorStatus=='Pending' || $orderMinorStatus=='PENDING_REISSUE')&& $fileContent!='' && $fileName!='')
+    {
+        $this->Form->create($this->base_uri . "clients/servicetab/" . (isset($clientID) ? $clientID : null) . "/" . (isset($serviceID) ? $serviceID : null) . "/tabClientDownloadAuthFile/");
+        ?>
+        <button class="btn btn-default float-left" type="submit" name="save">
+            <?php $this->_("ThesslstoreModule.tab_DownloadAuthFile");?>
+        </button>
+        <?php
+        $this->Form->end();
+    } ?>
+
+    <?php if($orderMajorStatus=='Active')
+    {
+        $this->Form->create($this->base_uri . "clients/servicetab/" . (isset($clientID) ? $clientID : null) . "/" . (isset($serviceID) ? $serviceID : null) . "/tabClientDownloadCertificate/");
+        ?>
+        <button class="btn btn-default float-left" type="submit" name="save">
+            <?php $this->_("ThesslstoreModule.tab_DownloadCertificate");?>
+        </button>
+        <?php
+        $this->Form->end();
+    } ?>
+
+    <?php if(($orderMajorStatus=='Pending' || $orderMinorStatus=='PENDING_REISSUE')&& $fileContent=='' && $fileName=='')
+    {
+        if($VendorName!='SYMANTEC' || ($VendorName=='SYMANTEC' && $hide_changeapprover_option != "YES" ))
+        {
+            $this->Form->create($this->base_uri . "clients/servicetab/" . (isset($clientID) ? $clientID : null) . "/" . (isset($serviceID) ? $serviceID : null) . "/tabAdminChangeApproverEmail/");
+            ?>
+            <div class="button_row">
+                <a class="btn btn-default submit" href="<?php $this->base_uri . "clients/servicetab/" . (isset($clientID) ? $clientID : null) . "/" . (isset($serviceID) ? $serviceID : null) . "/tabAdminChangeApproverEmail/"?>"><?php $this->_("ThesslstoreModule.tab_ChangeApproverEmail");?></a>
+            </div>
+            <?php
+            $this->Form->end();
+        }
+    } ?>
+
+    <?php if(($orderMajorStatus=='Pending' || $orderMinorStatus=='PENDING_REISSUE')&& $fileContent=='' && $fileName=='')
+    {
+        $this->Form->create($this->base_uri . "clients/servicetab/" . (isset($clientID) ? $clientID : null) . "/" . (isset($serviceID) ? $serviceID : null) . "/tabClientResendApproverEmail/");
+        ?>
+        <div class="button_row">
+            <a class="btn btn-default submit" href="<?php $this->base_uri . "clients/servicetab/" . (isset($clientID) ? $clientID : null) . "/" . (isset($serviceID) ? $serviceID : null) . "/tabClientResendApproverEmail/"?>"><?php $this->_("ThesslstoreModule.tab_ResendApproverEmail");?></a>
+        </div>
+        <?php
+        $this->Form->end();
+    } ?>
+</div>

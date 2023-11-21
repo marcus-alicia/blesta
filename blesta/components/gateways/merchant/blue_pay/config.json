@@ -1,0 +1,13 @@
+{
+	"version": "1.3.0",
+	"name": "Blue_pay.name",
+	"description": "Blue_pay.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["USD"],
+	"signup_url": "http://www.bluepay.com/blesta-partner-page"
+}

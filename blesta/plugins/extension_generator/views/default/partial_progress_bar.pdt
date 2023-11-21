@@ -1,0 +1,26 @@
+        <?php
+        $node_count = count((isset($nodes) ? $nodes : []));
+        $step = 0;
+        ?>
+        <div class="node-progress-container">
+            <div class="node-progress-bar-container">
+                <div class="node-progress-bar" style="background-image: linear-gradient(90deg, #a0f56c <?php echo ($page_step / ($node_count - 1) * 100); ?>%, white 1%);"></div>
+                    <?php
+                    foreach ($nodes as $form_step => $node) {
+                    ?>
+                        <div class="node-progress-node-container" style="left: <?php echo $step / ($node_count - 1) * 100; ?>%;" >
+                            <?php $node_color = $step <= $page_step ? '#a0f56c' : 'white'; ?>
+                            <div>
+                                <a href="<?php echo $this->base_uri . 'plugin/extension_generator/admin_' . $form_step . '/' . (isset($extension->id) ? $this->Html->safe($extension->id) : null) . '/';?>">
+                                    <div class="node-progress-node" style="background-color: <?php echo $node_color;?>;"></div>
+                                </a>
+                            </div>
+                            <p><?php echo $node;?></p>
+                        </div>
+                    <?php
+                        $step++;
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>

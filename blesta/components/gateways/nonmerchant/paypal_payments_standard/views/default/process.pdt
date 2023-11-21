@@ -1,0 +1,22 @@
+
+	<?php
+    // Disable CSRF for this form
+    $this->Form->setCsrfOptions(['set_on_create' => false]);
+    $this->Form->create($post_to);
+    if ((isset($fields) ? $fields : null)) {
+        foreach ($fields as $key => $value) {
+            $this->Form->fieldHidden($key, $value);
+        }
+    }
+
+    $button_url = $recurring
+        ? 'https://www.paypalobjects.com/en_US/i/btn/btn_subscribeCC_LG.gif'
+        : 'https://www.paypalobjects.com/en_US/i/bnr/horizontal_solution_PP.gif';
+
+    $this->Form->fieldImage(
+        'submit',
+        $this->_('PaypalPaymentsStandard.buildprocess.submit', true),
+        ['src' => $button_url]
+    );
+
+    $this->Form->end();

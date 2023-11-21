@@ -1,0 +1,33 @@
+<table class="table table-striped-alt table-hover">
+    <tr>
+        <td>
+            <a target="_blank" href="<?php echo (isset($login_url) ? $this->Html->safe($login_url) : null);?>"><?php $this->_('CWatch.service_info.option_login');?></a>
+        </td>
+    </tr>
+    <?php
+    $i = 0;
+    foreach ((isset($licenses) ? $licenses : []) as $license) {
+    ?>
+    <tr class="expand">
+        <td><?php echo (isset($license->productTitle) ? $this->Html->safe($license->productTitle) : null) . ' - ' . (isset($license->licenseKey) ? $this->Html->safe($license->licenseKey) : null);?></td>
+    </tr>
+    <tr class="expand_details">
+        <td class="subtable">
+            <table class="table">
+                <?php
+                foreach ($license as $field => $value) {
+                ?>
+                <tr>
+                    <td><?php echo ucfirst((isset($field) ? $this->Html->safe($field) : null));?></td>
+                    <td><?php echo (isset($value) ? $this->Html->safe($value) : null);?></td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+        </td>
+    </tr>
+    <?php
+    }
+    ?>
+</table>

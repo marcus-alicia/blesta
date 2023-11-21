@@ -1,0 +1,9 @@
+{
+    "name": "blesta/reassign_pricing",
+    "description": "Reassign Pricing",
+    "license": "proprietary",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

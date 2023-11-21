@@ -1,0 +1,39 @@
+<div id="stripe-payment-confirmation">
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        if (typeof stripe === 'undefined') {
+            // Create a Stripe client.
+            var stripe = Stripe('<?php echo (isset($meta['publishable_key']) ? $this->Html->safe($meta['publishable_key']) : null);?>');
+        }
+
+        // Handle form submission.
+        $('#stripe-payment-confirmation').closest('form').one('submit', submitPayment);
+
+        function submitPayment(event) {
+            // Skip attempting a payment if the submission is to edit in Blesta, not submit the payment
+            var submit_btn = $(document.activeElement);
+
+            if (submit_btn.length
+              && $(this).has(submit_btn)
+              && submit_btn.is('button[type="submit"], input[type="submit"]')
+              && submit_btn.attr('name') === 'submit_edit'
+            ) {
+                return;
+            }
+
+            event.preventDefault();
+            // Confirm the PaymentIntent, the card will not actually be charged until we capture server side
+            stripe.handleCardPayment('<?php echo (isset($payment_intent->client_secret) ? $this->Html->safe($payment_intent->client_secret) : null);?>', {payment_method: '<?php echo (isset($payment_intent->payment_method) ? $this->Html->safe($payment_intent->payment_method) : null);?>'}).then(function(result) {
+                // Resubmit the form, bypassing this handler
+                resubmitPaymentConfirmation();
+            });
+        }
+
+        function resubmitPaymentConfirmation()
+        {
+            $(this).blestaEnableFormSubmission($('#stripe-payment-confirmation').closest('form'));
+            $('#stripe-payment-confirmation').closest('form').off('submit', submitPayment);
+            $('#stripe-payment-confirmation').closest('form').submit();
+        }
+    </script>
+</div>

@@ -1,0 +1,23 @@
+        <?php
+        echo (isset($message) ? $message : null);
+        ?>
+        <?php
+        $this->Widget->clear();
+
+        $this->Widget->create($this->_('AdminSearch.index.boxtitle_search', true, (isset($vars->search) ? $vars->search : null)), ['id' => 'search_results'], (isset($render_section) ? $render_section : null));
+        ?>
+
+        <?php
+        $i = 0;
+        foreach ((isset($results) ? $results : []) as $result) {
+        ?>
+        <div class="inner<?php echo ($i++ == 0 ? ' offset' : '');?>">
+            <?php echo $result;?>
+        </div>
+        <?php
+        }
+        ?>
+
+        <?php
+        $this->Widget->end();
+        ?>

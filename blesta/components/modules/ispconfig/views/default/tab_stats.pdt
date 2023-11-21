@@ -1,0 +1,29 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Ispconfig.tab_stats.info_title'); ?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Ispconfig.tab_stats.info_heading.field'); ?></td>
+                    <td class="last"><?php $this->_('Ispconfig.tab_stats.info_heading.value'); ?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $keys = ['limit_web_quota', 'limit_traffic_quota', 'limit_ftp_user', 'limit_web_domain', 'limit_web_subdomain', 'limit_web_aliasdomain', 'limit_webdav_user', 'limit_database'];
+                foreach ($keys as $i => $key) {
+                    if (isset($stats->account_info[$key])) {
+                ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? ' class="odd_row"' : '', ''); ?>>
+                        <td><?php $this->_('Ispconfig.tab_stats.info.' . $key); ?></td>
+                        <td><?php echo $this->Html->safe($stats->account_info[$key] == '-1' ? '∞' : $stats->account_info[$key]); ?></td>
+                    </tr>
+                <?php
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>

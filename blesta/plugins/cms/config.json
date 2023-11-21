@@ -1,0 +1,11 @@
+{
+    "version": "2.8.0",
+    "name": "CmsPlugin.name",
+    "description": "CmsPlugin.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://blesta.com"
+        }
+    ]
+}

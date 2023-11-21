@@ -1,0 +1,13 @@
+
+<?php
+    $this->Form->create();
+    $this->Form->fieldImage(
+        'submit',
+        $this->_('Pagseguro.buildprocess.submit', true),
+        [
+            'src' => $this->view_dir.'images/pay.png',
+            'alt' => $this->_('Pagseguro.buildprocess.submit', true),
+            'title' => $this->_('Pagseguro.buildprocess.submit', true)
+        ]
+    );
+    $this->Form->end();

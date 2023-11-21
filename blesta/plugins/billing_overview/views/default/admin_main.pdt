@@ -1,0 +1,32 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css');
+        $this->Widget->setStyleSheet(VENDORWEBDIR . 'nvd3/nv.d3.min.css');
+        $this->Widget->setWidgetButton('arrow');
+        $this->Widget->setWidgetButton(['href' => $this->base_uri . 'widget/billing_overview/admin_main/settings/', 'class' => 'ajax setting']);
+        $this->Widget->create($this->_('AdminMain.index.boxtitle_overview', true), ['id' => 'widget_billing_overview_admin_main' . ((isset($dashboard) ? $dashboard : 'false') == 'true' ? '_dashboard' : '')], (isset($render_section) ? $render_section : null));
+        ?>
+        <div id="overview">
+            <?php echo (isset($content) ? $content : null);?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(document).on("change", "#currency", function() {
+            var params = $(this).closest("form").serialize();
+
+            $(this).blestaRequest("post", "<?php echo $this->Html->safe($this->base_uri . 'widget/billing_overview/admin_main/overview/');?>", params,
+                function(data) {
+                    if (data.overview)
+                        $('#overview').html(data.overview);
+                },
+                null);
+
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,83 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyModules.editgroup.boxtitle_edit', true, $module->getName(), $module->moduleRowName()));
+                $this->Form->create(null, ['id' => 'edit_group', 'class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyModules.editgroup.text_name', true), 'name');?>
+                                <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyModules.editgroup.text_order', true), 'add_order');?>
+                                <?php $this->Form->fieldSelect('add_order', (isset($module_add_order) ? $module_add_order : null), (isset($vars->add_order) ? $vars->add_order : null), ['id' => 'add_order']);?>
+                            </li>
+                        </ul>
+
+                        <table>
+                            <tr>
+                                <td><?php $this->Form->label($this->_('AdminCompanyModules.editgroup.assigned', true, $module->moduleRowNamePlural()), 'assigned');?></td>
+                                <td></td>
+                                <td><?php $this->Form->label($this->_('AdminCompanyModules.editgroup.available', true, $module->moduleRowNamePlural()), 'available');?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('module_rows[]', (isset($vars->module_rows) ? $vars->module_rows : null), array_keys((isset($vars->module_rows) ? $vars->module_rows : [])), ['id' => 'assigned']);?>
+                                </td>
+                                <td><a href="#" class="move_left">&nbsp;</a> &nbsp; <a href="#" class="move_right">&nbsp;</a></td>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('available[]', (isset($module_rows) ? $module_rows : null), [], ['id' => 'available']);?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php
+                                    $this->Form->fieldCheckbox('force_limits', '1', (isset($vars->force_limits) ? $vars->force_limits : null) == '1', ['id' => 'force_limits']);
+                                    $this->Form->label($this->_('AdminCompanyModules.editgroup.force_limits', true, $module->moduleRowName()), 'force_limits', ['class' => 'inline']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyModules.editgroup.tooltip_force_limits', false, $module->moduleRowName());?></div></span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminCompanyModules.editgroup.btn_edit', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    // Move module row from right to left
+    $('.move_left').click(function() {
+        $('#available option:selected').appendTo($('#assigned'));
+        return false;
+    });
+    // Move module row from left to right
+    $('.move_right').click(function() {
+        $('#assigned option:selected').appendTo($('#available'));
+        return false;
+    });
+
+    // Select all assigned value on submit
+    $('#edit_group').on('submit', function() {
+        $('#assigned option').prop('selected', true);
+    });
+});
+");

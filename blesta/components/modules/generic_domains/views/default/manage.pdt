@@ -1,0 +1,14 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminCompanyModules.manage.boxtitle_manage', true, (isset($module->name) ? $this->Html->safe($module->name) : null)), ['id' => 'manage_none']);
+        ?>
+        <div class="inner">
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('GenericDomains.manage.text');?>
+                </div>
+            </div>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

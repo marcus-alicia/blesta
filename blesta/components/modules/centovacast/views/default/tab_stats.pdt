@@ -1,0 +1,92 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Centovacast.tab_stats.info_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Centovacast.tab_stats.info_heading.field');?></td>
+                    <td class="last"><?php $this->_('Centovacast.tab_stats.info_heading.value');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $keys = ['username', 'hostname', 'ipaddress', 'port', 'maxclients', 'samplerate', 'maxbitrate', 'adminpassword', 'sourcepassword'];
+                $i = 1;
+                foreach ($account_info as $key => $value) {
+                    if (in_array($key, $keys)) {
+                        ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? ' class="odd_row"' : '', '');?>>
+                        <td><?php $this->_('Centovacast.tab_stats.info.' . $key);?></td>
+                        <td><?php echo (isset($value) ? $this->Html->safe($value) : null);?></td>
+                    </tr>
+                    <?php
+                    }
+
+                    $i++;
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Centovacast.tab_stats.bandwidth_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Centovacast.tab_stats.bandwidth_heading.used');?></td>
+                    <td class="last"><?php $this->_('Centovacast.tab_stats.bandwidth_heading.limit');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <?php
+                        $usage = (isset($account_info->cachedtransfer) ? $account_info->cachedtransfer : 0);
+                        $this->_('Centovacast.tab_stats.bandwidth_value', false, round($usage, 2));
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+                        $limit = (isset($account_info->transferlimit) ? $account_info->transferlimit : 0);
+                        $this->_(($account_info->transferlimit == 'unlimited' || $limit == 0 ? 'Centovacast.tab_stats.bandwidth_unlimited' : 'Centovacast.tab_stats.bandwidth_value'), false, round($limit, 2));
+                        ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Centovacast.tab_stats.disk_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Centovacast.tab_stats.disk_heading.used');?></td>
+                    <td class="last"><?php $this->_('Centovacast.tab_stats.disk_heading.limit');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <?php
+                        $usage = (isset($account_info->cacheddiskusage) ? $account_info->cacheddiskusage : 0);
+                        $this->_('Centovacast.tab_stats.disk_value', false, round($usage, 2));
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+                        $limit = (isset($account_info->diskquota) ? $account_info->diskquota : 0);
+                        $this->_(($account_info->diskquota == 'unlimited' || $limit == 0 ? 'Centovacast.tab_stats.disk_unlimited' : 'Centovacast.tab_stats.disk_value'), false, round($limit, 2));
+                        ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

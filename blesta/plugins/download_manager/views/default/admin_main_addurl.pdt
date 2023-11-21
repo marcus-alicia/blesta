@@ -1,0 +1,71 @@
+
+        <?php
+        echo ($message ?? null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminMain.addurl.boxtitle_add', true));
+
+        $this->Form->create(null, ['id' => 'add_url']);
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminMain.addurl.field_url', true), 'url');?>
+                        <?php $this->Form->fieldText('url', ($vars->url ?? null), ['id' => 'url']);?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldRadio('url_type', 'file', (($vars->url_type ?? 'file') == 'file'), ['id' => 'file', 'class' => 'url_type']);
+                        $this->Form->label($this->_('AdminMain.addurl.field_file', true), 'file', ['class' => 'inline']);
+                        $this->Form->fieldRadio('url_type', 'category', (($vars->url_type ?? null) == 'category'), ['id' => 'category', 'class' => 'url_type']);
+                        $this->Form->label($this->_('AdminMain.addurl.field_category', true), 'category', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li id="field_file" style="display:none;">
+                        <?php $this->Form->label($this->_('AdminMain.addurl.field_file', true), 'file');?>
+                        <?php $this->Form->fieldSelect('file', ($files ?? null), ($vars->file ?? null), array_merge(['class' => 'stretch']));?>
+                    </li>
+                    <li id="field_category" style="display:none;">
+                        <?php $this->Form->label($this->_('AdminMain.addurl.field_category', true), 'file_name');?>
+                        <?php $this->Form->fieldSelect('category', ($categories ?? null), ($vars->category ?? null), array_merge(['class' => 'stretch']));?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?> <div><?php $this->_('AdminMain.!tooltip.category_type');?></div></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.addurl.submit_add', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+                <a class="btn btn-default pull-right" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/urls/');?>"><?php $this->_('AdminMain.addurl.submit_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    // Hide/show url type fields
+    if ($('#file').prop('checked')) {
+        $('#field_file').show();
+        $('#field_category').hide();
+    }
+    if ($('#category').prop('checked')) {
+        $('#field_file').hide();
+        $('#field_category').show();
+    }
+
+    $('.url_type').change(function() {
+        if ($(this).val() == "file") {
+            $('#field_file').show();
+            $('#field_category').hide();
+        } else {
+            $('#field_file').hide();
+            $('#field_category').show();
+        }
+    });
+});
+</script>

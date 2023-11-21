@@ -1,0 +1,9 @@
+{
+    "name": "blesta/tcadmin",
+    "description": "TCAdmin",
+    "license": "proprietary",
+    "type": "blesta-module",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

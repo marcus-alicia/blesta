@@ -1,0 +1,36 @@
+<?php
+echo ($message ?? null);
+
+$this->Widget->clear();
+$this->Widget->setWidgetButton(['href' => $this->base_uri . 'package_options/logic/' . ($group->id ?? null), 'class' => 'setting']);
+$this->Widget->create($this->_('AdminPackageOptions.logicsettings.boxtitle', true), ['id' => 'admin_option_group_dependencies'], ($render_section ?? null));
+?>
+<div class="inner">
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="pad">
+        <ul>
+            <li>
+                <?php
+                $this->Form->fieldCheckbox('hide_options', '1', $vars->hide_options == '1', ['id' => 'hide_options']);
+                $this->Form->label($this->_('AdminPackageOptions.logicsettings.field_hide_options', true), 'hide_options', ['class' => 'inline']);
+                ?>
+            </li>
+        </ul>
+    </div>
+
+    <div class="inner">
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('AdminPackageOptions.logicsettings.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+            ?>
+        </div>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>
+</div>
+<?php
+$this->Widget->end();
+?>

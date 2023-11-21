@@ -1,0 +1,142 @@
+<?php
+		$this->Widget->clear();
+		$this->Widget->create($this->_("ThesslstoreModule.reseller_price.box_title", true));
+		?>
+
+		<div class="inner">
+		    <div class="pad">
+		    <p>
+            <h3>Note: Below is your "<?php echo (isset($api_mode) ? $this->Html->safe($api_mode) : null); ?>" Account Pricing in "USD".</h3>
+            </p>
+            </div>
+
+		    <table class="table">
+                <tbody>
+                    <tr class="heading_row">
+                        <td>Package Name</td>
+                        <td>Product Code</td>
+                        <td>Currency Code</td>
+                        <td>1 Year</td>
+                        <td>2 Year</td>
+                        <td>3 Year</td>
+                    </tr>
+                    <?php
+                        $odd = false;
+                        foreach($reseller_pricing as $pcode => $pricing){
+                            if($odd == true){
+                                $class = "class='odd_row'";
+                                $odd = false;
+                            }
+                            elseif($odd == false){
+                                $class = '';
+                                $odd = true;
+                            }
+                            ?>
+                            <tr <?php echo $class; ?> >
+                                <td><?php echo (isset($pricing['name']) ? $this->Html->safe($pricing['name']) : null); ?></td>
+                                <td><?php echo (isset($pcode) ? $this->Html->safe($pcode) : null); ?></td>
+                                <td>USD</td>
+                                <td>
+                                    <?php
+                                    if(isset($pricing['1year_price']))
+                                        echo (isset($pricing['1year_price']) ? $this->Html->safe($pricing['1year_price']) : null);
+                                    else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if(isset($pricing['2year_price']))
+                                        echo (isset($pricing['2year_price']) ? $this->Html->safe($pricing['2year_price']) : null);
+                                    else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if(isset($pricing['3year_price']))
+                                        echo (isset($pricing['3year_price']) ? $this->Html->safe($pricing['3year_price']) : null);
+                                    else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+
+                            </tr>
+                            <?php
+                            //For additional SAN price
+                            if($pricing['has_additional_san']){?>
+                                <tr <?php echo $class; ?>>
+                                    <td> + Additional SAN</td>
+                                    <td>-</td>
+                                    <td>USD</td>
+                                    <td>
+                                        <?php
+                                         if(isset($pricing['1year_san_price']))
+                                            echo (isset($pricing['1year_san_price']) ? $this->Html->safe($pricing['1year_san_price']) : null);
+                                         else
+                                            echo "N/A";
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        if(isset($pricing['2year_san_price']))
+                                            echo (isset($pricing['2year_san_price']) ? $this->Html->safe($pricing['2year_san_price']) : null);
+                                        else
+                                            echo "N/A";
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        if(isset($pricing['3year_san_price']))
+                                            echo (isset($pricing['3year_san_price']) ? $this->Html->safe($pricing['3year_san_price']) : null);
+                                        else
+                                            echo "N/A";
+                                        ?>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+
+                            //For additional Server price
+                            if($pricing['has_additional_server']){?>
+                                <tr <?php echo $class; ?>>
+                                    <td> + Additional Server</td>
+                                    <td>-</td>
+                                    <td>USD</td>
+                                    <td>
+                                        <?php
+                                         if(isset($pricing['1year_server_price']))
+                                            echo (isset($pricing['1year_server_price']) ? $this->Html->safe($pricing['1year_server_price']) : null);
+                                         else
+                                            echo "N/A";
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        if(isset($pricing['2year_server_price']))
+                                            echo (isset($pricing['2year_server_price']) ? $this->Html->safe($pricing['2year_server_price']) : null);
+                                        else
+                                            echo "N/A";
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        if(isset($pricing['3year_server_price']))
+                                            echo (isset($pricing['3year_server_price']) ? $this->Html->safe($pricing['3year_server_price']) : null);
+                                        else
+                                            echo "N/A";
+                                        ?>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+
+                        }
+                    ?>
+                </tbody>
+            </table>
+		</div>
+
+		<?php
+            $this->Widget->end();
+        ?>

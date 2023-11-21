@@ -1,0 +1,87 @@
+    <div id="multicraft_players">
+        <h4><?php $this->_('Multicraft.tab_client_players.heading_players');?></h4>
+        <?php
+        if (!empty($server_status['players'])) {
+        ?>
+        <div class="table-responsive">
+            <table class="table table-curved">
+                <thead>
+                    <tr>
+                        <th><?php $this->_('Multicraft.tab_client_players.heading_player_name');?></th>
+                        <th><?php $this->_('Multicraft.tab_client_players.heading_action');?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($server_status['players'] as $player) {
+                        $player_name = (isset($player['name']) ? $player['name'] : '');
+                    ?>
+                    <tr>
+                        <td><?php echo (isset($player_name) ? $this->Html->safe($player_name) : null);?></td>
+                        <td>
+                            <?php
+                            $this->Form->create();
+                            ?>
+                            <div class="btn-group">
+                                <?php
+                                $this->Form->fieldHidden('action', 'kick');
+                                $this->Form->fieldHidden('player', $player_name);
+                                ?>
+                                <button value="kick" name="submit" type="submit" class="btn btn-light btn-xs">
+                                    <i class="fas fa-hand-point-right fa-fw"></i> <?php $this->_('Multicraft.tab_client_players.action_kick');?>
+                                </button>
+                            </div>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        } else {
+        ?>
+        <p><?php $this->_('Multicraft.tab_client_players.no_results');?></p>
+        <?php
+        }
+        ?>
+    </div>
+
+<script type="text/javascript">
+var multicraft_refresh_rate = '<?php echo Configure::get('Multicraft.page_refresh_rate_fast');?>';
+var multicraft_old_player_data = '';
+
+$(document).ready(function() {
+    // Refresh
+    setMulticraftInterval();
+});
+
+function setMulticraftInterval() {
+    var interval = '';
+    interval = setInterval(function() {
+        $(this).blestaRequest("GET", '<?php echo $this->Html->safe($this->base_uri . 'services/manage/' . (isset($service_id) ? $service_id : null) . '/players/');?>', null,
+            // Success response
+            function(data) {
+                if (data.replacer && data.content) {
+                    var html = $('div', data.content).filter('#multicraft_players').html();
+                    $('#multicraft_players').html(html);
+                    multicraft_refresh_rate = (html == multicraft_old_player_data) ? '<?php echo Configure::get('Multicraft.page_refresh_rate');?>' : '<?php echo Configure::get('Multicraft.page_refresh_rate_fast');?>';
+
+                    clearInterval(interval);
+                    setMulticraftInterval();
+                    multicraft_old_player_data = html;
+                }
+            },
+            null,
+            {dataType: 'json'}
+        );
+
+        // Update refresh rate
+        multicraft_refresh_rate = '<?php echo Configure::get('Multicraft.page_refresh_rate');?>';
+    }, multicraft_refresh_rate);
+}
+</script>

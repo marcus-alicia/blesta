@@ -1,0 +1,112 @@
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('send_cancellation_notice', 'true', ((isset($vars['send_cancellation_notice']) ? $vars['send_cancellation_notice'] : 'false') == 'true'), ['id' => 'send_cancellation_notice']);
+                                $this->Form->label($this->_('AdminCompanyBilling.notices.field.send_cancellation_notice', true), 'send_cancellation_notice', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.send_cancellation_notice');?></div></span>
+                            </li>
+                            <li>
+                                <p><?php $this->_('AdminCompanyBilling.notices.text_notices');?></p>
+                                <?php
+                                $this->Form->fieldCheckbox('send_payment_notices', 'true', ((isset($vars['send_payment_notices']) ? $vars['send_payment_notices'] : 'false') == 'true'), ['id' => 'send_payment_notices']);
+                                $this->Form->label($this->_('AdminCompanyBilling.notices.field.send_payment_notices', true), 'send_payment_notices', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.send_payment_notices');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.notices.field.first_notice', true), 'notice1', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.first_notice');?></div></span>
+                                <?php
+                                // Determine which notice1_type to select, before or after
+                                $positive = true;
+                                if (!empty($vars['notice1'])) {
+                                    if (is_numeric($vars['notice1'])) {
+                                        if ($vars['notice1'] < 0) {
+                                            $vars['notice1'] *= -1;
+                                            $positive = false;
+                                        }
+                                    }
+                                }
+                                ?>
+
+                                <span class="input_span block">
+                                    <?php
+                                    $this->Form->fieldSelect('notice1', (isset($notice_range) ? $notice_range : null), (isset($vars['notice1']) ? $this->Html->safe($vars['notice1']) : null), ['id' => 'notice1']);
+                                    $this->Form->fieldRadio('notice1_type', '-1', !$positive, ['id' => 'notice1_before']);
+                                    $this->Form->label($this->_('AdminCompanyBilling.notices.text_before', true), 'notice1_before', ['class' => 'inline']);
+                                    $this->Form->fieldRadio('notice1_type', '1', $positive, ['id' => 'notice1_after']);
+                                    $this->Form->label($this->Html->concat(' ', $this->_('AdminCompanyBilling.notices.text_after', true), $this->_('AdminCompanyBilling.notices.text_inv_duedate', true)), 'notice1_after', ['class' => 'inline']);
+                                    ?>
+                                </span>
+                            </li>
+                            <li>
+                                <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/emails/edittemplate/' . (isset($email_templates['invoice_notice_first']) ? $email_templates['invoice_notice_first'] : null) . '/');?>"><?php $this->_('AdminCompanyBilling.notices.text_edit_template');?></a></span></h4>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.notices.field.second_notice', true), 'notice2', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.second_notice');?></div></span>
+                                <?php
+                                // Determine which notice2_type to select, before or after
+                                $positive = true;
+                                if (!empty($vars['notice2'])) {
+                                    if (is_numeric($vars['notice2'])) {
+                                        if ($vars['notice2'] < 0) {
+                                            $vars['notice2'] *= -1;
+                                            $positive = false;
+                                        }
+                                    }
+                                }
+                                ?>
+
+                                <span class="input_span block">
+                                    <?php
+                                    $this->Form->fieldSelect('notice2', (isset($notice_range) ? $notice_range : null), (isset($vars['notice2']) ? $this->Html->safe($vars['notice2']) : null), ['id' => 'notice2']);
+                                    $this->Form->fieldRadio('notice2_type', '-1', !$positive, ['id' => 'notice2_before']);
+                                    $this->Form->label($this->_('AdminCompanyBilling.notices.text_before', true), 'notice2_before', ['class' => 'inline']);
+                                    $this->Form->fieldRadio('notice2_type', '1', $positive, ['id' => 'notice2_after']);
+                                    $this->Form->label($this->Html->concat(' ', $this->_('AdminCompanyBilling.notices.text_after', true), $this->_('AdminCompanyBilling.notices.text_inv_duedate', true)), 'notice2_after', ['class' => 'inline']);
+                                    ?>
+                                </span>
+                            </li>
+                            <li>
+                                <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/emails/edittemplate/' . (isset($email_templates['invoice_notice_second']) ? $email_templates['invoice_notice_second'] : null) . '/');?>"><?php $this->_('AdminCompanyBilling.notices.text_edit_template');?></a></span></h4>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.notices.field.third_notice', true), 'notice3', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.third_notice');?></div></span>
+                                <?php
+                                // Determine which notice3_type to select, before or after
+                                $positive = true;
+                                if (!empty($vars['notice3'])) {
+                                    if (is_numeric($vars['notice3'])) {
+                                        if ($vars['notice3'] < 0) {
+                                            $vars['notice3'] *= -1;
+                                            $positive = false;
+                                        }
+                                    }
+                                }
+                                ?>
+
+                                <span class="input_span block">
+                                    <?php
+                                    $this->Form->fieldSelect('notice3', (isset($notice_range) ? $notice_range : null), (isset($vars['notice3']) ? $this->Html->safe($vars['notice3']) : null), ['id' => 'notice3']);
+                                    $this->Form->fieldRadio('notice3_type', '-1', !$positive, ['id' => 'notice3_before']);
+                                    $this->Form->label($this->_('AdminCompanyBilling.notices.text_before', true), 'notice3_before', ['class' => 'inline']);
+                                    $this->Form->fieldRadio('notice3_type', '1', $positive, ['id' => 'notice3_after']);
+                                    $this->Form->label($this->Html->concat(' ', $this->_('AdminCompanyBilling.notices.text_after', true), $this->_('AdminCompanyBilling.notices.text_inv_duedate', true)), 'notice3_after', ['class' => 'inline']);
+                                    ?>
+                                </span>
+                            </li>
+                            <li>
+                                <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/emails/edittemplate/' . (isset($email_templates['invoice_notice_third']) ? $email_templates['invoice_notice_third'] : null) . '/');?>"><?php $this->_('AdminCompanyBilling.notices.text_edit_template');?></a></span></h4>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyBilling.notices.field.notice_pending_autodebit', true), 'notice_pending_autodebit', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.!tooltip.notice_pending_autodebit');?></div></span>
+                                <?php $this->Form->fieldSelect('notice_pending_autodebit', (isset($notice_range) ? $notice_range : null), (isset($vars['notice_pending_autodebit']) ? $this->Html->safe($vars['notice_pending_autodebit']) : null), ['id' => 'notice_pending_autodebit', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/emails/edittemplate/' . (isset($email_templates['auto_debit_pending']) ? $email_templates['auto_debit_pending'] : null) . '/');?>"><?php $this->_('AdminCompanyBilling.notices.text_edit_template');?></a></span></h4>
+                            </li>
+                        </ul>

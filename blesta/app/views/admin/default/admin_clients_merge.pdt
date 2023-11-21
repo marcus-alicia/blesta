@@ -1,0 +1,42 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.merge.boxtitle_merge', true));
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="empty_section">
+                <div class="empty_box">
+                    This action is currently unavailable.
+                </div>
+            </div>
+        </div>
+        <?php
+        /*
+        #
+        # TODO:
+        #
+        # First search for the client id_code to merge with
+        $this->Form->label($this->_("AdminClients.merge.field_clientid", true), "id_code");
+        $this->Form->fieldText("id_code", (isset($vars->id_code) ? $vars->id_code : null), array("id"=>"id_code"));
+
+        #
+        # TODO:
+        #
+        # After result(s) found, allow merging
+        $this->Form->label($this->_("AdminClients.merge.field_mergefrom", true), "direction");
+        $this->Form->fieldRadio("direction", "b_to_a", ((!isset($vars->direction) || $vars->direction == "b_to_a") ? true : false));
+        $this->_("AdminClients.merge.field_btoa");
+        $this->Form->fieldRadio("direction", "a_to_b", ((isset($vars->direction) && $vars->direction == "a_to_b") ? true : false));
+        $this->_("AdminClients.merge.field_atob");
+
+        $this->Form->label($this->_("AdminClients.merge.field_password", true), "password");
+        $this->Form->fieldPassword("password");
+
+        $this->Form->fieldSubmit("merge", $this->_("AdminClients.merge.field_mergesubmit", true), array("id"=>"merge"));
+        */
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

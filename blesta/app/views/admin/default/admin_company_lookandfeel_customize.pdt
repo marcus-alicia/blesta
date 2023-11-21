@@ -1,0 +1,278 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $tabs = [];
+                foreach ((isset($theme_types) ? $theme_types : []) as $type => $name) {
+                    $tabs[] = ['name' => $name, 'current' => ($type == 'admin'), 'attributes' => ['id' => $type . '_customize_tab', 'href' => '#']];
+                }
+
+                $this->Widget->clear();
+                $this->Widget->setTabs($tabs);
+                $this->Widget->create($this->_('AdminCompanyLookandfeel.customize.box_title', true));
+                $this->Form->create(null, ['enctype' => 'multipart/form-data', 'class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div id="admin_customize" class="pad">
+                        <div class="preview_layout mb-3">
+                            <div class="header">
+                                <section class="top_row">
+                                    <div class="gap_row">
+                                        <h1>
+                                            <a href="#">
+                                                <div class="logo">
+                                                    <?php $this->Form->fieldHidden('admin_logo_height', ($vars['admin_logo_height'] ?? null), ['id' => 'admin_logo_height']);?>
+                                                    <img<?php echo (!empty($vars['admin_logo_height']) ? ' style="height: ' . $vars['admin_logo_height'] . 'px;"' : '');?> src="<?php (print (isset($admin_logo) ? $this->Html->safe($admin_logo) : null));?>"<?php if ($admin_default_logo ?? false) {echo ' class="default"';} ?>>
+                                                </div>
+                                            </a>
+                                        </h1>
+                                        <section class="right_section">
+                                            <nav class="top_nav">
+                                                <ul>
+                                                    <li>
+                                                        <a href="#"><i class="fas fa-info-circle fa-fw"></i><div class="fake_text"></div></a>
+                                                    </li>
+                                                    <li><span>/</span></li>
+                                                    <li>
+                                                        <a href="#"><i class="fas fa-cog fa-fw"></i><div class="fake_text"></div></a>
+                                                    </li>
+                                                    <li><span>/</span></li>
+                                                    <li>
+                                                        <a href="#"><i class="fas fa-sign-out-alt fa-fw"></i><div class="fake_text"></div></a>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </section>
+                                    </div>
+                                </section>
+                                <nav class="menu">
+                                    <ul class="nav">
+                                        <li class="first active"><a href="#"><div class="fake_text"></div></a></li>
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                    </ul>
+                                </nav>
+                                <section class="black_row"></section>
+                            </div>
+                        </div>
+
+                        <div class="title_row first float-none">
+                            <h3><?php $this->_('AdminCompanyLookandfeel.customize.heading_custom_logo');?></h3>
+                        </div>
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldRadio('admin_type', 'logo', true, ['id' => 'admin_type_logo']);
+                                $this->Form->label($this->_('AdminCompanyLookandfeel.customize.field.admin_type_logo', true), 'admin_type_logo', ['class' => 'inline']);
+
+                                $this->Form->fieldRadio('admin_type', 'url', false, ['id' => 'admin_type_url']);
+                                $this->Form->label($this->_('AdminCompanyLookandfeel.customize.field.admin_type_url', true), 'admin_type_url', ['class' => 'inline']);
+                                ?>
+                            </li>
+                            <li class="hidden">
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyLookandfeel.customize.field.admin_logo', true), 'admin_logo');
+                                $this->Form->fieldFile('admin_logo', ['id' => 'admin_logo']);
+                                ?>
+                            </li>
+                            <li class="hidden">
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyLookandfeel.customize.field.admin_url', true), 'admin_url');
+                                $this->Form->fieldText('admin_url', (isset($admin_logo) ? $admin_logo : null), ['id' => 'admin_url']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="client_customize" class="pad">
+                        <div class="preview_layout mb-3">
+                            <div class="client_header">
+                                <section class="top_row"<?php if (isset($client_colors['theme_header_bg_color_top'])) {?> style="background: linear-gradient(180deg, #<?php (print (isset($client_colors['theme_header_bg_color_top']) ? $this->Html->safe($client_colors['theme_header_bg_color_top']) : null));?> 0%, #<?php (print (isset($client_colors['theme_header_bg_color_bottom']) ? $this->Html->safe($client_colors['theme_header_bg_color_bottom']) : null));?> 100%);"<?php } ?>>
+                                    <div class="gap_row">
+                                        <h1>
+                                            <a href="#">
+                                                <div class="logo">
+                                                    <?php $this->Form->fieldHidden('client_logo_height', ($vars['client_logo_height'] ?? null), ['id' => 'client_logo_height']);?>
+                                                    <img<?php echo (!empty($vars['client_logo_height']) ? ' style="height: ' . $vars['client_logo_height'] . 'px;"' : '');?> src="<?php (print (isset($client_logo) ? $this->Html->safe($client_logo) : null));?>"<?php if ($client_default_logo ?? false) {echo ' class="default"';} ?>>
+                                                </div>
+                                            </a>
+                                        </h1>
+                                    </div>
+                                </section>
+                                <nav class="menu"<?php if (isset($client_colors['theme_navigation_background_color_top'])) {?> style="background: linear-gradient(180deg, #<?php (print (isset($client_colors['theme_navigation_background_color_top']) ? $this->Html->safe($client_colors['theme_navigation_background_color_top']) : null));?> 0%, #<?php (print (isset($client_colors['theme_navigation_background_color_bottom']) ? $this->Html->safe($client_colors['theme_navigation_background_color_bottom']) : null));?> 100%);"<?php } ?>>
+                                    <ul class="nav">
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                        <li><a href="#"><div class="fake_text"></div></a></li>
+                                    </ul>
+                                </nav>
+                                <section class="black_row"<?php if (isset($client_colors['theme_page_title_background_color_top'])) {?> style="background: linear-gradient(180deg, #<?php (print (isset($client_colors['theme_page_title_background_color_top']) ? $this->Html->safe($client_colors['theme_page_title_background_color_top']) : null));?> 0%, #<?php (print (isset($client_colors['theme_page_title_background_color_bottom']) ? $this->Html->safe($client_colors['theme_page_title_background_color_bottom']) : null));?> 100%);"<?php } ?>>
+                                    <h3><div class="fake_text"></div></h3>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div class="title_row first float-none">
+                            <h3><?php $this->_('AdminCompanyLookandfeel.customize.heading_custom_logo');?></h3>
+                        </div>
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldRadio('client_type', 'logo', true, ['id' => 'client_type_logo']);
+                                $this->Form->label($this->_('AdminCompanyLookandfeel.customize.field.client_type_logo', true), 'client_type_logo', ['class' => 'inline']);
+
+                                $this->Form->fieldRadio('client_type', 'url', false, ['id' => 'client_type_url']);
+                                $this->Form->label($this->_('AdminCompanyLookandfeel.customize.field.client_type_url', true), 'client_type_url', ['class' => 'inline']);
+                                ?>
+                            </li>
+                            <li class="hidden">
+                                <?php $this->Form->label($this->_('AdminCompanyLookandfeel.customize.field.client_logo', true), 'client_logo');?>
+                                <?php $this->Form->fieldFile('client_logo', ['id' => 'client_logo']);?>
+                            </li>
+                            <li class="hidden">
+                                <?php $this->Form->label($this->_('AdminCompanyLookandfeel.customize.field.client_url', true), 'client_url');?>
+                                <?php $this->Form->fieldText('client_url', (isset($client_logo) ? $client_logo : null), ['id' => 'client_url']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyLookandfeel.customize.text_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {     
+    // Set tabs
+    $('#client_customize').hide();
+    
+    $('.tab_slider ul li').on('click', function() {
+        $('.tab_slider ul li').removeClass('current');
+        $(this).addClass('current');
+    });
+    
+    $('#client_customize_tab').on('click', function() {
+        $('#admin_customize').hide();
+        $('#client_customize').show();
+    });
+    
+    $('#admin_customize_tab').on('click', function() {
+        $('#admin_customize').show();
+        $('#client_customize').hide();
+    });
+    
+    // Update logo
+    var view_dir = '" . str_replace(ROOTWEBDIR, '', str_replace(DS, '/', VIEWDIR)) . "';
+    $('#admin_url').on('change', function() {
+        var url = $(this).val();
+        $('#admin_customize .gap_row img').attr('src', url);
+        
+        if (url.includes(view_dir)) {
+            $('#admin_customize .gap_row img').addClass('default');
+        } else {
+            $('#admin_customize .gap_row img').removeClass('default');
+        }
+    });
+    $('#client_url').on('change', function() {
+        var url = $(this).val();
+        $('#client_customize .gap_row img').attr('src', url);
+        
+        if (url.includes(view_dir)) {
+            $('#client_customize .gap_row img').addClass('default');
+        } else {
+            $('#client_customize .gap_row img').removeClass('default');
+        }
+    });
+    
+    $('#admin_logo').on('change', function(event) {
+        var image = URL.createObjectURL(event.target.files[0]);
+        $('#admin_customize .gap_row img').attr('src', image);
+        $('#admin_customize .gap_row img').removeClass('default');
+    });
+    $('#client_logo').on('change', function(event) {
+        var image = URL.createObjectURL(event.target.files[0]);
+        $('#client_customize .gap_row img').attr('src', image);
+        $('#client_customize .gap_row img').removeClass('default');
+    });
+    
+    // Set logo types
+    $('#admin_logo').parent().removeClass('hidden');
+    $('#client_logo').parent().removeClass('hidden');
+    
+    $('#admin_type_url').on('click', function() {
+        $('#admin_logo').parent().addClass('hidden');
+        $('#admin_url').parent().removeClass('hidden');
+    });
+    
+    $('#admin_type_logo').on('click', function() {
+        $('#admin_logo').parent().removeClass('hidden');
+        $('#admin_url').parent().addClass('hidden');
+    });
+    
+    $('#client_type_url').on('click', function() {
+        $('#client_logo').parent().addClass('hidden');
+        $('#client_url').parent().removeClass('hidden');
+    });
+    
+    $('#client_type_logo').on('click', function() {
+        $('#client_logo').parent().removeClass('hidden');
+        $('#client_url').parent().addClass('hidden');
+    });
+    
+    // Resize logo
+    function resizeLogo(element) {
+        $('.preview_layout *').css('user-drag', 'none');
+
+        var height = $(element).height();
+        var width = $(element).width();
+        
+        if (height > 500) {
+            height = 500;
+            $(element).css('height', height);
+        }
+        
+        if (!$(element).find('img').hasClass('default')) {
+            $(element).find('img').css('height', height);
+            
+            if ($(element).closest('.pad').attr('id') == 'admin_customize') {
+                $('#admin_logo_height').val(height);
+            }
+            
+            if ($(element).closest('.pad').attr('id') == 'client_customize') {
+                $('#client_logo_height').val(height);
+            }
+        }
+    }
+
+    $('.logo').simpleResize({
+        top: false,
+        bottom: true,
+        left: false,
+        right: false,
+        corner: false,
+        store: false
+    }).on('resize:start', function() {
+        resizeLogo(this);
+    }).on('resize:move', function() {
+        resizeLogo(this);
+    }).on('resize:end', function() {
+        resizeLogo(this);
+    });
+});
+");
+?>

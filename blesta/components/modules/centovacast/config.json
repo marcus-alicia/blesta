@@ -1,0 +1,34 @@
+{
+    "version": "1.9.2",
+    "name": "Centovacast.name",
+    "description": "Centovacast.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "package": {
+        "name_key": "centovacast_hostname"
+    },
+    "service": {
+        "name_key": "centovacast_hostname"
+    },
+    "module": {
+        "row": "Centovacast.module_row",
+        "rows": "Centovacast.module_row_plural",
+        "row_key": "server_name",
+        "group": "Centovacast.module_group"
+    },
+    "email_tags": {
+        "module": ["hostname", "server_name"],
+        "package": ["servertype", "apptypes", "usesource", "maxclients", "maxbitrate", "transferlimit", "diskquota"],
+        "service": [
+            "centovacast_hostname",
+            "centovacast_username",
+            "centovacast_adminpassword",
+            "centovacast_title",
+            "centovacast_genre"
+        ]
+    }
+}

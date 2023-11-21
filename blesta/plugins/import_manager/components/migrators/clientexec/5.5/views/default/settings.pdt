@@ -1,0 +1,39 @@
+    <ul>
+        <li>
+            <?php
+            $this->Form->fieldHidden('step', 'settings');
+            $this->Form->label($this->_('Clientexec5_5.settings.host', true), 'host');
+            $this->Form->fieldText('host', (isset($vars->host) ? $vars->host : null), ['id' => 'host']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Clientexec5_5.settings.database', true), 'database');
+            $this->Form->fieldText('database', (isset($vars->database) ? $vars->database : null), ['id' => 'database']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Clientexec5_5.settings.user', true), 'user');
+            $this->Form->fieldText('user', (isset($vars->user) ? $vars->user : null), ['id' => 'user']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Clientexec5_5.settings.pass', true), 'pass');
+            $this->Form->fieldPassword('pass', ['id' => 'pass', 'value' => (isset($vars->pass) ? $vars->pass : null)]);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Clientexec5_5.settings.passphrase', true), 'passphrase');
+            $this->Form->fieldPassword('passphrase', ['id' => 'passphrase', 'value' => (isset($vars->passphrase) ? $vars->passphrase : null)]);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->fieldCheckbox('enable_debug', 'true', (isset($vars->enable_debug) ? $vars->enable_debug : null) == 'true', ['id' => 'enable_debug']);
+            $this->Form->label($this->_('Clientexec5_5.settings.enable_debug', true), 'enable_debug', ['class' => 'inline']);
+            ?>
+        </li>
+    </ul>

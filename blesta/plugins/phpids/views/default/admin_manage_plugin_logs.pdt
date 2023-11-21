@@ -1,0 +1,60 @@
+
+        <?php
+        $tabs = [
+            ['name'=>$this->_('PhpidsManagePlugin.index.tab_settings', true), 'attributes'=>['href'=>$this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $plugin_id : null)]],
+            ['name'=>$this->_('PhpidsManagePlugin.index.tab_logs', true), 'current'=>true, 'attributes'=>['href'=>$this->base_uri . 'settings/company/plugins/manage/' . (isset($plugin_id) ? $plugin_id : null) . '/?action=logs']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('PhpidsManagePlugin.index.boxtitle_phpids', true));
+        ?>
+
+        <div class="inner">
+            <?php
+            if ((isset($logs) ? $logs : null) && !empty($logs)) {
+            ?>
+            <table class="table">
+                <tr class="heading_row">
+                    <td><span><?php $this->_('PhpidsManagePlugin.logs.heading.name');?></span></td>
+                    <td><span><?php $this->_('PhpidsManagePlugin.logs.heading.value');?></span></td>
+                    <td><span><?php $this->_('PhpidsManagePlugin.logs.heading.uri');?></span></td>
+                    <td><span><?php $this->_('PhpidsManagePlugin.logs.heading.ip');?></span></td>
+                    <td><span><?php $this->_('PhpidsManagePlugin.logs.heading.user_id');?></span></td>
+                    <td><span><?php $this->_('PhpidsManagePlugin.logs.heading.tags');?></span></td>
+                    <td><span><?php $this->_('PhpidsManagePlugin.logs.heading.impact');?></span></td>
+                    <td class="last"><span><?php $this->_('PhpidsManagePlugin.logs.heading.date_added');?></span></td>
+                </tr>
+                <?php
+                foreach ($logs as $i => $log) {
+                ?>
+                <tr class="<?php echo ($i%2 == 1) ? 'odd_row' : '';?>">
+                    <td><?php echo (isset($log->name) ? $this->Html->safe($log->name) : null);?></td>
+                    <td><?php $this->Form->fieldTextarea('ids_value', $log->value);?></td>
+                    <td><?php $this->Form->fieldTextarea('ids_uri', $log->uri);?></td>
+                    <td><?php echo (isset($log->ip) ? $this->Html->safe($log->ip) : null);?></td>
+                    <td><?php echo (isset($log->user_id) ? $this->Html->safe($log->user_id) : null);?></td>
+                    <td><?php echo (isset($log->tags) ? $this->Html->safe($log->tags) : null);?></td>
+                    <td><?php echo (isset($log->impact) ? $this->Html->safe($log->impact) : null);?></td>
+                    <td><?php echo $this->Date->cast((isset($log->date_added) ? $this->Html->safe($log->date_added) : null), 'date_time');?></td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+            <?php
+                $this->Pagination->build();
+            } else {
+            ?>
+
+            <div class="empty_section">
+                <div class="empty_box"><?php $this->_('PhpidsManagePlugin.logs.no_results');?></div>
+            </div>
+
+            <?php
+            }
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

@@ -1,0 +1,56 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.recordpaymentconfirm.boxtitle_recordconfirm', true), ['id' => 'admin_clients_recordpaymentconfirm'], (isset($render_section) ? $render_section : null));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        $this->Form->fieldHidden('vars', base64_encode(serialize($vars)));
+        $this->Form->fieldHidden('step', (isset($step) ? $step : null));
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <section class="fieldset">
+                    <h1>
+                        <?php $this->_('AdminClients.recordpaymentconfirm.payment_details');?>
+                    </h1>
+                    <p>
+                        <?php
+                        if ((isset($vars->payment_type) ? $vars->payment_type : null) == 'credit') {
+                            $this->_('AdminClients.recordpaymentconfirm.trans_info_credit');
+                        } elseif ((isset($vars->transaction_id) ? $vars->transaction_id : null) != '') {
+                            $this->_('AdminClients.recordpaymentconfirm.trans_info_detailed', false, (isset($transaction_types[$vars->transaction_type]) ? $transaction_types[$vars->transaction_type] : null), (isset($vars->transaction_id) ? $vars->transaction_id : null));
+                        } else {
+                            $this->_('AdminClients.recordpaymentconfirm.trans_info', false, (isset($transaction_types[$vars->transaction_type]) ? $transaction_types[$vars->transaction_type] : null));
+                        }
+                        ?>
+                    </p>
+                </section>
+
+                <section class="fieldset">
+                    <h1>
+                        <?php $this->_('AdminClients.recordpaymentconfirm.email_receipt');?>
+                    </h1>
+                    <p>
+                        <?php $this->_((isset($vars->email_receipt) ? $vars->email_receipt : null) == 'true' ? 'AdminClients.recordpaymentconfirm.email_receipt_yes' : 'AdminClients.recordpaymentconfirm.email_receipt_no');?>
+                    </p>
+                </section>
+
+                <div class="sub_total_box">
+                    <div class="line payment_total">
+                        <span><?php $this->_('AdminClients.recordpaymentconfirm.total');?></span>
+                        <strong>
+                            <em><?php echo $this->CurrencyFormat->format((isset($total) ? $total : null), $currency);?></em>
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.recordpaymentconfirm.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                $this->Form->fieldSubmit('submit_edit', $this->_('AdminClients.recordpaymentconfirm.field_edit', true), ['class' => 'btn btn-default pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

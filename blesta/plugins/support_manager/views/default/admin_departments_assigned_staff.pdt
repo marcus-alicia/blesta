@@ -1,0 +1,37 @@
+
+            <div class="group_title_row">
+                <div class="title_row first">
+                    <h3><?php $this->_('AdminDepartments.assigned_staff.heading_assigned_staff');?></h3>
+                </div>
+                <?php
+                if ((isset($staff) ? $staff : false) && ($num_staff = count($staff)) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td class="last"><?php $this->_('AdminDepartments.assigned_staff.heading_staff');?></td>
+                    </tr>
+                    <?php
+                    // Display all staff
+                    $i = 0;
+                    foreach ($staff as $member) {
+                    ?>
+                    <tr<?php echo (($i++%2 == 1) ? ' class="odd_row"' : '');?>>
+                        <td class="last"><?php echo $this->Html->concat(' ', (isset($member->first_name) ? $this->Html->safe($member->first_name) : null), (isset($member->last_name) ? $this->Html->safe($member->last_name) : null));?></td>
+                    </tr>
+                    <?php
+                    }
+                    unset($i);
+                    ?>
+                </table>
+                <?php
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminDepartments.assigned_staff.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+            </div>

@@ -1,0 +1,7 @@
+    <?php
+    $this->Form->create();
+    if ((isset($allow_card_payment) ? $allow_card_payment : 'true') == 'true') {
+        $this->Form->fieldSubmit('submit_widepay_card', $this->_('Widepay.buildprocess.submit_card', true));
+    }
+    $this->Form->fieldSubmit('submit_widepay_ticket', $this->_('Widepay.buildprocess.submit_ticket', true));
+    $this->Form->end();

@@ -1,0 +1,31 @@
+
+	<ul>
+		<li>
+			<?php
+            $this->Form->label($this->_('Skrill.user_email', true), 'user_email');
+            $this->Form->fieldText('user_email', (isset($meta['user_email']) ? $meta['user_email'] : null), ['id'=>'user_email']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Skrill.user_email_note'); ?></div></span>
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Skrill.secret_word', true), 'secret_word');
+            $this->Form->fieldText('secret_word', (isset($meta['secret_word']) ? $meta['secret_word'] : null), ['id'=>'secret_word']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Skrill.secret_word_note'); ?></div></span>			
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Skrill.merchant_id', true), 'merchant_id');
+            $this->Form->fieldText('merchant_id', (isset($meta['merchant_id']) ? $meta['merchant_id'] : null), ['id'=>'merchant_id']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Skrill.merchant_id_note'); ?></div></span>			
+		</li> 
+		<li>
+			<?php
+            $this->Form->label($this->_('Skrill.mqi', true), 'mqi');
+            $this->Form->fieldText('mqi', (isset($meta['mqi']) ? $meta['mqi'] : null), ['id'=>'mqi']);
+            ?>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Skrill.mqi_note'); ?></div></span>			
+		</li>    
+	</ul>

@@ -1,0 +1,47 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Teamspeak.tab_clients.heading_clients'); ?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <tbody>
+                <tr class="heading_row">
+                    <td><span><?php $this->_('Teamspeak.tab_clients.clients_heading.client_id'); ?></span></td>
+                    <td><span><?php $this->_('Teamspeak.tab_clients.clients_heading.client_name'); ?></span></td>
+                    <td class="last"><span><?php $this->_('Teamspeak.tab_clients.clients_heading.options'); ?></span></td>
+                </tr>
+
+                <?php
+                if (!empty($server_clients->clients)) {
+                    $i = 0;
+                    foreach ($server_clients->clients as $client) {
+                        ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? ' class="odd_row"' : '', ''); ?>>
+                        <td><?php echo (isset($client->clid) ? $this->Html->safe($client->clid) : null); ?></td>
+                        <td><?php echo (isset($client->name) ? $this->Html->safe($client->name) : null); ?></td>
+                        <td>
+                            <?php
+                                $this->Form->create();
+                            $this->Form->fieldHidden('action', 'kick_client');
+                            $this->Form->fieldHidden('clid', $client->clid); ?>
+                                <a href="#" class="submit manage">
+                                    <?php $this->_('Teamspeak.tab_clients.action_kick_client'); ?>
+                                </a>
+                            <?php
+                                $this->Form->end(); ?>
+                        </td>
+                    </tr>
+                <?php
+                        $i++;
+                    }
+                } else {
+                ?>
+                    <tr>
+                        <td colspan="3"><?php $this->_('Teamspeak.tab_clients.text_no_clients'); ?></td>
+                    </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>

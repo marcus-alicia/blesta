@@ -1,0 +1,146 @@
+<?php
+if (!empty($fields) || !empty($html)) {
+?>
+<div class="generated_fields_div">
+    <?php
+    if (!empty($fields)) {
+        // Set any hidden fields
+        foreach (($fields ?? []) as $index => $field) {
+            foreach ($field->fields as $input) {
+                if ($input->type == 'fieldHidden') {
+                    call_user_func_array([$this->Form, $input->type], $input->params);
+                    unset($fields[$index]);
+                    continue 2;
+                }
+            }
+        }
+
+    ?>
+    <ul>
+        <?php
+        foreach (($fields ?? []) as $field) {
+        ?>
+        <li>
+            <?php
+            // Determine all field tooltips
+            $tooltips = [];
+            foreach ($field->fields as $input) {
+                // Collect all tooltips to be displayed for the field
+                if ($input->type == 'tooltip') {
+                    $tooltips[] = $input;
+                }
+            }
+
+            // Draw the primary label/field
+            call_user_func_array(
+                [$this->Form, $field->type],
+                array_merge_recursive((array)$field->params, (!empty($tooltips) ? ['attributes' => ['class' => 'inline']] : []))
+            );
+
+            // Draw each form field associated with this label
+            foreach ($field->fields as $input) {
+                // Collect all tooltips to be displayed at the end
+                if ($input->type == 'tooltip') {
+                    continue;
+                }
+
+                // Display a tooltip after the label if there is a label or the field is not a checkbox/radio
+                $params = [];
+                if (!empty($tooltips) && (!empty($field->params['name']) || !in_array($input->type, ['fieldCheckbox', 'fieldRadio']))) {
+                    $params = (!in_array($input->type, ['fieldCheckbox', 'fieldRadio']) ? ['attributes' => ['class' => 'block']] : []);
+
+                    foreach ($tooltips as $tooltip) {
+                    ?>
+                    <span class="tooltip block">
+                        <?php $this->_('AppController.tooltip.text');?>
+                        <div><?php (print (isset($tooltip->params['message']) ? $this->Html->safe($tooltip->params['message']) : null));?></div>
+                    </span>
+                    <?php
+                    }
+
+                    // Radio/checkbox lists should break at a new line
+                    if (in_array($input->type, ['fieldCheckbox', 'fieldRadio'])) {
+                    ?>
+                    <br />
+                    <?php
+                    }
+
+                    // Reset tooltips, they've already been displayed
+                    $tooltips = [];
+                }
+
+                // Display the form input field
+                call_user_func_array(
+                    [$this->Form, $input->type],
+                    array_merge_recursive((array)$input->params, $params)
+                );
+
+                // Draw the form field's secondary label if checkbox or radio item
+                if (isset($input->label)) {
+                    if (isset($input->label->params['attributes']['class'])) {
+                        if (is_array($input->label->params['attributes']['class'])) {
+                            $input->label->params['attributes']['class'][] = 'inline';
+                        } else {
+                            $input->label->params['attributes']['class'] .= ' inline';
+                        }
+                    } else {
+                        $input->label->params['attributes']['class'] = 'inline';
+                    }
+
+                    call_user_func_array([$this->Form, 'label'], $input->label->params);
+                }
+            }
+
+            // Display tooltips at the end of the field if any exist
+            foreach ($tooltips as $tooltip) {
+            ?>
+            <span class="tooltip">
+                <?php $this->_('AppController.tooltip.text');?>
+                <div><?php (print (isset($tooltip->params['message']) ? $this->Html->safe($tooltip->params['message']) : null));?></div>
+            </span>
+            <?php
+            }
+            ?>
+        </li>
+        <?php
+        }
+        ?>
+    </ul>
+    <?php
+    }
+    ?>
+    <?php echo ($html ?? null);?>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $("input[data-type='quantity']").each(function() {
+            var input = $(this);
+            if (input.attr("data-min") != "" && input.attr("data-max") != "") {
+                var count = $("<div class=\"ui-slide-amount\"></div>").insertAfter(input);
+                var elem = $("<div class=\"slider-container\"><div class=\"slider-amount\"></div><div class=\"ui-slider\"></div></div>").insertAfter(input);
+                var slider = $(".ui-slider", elem);
+                input.hide();
+
+                var min = parseInt(input.attr("data-min"));
+                var max = parseInt(input.attr("data-max"));
+                var step = parseInt(input.attr("data-step") == "" ? 1 : input.attr("data-step"));
+
+                $(slider).slider({
+                    value: input.val(),
+                    min: min,
+                    max: max,
+                    step: step,
+                    change: function(event, ui) {
+                        input.val(ui.value);
+                        $(".slider-amount", elem).html(ui.value);
+                        input.change();
+                    }
+                });
+                $(".slider-amount", elem).html(input.val());
+            }
+        });
+    });
+</script>
+<?php
+}

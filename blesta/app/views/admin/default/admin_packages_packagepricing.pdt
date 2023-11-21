@@ -1,0 +1,58 @@
+                <div class="group_title_row">
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminPackages.packagepricing.heading_pricing');?></h3>
+                    </div>
+                    <?php
+                    if ((isset($pricing) ? $pricing : false) && ($num_pricing = count($pricing)) > 0) {
+                    ?>
+                    <table class="table">
+                        <tr class="heading_row">
+                            <td><?php $this->_('AdminPackages.packagepricing.heading_id');?></td>
+                            <td><?php $this->_('AdminPackages.packagepricing.heading_term');?></td>
+                            <td><?php $this->_('AdminPackages.packagepricing.heading_price');?></td>
+                            <td><?php $this->_('AdminPackages.packagepricing.heading_price_renews');?></td>
+                            <td><?php $this->_('AdminPackages.packagepricing.heading_setup_fee');?></td>
+                            <td class="last"><?php $this->_('AdminPackages.packagepricing.heading_cancellation_fee');?></td>
+                        </tr>
+                        <?php
+                        for ($i = 0; $i < $num_pricing; $i++) {
+                        ?>
+                        <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : ''?>>
+                            <td><?php echo (isset($pricing[$i]->id) ? $pricing[$i]->id : null); ?></td>
+                            <td>
+                                <?php
+                                if ((isset($pricing[$i]->period) ? $pricing[$i]->period : null) == 'onetime') {
+                                    (print (isset($periods[$pricing[$i]->period]) ? $this->Html->safe($periods[$pricing[$i]->period]) : null));
+                                } else {
+                                    $term = (isset($pricing[$i]->term) ? $this->Html->safe($pricing[$i]->term) : null);
+                                    echo $this->Html->safe($this->Html->concat(' ', $term, ($term == 1 ? (isset($periods[$pricing[$i]->period]) ? $periods[$pricing[$i]->period] : null) : (isset($periods[$pricing[$i]->period . '_plural']) ? $periods[$pricing[$i]->period . '_plural'] : null))));
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $this->CurrencyFormat->format((isset($pricing[$i]->price) ? $this->Html->safe($pricing[$i]->price) : null), (isset($pricing[$i]->currency) ? $this->Html->safe($pricing[$i]->currency) : null), ['html_code' => true]);?></td>
+                            <td>
+                                <?php
+                                if ((isset($pricing[$i]->period) ? $pricing[$i]->period : null) == 'onetime') {
+                                    $this->_('AdminPackages.packagepricing.not_applicable');
+                                } else {
+                                    echo $this->CurrencyFormat->format($this->Html->safe((isset($pricing[$i]->price_renews) ? $pricing[$i]->price_renews : (isset($pricing[$i]->price) ? $pricing[$i]->price : null))), (isset($pricing[$i]->currency) ? $this->Html->safe($pricing[$i]->currency) : null), ['html_code' => true]);
+                                }
+                                ?>
+                            </td>
+                            <td><?php echo $this->CurrencyFormat->format((isset($pricing[$i]->setup_fee) ? $this->Html->safe($pricing[$i]->setup_fee) : null), (isset($pricing[$i]->currency) ? $this->Html->safe($pricing[$i]->currency) : null), ['html_code' => true]);?></td>
+                            <td><?php echo $this->CurrencyFormat->format((isset($pricing[$i]->cancel_fee) ? $this->Html->safe($pricing[$i]->cancel_fee) : null), (isset($pricing[$i]->currency) ? $this->Html->safe($pricing[$i]->currency) : null), ['html_code' => true]);?></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    } else {
+                    ?>
+                    <div class="empty_section">
+                        <div class="empty_box"><?php $this->_('AdminPackages.packagepricing.pricing_no_results');?></div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>

@@ -1,0 +1,30 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            ['name' => $this->_('AdminPackageOptions.index.category_groups', true) . ' <span>(' . (isset($type_count['groups']) ? $this->Html->safe($type_count['groups']) : null) . ')</span>', 'current' => ((isset($type) ? $type : null) == 'groups' ? true : false), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'package_options/index/groups/'), 'class' => 'ajax']],
+            ['name' => $this->_('AdminPackageOptions.index.category_options', true) . ' <span>(' . (isset($type_count['options']) ? $this->Html->safe($type_count['options']) : null) . ')</span>', 'current' => ((isset($type) ? $type : null) == 'options' ? true : false), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'package_options/index/options/'), 'class' => 'ajax']],
+        ];
+        $link_buttons = [
+            ['icon' => 'fas fa-plus', 'name' => $this->_('AdminPackageOptions.index.categorylink_createoption', true), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'package_options/add/')]],
+            ['icon' => 'fas fa-folder-plus', 'name' => $this->_('AdminPackageOptions.index.categorylink_creategroup', true), 'attributes' => ['href' => $this->Html->safe($this->base_uri . 'package_options/addgroup/')]]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setLinks($links);
+        $this->Widget->setLinkButtons($link_buttons);
+        $this->Widget->setFilters(($filters ?? null), $this->Html->safe($this->base_uri . 'package_options/index/' . ($type ?? null) . '/'), !empty($filter_vars));
+        $this->Widget->setAjaxFiltering();
+        $this->Widget->create($this->_('AdminPackageOptions.index.boxtitle_options', true), ['id' => 'admin_package_options'], (isset($render_section) ? $render_section : null));
+
+        echo (isset($content) ? $content : null);
+
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Handle confirmation
+        $('#package_options a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+    });
+</script>

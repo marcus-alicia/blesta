@@ -1,0 +1,226 @@
+		<?php
+		if(isset($_REQUEST['msg'])) {
+		    if($_REQUEST['msg']=='success'){ ?>
+		        <section class="error_section">
+                    <article class="error_box">
+                        <a class="close" href="#">&times;</a>
+                        <p> <?php $this->_("ThesslstoreModule.setup_price.update_success");?></p>
+                    </article>
+                </section>
+            <?php
+            }
+            elseif($_REQUEST['msg']=='modeupdated'){ ?>
+                <section class="error_section">
+                    <article class="error_box">
+                        <a class="close" href="#">&times;</a>
+                        <p> <?php $this->_("ThesslstoreModule.setup_price.update_mode");?></p>
+                    </article>
+                </section>
+            <?php
+            }
+		}
+		$this->Widget->clear();
+		$this->Widget->create($this->_("ThesslstoreModule.add_row.box_title", true));
+		?>
+		<div class="inner">
+			<?php
+			$this->Form->create();
+			?>
+			<div class="title_row first">
+				<h3><?php $this->_("ThesslstoreModule.add_row.setup_price");?></h3>
+			</div>
+			<div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                            $this->Form->fieldCheckbox("thesslstore_apply_margin", "yes",(isset($vars->thesslstore_apply_margin) ? $vars->thesslstore_apply_margin : null) == "yes", array('id' => 'thesslstore_apply_margin') );
+                            $this->Form->label( $this->_("ThesslstoreModule.setup_price.apply_margin", true), 'thesslstore_apply_margin',array('class' => "inline") );
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $margin_attr = array('id' => "thesslstore_margin_percentage");
+                        if((isset($vars->thesslstore_apply_margin) ? $vars->thesslstore_apply_margin : null) != "yes")
+                             $margin_attr['disabled'] =  "disabled";
+                        $this->Form->label($this->_("ThesslstoreModule.setup_price.margin_percentage", true), "thesslstore_margin_percentage",array('class' => "thesslstore_margin_percentage"));
+                        $this->Form->fieldText("thesslstore_margin_percentage", (isset($vars->thesslstore_margin_percentage) ? $vars->thesslstore_margin_percentage : null), $margin_attr);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+			<div class="links_row button_row">
+			    <a class = "float-right btn btn-primary submit save_price" href="#"><?php $this->_("ThesslstoreModule.credential_row.add_btn");?></a>
+			    <a target="_blank" class="float-right btn btn-default" href="<?php echo (isset($reseller_price_link) ? $this->Html->safe($reseller_price_link) : null); ?>"><?php $this->_("ThesslstoreModule.setup_price.view_reseller_price"); ?> </a>
+            </div>
+			<table class="table">
+			    <tbody>
+			        <tr class="heading_row">
+			            <td>Package Group</td>
+			            <td>Package Name</td>
+			            <td>Product Code</td>
+			            <td>Currency Code</td>
+			            <td>1 Year</td>
+			            <td>2 Year</td>
+			            <td>3 Year</td>
+			        </tr>
+			        <?php
+			        $odd = false;
+			        foreach($package_data as $id => $data){
+                    if($odd == true){
+                        $class = "class='odd_row'";
+                        $odd = false;
+                    }
+                    elseif($odd == false){
+                        $class = '';
+                        $odd = true;
+                    }
+                    //echo "<pre>";
+			        //print_r($data);
+			        ?>
+                        <tr <?php echo $class; ?> >
+                            <?php $this->Form->fieldHidden( "packages_id[]", $id ) ; ?>
+                            <td><?php echo (isset($data['group_name']) ? $data['group_name'] : null);  ?></td>
+                            <td><?php echo (isset($data['name']) ? $data['name'] : null);  ?></td>
+                            <td><?php echo (isset($data['product_code']) ? $data['product_code'] : null);  ?></td>
+                            <td>USD</td>
+                            <td>
+                                <?php
+                                if(isset($data['pricing']['1year']))
+                                    $this->Form->fieldText("price[{$data['pricing']['1year']['pricing_id']}]", $data['pricing']['1year']['price'], array("style" => "width:100px;"));
+                                else
+                                    echo "N/A";
+                                ?>
+                            </td>
+                            <td>
+                                <?php
+                                 if(isset($data['pricing']['2year']))
+                                    $this->Form->fieldText("price[{$data['pricing']['2year']['pricing_id']}]", $data['pricing']['2year']['price'], array("style" => "width:100px;"));
+                                 else
+                                    echo "N/A";
+                                 ?>
+                            </td>
+                            <td>
+                                <?php
+                                 if(isset($data['pricing']['3year']))
+                                    $this->Form->fieldText("price[{$data['pricing']['3year']['pricing_id']}]", $data['pricing']['3year']['price'], array("style" => "width:100px;"));
+                                 else
+                                    echo "N/A";
+                                ?>
+                            </td>
+                        </tr>
+
+			        <?php
+			            //For additional SAN price
+			            if($data['has_additional_san']){?>
+			                <tr <?php echo $class; ?>>
+                                <td></td>
+                                <td> + Additional SAN</td>
+                                <td> - </td>
+                                <td>USD</td>
+                                <td>
+                                    <?php
+                                     if(isset($data['san_pricing']['1year']))
+                                        $this->Form->fieldText("price[{$data['san_pricing']['1year']['pricing_id']}]", $data['san_pricing']['1year']['price'], array("style" => "width:100px;"));
+                                     else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                     if(isset($data['san_pricing']['2year']))
+                                        $this->Form->fieldText("price[{$data['san_pricing']['2year']['pricing_id']}]", $data['san_pricing']['2year']['price'], array("style" => "width:100px;"));
+                                     else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                     if(isset($data['san_pricing']['3year']))
+                                        $this->Form->fieldText("price[{$data['san_pricing']['3year']['pricing_id']}]", $data['san_pricing']['3year']['price'], array("style" => "width:100px;"));
+                                     else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+			            }
+
+                        if($data['has_additional_server']){?>
+                            <tr <?php echo $class; ?>>
+                                <td></td>
+                                <td> + Additional Server</td>
+                                <td>-</td>
+                                <td>USD</td>
+                                <td>
+                                    <?php
+                                     if(isset($data['server_pricing']['1year']))
+                                        $this->Form->fieldText("price[{$data['server_pricing']['1year']['pricing_id']}]", $data['server_pricing']['1year']['price'], array("style" => "width:100px;"));
+                                     else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                     if(isset($data['server_pricing']['2year']))
+                                        $this->Form->fieldText("price[{$data['server_pricing']['2year']['pricing_id']}]", $data['server_pricing']['2year']['price'], array("style" => "width:100px;"));
+                                     else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                     if(isset($data['server_pricing']['3year']))
+                                        $this->Form->fieldText("price[{$data['server_pricing']['3year']['pricing_id']}]", $data['server_pricing']['3year']['price'], array("style" => "width:100px;"));
+                                     else
+                                        echo "N/A";
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+			        }
+			        ?>
+			    </tbody>
+			</table>
+
+
+			<div class="button_row"><a class="float-right btn btn-primary submit save_price" href="#"><?php $this->_("ThesslstoreModule.credential_row.add_btn");?></a></div>
+			<?php
+			$this->Form->end();
+			?>
+		</div>
+		<?php
+		$this->Widget->end();
+		?>
+		<script type="text/javascript">
+        	$(document).ready(function() {
+        		$('input#thesslstore_apply_margin').change(
+        		    function(){
+        		       if($(this).is(":checked") == true){
+        		            $('input#thesslstore_margin_percentage').attr("disabled",false)
+        		       }
+        		       else{
+                            $('input#thesslstore_margin_percentage').attr("disabled",true)
+        		       }
+                });
+
+                //alert box on margin textbox
+                $('label.thesslstore_margin_percentage').click(
+                    function(){
+                       if($('input#thesslstore_margin_percentage').is(":disabled") == true){
+                            alert("Please check the Apply Profit Margin checkbox first");
+                       }
+                });
+
+                //confirm button on save button
+                jQuery("a.save_price").click(
+                    function(){
+                        res = window.confirm("Do you really want to the update price?");
+                        if(!res){
+                            return false;
+                        }
+                    }
+                );
+
+        	});
+        </script>

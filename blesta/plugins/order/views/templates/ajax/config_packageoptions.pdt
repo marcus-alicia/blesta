@@ -1,0 +1,15 @@
+            <?php
+            // Show module fields
+            if (isset($input_html) && ($package_field_html = $input_html->generate())) {
+            ?>
+                <div class="pad">
+                <?php
+                echo $package_field_html;
+                ?>
+                </div>
+            <?php
+            }
+
+            echo ($option_logic_js ?? null);
+            ?>
+<script type="text/javascript" src="<?php echo $this->Html->safe($this->view_dir . 'javascript/config_packageoptions.js');?>"></script>

@@ -1,0 +1,17 @@
+            <div class="pad">
+                <p><?php $this->_('AdminCompanyBilling.acceptedtypes.text_description');?></p>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('payments_allowed_cc', 'true', ((isset($vars['payments_allowed_cc']) ? $vars['payments_allowed_cc'] : null) == 'true'), ['id' => 'cc']);
+                        $this->Form->label($this->_('AdminCompanyBilling.acceptedtypes.field_cc', true), 'cc', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('payments_allowed_ach', 'true', ((isset($vars['payments_allowed_ach']) ? $vars['payments_allowed_ach'] : null) == 'true'), ['id' => 'ach']);
+                        $this->Form->label($this->_('AdminCompanyBilling.acceptedtypes.field_ach', true), 'ach', ['class' => 'inline']);
+                        ?>
+                    </li>
+                <ul>
+            </div>

@@ -1,0 +1,75 @@
+		<?php
+		if(isset($_REQUEST['error']) && $_REQUEST['error']=='false')
+		{
+		?>
+		    <section class="error_section">
+        		<article class="error_box">
+                    <a class="close" href="#">&times;</a>
+                    <p><?php echo $_REQUEST['count'];?> <?php $this->_("ThesslstoreModule.!success.import_package_success");?></p>
+        			</article>
+        	</section>
+		<?php
+		}
+		if(isset($_REQUEST['error']) && $_REQUEST['error']=='true')
+        {
+        ?>
+            <section class="error_section">
+                <article class="error_box error">
+                    <a class="close" href="#">&times;</a>
+                    <p><?php $this->_("ThesslstoreModule.!error.import_package_error");?></p>
+                </article>
+            </section>
+        <?php
+        }
+		echo (isset($message) ? $message : null);
+
+		$this->Widget->clear();
+		$this->Widget->create($this->_("ThesslstoreModule.add_row.box_title", true));
+
+		$this->Form->create();
+		?>
+		<div class="inner">
+			<div class="title_row first">
+				<h3><?php $this->_("ThesslstoreModule.add_row.import_packages");?></h3>
+			</div>
+			<?php
+			if($vars->packageGroupsArray=='false')
+			{
+			?>
+				<div class="error_box error"><?php $this->_("ThesslstoreModule.!error.empty_package_group");?></div>
+            <?php
+            }
+            else
+            {
+            ?>
+            <div class="pad">
+            	<ul>
+					<li>
+					<?php
+                    	$this->Form->label($this->_("ThesslstoreModule.row_meta.product_group", true), "product_group");
+                        $this->Form->fieldSelect("product_group",$vars->packageGroups, (isset($vars->product_group) ? $vars->product_group : null), array('id' => "product_group"));
+                    ?>
+					</li>
+					<li>
+                    <?php
+                        $this->Form->label($this->_("ThesslstoreModule.row_meta.profit_margin", true), "profit_margin");
+                       	$this->Form->fieldText("profit_margin", (isset($vars->profit_margin) ? $vars->profit_margin : null), array('id' => "profit_margin"));
+                    ?>
+                    </li>
+					<li>
+						<span>% Margin will apply to the price of all the products. You can change it later on from the price setup menu.</span>
+					</li>
+				</ul>
+			</div>
+				<div class="button_row"><a class="float-right btn btn-primary submit" href="#"><?php $this->_("ThesslstoreModule.import_packages_row.add_btn");?></a></div>
+            <?php
+            }
+            ?>
+			</div>
+			<?php
+			$this->Form->end();
+			?>
+		</div>
+		<?php
+		$this->Widget->end();
+		?>

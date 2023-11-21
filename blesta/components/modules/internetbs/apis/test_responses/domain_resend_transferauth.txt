@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Date: Wed, 22 Jun 2022 15:22:01 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips PHP/7.4.5
+X-Powered-By: PHP/7.4.5
+Set-Cookie: INTBSSEID=f45ef422bb2adbf0a1122a3f8cf42903; path=/; domain=.sandbox.internet.bs; HttpOnly
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: text/javascript; charset=utf-8
+
+{"transactid":"6d63a7c894a5fb651ffe81e6375f0489","domain":"example.com","status":"SUCCESS"}

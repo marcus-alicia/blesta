@@ -1,0 +1,38 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $widget_title = $this->_('AdminMain.addcategory.boxtitle_root', true, $this->_('AdminMain.!text.root_directory', true));
+        if (!empty($category))
+            $widget_title = $this->_('AdminMain.addcategory.boxtitle_addcategory', true, (isset($category->name) ? $category->name : null));
+
+        $this->Widget->clear();
+        $this->Widget->create($widget_title);
+
+        $this->Form->create();
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminMain.addcategory.field_name', true));?>
+                        <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id'=>'name']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminMain.addcategory.field_description', true));?>
+                        <?php $this->Form->fieldTextarea('description', (isset($vars->description) ? $vars->description : null), ['id'=>'description', 'class'=>'small', 'data-markdown-editor' => '']);?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminMain.addcategory.submit_add', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+                <a class="btn btn-default pull-right" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/download_manager/admin_main/files/' . ($category->id ?? null));?>"><?php $this->_('AdminMain.addcategory.submit_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

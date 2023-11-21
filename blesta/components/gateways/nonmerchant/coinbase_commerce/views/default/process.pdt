@@ -1,0 +1,3 @@
+<a href="<?php echo ($post_to ?? null); ?>" class="btn btn-xl btn-info">
+    <?php $this->_('CoinbaseCommerce.buildprocess.submit');?>
+</a>

@@ -1,0 +1,29 @@
+<?php
+foreach ($tlds_pricing as $tld => $pricing) {
+    if (array_key_exists($tld, $spotlight_tlds ?? [])) {
+        continue;
+    }
+
+    foreach($pricing as $term) {
+?>
+<tr class="tld_pricing hidden">
+    <td><?php echo $this->Html->safe($tld); ?></td>
+    <td>
+        <?php echo $this->CurrencyFormat->format(($term->price ?? 0), $term->currency);?>
+        <br><small><?php $this->_('Domain.lookup.term_year' . ($term->term > 1 ? 's' : ''), false, $term->term);?></small>
+    </td>
+    <td>
+        <?php echo $this->CurrencyFormat->format(($term->price_transfer ?? 0), $term->currency);?>
+        <br><small><?php $this->_('Domain.lookup.term_year' . ($term->term > 1 ? 's' : ''), false, $term->term);?></small>
+    </td>
+    <td>
+        <?php echo $this->CurrencyFormat->format(($term->price_renews ?? 0), $term->currency);?>
+        <br><small><?php $this->_('Domain.lookup.term_year' . ($term->term > 1 ? 's' : ''), false, $term->term);?></small>
+    </td>
+</tr>
+<?php
+        // Only display the shortest term on from package
+        break;
+    }
+}
+?>

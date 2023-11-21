@@ -1,0 +1,348 @@
+            <div class="col-md-12">
+                <?php
+                echo (isset($message) ? $message : null);
+                ?>
+
+                <?php
+                $this->WidgetClient->create($this->_('Registration.signup.header_signup', true));
+                ?>
+                <div class="card-body">
+                    <div class="signup_form option_section">
+
+                        <?php
+                        $this->Form->create(null, ['class' => 'disable-on-submit']);
+                        $this->Form->fieldHidden('action', 'signup');
+                        ?>
+                        <div class="row panel-fix">
+                            <div class="col-md-12">
+                                <h4><?php $this->_('Signup.index.heading_contact');?></h4>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_firstname', true), 'first_name');
+                                    $this->Form->fieldText('first_name', (isset($vars->first_name) ? $vars->first_name : null), ['id' => 'first_name', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_firstname', true)]);
+                                    ?>
+                                </div>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_lastname', true), 'last_name');
+                                    $this->Form->fieldText('last_name', (isset($vars->last_name) ? $vars->last_name : null), ['id' => 'last_name', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_lastname', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                if (in_array('company', $required_contact_fields ?? []) || in_array('company', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_company', true), 'company');
+                                    $this->Form->fieldText('company', (isset($vars->company) ? $vars->company : null), ['id' => 'company', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_company', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+
+                                if (in_array('title', $required_contact_fields ?? []) || in_array('title', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_title', true), 'title');
+                                    $this->Form->fieldText('title', (isset($vars->title) ? $vars->title : null), ['id' => 'title', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_title', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+
+                                if (in_array('address1', $required_contact_fields ?? []) || in_array('address1', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_address1', true), 'address1');
+                                    $this->Form->fieldText('address1', (isset($vars->address1) ? $vars->address1 : null), ['id' => 'address1', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_address1', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+
+                                if (in_array('address2', $required_contact_fields ?? []) || in_array('address2', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_address2', true), 'address2');
+                                    $this->Form->fieldText('address2', (isset($vars->address2) ? $vars->address2 : null), ['id' => 'address2', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_address2', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+
+                                if (in_array('city', $required_contact_fields ?? []) || in_array('city', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_city', true), 'city');
+                                    $this->Form->fieldText('city', (isset($vars->city) ? $vars->city : null), ['id' => 'city', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_city', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?php
+                                if (in_array('country', $required_contact_fields ?? []) || in_array('country', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_country', true), 'country');
+                                    $this->Form->fieldSelect('country', (isset($countries) ? $countries : null), (isset($vars->country) ? $vars->country : null), ['id' => 'country', 'class' => 'form-control']);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+
+                                if (in_array('state', $required_contact_fields ?? []) || in_array('state', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_state', true), 'state');
+                                    $this->Form->fieldSelect('state', (isset($states) ? $states : null), (isset($vars->state) ? $vars->state : null), ['id' => 'state', 'class' => 'form-control']);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+
+                                if (in_array('zip', $required_contact_fields ?? []) || in_array('zip', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_zip', true), 'zip');
+                                    $this->Form->fieldText('zip', (isset($vars->zip) ? $vars->zip : null), ['id' => 'zip', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_zip', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+
+                                if (in_array('phone', $required_contact_fields ?? []) || in_array('phone', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_phone', true), 'phone');
+                                    $this->Form->fieldHidden('numbers[type][0]', 'phone');
+                                    $this->Form->fieldHidden('numbers[location][0]', 'work');
+                                    $this->Form->fieldText('numbers[number][0]', (isset($vars->numbers['number'][0]) ? $vars->numbers['number'][0] : null), ['id' => 'phone', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_phone', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+
+                                if (in_array('fax', $required_contact_fields ?? []) || in_array('fax', $shown_contact_fields ?? [])) {
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_fax', true), 'fax');
+                                    $this->Form->fieldHidden('numbers[type][1]', 'fax');
+                                    $this->Form->fieldHidden('numbers[location][1]', 'work');
+                                    $this->Form->fieldText('numbers[number][1]', (isset($vars->numbers['number'][1]) ? $vars->numbers['number'][1] : null), ['id' => 'fax', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_fax', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_email', true), 'email');
+                                    $this->Form->fieldText('email', (isset($vars->email) ? $vars->email : null), ['id' => 'email', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_email', true)]);
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php
+                        if ((isset($show_client_tax_id) ? $show_client_tax_id : null)) {
+                        ?>
+                        <hr>
+                        <div class="row panel-fix">
+                            <div class="col-md-12">
+                                <h4><?php $this->_('Signup.index.heading_billing');?></h4>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_taxid', true), 'tax_id');
+                                    $this->Form->fieldText('tax_id', (isset($vars->tax_id) ? $vars->tax_id : null), ['id' => 'tax_id', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_taxid', true)]);
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        }
+
+                        if ((isset($custom_fields) ? $custom_fields : null) && !empty($custom_fields)) {
+                        ?>
+                            <hr>
+                            <div class="row panel-fix">
+                                <div class="col-md-12">
+                                    <h4><?php $this->_('Signup.index.heading_settings');?></h4>
+                                    <?php
+                                    // Display custom client fields
+                                    foreach ($custom_fields as $field) {
+                                    ?>
+                                    <div class="form-group">
+                                        <?php
+                                        // Set a unique field ID
+                                        $field_id = ($custom_field_prefix ?? null) . ($field->id ?? null);
+
+                                        // Show each custom field
+                                        $disabled = (($field->read_only ?? null) == '1' ? ['disabled' => 'disabled'] : []);
+                                        switch($field->type) {
+                                            case 'text':
+                                                $this->Form->label(($field->real_name ?? null), $field_id, null, true);
+                                                $this->Form->fieldText($field_id, ($vars->{$field_id} ?? ($field->default ?? null)), array_merge(['id'=>$field_id, 'class' => 'form-control'], $disabled));
+                                                break;
+                                            case 'select':
+                                                $this->Form->label(($field->real_name ?? null), $field_id, null, true);
+                                                $this->Form->fieldSelect($field_id, ($field->values ?? []), ($vars->{$field_id} ?? ($field->default ?? null)), array_merge(['id'=>$field_id, 'class' => 'form-control'], $disabled));
+                                                break;
+                                            case 'textarea':
+                                                $this->Form->label(($field->real_name ?? null), $field_id, null, true);
+                                                $this->Form->fieldTextarea($field_id, ($vars->{$field_id} ?? ($field->default ?? null)), array_merge(['id'=>$field_id, 'class' => 'form-control'], $disabled));
+                                                break;
+                                            case 'checkbox':
+                                                ?>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <?php $this->Form->fieldCheckbox($field_id, ($field->values ?? null), ($vars->{$field_id} ?? ($field->default ?? null)), array_merge(['id'=>$field_id], $disabled));?>
+                                                        <?php echo ($field->real_name ?? null);?>
+                                                    </label>
+                                                </div>
+                                                <?php
+                                                break;
+                                        }
+                                        ?>
+                                    </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        ?>
+
+                        <hr>
+                        <div class="row panel-fix">
+                            <div class="col-md-12">
+                                <h4><?php $this->_('Signup.index.heading_authentication');?></h4>
+                                <?php
+                                if ((isset($force_email_usernames) ? $force_email_usernames : 'false') == 'true') {
+                                    $this->Form->fieldHidden('username_type', 'email');
+                                    $this->Form->fieldHidden('username', '');
+                                ?>
+                                <div class="alert alert-info mb-2">
+                                    <p><?php $this->_('Signup.!notice.force_email_usernames');?></p>
+                                </div>
+                                <?php
+                                } else {
+                                ?>
+                                <div class="radio">
+                                    <label>
+                                        <?php
+                                        $this->Form->fieldRadio('username_type', 'email', ((isset($vars->username_type) ? $vars->username_type : 'email') == 'email'), ['id'=>'username_type_email']);
+                                        $this->_('Signup.index.field_username_type_email');
+                                        ?>
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label>
+                                        <?php
+                                        $this->Form->fieldRadio('username_type', 'username', ((isset($vars->username_type) ? $vars->username_type : null) == 'username'), ['id'=>'username_type_username']);
+                                        $this->_('Signup.index.field_username_type_username');
+                                        ?>
+                                    </label>
+                                </div>
+                                <div class="form-group username">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_username', true), 'signup_username');
+                                    $this->Form->fieldText('username', (isset($vars->username) ? $vars->username : null), ['id'=>'signup_username', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_username', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_newpassword', true), 'new_password');
+                                    $this->Form->fieldPassword('new_password', ['id'=>'new_password', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_newpassword', true)]);
+                                    ?>
+                                </div>
+                                <div class="form-group">
+                                    <?php
+                                    $this->Form->label($this->_('Signup.index.field_confirmpassword', true), 'confirm_password');
+                                    $this->Form->fieldPassword('confirm_password', ['id'=>'confirm_password', 'class' => 'form-control', 'placeholder' => $this->_('Signup.index.field_confirmpassword', true)]);
+                                    ?>
+                                </div>
+                                <?php
+                                if ((isset($show_receive_email_marketing) ? $show_receive_email_marketing : null) == 'true') {
+                                ?>
+                                <div class="form-group well">
+                                    <?php $this->Form->fieldCheckbox('receive_email_marketing', 'true', (isset($vars->receive_email_marketing) ? $vars->receive_email_marketing : 'false') == 'true', ['id' => 'receive_email_marketing']); ?>
+                                    <?php $this->Form->label($this->_('Signup.index.field_receive_email_marketing', true), 'receive_email_marketing', ['class' => 'inline']);?>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                        <?php
+                        if ((isset($captcha) ? $captcha : null)) {
+                        ?>
+                        <div class="col-md-12">
+                            <?php echo $captcha;?>
+                        </div>
+                        <?php
+                        }
+                        ?>
+
+                        <button type="submit" class="btn btn-light float-right">
+                            <i class="fas fa-arrow-circle-right"></i> <?php $this->_('Signup.index.signup_btn');?>
+                        </button>
+                        <?php
+                        $this->Form->end();
+                        ?>
+
+                    </div>
+
+                </div>
+                <?php
+                $this->WidgetClient->end();
+                ?>
+            </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $("#country").change(function() {
+            $(this).blestaRequest("get", "<?php echo $this->Html->safe($this->base_uri . 'order/signup/getstates/' . (isset($order_form->label) ? $order_form->label : null) . '/');?>" + $(this).val(), null, function(data) {
+                    // Remove all existing items
+                    $("option", "#state").remove();
+
+                    // Append all new items
+                    $.each($(this).blestaSortObject(data), function(index, item) {
+                        $("#state").append( new Option(item.value, item.key));
+                    });
+                },
+                null,
+                {dataType: "json"}
+            );
+        });
+
+        if ($("#username_type_email").attr("checked"))
+            $(".username").hide();
+
+        // Show/hide the username input
+        $("#username_type_username").click(function() {
+            $(".username").show();
+        });
+        $("#username_type_email").click(function() {
+            $(".username").hide();
+        });
+    });
+</script>

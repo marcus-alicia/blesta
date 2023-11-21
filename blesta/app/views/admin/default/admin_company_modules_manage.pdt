@@ -1,0 +1,8 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php echo (isset($content) ? $content : null);?>
+            </section>
+        </div>

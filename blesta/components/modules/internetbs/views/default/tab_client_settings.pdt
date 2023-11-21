@@ -1,0 +1,73 @@
+
+    <?php
+    $this->Form->create();
+    ?>
+    <h4><?php $this->_('Internetbs.tab_client_settings.heading_settings');?></h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group mb-0">
+                <?php
+                $this->Form->label($this->_('Internetbs.tab_client_settings.field_registrar_lock', true), 'registrarlock');
+                ?>
+            </div>
+            <div class="form-group mb-0">
+                <?php
+                $this->Form->fieldRadio('registrarlock', 'ENABLED', ($vars->registrarlock ?? null) == 'ENABLED', ['id' => 'registrarlock_yes']);
+                $this->Form->label($this->_('Internetbs.tab_client_settings.field_registrar_lock_yes', true), 'registrarlock_yes', ['class' => 'inline']);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                $this->Form->fieldRadio('registrarlock', 'DISABLED', ($vars->registrarlock ?? null) == 'DISABLED', ['id' => 'registrarlock_no']);
+                $this->Form->label($this->_('Internetbs.tab_client_settings.field_registrar_lock_no', true), 'registrarlock_no', ['class' => 'inline']);
+                ?>
+            </div>
+
+            <?php
+            if ($id_protection ?? false) {
+            ?>
+            <div class="form-group mb-0">
+                <?php
+                $this->Form->label($this->_('Internetbs.tab_client_settings.field_whois_privacy', true), 'privatewhois');
+                ?>
+            </div>
+            <div class="form-group mb-0">
+                <?php
+                $this->Form->fieldRadio('privatewhois', 'ENABLED', ($vars->privatewhois ?? null) == 'ENABLED', ['id' => 'privatewhois_yes']);
+                $this->Form->label($this->_('Internetbs.tab_client_settings.field_whois_privacy_state_yes', true), 'privatewhois_yes', ['class' => 'inline']);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                $this->Form->fieldRadio('privatewhois', 'DISABLED', ($vars->privatewhois ?? null) == 'DISABLED', ['id' => 'privatewhois_no']);
+                $this->Form->label($this->_('Internetbs.tab_client_settings.field_whois_privacy_state_no', true), 'privatewhois_no', ['class' => 'inline']);
+                ?>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+    </div>
+
+    <?php
+    if ($epp_code ?? false) {
+    ?>
+    <h4><?php $this->_('Internetbs.tab_client_settings.heading_auth_code');?></h4>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <p><?php $this->_('Internetbs.tab_client_settings.text_auth_code');?></p>
+                <div class="badge badge-info mt-2"><?php echo $this->Html->safe($vars->transferauthinfo ?? '');?></div>
+            </div>
+        </div>
+    </div>
+    <?php
+    }
+    ?>
+
+    <button class="btn btn-light float-right" type="submit">
+        <i class="fas fa-edit"></i> <?php $this->_('Internetbs.tab_client_settings.field_submit');?>
+    </button>
+    <?php
+    $this->Form->end();
+    ?>

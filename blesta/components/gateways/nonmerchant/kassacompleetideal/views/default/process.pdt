@@ -1,0 +1,24 @@
+
+    <?php
+    // Disable CSRF for this form
+    $this->Form->create();
+
+    $this->Form->label($this->_('Kassacompleetideal.buildprocess.issuer_id', true), 'issuer_id');
+    $this->Form->fieldSelect('issuer_id', (isset($issuer_ids) ? $issuer_ids : null), ['id' => 'issuer_id']);
+    $this->Form->fieldSubmit('submit_kassacompleet', $this->_('Kassacompleetideal.buildprocess.submit', true));
+
+    $this->Form->end();
+    ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".payment_buttons form").on('submit', preventSubmission);
+    });
+
+    function preventSubmission(e) {
+        e.stopPropagation();
+
+        $(this).clearQueue();
+        $(this).off('submit', preventSubmission);
+        return false;
+    }
+</script>

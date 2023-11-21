@@ -1,0 +1,14 @@
+            <?php
+            // Show module fields
+            if (isset($input_html) && ($package_field_html = $input_html->generate(null, $this->view))) {
+            ?>
+                <div class="pad">
+                <?php
+                echo $package_field_html;
+                ?>
+                </div>
+            <?php
+            }
+
+            echo ($option_logic_js ?? null);
+            ?>

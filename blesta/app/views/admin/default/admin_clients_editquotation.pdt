@@ -1,0 +1,340 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.editquotation.boxtitle_editquotation', true, (isset($vars->id_code) ? $this->Html->safe($vars->id_code) : null)), ['id' => 'admin_clients_editquotation']);
+        ?>
+        <div class="inner">
+            <?php $this->Form->create(null, ['id' => 'create-quotation', 'class' => 'disable-on-submit']);?>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="pb-2">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editquotation.field_title', true), 'title');
+                        $this->Form->fieldText('title', ($vars->title ?? null), ['id' => 'title', 'class' => 'stretch']);
+                        ?>
+                    </div>
+                </div>
+            </div>
+            <table class="table quotation">
+                <thead>
+                    <tr class="heading_row">
+                        <td><?php $this->_('AdminClients.editquotation.heading_description');?></td>
+                        <td><?php $this->_('AdminClients.editquotation.heading_quantity');?></td>
+                        <td><?php $this->_('AdminClients.editquotation.heading_unitcost');?></td>
+                        <td><?php $this->_('AdminClients.editquotation.heading_tax');?></td>
+                        <td><?php $this->_('AdminClients.editquotation.heading_options');?></td>
+                        <td class="icon last">&nbsp;</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $num_rows = max(1, count((isset($vars->line_items) ? $vars->line_items : [])));
+                    for ($i = 0; $i < $num_rows; $i++) {
+                        // Set just the line item that should be deleted from this invoice
+                        if (!empty($vars->line_items[$i]->id) && empty($vars->line_items[$i]->amount) && empty($vars->line_items[$i]->description)) {
+                            $this->Form->fieldHidden('lines[id][]', ($vars->line_items[$i]->id ?? null), ['class' => 'line_id']);
+                            continue;
+                        }
+                    ?>
+                    <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'line_row');?>">
+                        <?php $this->Form->fieldHidden('lines[id][]', ($vars->line_items[$i]->id ?? null), ['class' => 'line_id']);?>
+                        <?php
+                        if (str_contains(($vars->line_items[$i]->description ?? null), "\n")) {
+                        ?>
+                        <td><?php $this->Form->fieldTextarea('lines[description][]', ($vars->line_items[$i]->description ?? null), ['class' => 'stretch line_item']);?></td>
+                        <?php
+                        } else {
+                        ?>
+                        <td><?php $this->Form->fieldText('lines[description][]', ($vars->line_items[$i]->description ?? null), ['class' => 'stretch line_item']);?></td>
+                        <?php
+                        }
+                        ?>
+                        <td class="small"><?php $this->Form->fieldText('lines[qty][]', $this->CurrencyFormat->truncateDecimal(($vars->line_items[$i]->qty ?? null), 0), ['class' => 'stretch line_qty']);?></td>
+                        <td class="small"><?php $this->Form->fieldText('lines[amount][]', $this->CurrencyFormat->format(($vars->line_items[$i]->amount ?? null), ($vars->currency ?? null), ['prefix' => false, 'suffix' => false, 'with_separator' => false, 'code' => false, 'decimals' => 4]), ['class' => 'stretch line_amount']);?></td>
+                        <td class="extra_small"><?php $this->Form->fieldHidden('lines[tax][]', (($vars->line_items[$i]->tax ?? null) == 'true') ? 'true' : 'false');?> <?php $this->Form->fieldCheckbox('tax[]', 'true', (($vars->line_items[$i]->tax ?? null) == 'true'));?></td>
+                        <td class="medium"><a class="line_row_add" href="#"><?php $this->_('AdminClients.editquotation.option_add');?></a>, <a href="#" class="manage line_row_delete"><?php $this->_('AdminClients.editquotation.option_delete');?></a></td>
+                        <td class="last center"><i class="fas fa-arrows-alt movable"></i></td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="pad">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editquotation.field_date_created', true), 'date_created');
+                        $this->Form->fieldText('date_created', ($vars->date_created ?? $this->Date->format('Y-m-d')), ['id' => 'date_created', 'class' => 'date']);
+                        ?>
+                    </div>
+                    <div class="pad">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editquotation.field_date_expires', true), 'date_expires');
+                        $this->Form->fieldText('date_expires', ($vars->date_expires ?? null), ['id' => 'date_expires', 'class' => 'date']);
+                        ?>
+                    </div>
+                    <div class="pad">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editquotation.field_currency', true), 'currency');
+                        $this->Form->fieldSelect('currency', ($currencies ?? null), ($vars->currency ?? null), ['id' => 'currency']);
+                        ?>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="sub_total_box">
+                        <div class="line totals_subtotal">
+                            <span><?php $this->_('AdminClients.editquotation.price_subtotal');?></span><em></em>
+                        </div>
+                        <?php
+                        for ($i = 0; $i < 2; $i++) {
+                        ?>
+                        <div class="line totals_tax"<?php echo !isset($vars->taxes[$i]) ? ' style="display: none;"' : '';?>>
+                            <span></span><em></em>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                        <div class="line total totals_total">
+                            <span></span><strong><em></em></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4><a id="notes_link" href="#" class="show_content"><i class="fas fa-caret-down"></i> <?php $this->_('AdminClients.editquotation.section_notes');?></a></h4>
+            <div id="notes_section">
+                <div class="pad reverse">
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminClients.editquotation.field_notes', true), 'notes');
+                            $this->Form->fieldTextarea('notes', ($vars->notes ?? null), ['id' => 'notes']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminClients.editquotation.field_private_notes', true), 'private_notes');
+                            $this->Form->fieldTextarea('private_notes', ($vars->private_notes ?? null), ['id' => 'private_notes']);
+                            ?>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button_row">
+                <div class="auto_save"><span></span></div>
+
+                <?php
+                if (($quotation->status ?? null) == 'draft') {
+                    $this->Form->fieldSubmit('save', $this->_('AdminClients.editquotation.field_quotationsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                    $this->Form->fieldSubmit('submit_draft', $this->_('AdminClients.editquotation.field_quotationsavedraft', true), ['class' => 'btn btn-default pull-right']);
+                } else {
+                    $this->Form->fieldSubmit('save', $this->_('AdminClients.editquotation.field_quotationsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                }
+                ?>
+            </div>
+
+            <?php $this->Form->end();?>
+        </div>
+
+        <?php
+        $this->Widget->end();
+        ?>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+
+    var totals_uri = '" . (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null) . 'clients/calcLineTotals/' . (isset($client->id) ? $this->Html->safe($client->id) : null) . "?type=quotation';
+
+    // On load calculate totals
+    $('#create-quotation').blestaSetInvTotals(totals_uri);
+
+    // Ensure the position of the recurring date billed calendar is within the view frame
+    $('#recur_date_billed').dpSetPosition($.dpConst.POS_TOP, $.dpConst.POS_RIGHT);
+
+    // Whenever the tax box is checked, we need to set the line tax to update
+    $('input[name=\"tax[]\"]').change(function() {
+        $('input[name=\"lines[tax][]\"]', $(this).parent()).val($(this).prop('checked') ? 'true' : 'false');
+        $(this).blestaSetInvTotals(totals_uri);
+    });
+
+    // Set quotation totals when amount quantity, tax status, or currency changes
+    $('input[name=\"lines[amount][]\"], input[name=\"lines[qty][]\"], #currency').change(function() {
+        $(this).blestaSetInvTotals(totals_uri);
+    });
+
+    // Allow sort of quotation lines
+    $('table.table.quotation tbody').blestaSortable();
+    $('table.table.quotation tbody tr').hover(
+        function() {
+            $('.movable', this).show();
+        },
+        function() {
+            $('.movable', this).hide();
+        }
+    );
+
+    // If enter pressed while in line item field, convert to textarea
+    $('input.line_item').keypress(function(e) {
+        if (e.keyCode == 13) {
+            var element = this;
+            var textarea = $('<textarea>');
+            for (var i=0, len=element.attributes.length; i < len; i++) {
+                if (element.attributes[i].nodeName != 'type')
+                    textarea.attr(element.attributes[i].nodeName, element.attributes[i].nodeValue);
+            }
+            textarea.insertBefore(element).focus().val($(this).val() + String.fromCharCode(e.keyCode));
+            $(element).remove();
+        }
+    });
+
+    // Toggle notes section
+    $('#notes_section').hide();
+    $(this).blestaBindToggleEvent('#notes_link', '#notes_section');
+
+    if ('" . $this->Html->safe($vars->notes ?? null) . "' !== '' || '" . $this->Html->safe($vars->private_notes ?? null) . "' !== '') {
+        $('#notes_section').show();
+    }
+
+    // Remove blank lines when the form is submitted
+    $('#create-quotation').on('submit', function() {
+        $('.line_row').each(function() {
+            if ($(this).find('input.line_item').val().length <= 0
+                && $(this).find('input.line_qty').val().length <= 0
+                && $(this).find('input.line_amount').val().length <= 0
+            ) {
+                $(this).find('.line_row_delete').trigger('click');
+            }
+        });
+    });
+
+    // Automatically add a new blank line item after entering details into another
+    $('.quotation').on('input', '.line_row input.line_item', function() {
+        // If entering data into one line item, create a new line item below it
+        if ($(this).val().length > 1) {
+            return;
+        }
+
+        var blank_line_after = $(this).parents('tr.line_row').next().find('input.line_item').val();
+        if (blank_line_after === undefined) {
+            $(this).parents('.line_row').find('a.line_row_add').trigger('click');
+        }
+    });
+
+    $('.line_row_add').click(function() {
+        var fields = $('input[type=\"text\"].line_item:first').parent().parent().clone(true);
+
+        if (fields === undefined) {
+            var fields = $('tr.line_row:first').clone(true);
+        }
+
+        // Remove input text/hidden and textarea data
+        $(fields).find('input:text,input:hidden,textarea').val('');
+        // Remove checkbox/radio data
+        $(fields).find('input:checkbox,input:radio').prop('checked', false);
+        // Unselect options
+        $(fields).find('option:selected').prop('selected', false);
+
+        // Append the row below this row, assign the new row
+        var line = $(this).closest('tr').after(fields).next();
+
+        // Remove line item ID field from duplicated row
+        $('.line_id', line).remove();
+
+        // Hide the arrow icon for moving the row
+        $('.movable', fields).hide();
+
+        formatLineRows();
+
+        return false;
+    });
+
+    $('.line_row_delete').click(function() {
+        if ($('tr.line_row').length > 1) {
+            var form = $(this).closest('form');
+
+            // Move the line item ID field, then delete the row
+            var line_item = $(this).closest('tr').find('.line_id').clone(true);
+            $('tr.line_row:last').after(line_item);
+
+            $(this).closest('tr').remove();
+
+            // Update totals
+            $(form).blestaSetInvTotals(totals_uri);
+
+            formatLineRows();
+        }
+        return false;
+    });
+
+    // Format each line item row
+    function formatLineRows() {
+        $('tr.line_row').removeClass('odd_row');
+        $('tr.line_row:nth-child(even)').addClass('odd_row');
+    }
+
+    var auto_save_interval = 60000; // 60 seconds
+
+    /**
+     * Auto save quotation
+     */
+    function autoSave() {
+        var form = $('#admin_clients_editquotation form');
+
+        form.blestaRequest(form.attr('method'), form.attr('action'), form.serialize(),
+            function(data) {
+                var text = '" . $this->Html->safe($this->_('AdminClients.editquotation.auto_save_error', true)) . "';
+                var class_name = 'fab fa-whmcs';
+                if (data.success) {
+                    text = '" . $this->Html->safe($this->_('AdminClients.editquotation.auto_save_saved', true)) . "';
+                    class_name = 'fas fa-check';
+
+                    // Set the quotation ID so we can continue to update it
+                    $('#quotation_id').val(data.quotation_id);
+
+                    // Remove all existing line item IDs, we're going to replace them
+                    $('.line_row .line_id').remove();
+
+                    // Set the line item ID for each line item that was created
+                    $('.line_row').each(function(index) {
+                        if (data.quotation.line_items[index]) {
+                            $(this).prepend('<input type=\"hidden\" name=\"lines[id][]\" value=\"' + data.quotation.line_items[index].id + '\" class=\"line_id\" />');
+                        }
+                    });
+                }
+
+                $('.button_row .auto_save span').text(text);
+                $('.button_row .auto_save span').html('<i class=\"' + class_name + '\"></i> ' + $('.button_row .auto_save span').text());
+
+                $('.button_row .auto_save').delay(2000).fadeOut('slow');
+
+                // Set the next auto save
+                setTimeout(autoSave, auto_save_interval);
+            },
+            function() {
+                // Set the next auto save
+                setTimeout(autoSave, auto_save_interval);
+            },
+            {
+                beforeSend: function() {
+                    $('.button_row .auto_save').html('<i class=\"fas fa-spinner fa-spin\"></i> <span></span>');
+                    $('.button_row .auto_save span').text('" . $this->Html->safe($this->_('AdminClients.editquotation.auto_save_saving', true)) . "');
+                    $('.button_row .auto_save').show();
+                },
+                dataType: 'json'
+            }
+        );
+    }
+
+    // Begin the auto save process only after the form has gained focus on one of its input elements
+    var focused = false;
+    $('#admin_clients_editquotation input').focus(function() {
+        if (!focused) {
+            // Begin the auto save process
+            setTimeout(autoSave, auto_save_interval);
+            focused = true;
+        }
+    });
+});
+");
+?>

@@ -1,0 +1,30 @@
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-share fa-flip-vertical"></i></th>
+                    <th><?php $this->_('Cpanel.service_info.username');?></th>
+                    <th><?php $this->_('Cpanel.service_info.password');?></th>
+                    <th><?php $this->_('Cpanel.service_info.server');?></th>
+                    <th><?php $this->_('Cpanel.service_info.options');?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><?php echo (isset($service_fields->cpanel_username) ? $this->Html->safe($service_fields->cpanel_username) : null);?></td>
+                    <td><?php echo (isset($service_fields->cpanel_password) ? $this->Html->safe($service_fields->cpanel_password) : null);?></td>
+                    <td><?php echo (isset($module_row->meta->host_name) ? $this->Html->safe($module_row->meta->host_name) : null);?></td>
+                    <td>
+                        <?php
+                        if ((isset($login_url) ? $login_url : null)) {
+                        ?>
+                        <a href="<?php echo (isset($login_url) ? $this->Html->safe($login_url) : null);?>" target="_blank"><?php $this->_('Cpanel.service_info.option_login');?></a>
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

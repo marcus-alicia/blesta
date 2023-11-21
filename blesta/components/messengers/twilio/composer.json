@@ -1,0 +1,10 @@
+{
+    "name": "blesta/twilio",
+    "description": "Twilio",
+    "license": "proprietary",
+    "type": "blesta-messenger",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "twilio/sdk":"^6.10"
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "id":"id",
+    "name":"name",
+    "taxable":"taxable",
+    "prorata_day":"prorata_day",
+    "prorata_cutoff":"prorata_cutoff",
+    "upgrades_use_renewal":"upgrades_use_renewal"
+}

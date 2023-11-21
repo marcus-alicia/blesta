@@ -1,0 +1,22 @@
+
+	<ul>
+		<li>
+			<?php
+            $this->Form->label($this->_('AuthorizeNetAcceptjs.login_id', true), 'login_id');
+            $this->Form->fieldText('login_id', ($meta['login_id'] ?? null), ['id' => 'login_id']);
+            ?>
+		</li>
+        <li>
+            <?php
+            $this->Form->label($this->_('AuthorizeNetAcceptjs.transaction_key', true), 'transaction_key');
+            $this->Form->fieldText('transaction_key', ($meta['transaction_key'] ?? null), ['id' => 'transaction_key']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->fieldCheckbox('sandbox', 'true', (($meta['sandbox'] ?? 'false') == 'true'), ['id' => 'sandbox']);
+            $this->Form->label($this->_('AuthorizeNetAcceptjs.sandbox', true), 'sandbox', ['class' => 'inline']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AuthorizeNetAcceptjs.sandbox_note');?></div></span>
+        </li>
+	</ul>

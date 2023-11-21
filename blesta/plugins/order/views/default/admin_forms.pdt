@@ -1,0 +1,121 @@
+        <?php
+        echo (isset($message) ? $message : null);
+        ?>
+
+        <?php
+        $tabs = [
+            ['name' => $this->_('AdminForms.index.tab_forms', true), 'current' => true, 'attributes' => ['href' => $this->base_uri . 'plugin/order/admin_forms/']],
+            ['name' => $this->_('AdminForms.index.tab_settings', true), 'attributes' => ['href' => $this->base_uri . 'plugin/order/admin_forms/settings/']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('AdminForms.settings.boxtitle_order', true), ['id'=>'admin_forms'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="pad">
+            <div class="inner">
+                <div class="links_row">
+                    <a class="btn btn-default btn-sm pull-right" title="<?php $this->_('AdminForms.index.order_form_add');?>" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/add/');?>"><i class="fas fa-plus fa-fw"></i></a>
+                </div>
+                <?php
+                if ((isset($order_forms) ? $order_forms : null) && !empty($order_forms)) {
+                ?>
+
+                <table class="table option_table">
+                    <thead>
+                        <tr class="heading_row">
+                            <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/index/?sort=name&order=' . ($sort == 'name' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'name' ? ' ' . $order : '');?>"><?php $this->_('AdminForms.index.heading_name');?></a></span></td>
+                            <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/index/?sort=label&order=' . ($sort == 'label' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'label' ? ' ' . $order : '');?>"><?php $this->_('AdminForms.index.heading_label');?></a></span></td>
+                            <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/index/?sort=template&order=' . ($sort == 'template' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'template' ? ' ' . $order : '');?>"><?php $this->_('AdminForms.index.heading_template');?></a></span></td>
+                            <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/index/?sort=type&order=' . ($sort == 'type' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'type' ? ' ' . $order : '');?>"><?php $this->_('AdminForms.index.heading_type');?></a></span></td>
+                            <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/index/?sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('AdminForms.index.heading_date_added');?></a></span></td>
+                            <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/index/?sort=status&order=' . ($sort == 'status' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'status' ? ' ' . $order : '');?>"><?php $this->_('AdminForms.index.heading_status');?></a></span></td>
+                            <td class="last"><span><?php $this->_('AdminForms.index.heading_options');?></span></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Display all clients
+                        $i=0;
+                        foreach ($order_forms as $order_form) {
+                        ?>
+                        <tr class="<?php echo $this->Html->concat(' ', ($i++ % 2 == 1) ? 'odd_row' : '', 'option_row');?>" id="order_forms_<?php echo (isset($order_form->id) ? $this->Html->safe($order_form->id) : null);?>">
+                            <td><?php echo (isset($order_form->name) ? $this->Html->safe($order_form->name) : null);?></td>
+                            <td><a href="<?php echo $this->Html->safe((isset($base_order_url) ? $base_order_url : null) . (isset($order_form->label) ? $order_form->label : null));?>"><?php echo (isset($order_form->label) ? $this->Html->safe($order_form->label) : null);?></a></td>
+                            <td><?php echo (isset($templates[$order_form->template]->styles->{$order_form->template_style}->name) ? $this->Html->safe($templates[$order_form->template]->styles->{$order_form->template_style}->name) : null);?></td>
+                            <td><?php echo $this->Html->safe((isset($types[$order_form->type]) ? $types[$order_form->type] : null));?></td>
+                            <td><?php echo $this->Date->cast((isset($order_form->date_added) ? $order_form->date_added : null), 'date_time');?></td>
+                            <td><?php $this->_('AdminForms.index.field_status_' . (isset($order_form->status) ? $order_form->status : null));?></td>
+                            <td>
+                                <a href="<?php echo $this->base_uri . 'plugin/order/admin_forms/edit/' . (isset($order_form->id) ? $this->Html->safe($order_form->id) : null) . '/';?>"><?php $this->_('AdminForms.index.option_edit');?></a>,
+                                <?php
+                                $this->Form->create($this->base_uri . 'plugin/order/admin_forms/delete/');
+                                $this->Form->fieldHidden('id', (isset($order_form->id) ? $order_form->id : null));
+                                ?>
+                                <a href="<?php echo $this->base_uri . 'plugin/order/admin_forms/delete/' . (isset($order_form->id) ? $this->Html->safe($order_form->id) : null) . '/';?>" class="manage delete_form" rel="<?php $this->_('AdminForms.index.text_confirm_delete');?>"><?php $this->_('AdminForms.index.option_delete');?></a>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                            </td>
+                            <td class="last center" style="width:17px;"><i class="fas fa-arrows-alt movable"></i></td>
+                        </tr>
+                        <?php
+
+                            #
+                            # TODO: Add expandable section to display URL to order form and number of orders through this form, etc.
+                            #
+
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminForms.index.order_forms_no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('a.delete_form[rel]').blestaModalConfirm({base_url: '<?php echo $this->Html->safe($this->base_uri);?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+
+        // Allow sort of options
+        var options = {
+            // Sort items on the list
+            update: function(event, ui) {
+                var params = {
+                    _csrf_token: "<?php echo $this->Form->getCsrfToken();?>"
+                }
+
+                $(this).blestaRequest("POST", '<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/sortorderforms/');?>', $(this).sortable("serialize") + "&" + $.param(params),
+                // Success
+                null,
+                // Error
+                null,
+                {dataType: 'json'});
+            }
+        };
+        $('table.table tbody').blestaSortable(false, options);
+        $('table.table tbody tr').hover(
+            function() {
+                $('.movable', this).show();
+            },
+            function() {
+                $('.movable', this).hide();
+            }
+        );
+    });
+</script>

@@ -1,0 +1,84 @@
+        <?php
+        if (!empty($package_options)) {
+        ?>
+        <div class="group_title_row">
+            <div class="title_row first">
+                <h3><?php $this->_('AdminPackageOptions.groupinfo.heading_options');?></h3>
+            </div>
+            <table class="table option_table">
+                <thead>
+                    <tr class="heading_row">
+                        <td></td>
+                        <td><span><?php $this->_('AdminPackageOptions.groupinfo.heading_label');?></span></td>
+                        <td class="last"><span><?php $this->_('AdminPackageOptions.groupinfo.heading_options');?></span></td>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                // Display all package options
+                $i = 0;
+                foreach ((isset($package_options) ? $package_options : []) as $package_option) {
+                ?>
+                    <tr class="<?php echo $this->Html->concat(' ', ($i++ % 2 == 1) ? 'odd_row' : '', 'option_row');?>" id="options_<?php (print (isset($package_option->id) ? $this->Html->safe($package_option->id) : null));?>">
+                        <td style="width:17px;" class="center"><i class="fas fa-arrows-alt movable"></i></td>
+                        <td><?php (print (isset($package_option->label) ? $this->Html->safe($package_option->label) : null));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'package_options/edit/' . (isset($package_option->id) ? $this->Html->safe($package_option->id) : null) . '/';?>"><?php $this->_('AdminPackageOptions.groupinfo.option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'package_options/remove/');
+                            $this->Form->fieldHidden('option_id', (isset($package_option->id) ? $this->Html->safe($package_option->id) : null));
+                            $this->Form->fieldHidden('group_id', (isset($package_group->id) ? $this->Html->safe($package_group->id) : null));
+                            ?>
+                            <a href="<?php echo $this->base_uri . 'package_options/remove/' . (isset($package_option->id) ? $this->Html->safe($package_option->id) : null) . '/';?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminPackageOptions.groupinfo.confirm_remove_option', true));?>"><?php $this->_('AdminPackageOptions.groupinfo.option_remove');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box"><?php $this->_('AdminPackageOptions.groupinfo.no_results');?></div>
+        </div>
+        <?php
+        }
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('table.option_table a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+
+        // Allow sort of options
+        var options = {
+            // Sort items on the list
+            update: function(event, ui) {
+                var params = {
+                    group_id: $(this).closest("tr.expand_details").attr("id").replace("package_option_group_", ""),
+                    _csrf_token: "<?php echo $this->Form->getCsrfToken();?>",
+                }
+
+                $(this).blestaRequest("POST", '<?php echo $this->Html->safe($this->base_uri . 'package_options/orderoptions/');?>', $(this).sortable("serialize") + "&" + $.param(params),
+                // Success
+                null,
+                // Error
+                null,
+                {dataType: 'json'});
+            }
+        }
+        $('table.table.option_table tbody').blestaSortable(false, options);
+        $('.option_table tbody tr').hover(
+            function() {
+                $('.movable', this).show();
+            },
+            function() {
+                $('.movable', this).hide();
+            }
+        );
+    });
+</script>

@@ -1,0 +1,96 @@
+
+    <h4><?php $this->_('Teamspeak.tab_client_bans.heading_bans'); ?></h4>
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><?php $this->_('Teamspeak.tab_client_bans.bans_heading.date'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_bans.bans_heading.ban_id'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_bans.bans_heading.ban_rule'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_bans.bans_heading.reason'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_bans.bans_heading.options'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            if (!empty($server_bans->bans)) {
+                foreach ($server_bans->bans as $ban) {
+                    $date = date('M d, Y', $ban->created);
+                    $rule = !empty($ban->ip) ? $ban->ip : $ban->lastnickname; ?>
+                <tr>
+                    <td><?php echo (isset($date) ? $this->Html->safe($date) : null); ?></td>
+                    <td><?php echo (isset($ban->banid) ? $this->Html->safe($ban->banid) : null); ?></td>
+                    <td><?php echo (isset($rule) ? $this->Html->safe($rule) : null); ?></td>
+                    <td><?php echo (isset($ban->reason) ? $this->Html->safe($ban->reason) : null); ?></td>
+                    <td>
+                        <?php
+                        $this->Form->create();
+                        $this->Form->fieldHidden('action', 'unban_client');
+                        $this->Form->fieldHidden('banid', $ban->banid); ?>
+                        <button class="btn btn-light btn-sm btn-success">
+                            <i class="fas fa-check"></i> <?php $this->_('Teamspeak.tab_client_bans.action_unban_client'); ?>
+                        </button>
+                        <?php
+                        $this->Form->end(); ?>
+                    </td>
+                </tr>
+            <?php
+                }
+            } else {
+            ?>
+                <tr>
+                    <td colspan="5"><?php $this->_('Teamspeak.tab_client_bans.text_no_bans'); ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row options">
+        <div class="col-md-12">
+            <a href="#" class="ban btn btn-light float-right" style="margin-top: 5px;">
+                <i class="fas fa-plus"></i> <?php $this->_('Teamspeak.tab_client_bans.action_ban'); ?>
+            </a>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div id="ban_client" style="display:none;">
+        <hr />
+        <h4><?php $this->_('Teamspeak.tab_client_bans.heading_create_ban'); ?></h4>
+
+        <?php
+            $this->Form->create($this->base_uri . 'services/manage/' . (isset($service_id) ? $service_id : null) . '/tabClientBans/');
+        ?>
+        <div class="w-100">
+            <div class="form-group">
+                <?php
+                    $this->Form->label($this->_('Teamspeak.tab_client_bans.field_ip_address', true), 'ip_address');
+                    $this->Form->fieldText('ip_address', (isset($vars->ip_address) ? $vars->ip_address : null), ['id' => 'ip_address', 'class' => 'form-control', 'placeholder' => $this->_('Teamspeak.tab_client_bans.field_ip_address', true)]);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                    $this->Form->label($this->_('Teamspeak.tab_client_bans.field_reason', true), 'reason');
+                    $this->Form->fieldText('reason', (isset($vars->reason) ? $vars->reason : null), ['id' => 'reason', 'class' => 'form-control', 'placeholder' => $this->_('Teamspeak.tab_client_bans.field_reason', true)]);
+                    $this->Form->fieldHidden('action', 'create_ban');
+                ?>
+            </div>
+        </div>
+        <button class="btn btn-light float-right">
+            <i class="fas fa-plus"></i> <?php $this->_('Teamspeak.tab_client_bans.field_ban_submit'); ?>
+        </button>
+        <?php
+            $this->Form->end();
+        ?>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.options a.ban').click(function() {
+        $('#ban_client').toggle();
+    });
+});
+</script>

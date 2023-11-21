@@ -1,0 +1,54 @@
+
+        <div class="title_row">
+            <h3><?php $this->_('AdminSearch.transactions.heading');?></h3>
+        </div>
+        <?php
+        if ((isset($transactions) ? $transactions : false) && ($num_transactions = count($transactions)) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><?php $this->_('AdminSearch.transactions.heading_client_id');?></span></td>
+                <td><span><?php $this->_('AdminSearch.transactions.heading_type');?></span></td>
+                <td><span><?php $this->_('AdminSearch.transactions.heading_amount');?></span></td>
+                <td><span><?php $this->_('AdminSearch.transactions.heading_credited');?></span></td>
+                <td><span><?php $this->_('AdminSearch.transactions.heading_applied');?></span></td>
+                <td><span><?php $this->_('AdminSearch.transactions.heading_number');?></span></td>
+                <td><span><?php $this->_('AdminSearch.transactions.heading_status');?></span></td>
+                <td><span><?php $this->_('AdminSearch.transactions.heading_date');?></span></td>
+                <td class="last"><span><?php $this->_('AdminSearch.transactions.heading_options');?></span></td>
+            </tr>
+            <?php
+            for ($i = 0; $i < $num_transactions; $i++) {
+                $transaction_type = ($transactions[$i]->type_name != '' ? $transactions[$i]->type_name : $transactions[$i]->type);
+            ?>
+            <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . (isset($transactions[$i]->client_id) ? $this->Html->safe($transactions[$i]->client_id) : null) . '/');?>"><?php (print (isset($transactions[$i]->client_id_code) ? $this->Html->safe($transactions[$i]->client_id_code) : null));?></a></td>
+                <td><?php echo (isset($transaction_types[$transaction_type]) ? $this->Html->safe($transaction_types[$transaction_type]) : null);?></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($transactions[$i]->amount) ? $this->Html->safe($transactions[$i]->amount) : null), (isset($transactions[$i]->currency) ? $this->Html->safe($transactions[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($transactions[$i]->credited_amount) ? $this->Html->safe($transactions[$i]->credited_amount) : null), (isset($transactions[$i]->currency) ? $this->Html->safe($transactions[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($transactions[$i]->applied_amount) ? $this->Html->safe($transactions[$i]->applied_amount) : null), (isset($transactions[$i]->currency) ? $this->Html->safe($transactions[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php (print (isset($transactions[$i]->transaction_id) ? $this->Html->safe($transactions[$i]->transaction_id) : null));?></td>
+                <td><?php (print (isset($transaction_status[$transactions[$i]->status]) ? $this->Html->safe($transaction_status[$transactions[$i]->status]) : null));?></td>
+                <td><?php echo $this->Date->cast((isset($transactions[$i]->date_added) ? $this->Html->safe($transactions[$i]->date_added) : null));?></td>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/edittransaction/' . (isset($transactions[$i]->client_id) ? $transactions[$i]->client_id : null) . '/' . (isset($transactions[$i]->id) ? $transactions[$i]->id : null));?>"><?php $this->_('AdminSearch.transactions.option_edit');?></a></td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+            <?php
+            if (isset($this->Pagination)) {
+                $this->Pagination->build();
+            }
+            ?>
+        <?php
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminSearch.transactions.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>

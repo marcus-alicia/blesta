@@ -1,0 +1,43 @@
+        <?php
+        // Don't show this container when only rendering the widget section
+        if (!(isset($render_section) ? $render_section : null)) {
+        ?>
+    <div class="col-md-12">
+        <?php
+        }
+        echo (isset($message) ? $message : null);
+
+        $this->WidgetClient->clear();
+        $this->WidgetClient->create($this->_('Affiliates.signup.boxtitle_affiliates', true), ['id' => 'affiliates'], (isset($render_section) ? $render_section : null));
+        $this->WidgetClient->startBody();
+        $this->Form->create();
+        ?>
+            <?php echo (isset($signup_content) ? $signup_content : null);?>
+
+            <?php
+            if ($logged_in) {
+            ?>
+            <p class="text-center">
+                <?php $this->Form->fieldSubmit('signup', $this->_('Affiliates.signup.signup', true), ['class' => 'btn btn-success']);?>
+            </p>
+            <?php
+            } else {
+            ?>
+            <p class="text-center">
+                <a href="<?php echo (isset($this->client_uri) ? $this->client_uri : null);?>login/" class="btn btn-success"><?php  $this->_('Affiliates.signup.login');?></a>
+            </p>
+            <?php
+            }
+            ?>
+        <?php
+        $this->Form->end();
+        $this->WidgetClient->endBody();
+        $this->WidgetClient->end();
+
+        // Don't show this container when only rendering the widget section
+        if (!(isset($render_section) ? $render_section : null)) {
+        ?>
+    </div>
+        <?php
+        }
+        ?>

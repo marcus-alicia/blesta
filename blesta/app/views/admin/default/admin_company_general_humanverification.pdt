@@ -1,0 +1,93 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyGeneral.humanverification.boxtitle_humanverification', true));
+                $this->Form->create();
+                ?>
+                <div class="inner">
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminCompanyGeneral.humanverification.heading_captcha_provider');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyGeneral.humanverification.field_captcha', true), 'captcha', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyGeneral.!tooltip.captcha');?></div></span>
+                                <?php $this->Form->fieldSelect('captcha', $captchas, (isset($vars['captcha']) ? $vars['captcha'] : null), ['id' => 'captcha', 'class' => 'block']);?>
+                            </li>
+                            <?php
+                            foreach ($options as $captcha_id => $input_html) {
+                            ?>
+                            <li class="<?php echo (isset($captcha_id) ? $captcha_id : null);?>">
+                                <?php
+                                // Show module fields
+                                if (isset($input_html) && ($package_field_html = $input_html->generate(null, $this->view))) {
+                                ?>
+                                    <?php
+                                    echo $package_field_html;
+                                }
+                                ?>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyGeneral.humanverification.heading_enabled_forms');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <?php
+                            foreach ($forms as $form) {
+                            ?>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('captcha_enabled_forms[' . $form . ']', '1', (isset($vars['captcha_enabled_forms'][$form]) ? $vars['captcha_enabled_forms'][$form] : null) == '1', ['id' => 'captcha_enabled_forms_' . $form, 'class' => 'inline']);
+                                $this->Form->label($this->_('AdminCompanyGeneral.humanverification.field_captcha_enabled_forms_' . $form, true), 'captcha_enabled_forms_' . $form, ['class' => 'inline']);
+                                ?>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyGeneral.humanverification.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        setCaptcha();
+        $("#captcha").change(setCaptcha);
+
+        function setCaptcha() {
+            <?php
+            foreach ($options as $captcha_id => $fields) {
+            ?>
+            $("li.<?php echo (isset($captcha_id) ? $captcha_id : null);?>").hide();
+
+            if ($("#captcha").val() == "<?php echo (isset($captcha_id) ? $captcha_id : null);?>") {
+                $("li.<?php echo (isset($captcha_id) ? $captcha_id : null);?>").show();
+            }
+            <?php
+            }
+            ?>
+        }
+    });
+</script>

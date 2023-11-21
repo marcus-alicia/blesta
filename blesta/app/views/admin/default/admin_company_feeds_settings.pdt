@@ -1,0 +1,70 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyFeeds.settings.boxtitle_feed_settings', true));
+                $this->Form->create();
+                ?>
+                <div class="inner">
+                    <?php
+                    $i = 0;
+                    foreach ($feeds ?? [] as $feed) {
+                    ?>
+                    <div class="title_row<?php echo ($i == 0 ? ' first' : '');?>"><h3><?php echo $this->Html->safe($feed->name);?></h3></div>
+                    <div class="pad">
+                        <p><?php echo $this->Html->safe($feed->description);?></p>
+                        <ul class="p-1">
+                            <?php
+                            if (!empty($feed->endpoints)) {
+                            ?>
+                            <li>
+                                <div class="title_row first"><h3><?php $this->_('AdminCompanyFeeds.settings.header_endpoints');?></h3></div>
+                                <?php
+                                foreach ($feed->endpoints as $endpoint) {
+                                ?>
+                                <div class="pad">
+                                    <?php
+                                    $this->Form->fieldCheckbox('endpoint[' . $endpoint->id . ']', '1', ($vars['endpoint'][$endpoint->id] ?? $endpoint->enabled) == '1', ['id' => 'endpoint_' . $endpoint->id, 'class' => 'inline']);
+                                    $this->Form->label($this->Html->safe($endpoint->feed . '/' . $endpoint->endpoint), 'endpoint_' . $endpoint->id, ['class' => 'inline']);
+                                    ?>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </li>
+                            <?php
+                            }
+
+                            // Show data feed fields
+                            if (isset($feed->fields) && ($feed_field_html = $feed->fields->generate(null, $this->view))) {
+                            ?>
+                            <li>
+                                <?php
+                                echo $feed_field_html;
+                                ?>
+                            </li>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                    </div>
+                    <?php
+                        $i++;
+                    }
+                    ?>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyFeeds.settings.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

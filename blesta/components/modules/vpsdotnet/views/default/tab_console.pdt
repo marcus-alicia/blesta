@@ -1,0 +1,29 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Vpsdotnet.tab_console.heading_console');?></h3>
+    </div>
+    <div class="pad">
+        <ul>
+            <li><?php $this->_('Vpsdotnet.tab_console.root_password');?> <?php echo (isset($service_fields->vpsdotnet_password) ? $this->Html->safe($service_fields->vpsdotnet_password) : null);?></li>
+        </ul>
+        <?php
+        // Display the console applet
+        if ((isset($console) ? $console : null) && $console) {
+        ?>
+        <applet width="100%" height="700"
+            archive="https://console.vps.net/vnc.jar"
+            code="VncViewer.class"
+            codebase="https://console.vps.net/vnc/">
+            <param name="PORT" value="<?php echo (isset($console->port) ? $this->Html->safe($console->port) : null);?>" />
+            <param name="PASSWORD" value="<?php echo (isset($console->password) ? $this->Html->safe($console->password) : null);?>" />
+        </applet>
+        <?php
+        }
+        ?>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(this).blestaSetHeadTag("link", {media:"screen", type:"text/css", rel:"stylesheet", href: "<?php echo $this->Html->safe($this->view_dir . 'css/styles.css');?>"});
+});
+</script>

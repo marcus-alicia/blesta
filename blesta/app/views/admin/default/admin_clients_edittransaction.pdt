@@ -1,0 +1,125 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.edittransaction.boxtitle_edittransaction', true), ['id' => 'admin_clients_edittransaction']);
+        ?>
+        <div class="inner">
+
+            <table class="table">
+                <tr class="heading_row">
+                    <td><span><?php $this->_('AdminClients.edittransaction.heading_type');?></span></td>
+                    <td><span><?php $this->_('AdminClients.edittransaction.heading_amount');?></span></td>
+                    <td><span><?php $this->_('AdminClients.edittransaction.heading_credited');?></span></td>
+                    <td><span><?php $this->_('AdminClients.edittransaction.heading_applied');?></span></td>
+                    <td><span><?php $this->_('AdminClients.edittransaction.heading_number');?></span></td>
+                    <td><span><?php $this->_('AdminClients.edittransaction.heading_status');?></span></td>
+                    <td class="last"><span><?php $this->_('AdminClients.edittransaction.heading_date');?></span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <?php
+                        if ((isset($transaction->type) ? $transaction->type : null) == 'other' && (isset($transaction->gateway_type) ? $transaction->gateway_type : null) == 'nonmerchant') {
+                            $trans_type = $transaction->gateway_name;
+                        } else {
+                            $trans_type = (isset($transaction_types[($transaction->type_name != '' ? $transaction->type_name : $transaction->type)]) ? $transaction_types[($transaction->type_name != '' ? $transaction->type_name : $transaction->type)] : null);
+                        }
+                        ?>
+                        <?php (print (isset($trans_type) ? $this->Html->safe($trans_type) : null));?>
+                    </td>
+                    <td><?php echo $this->CurrencyFormat->format((isset($transaction->amount) ? $this->Html->safe($transaction->amount) : null), (isset($transaction->currency) ? $this->Html->safe($transaction->currency) : null), ['html_code' => true]);?></td>
+                    <td><?php echo $this->CurrencyFormat->format((isset($transaction->credited_amount) ? $this->Html->safe($transaction->credited_amount) : null), (isset($transaction->currency) ? $this->Html->safe($transaction->currency) : null), ['html_code' => true]);?></td>
+                    <td><?php echo $this->CurrencyFormat->format((isset($transaction->applied_amount) ? $this->Html->safe($transaction->applied_amount) : null), (isset($transaction->currency) ? $this->Html->safe($transaction->currency) : null), ['html_code' => true]);?></td>
+                    <td><?php (print (isset($transaction->transaction_id) ? $this->Html->safe($transaction->transaction_id) : null));?></td>
+                    <td><?php (print (isset($transaction_status[$transaction->status]) ? $this->Html->safe($transaction_status[$transaction->status]) : null));?></td>
+                    <td><?php echo $this->Date->cast((isset($transaction->date_added) ? $this->Html->safe($transaction->date_added) : null), 'date_time');?></td>
+                </tr>
+                <tr class="expand_details" style="display: table-row;">
+                    <td colspan="7" class="subtable">
+                        <?php
+                        if ((isset($applied) ? $applied : null)) {
+                        ?>
+                        <table class="table">
+                            <tr class="heading_row">
+                                <td class="border_left"><?php $this->_('AdminClients.edittransaction.subheading_invoice');?></td>
+                                <td><?php $this->_('AdminClients.edittransaction.subheading_amount');?></td>
+                                <td><?php $this->_('AdminClients.edittransaction.subheading_appliedon');?></td>
+                                <td class="last"><?php $this->_('AdminClients.edittransaction.subheading_options');?></td>
+                            </tr>
+                            <?php
+                            $num_applied = count($applied);
+                            for ($i = 0; $i < $num_applied; $i++) {
+                            ?>
+                            <tr<?php echo ($i % 2 == 1 ? ' class="odd_row"' : '');?>>
+                                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/viewinvoice/' . (isset($transaction->client_id) ? $transaction->client_id : null) . '/' . (isset($applied[$i]->invoice_id) ? $applied[$i]->invoice_id : null) . '/');?>"><?php (print (isset($applied[$i]->invoice_id_code) ? $this->Html->safe($applied[$i]->invoice_id_code) : null));?></a></td>
+                                <td><?php echo $this->CurrencyFormat->format((isset($applied[$i]->applied_amount) ? $this->Html->safe($applied[$i]->applied_amount) : null), (isset($applied[$i]->currency) ? $this->Html->safe($applied[$i]->currency) : null), ['html_code' => true]);?></td>
+                                <td><?php echo $this->Date->cast((isset($applied[$i]->applied_date) ? $this->Html->safe($applied[$i]->applied_date) : null), 'date_time');?></td>
+                                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/unapplytransaction/' . (isset($transaction->id) ? $transaction->id : null) . '/' . (isset($applied[$i]->invoice_id) ? $applied[$i]->invoice_id : null) . '/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminClients.edittransaction.confirm_unapply', true));?>"><?php $this->_('AdminClients.edittransaction.option_unapply');?></a></td>
+                            </tr>
+                            <?php
+                            }
+                            ?>
+                        </table>
+                        <?php
+                        } else {
+                        ?>
+                        <div class="empty_section">
+                            <div class="empty_box"><?php $this->_('AdminClients.edittransaction.applied_no_results');?></div>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="pad">
+                <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.edittransaction.field_status', true), 'status');
+                        $this->Form->fieldSelect('status', $transaction_status, (isset($vars->status) ? $vars->status : null), ['id' => 'status']);
+                        ?>
+                    </li>
+                    <?php
+                    if ((isset($transaction->gateway_id) ? $transaction->gateway_id : false) && (isset($transaction->status) ? $transaction->status : null) != 'void' && (isset($transaction->status) ? $transaction->status : null) != 'returned') {
+                    ?>
+                    <li class="process_remotely">
+                        <?php
+                        $this->Form->fieldCheckbox('process_remotely', 'true', (isset($vars->process_remotely) ? $vars->process_remotely : 'true') == 'true', ['id' => 'process_remotely']);
+                        $this->Form->label($this->_('AdminClients.edittransaction.field_processremotely', true, (isset($transaction->gateway_name) ? $transaction->gateway_name : null)), 'process_remotely', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+                <div class="button_row">
+                    <?php
+                    $this->Form->fieldSubmit('save', $this->_('AdminClients.edittransaction.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                    ?>
+                </div>
+                <?php $this->Form->end();?>
+            </div>
+        </div>
+        <?php $this->Widget->end();?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Handle confirmation
+        $('#admin_clients_edittransaction a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>'});
+
+        $("#admin_clients_edittransaction .process_remotely").hide();
+        changeStatus($("#admin_clients_edittransaction select[name='status']").val());
+
+        $("#admin_clients_edittransaction select[name='status']").change(function() {
+            changeStatus($(this).val());
+        });
+    });
+
+    function changeStatus(status) {
+        if (status == "void" || status == "refunded")
+            $("#admin_clients_edittransaction .process_remotely").show();
+        else
+            $("#admin_clients_edittransaction .process_remotely").hide();
+    }
+</script>

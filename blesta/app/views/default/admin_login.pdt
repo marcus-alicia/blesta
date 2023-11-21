@@ -1,0 +1,88 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="login-box vertical-center">
+                <div class="card card-login">
+                    <div class="card-body">
+                        <h3><?php $this->_('AdminLogin.index.title_adminarea', false, (isset($system_company->name) ? $this->Html->safe($system_company->name) : null));?></h3>
+                        <?php
+                        echo (isset($message) ? $message : null);
+                        $this->Form->create(null, ['class' => 'disable-on-submit']);
+                        ?>
+                            <div class="form-group">
+                                <?php
+                                $this->Form->fieldText(
+                                    'username',
+                                    (isset($vars->username) ? $vars->username : null),
+                                    [
+                                        'id' => 'username',
+                                        'class' => 'form-control',
+                                        'tabindex' => 1,
+                                        'placeholder' => $this->_('AdminLogin.index.field_username', true),
+                                        'autofocus' => 'autofocus'
+                                    ]
+                                );
+                                ?>
+                            </div>
+                            <div class="form-group">
+                                <?php
+                                $this->Form->fieldPassword(
+                                    'password',
+                                    [
+                                        'id' => 'password',
+                                        'class' => 'form-control',
+                                        'tabindex' => 2,
+                                        'placeholder' => $this->_('AdminLogin.index.field_password', true)
+                                    ]
+                                );
+                                ?>
+                            </div>
+                            <?php
+                            if ((isset($captcha) ? $captcha : null)) {
+                                ?>
+                                <div class="form-group">
+                                    <?php echo $captcha;?>
+                                </div>
+                                <?php
+                            }
+                            ?>
+                            <div class="row">
+                                <div class="col-md-8 col-xs-12">
+                                    <div class="checkbox">
+                                        <label class="control-label" for="remember_me">
+                                            <?php
+                                            $this->Form->fieldCheckbox(
+                                                'remember_me',
+                                                'true',
+                                                (isset($vars->remember_me) ? $vars->remember_me : null) == 'true',
+                                                [
+                                                    'id' => 'remember_me',
+                                                    'tabindex' => 3
+                                                ]
+                                            );
+                                            ?>
+                                            <?php $this->_('AdminLogin.index.field_rememberme');?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-xs-12">
+                                    <button class="btn btn-block btn-success float-right" type="submit">
+                                        <i class="fas fa-sign-in-alt"></i> <?php $this->_('AdminLogin.index.field_loginsubmit');?>
+                                    </button>
+                                </div>
+                            </div>
+                        <?php
+                        $this->Form->end();
+                        ?>
+                    </div>
+                    <div class="card-footer">
+                       <div class="pass-reset">
+                           <a href="<?php echo $this->base_uri . 'login/reset/';?>"><?php $this->_('AdminLogin.index.link_resetpassword');?></a>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

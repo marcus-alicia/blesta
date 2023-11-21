@@ -1,0 +1,156 @@
+    <?php
+    // Don't show this container when only rendering the widget section
+    if (!(isset($render_section) ? $render_section : null)) {
+    ?>
+    <div class="col-md-3">
+        <?php echo (isset($tabs) ? $tabs : null);?>
+    </div>
+    <div class="col-md-9">
+    <?php
+    }
+        echo (isset($message) ? $message : null);
+
+        $this->WidgetClient->clear();
+        $this->WidgetClient->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'order_form_styles']);
+        $this->WidgetClient->create($this->_('Payouts.add.boxtitle_request_payout', true), ['id' => 'request_payout'], (isset($render_section) ? $render_section : null));
+        $this->WidgetClient->startBody();
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <h4><?php $this->_('Payouts.add.title_payout_request');?></h4>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('Payouts.add.field_requested_amount', true), 'requested_amount');
+            ?>
+            <div class="input-group">
+                <?php
+                $this->Form->fieldText('requested_amount', (isset($vars->requested_amount) ? $vars->requested_amount : $available_payout), ['id' => 'requested_amount', 'class' => 'form-control', 'placeholder' => $this->_('Payouts.add.field_requested_amount', true)]);
+                ?>
+                <span class="input-group-append">
+                    <div class="input-group-text"><?php echo (isset($affiliate_settings['withdrawal_currency']) ? $affiliate_settings['withdrawal_currency'] : 'USD');?></div>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('Payouts.add.field_requested_currency', true), 'requested_currency');
+            $this->Form->fieldSelect('requested_currency', (isset($currencies) ? $currencies : null), (isset($client->settings['default_currency']) ? $client->settings['default_currency'] : (isset($vars->requested_currency) ? $vars->requested_currency : null)), ['id' => 'requested_currency', 'class' => 'form-control']);
+
+            foreach ((isset($exchange_rates) ? $exchange_rates : []) as $currency => $exchange_rate) {
+            ?>
+            <p class="exchange-rate" id="<?php echo (isset($currency) ? $this->Html->safe($currency) : null);?>_exchange_rate">Estimated Exchange Rate: <?php echo (isset($exchange_rate) ? $this->Html->safe($exchange_rate) : null);?></p>
+            <?php
+            }
+            ?>
+        </div>
+        <div class="form-group">
+            <?php
+            $this->Form->label($this->_('Payouts.add.field_payment_method', true), 'payment_method');
+            $this->Form->fieldSelect('payment_method', (isset($payment_methods) ? $payment_methods : null), (isset($vars->payment_method) ? $vars->payment_method : null), ['id' => 'payment_method', 'class' => 'form-control']);
+            ?>
+        </div>
+
+        <h4><?php $this->_('Affiliates.index.title_details');?></h4>
+        <div class="table-responsive form-group">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <td><?php $this->_('Payouts.add.min_withdrawal_amount');?></td>
+                        <td>
+                            <?php
+                            echo $this->CurrencyFormat->format(
+                                (isset($affiliate_settings['min_withdrawal_amount']) ? $affiliate_settings['min_withdrawal_amount'] : 0),
+                                (isset($affiliate_settings['withdrawal_currency']) ? $affiliate_settings['withdrawal_currency'] : 'USD'),
+                                ['html_code' => true]
+                            );
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php $this->_('Payouts.add.max_withdrawal_amount');?></td>
+                        <td>
+                            <?php
+                            echo $this->CurrencyFormat->format(
+                                (isset($affiliate_settings['max_withdrawal_amount']) ? $affiliate_settings['max_withdrawal_amount'] : 0),
+                                (isset($affiliate_settings['withdrawal_currency']) ? $affiliate_settings['withdrawal_currency'] : 'USD'),
+                                ['html_code' => true]
+                            );
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><?php $this->_('Payouts.add.available_payout');?></td>
+                        <td>
+                            <?php
+                            $formatted_available_payout = $this->CurrencyFormat->format(
+                                (isset($available_payout) ? $available_payout : 0),
+                                (isset($affiliate_settings['withdrawal_currency']) ? $affiliate_settings['withdrawal_currency'] : 'USD'),
+                                ['html_code' => true]
+                            );
+                            echo (isset($formatted_available_payout) ? $formatted_available_payout : 0);
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button type="submit" class="btn btn-light pull-right" id="request-payout">
+            <i class="fas fa-arrow-circle-right"></i> <?php $this->_('Payouts.add.request_payout');?>
+        </button>
+        <?php
+        $this->Form->end();
+
+        $this->WidgetClient->endBody();
+        $this->WidgetClient->end();
+
+    // Don't show this container when only rendering the widget section
+    if (!(isset($render_section) ? $render_section : null)) {
+    ?>
+    </div>
+    <?php
+    }
+    ?>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            function updateExchangeRate() {
+                var currency = $('#requested_currency').val();
+                $('.exchange-rate').hide();
+                $('#' + currency + '_exchange_rate').show();
+            }
+
+            $('#requested_currency').change(function() {
+                updateExchangeRate();
+            });
+            updateExchangeRate();
+
+            // Limit the requested amount based on the min/max withdrawal settings
+            function limitWithdrawalAmount() {
+                var amount = $('#requested_amount').val();
+
+                if (amount > <?php echo (isset($affiliate_settings['max_withdrawal_amount']) ? $affiliate_settings['max_withdrawal_amount'] : 0);?>) {
+                    $('#requested_amount').val(<?php echo (isset($affiliate_settings['max_withdrawal_amount']) ? $affiliate_settings['max_withdrawal_amount'] : 0);?>);
+                } else if (amount < <?php echo (isset($affiliate_settings['min_withdrawal_amount']) ? $affiliate_settings['min_withdrawal_amount'] : 0);?>) {
+                    $('#requested_amount').val(<?php echo (isset($affiliate_settings['min_withdrawal_amount']) ? $affiliate_settings['min_withdrawal_amount'] : 0);?>);
+                }
+            }
+
+            $('#requested_amount').change(function() {
+                limitWithdrawalAmount();
+            });
+            limitWithdrawalAmount();
+
+            <?php
+            // Disable payout request button if no funds are available
+            if ((isset($available_payout) ? $available_payout : 0) < (isset($affiliate_settings['min_withdrawal_amount']) ? $affiliate_settings['min_withdrawal_amount'] : 0)) {
+            ?>
+            $('#request-payout').click(function(e) {
+                e.preventDefault();
+            });
+            $('#request-payout').prop('disabled', true);
+            <?php
+            }
+            ?>
+        });
+    </script>

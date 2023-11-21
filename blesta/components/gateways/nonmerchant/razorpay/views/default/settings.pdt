@@ -1,0 +1,29 @@
+
+	<ul>
+		<li>
+			<?php
+            $this->Form->label($this->_('Razorpay.key_id', true), 'key_id');
+            $this->Form->fieldText('key_id', (isset($meta['key_id']) ? $meta['key_id'] : null), ['id'=>'key_id']);
+            ?>
+		</li>
+		<li>
+			<?php
+            $this->Form->label($this->_('Razorpay.key_secret', true), 'key_secret');
+            $this->Form->fieldText('key_secret', (isset($meta['key_secret']) ? $meta['key_secret'] : null), ['id'=>'key_secret']);
+            ?>
+		</li>
+        <li>
+            <?php
+            $this->Form->label($this->_('Razorpay.webhook_secret', true), 'webhook_secret');
+            $this->Form->fieldText('webhook_secret', (isset($meta['webhook_secret']) ? $meta['webhook_secret'] : null), ['id'=>'webhook_secret']);
+            ?>
+        </li>
+	</ul>
+
+    <div class="title_row">
+        <h3><?php $this->_('Razorpay.webhook'); ?></h3>
+    </div>
+    <div class="pad">
+        <p><?php $this->_('Razorpay.webhook_note'); ?></p>
+        <code><?php echo Configure::get('Blesta.gw_callback_url') . Configure::get('Blesta.company_id') . '/razorpay/'; ?></code>
+    </div>

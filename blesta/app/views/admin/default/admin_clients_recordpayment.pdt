@@ -1,0 +1,205 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.recordpayment.boxtitle_recordpayment', true), ['id' => 'admin_clients_recordpayment'], (isset($render_section) ? $render_section : null));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li id="record_credit">
+                        <?php
+                        // Partial for selecting to record a payment, or apply a credit
+                        echo (isset($record_payment_fields) ? $record_payment_fields : null);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.recordpayment.field_amount', true), 'amount');
+                        $this->Form->fieldText('amount', (isset($vars->amount) ? $vars->amount : null), ['id' => 'amount', 'class' => 'small']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.recordpayment.field_transaction_id', true), 'transaction_id');
+                        $this->Form->fieldText('transaction_id', (isset($vars->transaction_id) ? $vars->transaction_id : null), ['id' => 'transaction_id', 'class' => 'small']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.recordpayment.field_transactiontype', true), 'transaction_type');
+                        $this->Form->fieldSelect('transaction_type', (isset($transaction_types) ? $transaction_types : null), (isset($vars->transaction_type) ? $vars->transaction_type : 'check'), ['id' => 'transaction_type']);
+                        ?>
+                    </li>
+                    <li class="gateway">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.recordpayment.field_gateway_id', true), 'gateway_id');
+                        $this->Form->fieldHidden('gateway_id', (isset($vars->gateway_id) ? $vars->gateway_id : null), ['id' => 'gateway_id']);
+                        $this->Form->fieldSelect('merchant_gw', ['' => $this->_('AdminClients.recordpayment.gateway_none', true)] + $this->Form->collapseObjectArray($merchant_gateways, 'name', 'id'), (isset($vars->gateway_id) ? $vars->gateway_id : null), ['id' => 'merchant_gw']);
+                        $this->Form->fieldSelect('nonmerchant_gw', ['' => $this->_('AdminClients.recordpayment.gateway_none', true)] + $this->Form->collapseObjectArray($nonmerchant_gateways, 'name', 'id'), (isset($vars->gateway_id) ? $vars->gateway_id : null), ['id' => 'nonmerchant_gw']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.recordpayment.field_currency', true), 'currency');
+                        $this->Form->fieldSelect('currency', (isset($currencies) ? $currencies : null), (isset($vars->currency) ? $vars->currency : null), ['id' => 'currency']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.recordpayment.field_status', true), 'status');
+                        $this->Form->fieldSelect('status', (isset($statuses) ? $statuses : null), (isset($vars->status) ? $vars->status : 'approved'), ['id' => 'status']);
+                        ?>
+                    </li>
+                    <li class="show_date_received">
+                        <h4 class="no_pad"><a class="show_content" href="#"><i class="fas fa-caret-down"></i> <?php $this->_('AdminClients.recordpayment.text_datereceived');?></a></h4>
+                    </li>
+                    <li class="date_received hidden">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.recordpayment.field_datereceived', true), 'date_received');
+                        $this->Form->fieldText('date_received', (isset($vars->date_received) ? $vars->date_received : $this->Date->cast(date('c'), 'Y-m-d')), ['id' => 'date_received', 'class' => 'small date']);
+                        ?>
+                    </li>
+                </ul>
+
+                <div id="invoices_to_pay">
+                    <?php
+                    echo (isset($invoice_info) ? $invoice_info : null);
+                    ?>
+                </div>
+            </div>
+            <div class="pad clear email_receipt">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('email_receipt', 'true', (isset($vars->email_receipt) ? $vars->email_receipt : null), ['id' => 'email_receipt']);
+                        $this->Form->label($this->_('AdminClients.recordpayment.field_receipt', true), 'email_receipt', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.recordpayment.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+
+<?php
+$this->Javascript->setInline('
+    $(document).ready(function() {
+        // Toggle date received
+        $(this).blestaBindToggleEvent(".show_date_received a", ".date_received");
+
+        $("#amount").focus();
+
+        $("input[name=\'invoice_id[]\']").on("click", function() {
+            if ($(this).val() == "all") {
+                if ($(this).prop("checked"))
+                    $("input[name=\'invoice_id[]\']").prop("checked", true);
+                else
+                    $("input[name=\'invoice_id[]\']").prop("checked", false);
+            }
+        });
+
+        // Swap invoices to be paid based on currency selected
+        $("#currency").change(function() {
+            $(this).blestaRequest("POST", "' . $this->Html->safe($this->base_uri . 'clients/makepaymentinvoices/' . $client->id . '/') . '", $(this).closest("form").serialize(), function(data) {
+                $("#invoices_to_pay").html(data.content);
+            },
+            null,
+            {dataType: "json"});
+
+            $(this).blestaRequest("POST", "' . $this->Html->safe($this->base_uri . 'clients/getrecordcreditfields/' . $client->id . '/') . '", $(this).closest("form").serialize(), function(data) {
+                $("#record_credit").html(data.content);
+                setPaymentType();
+            },
+            null,
+            {dataType: "json"});
+        });
+
+        setPaymentType();
+        $("#record_credit").on("change", ".payment_type", function() {
+            setPaymentType();
+        });
+
+        setGateway();
+        $("#transaction_type").change(function() {
+            setGateway();
+        });
+
+        toggleInvoiceAndEmail();
+        $("#status").change(toggleInvoiceAndEmail);
+
+        function setGateway() {
+            $("li.gateway").hide();
+            $("#merchant_gw").hide();
+            $("#nonmerchant_gw").hide();
+
+            $("#merchant_gw").change(function() {
+                $("#gateway_id").val($(this).val());
+            });
+            $("#nonmerchant_gw").change(function() {
+                $("#gateway_id").val($(this).val());
+            });
+
+            switch($("#transaction_type").val()) {
+                case "cc":
+                    $("li.gateway").show();
+                    $("#merchant_gw").show();
+                    $("#gateway_id").val($("#merchant_gw").val());
+                    break;
+                case "ach":
+                    $("li.gateway").show();
+                    $("#merchant_gw").show();
+                    $("#gateway_id").val($("#merchant_gw").val());
+                    break;
+                case "other":
+                    $("li.gateway").show();
+                    $("#nonmerchant_gw").show();
+                    $("#gateway_id").val($("#nonmerchant_gw").val());
+                    break;
+                default:
+                    $("#gateway_id").val("");
+                    break;
+            }
+        }
+
+        function setPaymentType() {
+            if ($("#payment_type_credit").prop("checked")) {
+                $("#amount").parent().hide();
+                $("#transaction_id").parent().hide();
+                $("#transaction_type").parent().hide();
+                $("#email_receipt").closest("div.pad").hide();
+            }
+            else {
+                $("#amount").parent().show();
+                $("#transaction_id").parent().show();
+                $("#transaction_type").parent().show();
+
+                if ($("#status").val() == "approved") {
+                    $("#email_receipt").closest("div.pad").show();
+                }
+            }
+        }
+
+        function toggleInvoiceAndEmail() {
+            if ($("#status").val() == "approved") {
+                if (!$("#payment_type_credit").prop("checked")) {
+                    $(".email_receipt").show();
+                }
+                $("#invoices_to_pay").show();
+                $(".email_receipt input, #invoices_to_pay input").prop("disabled", false);
+            } else {
+                $(".email_receipt, #invoices_to_pay").hide();
+                $(".email_receipt input, #invoices_to_pay input").prop("disabled", true);
+            }
+        }
+    });
+');
+?>

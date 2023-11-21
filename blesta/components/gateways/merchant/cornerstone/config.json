@@ -1,0 +1,21 @@
+{
+    "version": "1.2.0",
+    "name": "Cornerstone.name",
+    "description": "Cornerstone.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "http://www.blesta.com"
+        }
+    ],
+    "currencies": [
+        "AED", "AMD", "ANG", "ARS", "AUD", "AWG", "AZN", "BBD", "BDT", "BGN",
+        "BIF", "BMD", "BND", "BOB", "BRL", "BSD", "BWP", "BYR", "BZD", "CAD",
+        "CHF", "CLP", "CNY", "COP", "CRC", "CVE", "CZK", "DJF", "DKK", "DOP",
+        "DZD", "EGP", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GIP", "GMD",
+        "GNF", "GTQ", "GYD", "HKD", "HNL", "HTG", "HUF", "IDR", "ILS", "INR",
+        "ISK", "JMD", "JPY", "KES", "KGS", "KHR", "KMF", "KRW", "KZT", "SZL",
+        "TOP", "TRY", "TTD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS",
+        "VND", "VUV", "WST", "XAF", "XOF", "XPF", "ZAR", "ZWD"
+    ]
+}

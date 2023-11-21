@@ -1,0 +1,42 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyLookandfeel.template.box_title', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyLookandfeel.template.text_client_view_dir', true), 'client_view_dir');?>
+                                <?php $this->Form->fieldSelect('client_view_dir', ($client_view_dirs ?? null), ($vars['client_view_dir'] ?? null), ['id' => 'client_view_dir']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyLookandfeel.template.text_admin_view_dir', true), 'admin_view_dir');?>
+                                <?php $this->Form->fieldSelect('admin_view_dir', ($admin_view_dirs ?? null), ($vars['admin_view_dir'] ?? 'default'), ['id' => 'admin_view_dir']);?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('client_view_override', 'true', ($vars['client_view_override'] ?? 'false') == 'true', ['id' => 'client_view_override']);
+                                $this->Form->label($this->_('AdminCompanyLookandfeel.template.text_client_view_override', true), 'client_view_override', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyLookandfeel.!tooltip.client_view_override');?></div></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyLookandfeel.template.text_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

@@ -1,0 +1,36 @@
+
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminClients.addservice.boxtitle_addservice', true, (isset($package->name) ? $package->name : null)));
+        ?>
+
+        <div class="inner">
+        <?php
+        if (isset($package_options)) {
+            $this->Form->create(null, ['method' => 'get', 'class' => 'disable-on-submit']);
+            ?>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.addservice.field_package', true), 'group_package');
+                        $this->Form->fieldSelect('group_package', $package_options, (isset($vars->package_id) ? $vars->package_id : null), ['id' => 'group_package'], (isset($package_attributes) ? $package_attributes : []));
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.addservice.field_continue', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+        } else {
+            echo (isset($form) ? $form : null);
+        }
+        ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

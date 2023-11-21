@@ -1,0 +1,55 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('OvhDomains.tab_client_settings.heading');?></h3>
+    </div>
+
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="pad">
+        <div class="row panel-fix">
+            <div class="col-md-12">
+                <div class="form-group mb-0">
+                    <?php
+                    $this->Form->label($this->_('OvhDomains.tab_client_settings.field_registrar_lock', true), 'registrarlock');
+                    ?>
+                </div>
+                <div class="form-group mb-0">
+                    <?php
+                    $this->Form->fieldRadio('transferLockStatus', 'locked', ($vars->transferLockStatus ?? (($is_locked ?? false) ? 'locked' : null)) == 'locked', ['id' => 'registrarlock_yes']);
+                    $this->Form->label($this->_('OvhDomains.tab_client_settings.field_registrar_lock_yes', true), 'registrarlock_yes', ['class' => 'inline']);
+                    ?>
+                </div>
+                <div class="form-group">
+                    <?php
+                    $this->Form->fieldRadio('transferLockStatus', 'unlocked', ($vars->transferLockStatus ?? null) == 'unlocked', ['id' => 'registrarlock_no']);
+                    $this->Form->label($this->_('OvhDomains.tab_client_settings.field_registrar_lock_no', true), 'registrarlock_no', ['class' => 'inline']);
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <?php
+        if (($epp_code ?? false) && !is_null($auth_code ?? null)) {
+        ?>
+        <h4><?php $this->_('OvhDomains.tab_client_settings.heading_auth_code');?></h4>
+        <div class="row panel-fix">
+            <div class="col-md-12">
+                <p><?php $this->_('OvhDomains.tab_client_settings.text_auth_code');?> <span class="badge badge-info"><?php echo $this->Html->safe($auth_code ?? '');?></span></p>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+
+    </div>
+
+    <div class="button_row">
+        <?php
+        $this->Form->fieldSubmit(null, $this->_('OvhDomains.tab_client_settings.field_submit', true), ['class' => 'btn btn-primary float-right']);
+        ?>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>
+

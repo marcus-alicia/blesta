@@ -1,0 +1,98 @@
+<?php
+if (!empty($pairing_code)) {
+?>
+<section class="error_section" id="bitpay_notice">
+    <article class="error_box alert p-4 m-0">
+        <div class="row">
+            <div class="col-md-9">
+                <i class="fas fa-fw fa-exclamation-triangle"></i> <strong><?php $this->_('Bitpay.pairing_code');?></strong><br />
+                <?php $this->_('Bitpay.pairing_code_note', false, (isset($pairing_code) ? $pairing_code : null));?>
+            </div>
+
+            <div class="col-md-3">
+                <?php
+                if ((isset($meta['test_mode']) ? $meta['test_mode'] : 'false') == 'false') {
+                ?>
+                <a target="_blank" href="https://bitpay.com/api-access-request?pairingCode=<?php echo $this->Html->safe($pairing_code);?>" style="margin-top: -20px" class="btn btn-warning mt-3 float-right">
+                    <?php $this->_('Bitpay.connect.button');?>
+                </a>
+                <?php
+                } else {
+                ?>
+                <a target="_blank" href="https://test.bitpay.com/dashboard/merchant/api-tokens" style="margin-top: -20px" class="btn btn-warning mt-2 float-right">
+                    <?php $this->_('Bitpay.connect.button');?>
+                </a>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+    </article>
+</section>
+<?php
+}
+?>
+
+<ul>
+	<li>
+		<?php
+        $this->Form->label($this->_('Bitpay.transaction_speed', true), 'transaction_speed');
+        $this->Form->fieldSelect('transaction_speed', (isset($select_options) ? $select_options : []), (isset($meta['transaction_speed']) ? $meta['transaction_speed'] : null), ['id' => 'transaction_speed']);
+        ?>
+		<span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Bitpay.transaction_speed_note');?></div></span>
+
+        <?php
+        $this->Form->fieldHidden('private_key', (isset($meta['private_key']) ? $meta['private_key'] : null));
+        $this->Form->fieldHidden('key_id', (isset($meta['key_id']) ? $meta['key_id'] : null));
+        $this->Form->fieldHidden('token', (isset($meta['token']) ? $meta['token'] : null));
+        $this->Form->fieldHidden('client_id', (isset($meta['client_id']) ? $meta['client_id'] : null));
+        ?>
+	</li>
+    <li>
+        <?php
+        if (!empty($pairing_code)) {
+        ?>
+            <?php
+            $this->Form->fieldCheckbox('test_mode', 'true', ((isset($meta['test_mode']) ? $meta['test_mode'] : 'false') == 'true'), ['id' => 'test_mode']);
+            $this->Form->label($this->_('Bitpay.test_mode', true), 'test_mode', ['class' => 'inline']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Bitpay.test_mode_note'); ?></div></span>
+        <?php
+        } else {
+            $this->Form->fieldHidden('test_mode', (isset($meta['test_mode']) ? $meta['test_mode'] : null));
+        }
+        ?>
+    </li>
+</ul>
+
+<?php
+if (empty($pairing_code)) {
+?>
+<div class="button_row">
+    <?php
+    $this->Form->fieldSubmit('disconnect', $this->_('Bitpay.disconnect.button', true), ['class' => 'btn btn-default float-right']);
+    ?>
+</div>
+<?php
+}
+?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Refresh token if test mode is enabled or disabled
+        $('#test_mode').change(function() {
+            var form = $(this).closest('form');
+            $(form).append('<input type=\"hidden\" name=\"refresh_fields\" value=\"true\">');
+
+            $(this).blestaRequest('POST', $(form).attr('action'), $(form).serialize(),
+                function(data) {
+                    location.reload();
+                },
+                function(data) {
+                    location.reload();
+                },
+                {dataType: 'json'}
+            );
+        });
+    });
+</script>

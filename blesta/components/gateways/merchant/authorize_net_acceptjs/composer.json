@@ -1,0 +1,10 @@
+{
+    "name": "blesta/authorize_net_acceptjs",
+    "description": "Authorize Net Accept.js",
+    "license": "proprietary",
+    "type": "blesta-gateway-merchant",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "authorizenet/authorizenet": "~2.0"
+    }
+}

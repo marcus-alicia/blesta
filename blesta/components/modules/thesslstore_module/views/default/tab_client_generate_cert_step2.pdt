@@ -1,0 +1,66 @@
+<?php
+    $this->Form->create($this->base_uri . "services/manage/" . (isset($service_id) ? $service_id : null) . "/tabClientGenerateCert/");
+
+    $this->Form->fieldHidden("thesslstore_gen_step", $step);
+    $this->Form->fieldHidden("thesslstore_csr", $vars->thesslstore_csr);
+    $this->Form->fieldHidden("thesslstore_webserver_type", $vars->thesslstore_webserver_type);
+    $this->Form->fieldHidden("thesslstore_signature_algorithm", $vars->thesslstore_signature_algorithm);
+    $this->Form->fieldHidden("thesslstore_auth_method", $vars->thesslstore_auth_method);
+    $this->Form->fieldHidden("thesslstore_admin_first_name", $vars->thesslstore_admin_first_name);
+    $this->Form->fieldHidden("thesslstore_admin_last_name", $vars->thesslstore_admin_last_name);
+    $this->Form->fieldHidden("thesslstore_admin_title", $vars->thesslstore_admin_title);
+    $this->Form->fieldHidden("thesslstore_admin_email", $vars->thesslstore_admin_email);
+    $this->Form->fieldHidden("thesslstore_admin_phone", $vars->thesslstore_admin_phone);
+    $this->Form->fieldHidden("thesslstore_org_name", $vars->thesslstore_org_name);
+    $this->Form->fieldHidden("thesslstore_org_division", $vars->thesslstore_org_division);
+    $this->Form->fieldHidden("thesslstore_admin_address1", $vars->thesslstore_admin_address1);
+    $this->Form->fieldHidden("thesslstore_admin_address2", $vars->thesslstore_admin_address2);
+    $this->Form->fieldHidden("thesslstore_admin_city", $vars->thesslstore_admin_city);
+    $this->Form->fieldHidden("thesslstore_admin_state", $vars->thesslstore_admin_state);
+    $this->Form->fieldHidden("thesslstore_admin_country", $vars->thesslstore_admin_country);
+    $this->Form->fieldHidden("thesslstore_admin_zip", $vars->thesslstore_admin_zip);
+    $this->Form->fieldHidden("thesslstore_tech_first_name", $vars->thesslstore_tech_first_name);
+    $this->Form->fieldHidden("thesslstore_tech_last_name", $vars->thesslstore_tech_last_name);
+    $this->Form->fieldHidden("thesslstore_tech_title", $vars->thesslstore_tech_title);
+    $this->Form->fieldHidden("thesslstore_tech_email", $vars->thesslstore_tech_email);
+    $this->Form->fieldHidden("thesslstore_tech_phone", $vars->thesslstore_tech_phone);
+
+    //Additional SAN
+    if(isset($vars->thesslstore_additional_san)){
+        foreach($vars->thesslstore_additional_san as $additional_san){
+            $this->Form->fieldHidden("thesslstore_additional_san[]", $additional_san);
+        }
+    }
+
+?>
+    <div class="row panel-fix">
+        <div class="col-md-12">
+            <h4><?php $this->_("ThesslstoreModule.tab_generate_cert.heading_approver_email");?></h4>
+            <?php
+            foreach($approver_email_list as $dm => $email_list){
+            ?>
+            <div class="form-group">
+                <?php
+                $this->Form->label($dm.'*', "for_".$dm);
+                $this->Form->fieldSelect("thesslstore_approver_emails[]", (isset($email_list) ? $email_list : null), (isset($vars->thesslstore_webserver_type) ? $vars->thesslstore_webserver_type : null), array('id' => "for_".$dm, 'class'=>"form-control"));
+                ?>
+            </div>
+            <?php
+            }?>
+        </div>
+    </div>
+
+    <button class="btn btn-light float-right" type="submit">
+       <?php $this->_("ThesslstoreModule.tab_generate_cert_step1.submit");?>
+    </button>
+<?php
+    $this->Form->end();
+?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		//remove success message
+		$('div.alert-success').remove()
+	});
+</script>
+

@@ -1,0 +1,33 @@
+
+                <?php
+                echo (isset($message) ? $message : null);
+
+                $widget_title = $this->_('AdminResponses.addcategory.boxtitle_root', true);
+                if (!empty($parent_category)) {
+                    $widget_title = $this->_('AdminResponses.addcategory.boxtitle_addcategory', true, (isset($parent_category->name) ? $parent_category->name : null));
+                }
+
+                $this->Widget->clear();
+                $this->Widget->create($widget_title);
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['class' => 'disable-on-submit']);?>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminResponses.addcategory.field_name', true), 'name');
+                                $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminResponses.addcategory.field_submit', true), ['class' => 'btn btn-primary float-right']);
+                        ?>
+                    </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>

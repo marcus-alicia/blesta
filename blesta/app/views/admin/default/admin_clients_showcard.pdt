@@ -1,0 +1,49 @@
+<?php
+echo (isset($message) ? $message : null);
+?>
+<div class="common_box">
+    <?php
+    $this->Form->create();
+    ?>
+    <div class="inner">
+        <?php
+        $this->Form->label($passphrase_required ? $this->_('AdminClients.showcard.field_passphrase', true) : $this->_('AdminClients.showcard.field_staff_password', true));
+        $this->Form->fieldPassword('passphrase');
+        ?>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('AdminClients.showcard.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+            ?>
+        </div>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('div.common_box form').submit(function(event) {
+
+            if ($(this).blestaDisableFormSubmission($(this))) {
+                $(this).blestaRequest("POST", $(this).attr('action'), $(this).serialize(),
+                    // On success
+                    function(data) {
+                        if (data.account && data.account.number)
+                            $('#number').val(data.account.number);
+
+                        // If view set, update content in modal
+                        if (data.view)
+                            $('a.show_card').qtip('api').set('content.text', data.view);
+                        // If no view, hide
+                        else
+                            $('a.show_card').qtip('hide');
+                    },
+                    null,
+                    {dataType: 'json', complete: function() { $('div.common_box form').blestaEnableFormSubmission($('div.common_box form')); }}
+                );
+            }
+
+            return false;
+        });
+    });
+</script>

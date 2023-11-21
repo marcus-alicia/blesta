@@ -1,0 +1,15 @@
+
+    <ul>
+        <li>
+            <?php
+            $this->Form->label($this->_('CoinPayments.merchant_id', true), 'merchant_id');
+            $this->Form->fieldText('merchant_id', (isset($meta['merchant_id']) ? $meta['merchant_id'] : null), ['id' => 'merchant_id']);
+            ?>
+        </li>
+        <li>
+            <?php
+            $this->Form->label($this->_('CoinPayments.ipn_secret', true), 'ipn_secret');
+            $this->Form->fieldText('ipn_secret', (isset($meta['ipn_secret']) ? $meta['ipn_secret'] : null), ['id' => 'ipn_secret']);
+            ?>
+        </li>
+    </ul>

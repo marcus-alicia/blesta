@@ -1,0 +1,42 @@
+<table class="table">
+    <tr class="heading_row">
+        <td class="fixed_small center border_none"><span class="paymnt_arrow"></span></td>
+        <td class="border_left"><?php $this->_('Whmsonic.service_info.ip_address');?></td>
+        <td><?php $this->_('Whmsonic.service_info.username');?></td>
+        <td><?php $this->_('Whmsonic.service_info.password');?></td>
+        <td class="last"><?php $this->_('Whmsonic.service_info.options');?></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><?php echo (isset($module_row->meta->ip_address) ? $this->Html->safe($module_row->meta->ip_address) : null);?></td>
+        <td><?php echo (isset($service_fields->whmsonic_username) ? $this->Html->safe($service_fields->whmsonic_username) : null);?></td>
+        <td><?php echo (isset($service_fields->whmsonic_password) ? $this->Html->safe($service_fields->whmsonic_password) : null);?></td>
+        <td>
+            <?php
+            $http = 'http://';
+            $port = '2082';
+            if (isset($module_row->meta->use_ssl) && $module_row->meta->use_ssl == 'true') {
+                $http = 'https://';
+                $port = '2083';
+            }
+            $this->Form->create($this->Html->safe($http . (isset($module_row->meta->ip_address) ? $module_row->meta->ip_address : null) . ':' . (isset($port) ? $port : null) . '/login/'), ['target' => '_blank']);
+            $this->Form->fieldHidden('user', (isset($service_fields->whmsonic_username) ? $service_fields->whmsonic_username : null));
+            $this->Form->fieldHidden('pass', (isset($service_fields->whmsonic_password) ? $service_fields->whmsonic_password : null));
+            ?>
+            <a id="_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>"
+               href="#"><?php $this->_('Whmsonic.service_info.option_login');?></a>
+            <?php
+            $this->Form->end();
+            ?>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>').click(function (e) {
+            e.preventDefault();
+
+            $(this).closest('form').submit();
+        });
+    });
+</script>

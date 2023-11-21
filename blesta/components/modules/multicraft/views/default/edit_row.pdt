@@ -1,0 +1,146 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('Multicraft.edit_row.box_title', true));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <div class="title_row first">
+                <h3><?php $this->_('Multicraft.edit_row.basic_title');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Multicraft.row_meta.server_name', true), 'server_name');
+                        $this->Form->fieldText('server_name', (isset($vars->server_name) ? $vars->server_name : null), ['id' => 'server_name']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Multicraft.row_meta.panel_url', true), 'panel_url');
+                        $this->Form->fieldText('panel_url', (isset($vars->panel_url) ? $vars->panel_url : null), ['id' => 'panel_url']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Multicraft.!tooltip.panel_url');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Multicraft.row_meta.panel_api_url', true), 'panel_api_url');
+                        $this->Form->fieldText('panel_api_url', (isset($vars->panel_api_url) ? $vars->panel_api_url : null), ['id' => 'panel_api_url']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Multicraft.!tooltip.panel_api_url');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Multicraft.row_meta.username', true), 'username');
+                        $this->Form->fieldText('username', (isset($vars->username) ? $vars->username : null), ['id' => 'username']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('Multicraft.row_meta.key', true), 'key');
+                        $this->Form->fieldText('key', (isset($vars->key) ? $vars->key : null), ['id' => 'key']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Multicraft.!tooltip.key');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('log_all', '1', (isset($vars->log_all) ? $vars->log_all : null) == '1', ['id' => 'log_all']);
+                        $this->Form->label($this->_('Multicraft.row_meta.log_all', true), 'log_all', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('Multicraft.!tooltip.log_all');?></div></span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row">
+                <h3><?php $this->_('Multicraft.edit_row.daemons_title');?></h3>
+            </div>
+            <div class="pad">
+                <div class="links_row">
+                    <a class="btn btn-default float-right btn-sm ip_row_add" href="#"><i class="fas fa-plus"></i> <span><?php $this->_('Multicraft.edit_row.ip_btn');?></span></a>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="heading_row">
+                            <td><?php $this->Form->label($this->_('Multicraft.edit_row.daemon_col', true));?></td>
+                            <td><?php $this->Form->label($this->_('Multicraft.edit_row.ip_col', true));?></td>
+                            <td><?php $this->Form->label($this->_('Multicraft.edit_row.port_col', true));?></td>
+                            <td><?php $this->Form->label($this->_('Multicraft.edit_row.in_use_col', true));?></td>
+                            <td class="last"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $num_ips = count((isset($vars->ips) ? $vars->ips : []));
+                        for ($i = 0; $i < max(1, $num_ips); $i++) {
+                        ?>
+                        <tr class="ip_row<?php echo ($i%2 == 1) ? ' odd_row' : '';?>">
+                            <td><?php $this->Form->fieldText('daemons[]', (isset($vars->daemons[$i]) ? $vars->daemons[$i] : null), ['class'=>'stretch']);?></td>
+                            <td><?php $this->Form->fieldText('ips[ip][]', (isset($vars->ips[$i]['ip']) ? $vars->ips[$i]['ip'] : null));?></td>
+                            <td><?php $this->Form->fieldText('ips[port][]', (isset($vars->ips[$i]['port']) ? $vars->ips[$i]['port'] : null), ['class'=>'stretch port']);?></td>
+                            <td><?php $this->Form->fieldSelect('ips_in_use[]', (isset($ips_in_use) ? $ips_in_use : null), (isset($vars->ips_in_use[$i]) ? $vars->ips_in_use[$i] : null));?></td>
+                            <td><a href="#" class="manage ip_row_remove"><?php $this->_('Multicraft.edit_row.remove_ip');?></a></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('Multicraft.edit_row.add_btn', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    updateIPRows();
+    // Add a row
+    $('.ip_row_add').click(function() {
+        var fields = $('tr.ip_row:first').clone(true);
+        $(fields).find('input').val('');
+        $('td:first span', fields).text($('tr.ip_row').length+1);
+        $('tr.ip_row:last').after(fields);
+        updateIPRows();
+        return false;
+    });
+    // Remove a row
+    $('.ip_row_remove').click(function() {
+        if ($('tr.ip_row').length > 1) {
+            $(this).closest('tr').remove();
+            // Reorder the counts for these rows
+            $i=1;
+            $('tr.ip_row').each(function() {
+                $('td:first span', this).text($i++);
+            });
+        }
+        updateIPRows();
+        return false;
+    });
+});
+
+// Zebra-stripe rows and set default port num
+function updateIPRows() {
+    var i = 0;
+    var default_port = "<?php echo (isset($default_port) ? $this->Html->safe($default_port) : null);?>";
+    $('tr.ip_row').each(function() {
+        if(!$('td input.port', this).val())
+            $('td input.port', this).val(default_port);
+        if (i++%2 == 1)
+            $(this).addClass('odd_row');
+        else
+            $(this).removeClass('odd_row');
+    });
+}
+</script>

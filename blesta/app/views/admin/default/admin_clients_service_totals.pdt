@@ -1,0 +1,31 @@
+<div class="sub_total_box">
+    <div class="line totals_subtotal">
+        <span><?php $this->_('AdminClientsService.totals.subtotal');?></span>
+        <em><?php echo $this->CurrencyFormat->format((isset($totals->subtotal) ? $this->Html->safe($totals->subtotal) : null), (isset($currency) ? $currency : null));?></em>
+    </div>
+    <?php
+    foreach ((isset($discounts) ? $discounts : []) as $discount) {
+        // Show discount as negative
+        $amount = (isset($discount->total) ? $discount->total : 0) * -1;
+    ?>
+    <div class="line totals_discount">
+        <span><?php (print (isset($discount->description) ? $this->Html->safe($discount->description) : null));?></span>
+        <em><?php echo $this->CurrencyFormat->format((isset($amount) ? $this->Html->safe($amount) : null), (isset($currency) ? $currency : null));?></em>
+    </div>
+    <?php
+    }
+
+    foreach ((isset($taxes) ? $taxes : []) as $tax) {
+    ?>
+    <div class="line totals_tax">
+        <span><?php (print (isset($tax->description) ? $this->Html->safe($tax->description) : null));?></span>
+        <em><?php echo $this->CurrencyFormat->format((isset($tax->total) ? $this->Html->safe($tax->total) : null), (isset($currency) ? $currency : null));?></em>
+    </div>
+    <?php
+    }
+    ?>
+
+    <div class="line total totals_total">
+        <strong><em><?php echo $this->CurrencyFormat->format((isset($settings['client_prorate_credits']) ? $settings['client_prorate_credits'] : null) == 'false' && (isset($totals->total_without_exclusive_tax) ? $this->Html->safe($totals->total_without_exclusive_tax) : null) < 0 ? 0 : (isset($totals->total_without_exclusive_tax) ? $this->Html->safe($totals->total_without_exclusive_tax) : null), (isset($currency) ? $currency : null));?></em></strong>
+    </div>
+</div>

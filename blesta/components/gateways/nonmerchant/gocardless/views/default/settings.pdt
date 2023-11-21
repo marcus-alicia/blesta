@@ -1,0 +1,46 @@
+<ul>
+    <li>
+        <?php
+            $this->Form->label($this->_('Gocardless.access_token', true), 'access_token');
+            $this->Form->fieldText('access_token', (isset($meta['access_token']) ? $meta['access_token'] : null), ['id' => 'access_token']);
+        ?>
+    </li>
+    <li>
+        <?php
+            $this->Form->label($this->_('Gocardless.webhook_secret', true), 'webhook_secret', ['class' => 'inline']);
+            ?>
+            <span class="tooltip block"><?php $this->_('AppController.tooltip.text'); ?><div><?php $this->_('Gocardless.!tooltip.webhook_secret'); ?></div></span>
+            <?php
+            $this->Form->fieldText('webhook_secret', (isset($meta['webhook_secret']) ? $meta['webhook_secret'] : null), ['id' => 'webhook_secret', 'class' => 'block']);
+        ?>
+    </li>
+    <li>
+        <?php
+            $this->Form->label($this->_('Gocardless.pay_type', true));
+
+            $this->Form->fieldRadio('pay_type', 'both', ((isset($meta['pay_type']) ? $meta['pay_type'] : 'both') == 'both'), ['id' => 'pay_type_both']);
+            $this->Form->label($this->_('Gocardless.pay_type_both', true), 'pay_type_both', ['class' => 'inline']);
+
+            $this->Form->fieldRadio('pay_type', 'onetime', ((isset($meta['pay_type']) ? $meta['pay_type'] : 'both') == 'onetime'), ['id' => 'pay_type_onetime']);
+            $this->Form->label($this->_('Gocardless.pay_type_onetime', true), 'pay_type_onetime', ['class' => 'inline']);
+
+            $this->Form->fieldRadio('pay_type', 'subscribe', ((isset($meta['pay_type']) ? $meta['pay_type'] : 'both') == 'subscribe'), ['id' => 'pay_type_subscribe']);
+            $this->Form->label($this->_('Gocardless.pay_type_subscribe', true), 'pay_type_subscribe', ['class' => 'inline']);
+        ?>
+    </li>
+    <li>
+        <?php
+            $this->Form->fieldCheckbox('dev_mode', 'true', ((isset($meta['dev_mode']) ? $meta['dev_mode'] : 'false') == 'true'), ['id' => 'dev_mode']);
+            $this->Form->label($this->_('Gocardless.dev_mode', true), 'dev_mode', ['class' => 'inline']);
+        ?>
+        <span class="tooltip"><?php $this->_('AppController.tooltip.text'); ?><div><?php $this->_('Gocardless.dev_mode_note'); ?></div></span>
+    </li>
+</ul>
+
+<div class="title_row">
+    <h3><?php $this->_('Gocardless.webhook'); ?></h3>
+</div>
+<div class="pad">
+    <p><?php $this->_('Gocardless.webhook_note'); ?></p>
+    <code><?php echo Configure::get('Blesta.gw_callback_url') . Configure::get('Blesta.company_id') . '/gocardless/'; ?></code>
+</div>

@@ -1,0 +1,352 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $tabs = [
+            [
+                'name' => $this->_('AdminForms.add.tab_basic', true),
+                'current' => (($tab ?? 'basic') == 'basic'),
+                'attributes' => [
+                    'class' => 'basic',
+                    'href' => '#'
+                ]
+            ],
+            [
+                'name' => $this->_('AdminForms.add.tab_abandoned_cart', true),
+                'current' => (($tab ?? null) == 'abandoned_cart'),
+                'attributes' => [
+                    'class' => 'abandoned_cart',
+                    'href' => '#'
+                ]
+            ]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'order_form_styles']);
+        $this->Widget->create($this->_('AdminForms.add.boxtitle_order', true));
+        $this->Form->create(null, ['id' => 'order_form', 'class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="order_tab" id="tab_basic">
+                <div class="title_row first">
+                    <h3><?php $this->_('AdminForms.add.heading_basic');?></h3>
+                </div>
+
+                <div class="pad">
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_status', true), 'form_status');
+
+                            $this->Form->fieldRadio('status', 'active', (isset($vars->status) ? $vars->status : 'active') == 'active', ['id' => 'form_status_active']);
+                            $this->Form->label($this->_('AdminForms.add.field_status_active', true), 'form_status_active', ['class' => 'inline']);
+
+                            $this->Form->fieldRadio('status', 'inactive', (isset($vars->status) ? $vars->status : null) == 'inactive', ['id' => 'form_status_inactive']);
+                            $this->Form->label($this->_('AdminForms.add.field_status_inactive', true), 'form_status_inactive', ['class' => 'inline']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_name', true), 'form_name');
+                            $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'form_name']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_label', true), 'form_label');
+                            $this->Form->fieldText('label', (isset($vars->label) ? $vars->label : null), ['id' => 'form_label']);
+                            ?>
+                            <a href="<?php echo (isset($base_order_url) ? $this->Html->safe($base_order_url) : null);?>" target="_blank" id="form_label_link"><?php echo (isset($base_order_url) ? $this->Html->safe($base_order_url) : null);?><span id="order_label"></span></a>
+                        </li>
+                        <li>
+                            <h4>
+                                <a id="description_area" href="#" class="show_content">
+                                    <i class="fas fa-caret-down"></i> <?php $this->_('AdminForms.add.field_description');?>
+                                </a>
+                            </h4>
+                            <div id="description_content"<?php echo empty($vars->description) ? ' style="display:none;"' : '';?>>
+                                <?php
+                                $this->Form->fieldTextarea('description', (isset($vars->description) ? $vars->description : null), ['data-markdown-editor' => '']);
+                                ?>
+                            </div>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_visibility'), 'form_visibility');
+                            $this->Form->fieldSelect(
+                                'visibility',
+                                (isset($visibility) ? $visibility : null),
+                                (isset($vars->visibility) ? $vars->visibility : 'public'),
+                                ['id' => 'form_visibility']
+                            );
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_type', true), 'form_type');
+                            $this->Form->fieldSelect('type', (isset($types) ? $types : null), (isset($vars->type) ? $vars->type : 'general'), ['id' => 'form_type']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_template', true), 'form_template');
+                            $this->Form->fieldHidden('template', (isset($vars->template) ? $vars->template : null), ['id' => 'form_template']);
+
+                            foreach ($templates as $dir => $template) {
+                                foreach ($template->styles as $key => $style) {
+                            ?>
+                                <div class="thumbnail list">
+                                    <label class="thumb">
+                                        <img src="<?php echo $this->Html->safe($this->view_dir . '../templates/' . (isset($dir) ? $dir : null) . '/' . (isset($style->thumbnail) ? $style->thumbnail : null));?>" />
+                                        <div class="caption">
+                                            <?php
+                                            $this->Form->fieldRadio('template_style', $key, ((isset($vars->template) ? $vars->template : null) . '.' . (isset($vars->template_style) ? $vars->template_style : null)) == ($dir . '.' . $key), ['class' => 'template_style', 'data-template' => $dir]);
+                                            echo (isset($style->name) ? $this->Html->safe($style->name) : null);
+                                            ?>
+                                            <br />
+                                            <a href="<?php echo $this->Html->safe($this->view_dir . '../templates/' . (isset($dir) ? $dir : null) . '/' . (isset($style->screenshot) ? $style->screenshot : null));?>" target="_blank"><?php $this->_('AdminForms.add.template_preview');?></a>
+                                        </div>
+                                    </label>
+                                </div>
+                            <?php
+                                }
+                            }
+                            ?>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_client_group_id', true), 'form_client_group_id');
+                            $this->Form->fieldSelect('client_group_id', $this->Form->collapseObjectArray((isset($client_groups) ? $client_groups : []), 'name', 'id'), (isset($vars->client_group_id) ? $vars->client_group_id : null), ['id' => 'form_client_group_id']);
+                            ?>
+                            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminForms.add.tooltip_client_group', true));?></div></span>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->fieldCheckbox('allow_coupons', '1', (isset($vars->allow_coupons) ? $vars->allow_coupons : null) == '1', ['id' => 'form_allow_coupons']);
+                            $this->Form->label($this->_('AdminForms.add.field_allow_coupons', true), 'form_allow_coupons', ['class' => 'inline']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->fieldCheckbox('manual_review', '1', (isset($vars->manual_review) ? $vars->manual_review : null) == '1', ['id' => 'form_manual_review']);
+                            $this->Form->label($this->_('AdminForms.add.field_manual_review', true), 'form_manual_review', ['class' => 'inline']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->fieldCheckbox('require_ssl', '1', (isset($vars->require_ssl) ? $vars->require_ssl : null) == '1', ['id' => 'form_require_ssl']);
+                            $this->Form->label($this->_('AdminForms.add.field_require_ssl', true), 'form_require_ssl', ['class' => 'inline']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->fieldCheckbox('require_captcha', '1', (isset($vars->require_captcha) ? $vars->require_captcha : null) == '1', ['id' => 'form_require_captcha']);
+                            $this->Form->label($this->_('AdminForms.add.field_require_captcha', true), 'form_require_captcha', ['class' => 'inline']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->fieldCheckbox('require_tos', '1', (isset($vars->require_tos) ? $vars->require_tos : null) == '1', ['id' => 'form_require_tos']);
+                            $this->Form->label($this->_('AdminForms.add.field_require_tos', true), 'form_require_tos', ['class' => 'inline']);
+                            ?>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_tos_url', true), 'form_tos_url');
+                            $this->Form->fieldText('tos_url', (isset($vars->tos_url) ? $vars->tos_url : null), ['id' => 'form_tos_url']);
+                            ?>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="order_form_meta">
+                    <?php
+                    if (($vars->currencies ?? null)) {
+                        foreach ($vars->currencies as $currency) {
+                            $this->Form->fieldHidden('currencies[]', $currency->currency ?? $currency);
+                        }
+                    }
+                    if (($vars->gateways ?? null)) {
+                        foreach ($vars->gateways as $gateway) {
+                            $this->Form->fieldHidden('gateways[]', $gateway->gateway_id ?? $gateway);
+                        }
+                    }
+                    if (($vars->groups ?? null)) {
+                        foreach ($vars->groups as $group) {
+                            $this->Form->fieldHidden('groups[]', $group->package_group_id ?? $group);
+                        }
+                    }
+                    if (($vars->meta ?? null)) {
+                        foreach ($vars->meta as $key => $meta) {
+                            if (is_object($meta)) {
+                                if (!is_scalar($meta->value)) {
+                                    foreach ($meta->value as $meta_key => $meta_value) {
+                                        $this->Form->fieldHidden('meta[' . $meta->key . '][' . $meta_key . ']', $meta_value);
+                                    }
+                                } else {
+                                    $this->Form->fieldHidden('meta[' . $meta->key . ']', $meta->value);
+                                }
+                            } else {
+                                if (!is_scalar($meta)) {
+                                    foreach ($meta as $meta_key => $meta_value) {
+                                        $this->Form->fieldHidden('meta[' . $key . '][' . $meta_key . ']', $meta_value);
+                                    }
+                                } else {
+                                    $this->Form->fieldHidden('meta[' . $key . ']', $meta);
+                                }
+                            }
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+
+            <div class="order_tab" id="tab_abandoned_cart">
+                <div class="title_row first">
+                    <h3><?php $this->_('AdminForms.add.heading_abandoned_cart');?></h3>
+                </div>
+
+                <div class="pad">
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_abandoned_cart_first', true), 'abandoned_cart_first');
+                            $this->Form->fieldSelect('abandoned_cart_first', $abandoned_cart_days ?? [], ($vars->abandoned_cart_first ?? null), ['id' => 'abandoned_cart_first']);
+                            ?>
+                            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminForms.add.tooltip_abandoned_cart_first', true));?></div></span>
+                        </li>
+                        <li>
+                            <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->base_uri . 'settings/company/emails/edittemplate/' . ($first_reminder_template->id ?? null)?>"><?php echo $this->_('AdminForms.add.link_template'); ?></a></span></h4>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_abandoned_cart_second', true), 'abandoned_cart_second');
+                            $this->Form->fieldSelect('abandoned_cart_second', $abandoned_cart_days ?? [], ($vars->abandoned_cart_second ?? null), ['id' => 'abandoned_cart_second']);
+                            ?>
+                            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminForms.add.tooltip_abandoned_cart_second', true));?></div></span>
+                        </li>
+                        <li>
+                            <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->base_uri . 'settings/company/emails/edittemplate/' . ($second_reminder_template->id ?? null)?>"><?php echo $this->_('AdminForms.add.link_template'); ?></a></span></h4>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_abandoned_cart_third', true), 'abandoned_cart_third');
+                            $this->Form->fieldSelect('abandoned_cart_third', $abandoned_cart_days ?? [], ($vars->abandoned_cart_third ?? null), ['id' => 'abandoned_cart_third']);
+                            ?>
+                            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminForms.add.tooltip_abandoned_cart_third', true));?></div></span>
+                        </li>
+                        <li>
+                            <h4><i class="fas fa-envelope-open-text"></i> <span><a href="<?php echo $this->base_uri . 'settings/company/emails/edittemplate/' . ($third_reminder_template->id ?? null)?>"><?php echo $this->_('AdminForms.add.link_template'); ?></a></span></h4>
+                        </li>
+                        <li>
+                            <?php
+                            $this->Form->label($this->_('AdminForms.add.field_abandoned_cart_cancellation', true), 'abandoned_cart_cancellation');
+                            $this->Form->fieldSelect('abandoned_cart_cancellation', $abandoned_cart_days ?? [], ($vars->abandoned_cart_cancellation ?? null), ['id' => 'abandoned_cart_cancellation']);
+                            ?>
+                            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminForms.add.tooltip_abandoned_cart_cancellation', true));?></div></span>
+                        </li>
+                        <li id="inactive_client" style="display: none;">
+                            <?php
+                            $this->Form->fieldCheckbox('inactive_after_cancellation', '1', ($vars->inactive_after_cancellation ?? null) == '1', ['id' => 'inactive_after_cancellation']);
+                            $this->Form->label($this->_('AdminForms.add.field_inactive_after_cancellation', true), 'inactive_after_cancellation', ['class' => 'inline']);
+                            ?>
+                            <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminForms.add.tooltip_inactive_after_cancellation', true));?></div></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminForms.add.field_addsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $(this).blestaBindToggleEvent('#description_area', '#description_content');
+
+        loadMeta(this);
+        $('#form_type').change(function() {
+            loadMeta(this);
+        });
+
+        // Load swappable meta section
+        function loadMeta(element) {
+            $(element).blestaRequest("POST", "<?php echo $this->Html->safe($this->base_uri . 'plugin/order/admin_forms/meta/');?>", $("#order_form").serialize(), function(data) {
+                if (data.content)
+                    $("#order_form_meta").html(data.content);
+            },
+            null,
+            {dataType: 'json'}
+            );
+        }
+
+        // Move packages from right to left
+        $(document).on("click", "#order_form .move_left", function() {
+        //$('.move_left').click(function() {
+            $('#available option:selected').appendTo($('#assigned'));
+            return false;
+        });
+        // Move packages from left to right
+        $(document).on("click", "#order_form .move_right", function() {
+        //$('.move_right').click(function() {
+            $('#assigned option:selected').appendTo($('#available'));
+            return false;
+        });
+
+        $('#order_form').submit(function() {
+            $('#assigned option').prop('selected', true);
+        });
+
+        // Update label section of URL on load
+        $('#order_label').text(encodeURIComponent($("#form_label").val()));
+        $('#form_label_link').attr('href', $('#form_label_link').text());
+        $('#form_label').keyup(function() {
+
+            // Update label section of URL
+            $('#order_label').text(encodeURIComponent($(this).val()));
+
+            // Update href with new URL
+            $('#form_label_link').attr('href', $('#form_label_link').text());
+        });
+
+        $(".template_style").change(function() {
+            $("#form_template").val($(this).attr('data-template'));
+        });
+
+        // Set tabs
+        $('.tabs_content .order_tab').hide();
+        $('.tabs_content #tab_<?php echo ($tab ?? 'basic');?>').show();
+        $('.tab_slider ul li').on('click', function() {
+            var tab = $(this).find('a').attr('class');
+
+            $('.tab_slider ul li').removeClass('current');
+            $(this).addClass('current');
+            $('.tabs_content .order_tab').hide();
+            $('.tabs_content .order_tab#tab_' + tab).show();
+        });
+
+        if ($('#selected_response').text() === '') {
+            $('#no_selected_response').show();
+            $('#remove_response').hide();
+        }
+
+        $("#abandoned_cart_cancellation").change(function() {
+            if ($("#abandoned_cart_cancellation").val() !== "" && $("#abandoned_cart_cancellation").val() > 0) {
+                $("#inactive_client").show();
+            } else {
+                $("#inactive_client").hide();
+            }
+        });
+        $("#abandoned_cart_cancellation").change();
+    });
+
+</script>

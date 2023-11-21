@@ -1,0 +1,216 @@
+            <!-- Steps -->
+            <div class="col-md-12 hidden-xs hidden-sm">
+                <div class="card card-blesta card-steps">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/main/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_1_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_1_description');?></em></p>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/config/index/' . (isset($order_form->label) ? $order_form->label : null));?>" class="active"><strong><?php $this->_('Main.steps.step_2_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_2_description');?></em></p>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <i class="fas fa-chevron-right fa-lg float-right d-none d-sm-block"></i>
+                                <i class="fas fa-chevron-down fa-lg float-right d-sm-none"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/cart/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_3_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_3_description');?></em></p>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/checkout/index/' . (isset($order_form->label) ? $order_form->label : null));?>"><strong><?php $this->_('Main.steps.step_4_name');?></strong></a>
+                                <p><em><?php $this->_('Main.steps.step_4_description');?></em></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <?php
+                echo (isset($message) ? $message : null);
+                ?>
+                <?php
+                $this->WidgetClient->clear();
+                if ((isset($service_name) ? $service_name : null)) {
+                    $this->WidgetClient->create($this->_('Config.index.header_configure_service', true, $this->Html->safe($service_name)));
+                } else {
+                    $this->WidgetClient->create($this->_('Config.index.header_configuration', true));
+                }
+                ?>
+                <div class="card-body">
+                    <?php
+                    // Display message if we are configuring a bundlable domain
+                    if (($order_form->meta['free_domain'] ?? '0') == '1' && $bundle_eligible_domain) {
+                        $package_term = $this->_('Config.index.term_' . $order_form->meta['period'] . ($order_form->meta['term'] > 1 ? 's' : ''), true, $order_form->meta['term']);
+                        $minimim_price = $package->pricing[0];
+                        $domain_term = $this->_('Config.index.term_' . $minimim_price->period . ($minimim_price->term > 1 ? 's' : ''), true, $minimim_price->term);
+                        if ($order_form->meta['limit_term'] ?? false) {
+                        ?>
+                    <div class="alert alert-info mb-3">
+                        <p><?php $this->_('Config.index.text_free_domain_next_step_limited', false, $package_term, $domain_term);?></p>
+                    </div>
+                        <?php
+                        } else {
+                        ?>
+                    <div class="alert alert-info mb-3">
+                        <p><?php $this->_('Config.index.text_free_domain_next_step', false, $package_term);?></p>
+                    </div>
+                        <?php
+                        }
+                    }
+
+                    // Display message if we are configuring a bundlable domain
+                    if (($order_form->meta['free_domain'] ?? '0') == '1' && $bundle_eligible_package && $cart_has_eligible_domain) {
+                        $package_term = $this->_('Config.index.term_' . $order_form->meta['period'] . ($order_form->meta['term'] > 1 ? 's' : ''), true, $order_form->meta['term']);
+                    ?>
+                    <div class="alert alert-info mb-3">
+                        <p><?php $this->_('Config.index.text_free_domain', false, $package_term);?></p>
+                    </div>
+                    <?php
+                    }
+
+                    $this->Form->create(null, ['class' => 'disable-on-submit']);
+                    ?>
+
+                        <h5><?php $this->_('Config.index.header_term');?></h5>
+                        <div class="form-group">
+                            <?php
+                            $selected_price = (isset($vars->pricing_id) ? $vars->pricing_id : $item['pricing_id']);
+                            $prices = [];
+                            foreach ($package->pricing as $price) {
+                                if ((isset($price->period) ? $price->period : null) == 'onetime') {
+                                    $period = (isset($periods[$price->period]) ? $periods[$price->period] : null);
+                                } else {
+                                    $term = (isset($price->term) ? $this->Html->safe($price->term) : null);
+                                    $period = $this->Html->concat(' ', $term, ($term == 1 ? (isset($periods[$price->period]) ? $periods[$price->period] : null) : (isset($periods[$price->period . '_plural']) ? $periods[$price->period . '_plural'] : null)));
+                                }
+
+                                // Set the pricing text to include or not include renewal pricing
+                                $prices[$price->id] = (($price->period ?? null) == 'onetime' || ((isset($price->transfer) ? ($price->price_transfer ?? null) : ($price->price ?? null)) == ($price->price_renews ?? null))
+                                    ? $this->_('Config.index.package_price', true, $period, $this->CurrencyFormat->format((isset($price->transfer) ? ($price->price_transfer ?? null) : ($price->price ?? null)), ($price->currency ?? null), ['decimals' => $price->precision]))
+                                    : $this->_('Config.index.package_price_recurring', true, $period, $this->CurrencyFormat->format((isset($price->transfer) ? ($price->price_transfer ?? null) : ($price->price ?? null)), ($price->currency ?? null), ['decimals' => $price->precision]), $this->CurrencyFormat->format(($price->price_renews ?? null), ($price->currency ?? null), ['decimals' => $price->precision]))
+                                );
+                            }
+                            $this->Form->fieldSelect('pricing_id', $prices, $selected_price, ['class' => 'form-control']);
+                            $this->Form->fieldHidden('group_id', $item['group_id']);
+                            ?>
+                        </div>
+                        <div class="clearfix"></div>
+                        <?php
+                        // Show module fields
+                        if (isset($fields_html) && ($module_field_html = $fields_html->generate())) {
+                        ?>
+                            <h5><?php $this->_('Config.index.header_module');?></h5>
+                            <?php
+                            echo $module_field_html;
+                            ?>
+                        <?php
+                        }
+                        ?>
+
+                        <div class="package_options">
+                            <?php
+                            if (isset($vars->configoptions)) {
+                                foreach ($vars->configoptions as $key => $value) {
+                                    $this->Form->fieldHidden('configoptions[' . $key . ']', $value);
+                                }
+                            }
+                            ?>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <?php
+                        if ((isset($addon_groups) ? $addon_groups : null) && !empty($addon_groups)) {
+                        ?>
+                            <hr>
+                            <h5><?php $this->_('Config.index.header_addons');?></h5>
+                            <?php
+                            foreach ($addon_groups as $addon_group) {
+                                $this->Form->label($addon_group->name);
+                                ?>
+                                <div class="radio">
+                                    <label>
+                                        <?php
+                                        $this->Form->fieldRadio('addon[' . (isset($addon_group->id) ? $this->Html->safe($addon_group->id) : null) . '][pricing_id]', '', (isset($vars->addon[$addon_group->id]['id']) ? $vars->addon[$addon_group->id]['id'] : null) == '');
+                                        $this->_('Config.index.field_default_addon');
+                                        ?>
+                                    </label>
+                                </div>
+
+                                <?php
+                                foreach ($addon_group->packages as $addon_package) {
+                                    foreach ($addon_package->pricing as $price) {
+                                        if ((isset($price->period) ? $price->period : null) == 'onetime') {
+                                            $term = (isset($periods[$price->period]) ? $periods[$price->period] : null);
+                                        } else {
+                                            $term = (isset($price->term) ? $this->Html->safe($price->term) : null);
+                                            $term = $this->Html->concat(' ', $term, ($term == 1 ? (isset($periods[$price->period]) ? $periods[$price->period] : null) : (isset($periods[$price->period . '_plural']) ? $periods[$price->period . '_plural'] : null)));
+                                        }
+
+                                        // Set the pricing text to include or not include the renewal pricing
+                                        $formatted_price = $this->CurrencyFormat->format((isset($price->transfer) ? (isset($price->price_transfer) ? $price->price_transfer : null) : (isset($price->price) ? $price->price : null)), (isset($price->currency) ? $price->currency : null), ['decimals' => $price->precision]);
+                                        $label = ((isset($price->period) ? $price->period : null) == 'onetime' || ((isset($price->transfer) ? (isset($price->price_transfer) ? $price->price_transfer : null) : (isset($price->price) ? $price->price : null)) == (isset($price->price_renews) ? $price->price_renews : null))
+                                            ? $this->_('Config.index.field_addon_label', true, (isset($addon_package->name) ? $addon_package->name : null), $term, $formatted_price)
+                                            : $this->_('Config.index.field_addon_label_recurring', true, (isset($addon_package->name) ? $addon_package->name : null), $term, $formatted_price, $this->CurrencyFormat->format((isset($price->price_renews) ? $price->price_renews : null), (isset($price->currency) ? $price->currency : null)))
+                                        );
+                                    ?>
+                                    <div class="radio">
+                                        <label>
+                                            <?php
+                                            $this->Form->fieldRadio('addon[' . (isset($addon_group->id) ? $this->Html->safe($addon_group->id) : null) . '][pricing_id]', (isset($price->id) ? $this->Html->safe($price->id) : null), (isset($vars->addon[$addon_group->id]['pricing_id']) ? $vars->addon[$addon_group->id]['pricing_id'] : null) == $price->id);
+                                            echo (isset($label) ? $label : null);
+                                            ?>
+                                        </label>
+                                    </div>
+                                    <?php
+                                    }
+                                }
+                            }
+                        }
+                        ?>
+
+                        <button class="btn btn-success float-right" type="submit">
+                            <?php $this->_('Config.index.continue_btn');?> <i class="fas fa-angle-double-right"></i>
+                        </button>
+
+                    <?php
+                    $this->Form->end();
+                    ?>
+                </div>
+                <?php
+                $this->WidgetClient->end();
+                ?>
+            </div>
+            <div class="col-md-3" id="summary_section"></div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Fetch package options
+        packageOptions();
+        $('[name="pricing_id"]').change(function() {
+            packageOptions();
+        });
+
+        $(this).blestaRequest('GET', '<?php echo $this->Html->safe($this->base_uri . 'order/summary/index/' . (isset($order_form->label) ? $order_form->label : null));?>', null,
+            function(data) {
+                $("#summary_section").html(data);
+            }
+        );
+
+        function packageOptions() {
+            var pricing_id = $('[name="pricing_id"]').val();
+            if (pricing_id) {
+                var params = $('[name^="configoptions"]', $('.package_options').closest('form')).serialize();
+                $(this).blestaRequest('GET', '<?php echo $this->Html->safe($this->base_uri . 'order/config/packageoptions/' . (isset($order_form->label) ? $order_form->label : null) . '/');?>' + pricing_id, params, function(data) {
+                    $('.package_options').html(data);
+                },
+                null,
+                {dataType: 'json'});
+            }
+        }
+    });
+</script>

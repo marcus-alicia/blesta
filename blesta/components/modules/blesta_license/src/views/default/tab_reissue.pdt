@@ -1,0 +1,17 @@
+
+	<div class="title_row first">
+		<h3><?php $this->_("BlestaLicense.tab_reissue.heading_reissue");?></h3>
+	</div>
+	<div class="pad">
+        <?php
+        $this->Form->create($this->base_uri . "clients/servicetab/" . $this->Html->ifSet($client_id) . "/" . $this->Html->ifSet($service_id) . "/tabReissue/");
+        $this->Form->fieldHidden("reissue", "true");
+		?>
+        <p><?php $this->_("BlestaLicense.tab_reissue.description");?></p>
+        <div class="button_row">
+			<a class="btn btn-primary float-right submit" href="#"><?php $this->_("BlestaLicense.tab_reissue.field_submit");?></a>
+		</div>
+        <?php
+        $this->Form->end();
+        ?>
+	</div>

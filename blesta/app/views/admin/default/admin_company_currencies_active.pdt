@@ -1,0 +1,98 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminCompanyCurrencies.active.categorylink_addcurrency', true),
+                            'href' => $this->base_uri . 'settings/company/currencies/add/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminCompanyCurrencies.active.boxtitle_active', true), ['id' => 'admin_company_currencies_active'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($currencies) ? $currencies : false) && ($num_currencies = count($currencies)) > 0) {
+                ?>
+                <table class="table">
+                    <tr class="heading_row">
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/currencies/active/?sort=code&order=' . ($sort == 'code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'code' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyCurrencies.active.text_currency_code');?></a></span></td>
+                        <td><span><?php $this->_('AdminCompanyCurrencies.active.text_format');?></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/currencies/active/?sort=precision&order=' . ($sort == 'precision' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'precision' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyCurrencies.active.text_precision');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/currencies/active/?sort=exchange_rate&order=' . ($sort == 'exchange_rate' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'exchange_rate' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyCurrencies.active.text_exchange_rate');?></a></span></td>
+                        <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/currencies/active/?sort=exchange_updated&order=' . ($sort == 'exchange_updated' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'exchange_updated' ? ' ' . $order : '');?>"><?php $this->_('AdminCompanyCurrencies.active.text_exchange_updated');?></a></span></td>
+                        <td class="last"><span><?php $this->_('AdminCompanyCurrencies.active.text_options');?></span></td>
+                    </tr>
+                    <?php
+                    for ($i = 0; $i < $num_currencies; $i++) {
+                    ?>
+                    <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                        <td><?php (print (isset($currencies[$i]->code) ? $this->Html->safe($currencies[$i]->code) : null));?></td>
+                        <td><span class="currency_value"><?php echo (isset($currencies[$i]->prefix) ? $this->Html->safe($currencies[$i]->prefix) : null) . (isset($currencies[$i]->format) ? $this->Html->safe($currencies[$i]->format) : null) . (isset($currencies[$i]->suffix) ? $this->Html->safe($currencies[$i]->suffix) : null);?></span></td>
+                        <td><?php (print (isset($currencies[$i]->precision) ? $this->Html->safe($currencies[$i]->precision) : null));?></td>
+                        <td><?php (print (isset($currencies[$i]->exchange_rate) ? $this->Html->safe($currencies[$i]->exchange_rate) : null));?></td>
+                        <td><?php echo (empty($currencies[$i]->exchange_updated) ? $this->_('AdminCompanyCurrencies.active.no_exchange_updated', true) : $this->Date->cast((isset($currencies[$i]->exchange_updated) ? $currencies[$i]->exchange_updated : null), 'date_time'));?></td>
+                        <td class="last">
+                            <a href="<?php echo $this->base_uri . 'settings/company/currencies/edit/' . (isset($currencies[$i]->code) ? $this->Html->safe($currencies[$i]->code) : null) . '/';?>"><?php $this->_('AdminCompanyCurrencies.active.option_edit');?></a><?php echo ((isset($currencies[$i]->code) ? $this->Html->safe($currencies[$i]->code) : null) != (isset($default_currency) ? $default_currency : null)) ? ',' : '';?>
+                            <?php
+                            // Do not display link to delete the default currency
+                            if ((isset($currencies[$i]->code) ? $this->Html->safe($currencies[$i]->code) : null) != (isset($default_currency) ? $default_currency : null)) {
+                            ?>
+                                <?php
+                                $this->Form->create($this->base_uri . 'settings/company/currencies/delete/');
+                                $this->Form->fieldHidden('id', (isset($currencies[$i]->code) ? $this->Html->safe($currencies[$i]->code) : null));
+                                ?>
+                                <a class="manage" href="<?php echo $this->base_uri . 'settings/company/currencies/delete/' . (isset($currencies[$i]->code) ? $this->Html->safe($currencies[$i]->code) : null) . '/';?>" rel="<?php echo $this->Html->safe($this->_('AdminCompanyCurrencies.active.confirm_delete', true));?>"><?php $this->_('AdminCompanyCurrencies.active.option_delete');?></a>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                            <?php
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminCompanyCurrencies.active.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Handle confirmation
+                $('#admin_company_currencies_active a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

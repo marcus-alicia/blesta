@@ -1,0 +1,219 @@
+<?php
+if(isset($_GET['success']) && $_GET['success'] == 'change_mail'){
+//This message is displayed when user change approver email successfully from "change approver email" tab
+?>
+<section class="error_section">
+    <article class="error_box">
+        <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <p> <?php $this->_("ThesslstoreModule.success.change_approver_email"); ?> </p>
+        </div>
+    </article>
+</section>
+<?php
+} ?>
+<div class="panel-pad">
+    <h3><?php $this->_("ThesslstoreModule.tab_client_cert_details"); ?></h3>
+    <?php
+    if($certificate->order_status == 'Initial'){?>
+        <div class="row">
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.order_status"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4>
+                    <?php echo (isset($certificate->order_status) ? $this->Html->safe($certificate->order_status) : null); ?>
+                    <a target="_blank" href="<?php echo (isset($certificate->generation_link) ? $this->Html->safe($certificate->generation_link) : null); ?>" class="btn btn-success btn-xs" type="button"><?php $this->_("ThesslstoreModule.tab_GenerateCert"); ?></a>
+                </h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.store_order_id"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->store_order_id) ? $this->Html->safe($certificate->store_order_id) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.token"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->token) ? $this->Html->safe($certificate->token) : null); ?></h4>
+            </div>
+        </div>
+    <?php
+    }
+    else{ ?>
+        <div class="row">
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.order_status"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->order_status) ? $this->Html->safe($certificate->order_status) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.package_name"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($service->package->name) ? $this->Html->safe($service->package->name) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.store_order_id"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->store_order_id) ? $this->Html->safe($certificate->store_order_id) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.vendor_order_id"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->vendor_order_id) ? $this->Html->safe($certificate->vendor_order_id) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.vendor_status"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->vendor_status) ? $this->Html->safe($certificate->vendor_status) : null); ?></h4>
+                <?php if(!empty($replacementdetails )){ ?>
+                <label><?php echo (isset($replacementdetails) ? $this->Html->safe($replacementdetails) : null); ?></label>
+                <?php } ?>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.token"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->token) ? $this->Html->safe($certificate->token) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.ssl_start_date"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->ssl_start_date) ? $this->Html->safe($certificate->ssl_start_date) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.ssl_end_date"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->ssl_end_date) ? $this->Html->safe($certificate->ssl_end_date) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.domains"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->domains) ? $this->Html->safe($certificate->domains) : null); ?></h4>
+                <h4><?php echo (isset($certificate->additional_domains) ? $this->Html->safe($certificate->additional_domains) : null);?></h4>
+            </div>
+            <?php
+            if($certificate->verification_type == 'email'){ ?>
+                <div class="col-md-3 service-info">
+                    <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.verification_email"); ?></label>
+                </div>
+                <div class="col-md-9 service-info">
+                    <h4><?php echo (isset($certificate->verification_email) ? $this->Html->safe($certificate->verification_email) : null); ?></h4>
+                </div>
+
+                <?php
+            }
+            if($certificate->siteseal_url != 'NA'){ ?>
+                <div class="col-md-3 service-info">
+                    <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.siteseal_url"); ?></label>
+                </div>
+                <div class="col-md-9 service-info">
+                    <h4>
+                        <a target="_blank" href="<?php echo (isset($certificate->siteseal_url) ? $this->Html->safe($certificate->siteseal_url) : null);?>">
+                            <?php echo (isset($certificate->siteseal_url) ? $this->Html->safe($certificate->siteseal_url) : null);?>
+                        </a>
+                    </h4>
+                </div>
+            <?php } ?>
+        </div>
+
+        <h3><?php $this->_("ThesslstoreModule.tab_client_cert_details.admin_details"); ?></h3>
+        <div class="row">
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.admin_title"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->admin_title) ? $this->Html->safe($certificate->admin_title) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.admin_first_name"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->admin_first_name) ? $this->Html->safe($certificate->admin_first_name) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.admin_last_name"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->admin_last_name) ? $this->Html->safe($certificate->admin_last_name) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.admin_email"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->admin_email) ? $this->Html->safe($certificate->admin_email) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.admin_phone"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->admin_phone) ? $this->Html->safe($certificate->admin_phone) : null); ?></h4>
+            </div>
+        </div>
+
+        <h3><?php $this->_("ThesslstoreModule.tab_client_cert_details.tech_details"); ?></h3>
+        <div class="row">
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.tech_title"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->tech_title) ? $this->Html->safe($certificate->tech_title) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.tech_first_name"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->tech_first_name) ? $this->Html->safe($certificate->tech_first_name) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.tech_last_name"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->tech_last_name) ? $this->Html->safe($certificate->tech_last_name) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.tech_email"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->tech_email) ? $this->Html->safe($certificate->tech_email) : null); ?></h4>
+            </div>
+
+            <div class="col-md-3 service-info">
+                <label><?php $this->_("ThesslstoreModule.tab_client_cert_details.tech_phone"); ?></label>
+            </div>
+            <div class="col-md-9 service-info">
+                <h4><?php echo (isset($certificate->tech_phone) ? $this->Html->safe($certificate->tech_phone) : null); ?></h4>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
+</div>

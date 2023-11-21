@@ -1,0 +1,8 @@
+{
+    "name": "WHMCS",
+    "migrators": {
+        "5.2": "5.2 - 7.10",
+        "8.0": "8.0"
+    },
+    "supports_cli": true
+}

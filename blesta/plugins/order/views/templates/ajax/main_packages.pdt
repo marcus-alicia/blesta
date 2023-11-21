@@ -1,0 +1,348 @@
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="section-title">
+                                <h3><?php echo (isset($package_group->name) ? $this->Html->safe($package_group->name) : null);?></h3>
+                                <?php
+                                if (empty($package_group->description)) {
+                                ?>
+                                <p class="format"><?php $this->_('Main.packages.subheading');?></p>
+                                <?php
+                                } else {
+                                    echo $this->TextParser->encode($parser_syntax, $package_group->description);
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <?php
+                            if (count((isset($order_form->currencies) ? $order_form->currencies : [])) > 1) {
+                            ?>
+                            <div class="currency">
+
+                                <?php
+                                $this->Form->setCsrfOptions(['set_on_create' => false]);
+                                $this->Form->create(null, ['method' => 'GET', 'class' => 'form-inline']);
+                                $this->Form->fieldHidden('group_id', (isset($package_group->id) ? $package_group->id : null));
+                                ?>
+                                    <label for="change_currency">
+                                        <?php $this->_('Main.index.field_currency');?>
+                                    </label>
+                                    <?php
+                                    $this->Form->fieldSelect('currency', $this->Form->collapseObjectArray($order_form->currencies, 'currency', 'currency'), (isset($currency) ? $currency : null), ['class' => 'form-control input-sm', 'id' => 'change_currency']);
+                                    ?>
+                                <?php
+                                $this->Form->end();
+                                $this->Form->setCsrfOptions(['set_on_create' => true]);
+                                ?>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+
+                    <?php
+                    if ($order_form->template_style == 'list') {
+                    ?>
+                        <?php
+                        foreach ($packages as $i => $package) {
+                            $sold_out = (isset($package->qty) ? $package->qty : null) == '0';
+                            $limit_reached = $package->client_qty !== null && $package->client_qty <= (isset($package_counts[$package->id]) ? $package_counts[$package->id] : 0);
+                            $lowest_price = null;
+                            if (!$sold_out && !(isset($package_id) ? $package_id : null)  && !(isset($pricing_id) ? $pricing_id : null)) {
+                                $package_id = $package->id;
+                            }
+
+                            $selected_pricing_id = null;
+                            foreach ($package->pricing as $price) {
+                                if ((isset($pricing_id) ? $pricing_id : null) == $price->id) {
+                                    $package_id = $package->id;
+                                    $selected_pricing_id = $pricing_id;
+                                }
+
+                                if ($lowest_price === null || $lowest_price->price > $price->price)
+                                    $lowest_price = $price;
+                            }
+                            ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            // Prevent sold out packages from being submitted
+                            if ($sold_out || $limit_reached) {
+                            ?>
+                            <div class="card bg-light p-3 card-order package-list">
+                            <?php
+                            } else {
+                            ?>
+                            <div class="card bg-light p-3 card-order package-list <?php echo ((isset($package_id) ? $package_id : null) == $package->id ? 'selected' : '');?>" data-group-id="<?php echo (isset($package_group->id) ? $this->Html->safe($package_group->id) : null);?>" data-pricing-id="<?php echo (isset($lowest_price->id) ? $this->Html->safe($lowest_price->id) : null);?>" data-selected-pricing-id="<?php echo (isset($selected_pricing_id) ? $this->Html->safe($selected_pricing_id) : null);?>">
+                            <?php
+                            }
+                            ?>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-6 col-xs-12 package-item">
+                                        <h3><?php echo (isset($package->name) ? $this->Html->safe($package->name) : null);?></h3>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 package-description">
+                                        <?php
+                                        if (!empty($package->description_html) || !empty($package->description)) {
+                                        ?>
+                                            <?php echo ((isset($package->description_html) ? $package->description_html : null) != '' ? $package->description_html : $this->TextParser->encode($parser_syntax, $package->description));?>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12 col-xs-12 package-item">
+                                        <h3 class="float-right"><small><?php $this->_('Main.packages.price_start');?></small> <?php echo $this->CurrencyFormat->format((isset($lowest_price->price) ? $lowest_price->price : null), (isset($lowest_price->currency) ? $lowest_price->currency : null), ['decimals' => $lowest_price->precision]);?></h3>
+                                        <div class="clearfix"></div>
+                                        <div>
+                                            <?php
+                                            if ($sold_out) {
+                                            ?>
+                                            <div class="order sold-btn">
+                                                <div disabled="disabled" class="btn btn-danger btn-lg float-right"><?php $this->_('Main.packages.box_sold_out');?></div>
+                                            </div>
+                                            <?php
+                                            } elseif ($limit_reached) {
+                                            ?>
+                                            <div class="order sold-btn">
+                                                <div disabled="disabled" class="btn btn-danger btn-lg float-right"><?php $this->_('Main.packages.box_client_limit');?></div>
+                                            </div>
+                                            <?php
+                                            } else {
+                                            ?>
+                                            <div class="order selected-btn">
+                                                <button type="button" class="btn btn-success btn-lg float-right"><?php $this->_('Main.packages.box_selected');?></button>
+                                            </div>
+                                            <div class="order unselected-btn">
+                                                <button type="button" class="btn btn-light btn-lg float-right"><?php $this->_('Main.packages.box_select');?></button>
+                                            </div>
+                                            <?php
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <?php
+                        }
+                        ?>
+                    <?php
+                    } elseif ($order_form->template_style == 'boxes') {
+                    ?>
+                    <div class="row">
+                        <?php
+                        foreach ($packages as $i => $package) {
+                            $sold_out = (isset($package->qty) ? $package->qty : null) == '0';
+                            $limit_reached = $package->client_qty !== null && $package->client_qty <=  (isset($package_counts[$package->id]) ? $package_counts[$package->id] : 0);
+                            $lowest_price = null;
+
+                            // Select the first non sold out package
+                            if (!$sold_out && !(isset($package_id) ? $package_id : null) && !(isset($pricing_id) ? $pricing_id : null)) {
+                                $package_id = $package->id;
+                            }
+
+                            if (!$sold_out
+                                && !$limit_reached
+                                && !(isset($package_id) ? $package_id : null)
+                                && !(isset($pricing_id) ? $pricing_id : null)
+                            ) {
+                                $package_id = $package->id;
+                            }
+
+                            $selected_pricing_id = null;
+                            foreach ($package->pricing as $price) {
+                                if ((isset($pricing_id) ? $pricing_id : null) == $price->id) {
+                                    $package_id = $package->id;
+                                    $selected_pricing_id = $pricing_id;
+                                }
+
+                                if ($lowest_price === null || $lowest_price->price > $price->price) {
+                                    $lowest_price = $price;
+                                }
+                            }
+                        ?>
+                        <div class="col-md-3 package-boxes">
+                            <?php
+                            // Prevent sold out packages from being submitted
+                            if ($sold_out || $limit_reached) {
+                            ?>
+                            <div class="package card card-blesta">
+                            <?php
+                            } else {
+                            ?>
+                            <div class="package card card-blesta <?php echo ((isset($package_id) ? $package_id : null) == $package->id ? 'selected' : '');?>" data-group-id="<?php echo (isset($package_group->id) ? $this->Html->safe($package_group->id) : null);?>" data-pricing-id="<?php echo (isset($lowest_price->id) ? $this->Html->safe($lowest_price->id) : null);?>" data-selected-pricing-id="<?php echo (isset($selected_pricing_id) ? $this->Html->safe($selected_pricing_id) : null);?>">
+                            <?php
+                            }
+                            ?>
+
+                                <div class="package-name card-header">
+                                    <h4><?php echo (isset($package->name) ? $this->Html->safe($package->name) : null);?></h4>
+                                </div>
+                                <div class="price-box card-body">
+                                    <p><?php $this->_('Main.packages.price_start');?></p>
+                                    <h4><?php echo $this->CurrencyFormat->format((isset($lowest_price->price) ? $lowest_price->price : null), (isset($lowest_price->currency) ? $lowest_price->currency : null), ['decimals' => $lowest_price->precision]);?></h4>
+                                </div>
+                                <?php
+                                if (!empty($package->description_html) || !empty($package->description)) {
+                                ?>
+                                    <?php echo ((isset($package->description_html) ? $package->description_html : null) != '' ? $package->description_html : $this->TextParser->encode($parser_syntax, $package->description));?>
+                                <?php
+                                }
+
+                                if ($sold_out) {
+                                ?>
+                                <div class="order sold-btn card-footer">
+                                    <div disabled="disabled" class="btn btn-danger btn-lg btn-block"><?php $this->_('Main.packages.box_sold_out');?></div>
+                                </div>
+                                <?php
+                                } elseif ($limit_reached) {
+                                ?>
+                                <div class="order sold-btn card-footer">
+                                    <div disabled="disabled" class="btn btn-danger btn-lg btn-block"><?php $this->_('Main.packages.box_client_limit');?></div>
+                                </div>
+                                <?php
+                                } else {
+                                ?>
+                                <div class="order selected-btn card-footer">
+                                    <button type="button" class="btn btn-success btn-lg btn-block"><?php $this->_('Main.packages.box_selected');?></button>
+                                </div>
+                                <div class="order unselected-btn card-footer">
+                                    <button type="button" class="btn btn-light btn-lg btn-block"><?php $this->_('Main.packages.box_select');?></button>
+                                </div>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <?php
+                    } elseif ($order_form->template_style == 'slider') {
+                    ?>
+                    <div class="row">
+                        <div class="col-md-12 package-slider">
+                            <div class="card bg-light w-100">
+                                <div class="card-body">
+                                    <?php
+                                    $slider_packages = [];
+                                    $slider_packages_js = [];
+                                    foreach ($packages as $i => $package) {
+                                        if ($i == 0 && !(isset($package_id) ? $package_id : null) && !(isset($pricing_id) ? $pricing_id : null)) {
+                                            $package_id = $package->id;
+                                        }
+                                        $lowest_price = null;
+                                        $selected_pricing_id = null;
+                                        foreach ($package->pricing as $price) {
+                                            if ((isset($pricing_id) ? $pricing_id : null) == $price->id) {
+                                                $package_id = $package->id;
+                                                $selected_pricing_id = $pricing_id;
+                                            }
+
+                                            if ($lowest_price === null || $lowest_price->price > $price->price) {
+                                                $lowest_price = $price;
+                                            }
+                                        }
+                                        $slider_packages[$package->id] = (object)['index' => $i+1, 'group_id' => $package_group->id, 'pricing_id' => (isset($lowest_price->id) ? $lowest_price->id : null)];
+                                        $slider_packages_js[$slider_packages[$package->id]->index] = $slider_packages[$package->id];
+                                    }
+                                    $temp_package_id = (isset($package_id) ? $package_id : null);
+                                    $this->Form->fieldText(null, (isset($slider_packages[$temp_package_id]->index) ? $slider_packages[$temp_package_id]->index : null), ['id' => 'package_slider', 'data-slider-min' => 1, 'data-slider-max' => count((isset($packages) ? $packages : [])), 'data-slider-step' => 1, 'data-slider-value'=> (isset($slider_packages[$temp_package_id]->index) ? $slider_packages[$temp_package_id]->index : null)]);
+                                    ?>
+                                    <p class="instructions"><i class="fas fa-share fa-rotate-270"></i> <?php $this->_('Main.packages.select_note');?></p>
+
+                                    <?php
+                                    foreach ($packages as $i => $package) {
+                                        $lowest_price = null;
+                                        foreach ($package->pricing as $price) {
+                                            if ($lowest_price === null || $lowest_price->price > $price->price) {
+                                                $lowest_price = $price;
+                                            }
+                                        }
+                                    ?>
+                                    <div id="package_<?php echo $this->Html->safe($i+1);?>" class="package-block <?php echo ((isset($package_id) ? $package_id : null) == $package->id ? 'active' : '');?>">
+                                        <div class="row">
+                                            <div class="col-md-6 package-selected">
+                                                <h3><?php echo (isset($package->name) ? $this->Html->safe($package->name) : null);?></h3>
+                                            </div>
+                                            <div class="col-md-6 package-selected">
+                                                <h3 class="float-right"><small><?php $this->_('Main.packages.price_start');?></small> <?php echo $this->CurrencyFormat->format((isset($lowest_price->price) ? $lowest_price->price : null), (isset($lowest_price->currency) ? $lowest_price->currency : null), ['decimals' => $lowest_price->precision]);?></h3>
+                                            </div>
+                                        </div>
+                                        <?php
+                                        if (!empty($package->description_html) || !empty($package->description)) {
+                                        ?>
+                                            <div class="package-description border-top pt-3">
+                                                <?php echo ((isset($package->description_html) ? $package->description_html : null) != '' ? $package->description_html : $this->TextParser->encode($parser_syntax, $package->description));?>
+                                            </div>
+                                        <?php
+                                        }
+                                        ?>
+                                    </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="float-right">
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/cart/index/' . ($order_form->label ?? null));?>" class="btn btn-lg btn-secondary mb-2">
+                                    <i class="fas fa-shopping-cart"></i> <?php $this->_('Main.packages.show_cart_btn');?>
+                                </a>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6" id="package-config"></div>
+                        <div class="col-md-6" id="order-summary"></div>
+                    </div>
+                    <div class="row"><div class="col-md-12" id="create-account"></div></div>
+                </div>
+
+    <script type="text/javascript">
+        var base_uri = '<?php echo (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null);?>';
+        var order_label = '<?php echo (isset($order_form->label) ? $this->Html->safe($order_form->label) : null);?>';
+    </script>
+    <script type="text/javascript" src="<?php echo $this->Html->safe($this->view_dir . 'javascript/order.js');?>"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Initialize package selection
+            initPackages(
+                <?php echo json_encode((isset($slider_packages_js) ? $slider_packages_js : []));?>,
+                <?php echo json_encode((isset($config_options) ? $config_options : []));?>
+            );
+
+            <?php if ($order_form->template_style == 'slider') { ?>
+            // Fetch initial configuration
+            fetchConfig('<?php echo (isset($slider_packages[($package_id ?? package_id)]->group_id) ? $this->Html->safe($slider_packages[($package_id ?? package_id)]->group_id) : null);?>',
+                '<?php echo (isset($pricing_id) ? $pricing_id : $slider_packages[(isset($package_id) ? $package_id : null)]->pricing_id);?>',
+                null,
+                <?php echo json_encode((isset($config_options) ? $config_options : []));?>
+            );
+            <?php } ?>
+
+            // Fetch signup/login
+            fetchSignup();
+        });
+
+        // Process change currency request
+        $("#change_currency").change(function() {
+            $(this).closest("form").attr('action', window.location.href);
+            $(this).closest("form").submit();
+        });
+
+    </script>

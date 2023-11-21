@@ -1,0 +1,137 @@
+<?php
+if (isset($message)) {
+?>
+    <div><?php echo (isset($message) ? $message : null);?></div>
+<?php
+}
+?>
+<div class="title_row first">
+    <h3>
+        <?php $this->_('CWatch.tab_licenses.licenses');?>
+    </h3>
+</div>
+<?php
+if (!empty($licenses)) {
+?>
+<table class="table table-bordered table-striped" id="licenses">
+    <tr class="heading_row">
+        <td><?php $this->_('CWatch.tab_licenses.licenseKey');?></td>
+        <td><?php $this->_('CWatch.tab_licenses.type');?></td>
+        <td><?php $this->_('CWatch.tab_licenses.domain');?></td>
+        <td><?php $this->_('CWatch.tab_licenses.status');?></td>
+        <td><?php $this->_('CWatch.tab_licenses.malware_scanner');?></td>
+        <td><?php $this->_('CWatch.tab_licenses.options');?></td>
+    </tr>
+    <?php
+    $odd_row = false;
+    foreach ($licenses as $key => $license) {
+    ?>
+    <tr<?php echo $odd_row ? ' class="odd_row"' : '';?>>
+        <td><?php echo (isset($license->licenseKey) ? $this->Html->safe($license->licenseKey) : null);?></td>
+        <td><?php echo (isset($license->productTitle) ? $this->Html->safe($license->productTitle) : null);?></td>
+        <td><?php echo (isset($license->site->domain) ? $this->Html->safe($license->site->domain) : null);?></td>
+        <td><?php echo $this->Html->safe((isset($site_statuses[($license->site->status ?? null)]) ? $site_statuses[($license->site->status ?? null)] : (isset($license->site->status) ? $license->site->status : null)));?></td>
+        <td><?php echo (isset($license->site->scanner) ? $license->site->scanner : null) ? (isset($license->site->scanner->status) ? $this->Html->safe($license->site->scanner->status) : null) : $this->_('CWatch.tab_licenses.not_applicable', true);?></td>
+        <td>
+            <?php
+            if ((isset($license->site->status) ? $license->site->status : null) == 'Valid') {
+                $this->Form->create($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/');
+                $this->Form->fieldHidden('domain', (isset($license->site->domain) ? $license->site->domain : null));
+                $this->Form->fieldHidden('action', 'remove_domain');
+            ?>
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/?action=upgrade_site&key=' . (isset($license->licenseKey) ? $license->licenseKey : null));?>">
+                <?php $this->_('CWatch.tab_licenses.upgrade_site');?></a>,
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('CWatch.tab_licenses.confirm_delete', true));?>">
+                <?php $this->_('CWatch.tab_licenses.remove_site');?></a>,
+                <?php
+                $this->Form->end();
+                ?>
+            <?php
+            } else {
+            ?>
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/?action=add_site&key=' . (isset($license->licenseKey) ? $license->licenseKey : null));?>" ><?php $this->_('CWatch.tab_licenses.add_site');?></a>,
+            <?php
+            }
+            ?>
+            <?php
+            $this->Form->create($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/');
+            $this->Form->fieldHidden('licenseKey', (isset($license->licenseKey) ? $license->licenseKey : null));
+            $this->Form->fieldHidden('action', 'deactivate_license');
+            ?>
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('CWatch.tab_licenses.confirm_deactivate', true));?>">
+            <?php $this->_('CWatch.tab_licenses.deactivate_license');?></a>
+            <?php
+            $this->Form->end();
+            ?>
+        </td>
+    </tr>
+    <?php
+        $odd_row = !$odd_row;
+    }
+    ?>
+</table>
+<?php
+} else {
+?>
+<div class="empty_section"><div class="empty_box"><?php $this->_('CWatch.tab_licenses.no_results');?></div></div>
+<?php
+}
+?>
+
+<?php
+if (!empty($inactive_licenses)) {
+?>
+<div class="title_row">
+    <h3>
+        <?php $this->_('CWatch.tab_licenses.inactive_licenses');?>
+    </h3>
+</div>
+<table class="table table-bordered table-striped" id="licenses">
+    <tr class="heading_row">
+        <td><?php $this->_('CWatch.tab_licenses.licenseKey');?></td>
+        <td><?php $this->_('CWatch.tab_licenses.type');?></td>
+        <td><?php $this->_('CWatch.tab_licenses.domain');?></td>
+        <td><?php $this->_('CWatch.tab_licenses.options');?></td>
+    </tr>
+    <?php
+    $odd_row = false;
+    foreach ($inactive_licenses as $key => $license) {
+        $site = isset($license->site);
+    ?>
+    <tr<?php echo $odd_row ? ' class="odd_row"' : '';?>>
+        <td><?php echo (isset($license->licenseKey) ? $this->Html->safe($license->licenseKey) : null);?></td>
+        <td><?php echo (isset($license->productTitle) ? $this->Html->safe($license->productTitle) : null);?></td>
+        <td><?php echo (isset($license->site->domain) ? $this->Html->safe($license->site->domain) : null);?></td>
+        <td>
+            <?php
+            if ($site) {
+                $this->Form->create($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/');
+                $this->Form->fieldHidden('domain', (isset($license->site->domain) ? $license->site->domain : null));
+                $this->Form->fieldHidden('action', 'remove_domain');
+            ?>
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/?action=upgrade_site&key=' . (isset($license->licenseKey) ? $license->licenseKey : null));?>">
+                <?php $this->_('CWatch.tab_licenses.upgrade_site');?></a>,
+            <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/serviceTab/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/tabLicenses/');?>" class="manage" rel="<?php echo $this->Html->safe($this->_('CWatch.tab_licenses.confirm_delete', true));?>">
+                <?php $this->_('CWatch.tab_licenses.remove_site');?></a>
+            <?php
+                $this->Form->end();
+            }
+            ?>
+        </td>
+    </tr>
+    <?php
+        $odd_row = !$odd_row;
+    }
+    ?>
+</table>
+<?php
+}
+?>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#licenses a.manage[rel]').each(function() {
+            $(this).blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', submit: true});
+        });
+    });
+</script>

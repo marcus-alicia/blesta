@@ -1,0 +1,44 @@
+
+    <h4><?php $this->_('Teamspeak.tab_client_clients.heading_clients'); ?></h4>
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><?php $this->_('Teamspeak.tab_client_clients.clients_heading.client_id'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_clients.clients_heading.client_name'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_clients.clients_heading.options'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            if (!empty($server_clients->clients)) {
+                foreach ($server_clients->clients as $client) {
+                    ?>
+                <tr>
+                    <td><?php echo (isset($client->clid) ? $this->Html->safe($client->clid) : null); ?></td>
+                    <td><?php echo (isset($client->name) ? $this->Html->safe($client->name) : null); ?></td>
+                    <td>
+                        <?php
+                            $this->Form->create();
+                        $this->Form->fieldHidden('action', 'kick_client');
+                        $this->Form->fieldHidden('clid', $client->clid); ?>
+                            <button class="btn btn-light btn-sm btn-danger">
+                                <i class="fas fa-ban"></i> <?php $this->_('Teamspeak.tab_client_clients.action_kick_client'); ?>
+                            </button>
+                        <?php
+                            $this->Form->end(); ?>
+                    </td>
+                </tr>
+            <?php
+                }
+            } else {
+            ?>
+                <tr>
+                    <td colspan="3"><?php $this->_('Teamspeak.tab_client_clients.text_no_clients'); ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>

@@ -1,0 +1,460 @@
+
+        <?php
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        $this->Form->fieldHidden('section', 'information');
+        ?>
+        <div class="title_row first">
+            <h3><?php $this->_('AdminClients.editservice.service_heading');?></h3>
+        </div>
+        <div class="pad">
+            <ul>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_package_name');?>
+                    <?php (print (isset($service->package->name) ? $this->Html->safe($service->package->name) : null));?>
+                </li>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_label');?>
+                    <?php (print (isset($service->name) ? $this->Html->safe($service->name) : null));?>
+                </li>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_qty');?>
+                    <?php (print (isset($service->qty) ? $this->Html->safe($service->qty) : null));?>
+                </li>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_term');?>
+                    <?php
+                    if ((isset($service->package_pricing->period) ? $service->package_pricing->period : null) == 'onetime') {
+                        (print (isset($periods[$service->package_pricing->period]) ? $this->Html->safe($periods[$service->package_pricing->period]) : null));
+                    } else {
+                        $term = (isset($service->package_pricing->term) ? $this->Html->safe($service->package_pricing->term) : null);
+                        echo $this->Html->safe($this->Html->concat(' ', $term, ($term == 1 ? (isset($periods[$service->package_pricing->period]) ? $periods[$service->package_pricing->period] : null) : (isset($periods[$service->package_pricing->period . '_plural']) ? $periods[$service->package_pricing->period . '_plural'] : null))));
+                    }
+                    ?>
+                </li>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_status');?>
+                    <?php echo $this->Html->safe((isset($statuses[$service->status]) ? $statuses[$service->status] : null));?>
+                </li>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_date_added');?>
+                    <?php echo (!empty($service->date_added) ? $this->Date->cast($service->date_added) : '');?>
+                </li>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_date_renews');?>
+                    <?php echo (!empty($service->date_renews) ? $this->Date->cast($service->date_renews) : $this->_('AdminClients.services.text_never', true));?>
+                </li>
+                <?php
+                if (!empty($service->date_suspended)) {
+                ?>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_date_suspended');?>
+                    <?php echo $this->Date->cast($service->date_suspended);?>
+                </li>
+                <?php
+                }
+                if (!empty($service->date_canceled)) {
+                ?>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_date_canceled');?>
+                    <?php echo $this->Date->cast($service->date_canceled);?>
+                </li>
+                <?php
+                }
+
+                // Display the coupon that should apply when the service renews
+                if ((isset($recurring_coupon) ? $recurring_coupon : null)) {
+                ?>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_recurring_coupon');?>
+                    <?php
+                    if ((isset($recurring_coupon->recurring_amount->type) ? $recurring_coupon->recurring_amount->type : null) == 'percent') {
+                        $this->_('AdminClients.editservice.text_coupon_percent', false, $this->Html->safe((isset($recurring_coupon->code) ? $recurring_coupon->code : null)), $this->CurrencyFormat->cast((isset($recurring_coupon->recurring_amount->amount) ? $recurring_coupon->recurring_amount->amount : null), (isset($recurring_coupon->recurring_amount->currency) ? $recurring_coupon->recurring_amount->currency : null)));
+                    } else {
+                        $this->_('AdminClients.editservice.text_coupon_amount', false, $this->Html->safe((isset($recurring_coupon->code) ? $recurring_coupon->code : null)), $this->CurrencyFormat->format((isset($recurring_coupon->recurring_amount->amount) ? $recurring_coupon->recurring_amount->amount : null), (isset($recurring_coupon->recurring_amount->currency) ? $recurring_coupon->recurring_amount->currency : null)));
+                    }
+                    ?>
+                </li>
+                <?php
+                }
+
+                if ((isset($service->package_pricing->period) ? $service->package_pricing->period : null) != 'onetime') {
+                ?>
+                <li>
+                    <?php $this->_('AdminClients.editservice.text_renewal_price');?>
+                    <?php echo $this->CurrencyFormat->format((isset($service->renewal_price) ? $service->renewal_price : null), (isset($service->override_currency) ? $service->override_currency : (isset($service->package_pricing->currency) ? $service->package_pricing->currency : null)));?>
+                </li>
+                <?php
+                }
+
+                if ((isset($service->status) ? $service->status : null) != 'canceled' && !empty($module_row_fields)) {
+                ?>
+                <li>
+                    <?php
+                    $this->Form->label((isset($module_row_name) ? $module_row_name : null), 'module_row_id');
+                    $this->Form->fieldSelect('module_row_id', (isset($module_row_fields) ? $module_row_fields : []), (isset($vars->module_row_id) ? $vars->module_row_id : null), ['id' => 'module_row_id']);
+                    ?>
+                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.!tooltip.module_row_id');?></div></span>
+                </li>
+                <?php
+                }
+                ?>
+            </ul>
+        </div>
+        <?php
+        if ((isset($service->status) ? $service->status : null) != 'canceled' && !empty($module_row_fields)) {
+        ?>
+        <div class="button_row">
+            <?php
+            $this->Form->fieldSubmit('save', $this->_('AdminClients.editservice.field_module_save', true), ['class' => 'btn btn-primary pull-right']);
+            ?>
+        </div>
+        <?php
+        }
+        $this->Form->end();
+        ?>
+
+        <?php
+        if ((isset($service->status) ? $service->status : null) != 'canceled') {
+            $this->Form->create(null, ['id' => 'service_actions', 'class' => 'disable-on-submit']);
+            $this->Form->fieldHidden('section', 'action');
+            ?>
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.editservice.action_heading');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.action.field_action', true), 'action_action');
+                        $this->Form->fieldSelect('action', (isset($actions) ? $actions : null), (isset($vars->action) ? $vars->action : null), ['id' => 'action_action']);
+                        ?>
+                    </li>
+                    <li class="schedule_service_cancel">
+                        <?php
+                        // Disable the end of term field since there is no renew date
+                        $disabled_field = [];
+                        if (!$service->date_renews) {
+                            $disabled_field = ['disabled' => 'disabled'];
+                        }
+
+                        $this->Form->fieldRadio('cancel', 'term', ($service->date_renews && (isset($vars->cancel) ? $vars->cancel : 'term') == 'term'), array_merge(['id' => 'action_cancel_term'], $disabled_field));
+
+                        // Show language based on whether or not a renew date exists
+                        if ($service->date_renews) {
+                            $this->Form->label($this->_('AdminClients.editservice.action.field_cancel_term_date', true, $this->Date->cast((isset($service->date_renews) ? $service->date_renews : null), 'date')), 'action_cancel_term', ['class' => 'inline']);
+                        } else {
+                            $this->Form->label($this->_('AdminClients.editservice.action.field_cancel_term', true), 'action_cancel_term', ['class' => 'inline']);
+                        }
+
+                        $this->Form->fieldRadio('cancel', 'date', ((isset($vars->cancel) ? $vars->cancel : null) == 'date' || (!$service->date_renews && ((isset($vars->cancel) ? $vars->cancel : null) != 'none'))), ['id' => 'action_cancel_date']);
+                        $this->Form->label($this->_('AdminClients.editservice.action.field_cancel_date', true), 'action_cancel_date', ['class' => 'inline']);
+                        $this->Form->fieldText('date_canceled', (isset($vars->date_canceled) ? $vars->date_canceled : null), ['class' => 'date']);
+                        $this->Form->fieldRadio('cancel', 'none', (isset($vars->cancel) ? $vars->cancel : null) == 'none', ['id' => 'action_cancel_none']);
+                        $this->Form->label($this->_('AdminClients.editservice.action.field_cancel_none', true), 'action_cancel_none', ['class' => 'inline']);
+                        ?>
+                    </li>
+                    <li class="service_cancel">
+                        <?php
+                        if (!empty($service->children)) {
+                        ?>
+                            <section class="error_section"><article class="error_box alert"><i class="fas fa-fw fa-exclamation-triangle"></i>  <?php $this->_('AdminClients.editservice.text_children');?></article></section>
+                        <?php
+                        }
+                        ?>
+
+                        <?php $this->Form->fieldCheckbox('notify_cancel', 'true', (isset($vars->notify_cancel) ? $vars->notify_cancel : 'true') === 'true', ['id' => 'notify_cancel']);?>
+                        <?php $this->Form->label($this->_('AdminClients.editservice.action.field_notify_cancel', true), 'notify_cancel', ['class' => 'inline']);?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.!tooltip.notify_cancel');?></div></span>
+                    </li>
+                    <li class="change_date_renews">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.action.field_date_renews', true));
+                        $this->Form->fieldText('date_renews', (isset($vars->date_renews) ? $vars->date_renews : $this->Date->cast($service->date_renews, 'Y-m-d')), ['class' => 'date', 'id' => 'renew_date']);
+                        ?>
+                    </li>
+                    <li class="change_date_renews">
+                        <?php
+                        $this->Form->fieldCheckbox('prorate', 'true', (isset($vars->prorate) ? $vars->prorate : 'true') == 'true', ['id' => 'prorate_renew']);
+                        $this->Form->label($this->_('AdminClients.editservice.field_prorate', true), 'prorate_renew', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.editservice.tooltip_prorate_renewal');?></div></span>
+                    </li>
+                    <li class="suspension_reason">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.action.field_suspension_reason', true));
+                        $this->Form->fieldTextArea('suspension_reason', (isset($vars->suspension_reason) ? $vars->suspension_reason : null));
+                        ?>
+                    </li>
+                    <li class="cancellation_reason">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.action.field_cancellation_reason', true));
+                        $this->Form->fieldTextArea('cancellation_reason', (isset($vars->cancellation_reason) ? $vars->cancellation_reason : null));
+                        ?>
+                    </li>
+                    <li class="update_coupon">
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.action.field_coupon_code', true), 'coupon_code_update');
+                        $this->Form->fieldText('coupon_code_update', (isset($vars->coupon_code_update) ? $vars->coupon_code_update : null), ['id' => 'coupon_code_update', 'class' => 'medium']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.editservice.tooltip_coupon_code');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('use_module', 'true', (isset($vars->use_module) ? $vars->use_module : 'true') == 'true', ['id' => 'use_module_action']);
+                        $this->Form->label($this->_('AdminClients.editservice.field_use_module', true), 'use_module_action', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div id="service_action_totals"></div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.editservice.field_module_save', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+
+            <?php
+            $this->Form->create(null, ['id' => 'service_changes', 'class' => 'disable-on-submit']);
+            $this->Form->fieldHidden('section', 'package');
+            ?>
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.editservice.package_heading');?></h3>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.package.field_pricing', true), 'pricing_id');
+                        $this->Form->fieldSelect('pricing_id', $terms, (isset($vars->pricing_id) ? $vars->pricing_id : null), ['id' => 'pricing_id']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('price_override', 'true', (isset($vars->price_override) ? $vars->price_override : null) == 'true', ['id' => 'price_override']);
+                        $this->Form->label($this->_('AdminClients.editservice.field_price_override', true), 'price_override', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+
+                <ul id="override_price_fields">
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.field_override_price', true), 'override_price');
+                        $this->Form->fieldText('override_price', (isset($vars->override_price) ? $vars->override_price : null), ['id' => 'override_price', 'class' => 'small']);
+                        $this->Form->fieldSelect('override_currency', $this->Form->collapseObjectArray((isset($currencies) ? $currencies : []), 'code', 'code'), (isset($vars->override_currency) ? $vars->override_currency : null), ['id' => 'override_currency']);
+                        ?>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.field_current_coupon_code', true));
+                        $this->Form->fieldText('current_coupon_code', (isset($service->coupon_code) ? $service->coupon_code : null), ['disabled' => 'disabled', 'class' => 'medium']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminClients.editservice.field_new_coupon_code', true), 'coupon_code');
+                        $this->Form->fieldText('coupon_code', (isset($vars->coupon_code) ? $vars->coupon_code : null), ['id' => 'coupon_code', 'class' => 'medium']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.editservice.tooltip_coupon_code');?></div></span>
+                    </li>
+                </ul>
+            </div>
+
+            <?php
+            // Show module fields
+            if (isset($input_html) && ($module_field_html = $input_html->generate(null, $this->view))) {
+            ?>
+                <div class="pad">
+                <?php
+                echo $module_field_html;
+                ?>
+                </div>
+            <?php
+            }
+            ?>
+            <div class="package_options">
+                <?php
+                if (isset($vars->configoptions)) {
+                    foreach ($vars->configoptions as $key => $value) {
+                        $this->Form->fieldHidden('configoptions[' . $key . ']', $value);
+                    }
+                }
+                ?>
+            </div>
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('prorate', 'true', (isset($vars->prorate) ? $vars->prorate : 'true') == 'true', ['id' => 'prorate_upgrade']);
+                        $this->Form->label($this->_('AdminClients.editservice.field_prorate', true), 'prorate_upgrade', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminClients.editservice.tooltip_prorate');?></div></span>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('use_module', 'true', (isset($vars->use_module) ? $vars->use_module : 'true') == 'true', ['id' => 'use_module_package']);
+                        $this->Form->label($this->_('AdminClients.editservice.field_use_module', true), 'use_module_package', ['class' => 'inline']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div id="service_change_totals"></div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminClients.editservice.field_module_save', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+            $this->Form->end();
+        }
+        ?>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        showPriceOverrideFields();
+        showUpgradeProration();
+        $("#price_override").change(function() {
+            showPriceOverrideFields();
+            showUpgradeProration();
+        });
+
+        function showPriceOverrideFields() {
+            if ($("#price_override").prop("checked")) {
+                $("#override_price_fields").show();
+                $("#pricing_id").prop("disabled", true);
+            }
+            else {
+                $("#override_price_fields").hide();
+                $("#pricing_id").prop("disabled", false);
+            }
+        }
+
+        serviceActionChange();
+        $("#action_action").change(function() {
+            serviceActionChange();
+        });
+
+        function serviceActionChange() {
+            $(".change_date_renews").hide();
+            $(".suspension_reason").hide();
+            $(".cancellation_reason").hide();
+            $(".update_coupon").hide();
+            $(".service_cancel").hide();
+
+            if ($("#action_action").val() == "schedule_cancel") {
+                $("#use_module_action").prop("checked", true).prop("disabled", true);
+                $(".schedule_service_cancel").show();
+                $(".service_cancel").show();
+                $(".cancellation_reason").show();
+            } else {
+                $("#use_module_action").prop("disabled", false);
+                $(".schedule_service_cancel").hide();
+
+                if ($("#action_action").val() == "change_renew") {
+                    $(".change_date_renews").show();
+                    $("#use_module_action").prop("checked", false).prop("disabled", true);
+                } else if ($("#action_action").val() == "suspend") {
+                    $(".suspension_reason").show();
+                }
+
+                if ($("#action_action").val() == "update_coupon") {
+                    $(".update_coupon").show();
+                    $("#use_module_action").prop("checked", false).prop("disabled", true);
+                }
+
+                if ($("#action_action").val() == "cancel") {
+                    $(".service_cancel").show();
+                    $(".cancellation_reason").show();
+                }
+            }
+        }
+
+        // Fetch package options
+        packageOptions();
+        $('#pricing_id').change(function() {
+            packageOptions();
+        });
+
+        function showUpgradeProration() {
+            // Proration does not occur if price overrides are set
+            if ($("#price_override").prop("checked")) {
+                $("#prorate_upgrade").prop("checked", false);
+                $("#prorate_upgrade").prop("disabled", true);
+            }
+            else
+                $("#prorate_upgrade").prop("disabled", false);
+        }
+
+        function packageOptions() {
+            var pricing_id = $('#pricing_id').val();
+            if (pricing_id) {
+                var params = 'service_id=<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>&' + $('[name^="configoptions"]', $('.package_options').closest('form')).serialize();
+                $(this).blestaRequest('GET', '<?php echo $this->Html->safe($this->base_uri . 'clients/packageoptions/');?>' + pricing_id, params, function(data) {
+                    $('.package_options').html(data);
+                    $('.package_options').blestaBindToolTips();
+                    updateTotals();
+                },
+                null,
+                {dataType: 'json'});
+            }
+        }
+
+        $('#action_action, #renew_date').on('change', function() {
+            // Remove any totals, we only show it for the renew date action
+            if ($('#action_action').val() != 'change_renew') {
+                $('#service_action_totals').html('');
+            } else {
+                updateActionTotals();
+            }
+        });
+
+        function updateActionTotals() {
+            var params = $('#service_actions').serialize();
+
+            $(this).blestaRequest('POST', '<?php echo $this->Html->safe($this->base_uri . 'clients_service/updatetotals/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/');?>', params, function(data) {
+                    $('#service_action_totals').html(data);
+                },
+                null,
+                {dataType: 'json'}
+            );
+        }
+
+        $('#service_changes').on('change', 'input, select', function() {
+            updateTotals();
+        });
+
+        // Check whether any sliders have changed
+        $('#service_changes').on('slidechange', '.ui-slider', function() {
+            updateTotals();
+        });
+
+        function updateTotals() {
+            // Enable disabled fields prior to serializing them so they can be passed along to total calculations
+            var pricing_disabled = $('#pricing_id:disabled').prop('disabled', false);
+            var params = $('#service_changes').serialize();
+            // Disable the field again
+            $(pricing_disabled).prop('disabled', true);
+
+            $(this).blestaRequest('POST', '<?php echo $this->Html->safe($this->base_uri . 'clients_service/updatetotals/' . (isset($service->client_id) ? $service->client_id : null) . '/' . (isset($service->id) ? $service->id : null) . '/');?>', params, function(data) {
+                    $('#service_change_totals').html(data);
+                },
+                null,
+                {dataType: 'json'}
+            );
+        }
+
+        // Re-enable disabled pricing field before submission
+        $('#service_changes').on('submit', function() {
+            $('#pricing_id').prop('disabled', false);
+
+            return true;
+        });
+    });
+</script>

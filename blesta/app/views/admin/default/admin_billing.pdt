@@ -1,0 +1,81 @@
+                <aside id="dashboard_left">
+                    <ul class="dash_link_box nopad separator">
+                        <li class="manage_widgets">
+                            <i class="fas fa-cogs fa-fw"></i>
+                            <a href="<?php echo $this->base_uri . 'billing/managewidgets/';?>">
+                                <?php $this->_('AdminBilling.index.manage_widgets');?>
+                            </a>
+                        </li>
+                        <li class="customize_dashboard">
+                            <i class="fas fa-columns fa-fw"></i>
+                            <a href="<?php echo $this->base_uri . 'billing/updatedashboard/';?>">
+                                <?php $this->_('AdminBilling.index.customize_dashboard');?>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <section class="dash_box separator">
+                        <h3><?php $this->_('AdminBilling.index.heading_actions');?></h3>
+                        <?php
+                        // Show actions if any are set
+                        if ((isset($action_items['show_actions']) ? $this->Html->safe($action_items['show_actions']) : null)) {
+                        ?>
+                        <ul>
+                            <?php
+                            // Show each action
+                            foreach ((isset($action_items['actions']) ? $action_items['actions'] : []) as $key => $item) {
+                                $icon_class = '';
+                                switch ($key) {
+                                    case 'printqueue':
+                                        $icon_class = 'print';
+                                        break;
+                                    case 'batch':
+                                        $icon_class = 'money-bill-alt';
+                                        break;
+                                }
+
+                                if ((isset($item['enabled']) ? $item['enabled'] : false)) {
+                            ?>
+                            <li>
+                                <i class="fas fa-<?php (print (isset($icon_class) ? $this->Html->safe($icon_class) : null));?> fa-fw"></i>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'billing/' . (isset($key) ? $key : null) . '/');?>"><?php $this->_('AdminBilling.index.action_' . (isset($key) ? $key : null));?></a>
+                                <?php
+                                if ((isset($item['value']) ? $item['value'] : null) != null) {
+                                    echo $this->Html->concat('', $this->_('AdminBilling.index.open_parethesis', true), (isset($item['value']) ? $this->Html->safe($item['value']) : null), $this->_('AdminBilling.index.closed_parethesis', true));
+                                }
+                                ?>
+                            </li>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </ul>
+                        <?php
+                        } else {
+                        ?>
+                        <ul class="empty">
+                            <li><?php $this->_('AdminBilling.index.no_actions');?></li>
+                        </ul>
+                        <?php
+                        }
+                        ?>
+                    </section>
+                </aside>
+                <div id="dashboard_right">
+                    <?php echo (isset($message) ? $message : null);?>
+                    <?php echo (isset($content) ? $content : null);?>
+                </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('.column').blestaLoadWidgets({
+        fetch_uri: '" . $this->Html->safe($this->base_uri . 'billing/getwidgets/') . "',
+        update_uri: '" . $this->Html->safe($this->base_uri . 'billing/reorderwidgets/') . "',
+        toggle_uri: '" . $this->Html->safe($this->base_uri . 'billing/togglewidget/') . "'
+    });
+
+    $('.manage_widgets a').blestaModal({close: '" . $this->_('AppController.modal.text_close', true) . "', min_width: 800, max_width: 800, onHide: function() { window.location.reload(); } });
+    $('.customize_dashboard a').blestaModal({close: '" . $this->_('AppController.modal.text_close', true) . "'});
+});
+");
+?>

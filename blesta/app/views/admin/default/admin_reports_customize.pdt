@@ -1,0 +1,64 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $links = [
+            ['name' => $this->_('AdminReportsCustomize.index.reports', true), 'current' => false, 'attributes' => ['href' => $this->base_uri . 'reports/']],
+            ['name' => $this->_('AdminReportsCustomize.index.customize', true), 'current' => true, 'attributes' => ['href' => $this->base_uri . 'reports_customize']]
+        ];
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($links);
+        $this->Widget->create($this->_('AdminReportsCustomize.index.box_title', true), ['id' => 'admin_reports_customize'], (isset($render_section) ? $render_section : null));
+        ?>
+            <div class="inner">
+                <div class="links_row">
+                    <a class="btn btn-default pull-right btn-sm" title="<?php $this->_('AdminReportsCustomize.index.btn_add_report');?>" href="<?php echo $this->Html->safe($this->base_uri . 'reports_customize/add/');?>"><i class="fas fa-plus fa-fw"></i></a>
+                </div>
+                <?php
+                if ((isset($reports) ? $reports : null) && !empty($reports)) {
+                ?>
+                <table class="table" id="reports">
+                    <tr class="heading_row">
+                        <td><?php $this->_('AdminReportsCustomize.index.table_name');?></td>
+                        <td><?php $this->_('AdminReportsCustomize.index.table_created');?></td>
+                        <td class="last"><?php $this->_('AdminReportsCustomize.index.table_options');?></td>
+                    </tr>
+                    <?php
+                    foreach ($reports as $i => $report) {
+                    ?>
+                    <tr class="<?php echo ($i % 2 == 1 ? 'odd_row' : '');?>">
+                        <td><?php (print (isset($report->name) ? $this->Html->safe($report->name) : null));?></td>
+                        <td><?php echo $this->Html->safe($this->Date->cast((isset($report->date_created) ? $report->date_created : null)));?></td>
+                        <td>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'reports_customize/edit/' . (isset($report->id) ? $report->id : null));?>"><?php $this->_('AdminReportsCustomize.index.table_option_edit');?></a>,
+                            <?php
+                            $this->Form->create($this->base_uri . 'reports_customize/delete/' . (isset($report->id) ? $report->id : null));
+                            $this->Form->fieldHidden('id', (isset($report->id) ? $report->id : null));
+                            ?>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'reports_customize/delete/' . (isset($report->id) ? $report->id : null));?>" class="manage" rel="<?php $this->_('AdminReportsCustomize.index.table_confirm_delete');?>"><?php $this->_('AdminReportsCustomize.index.table_option_delete');?></a>
+                            <?php
+                            $this->Form->end();
+                            ?>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <?php
+                } else {
+                ?>
+                    <p><?php $this->_('AdminReportsCustomize.index.no_custom_reports');?></p>
+                <?php
+                }
+                ?>
+            </div>
+        <?php
+        $this->Widget->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#reports a.manage[rel]').blestaModalConfirm({base_url: '<?php (print (isset($this->base_uri) ? $this->Html->safe($this->base_uri) : null));?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+    });
+</script>

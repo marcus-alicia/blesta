@@ -1,0 +1,112 @@
+
+                        <p><?php $this->_('AdminCompanyClientOptions.requiredfields.description');?></p>
+                        <table class="table">
+                            <tbody>
+                                <tr class="heading_row">
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.heading_field');?></td>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.heading_required');?></td>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.heading_show');?></td>
+                                    <td class="last">
+                                        <?php $this->_('AdminCompanyClientOptions.requiredfields.heading_read_only');?>
+                                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.read_only');?></div></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_first_name');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'first_name', true, ['id' => 'first_name', 'disabled' => 'disabled', 'class' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'first_name', true, ['disabled' => 'disabled', 'class' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'first_name', in_array('first_name', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr class="odd_row">
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_last_name');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'last_name', true, ['id' => 'last_name', 'disabled' => 'disabled', 'class' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'last_name', true, ['disabled' => 'disabled', 'class' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'last_name', in_array('last_name', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_company');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'company', in_array('company', ($vars->required_contact_fields ?? [])), ['id' => 'company']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'company', in_array('company', ($vars->shown_contact_fields ?? [])) || in_array('company', ($vars->required_contact_fields ?? [])), in_array('company', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'company', in_array('company', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr class="odd_row">
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_title');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'title', in_array('title', ($vars->required_contact_fields ?? [])), ['id' => 'title']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'title', in_array('title', ($vars->shown_contact_fields ?? [])) || in_array('title', ($vars->required_contact_fields ?? [])), in_array('title', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'title', in_array('title', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_address1');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'address1', in_array('address1', ($vars->required_contact_fields ?? [])), ['id' => 'address1']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'address1', in_array('address1', ($vars->shown_contact_fields ?? [])) || in_array('address1', ($vars->required_contact_fields ?? [])), in_array('address1', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'address1', in_array('address1', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr class="odd_row">
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_address2');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'address2', in_array('address2', ($vars->required_contact_fields ?? [])), ['id' => 'address2']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'address2', in_array('address2', ($vars->shown_contact_fields ?? [])) || in_array('address2', ($vars->required_contact_fields ?? [])), in_array('address2', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'address2', in_array('address2', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_city');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'city', in_array('city', ($vars->required_contact_fields ?? [])), ['id' => 'city']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'city', in_array('city', ($vars->shown_contact_fields ?? [])) || in_array('city', ($vars->required_contact_fields ?? [])), in_array('city', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'city', in_array('city', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr class="odd_row">
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_country');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'country', in_array('country', ($vars->required_contact_fields ?? [])), ['id' => 'country']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'country', in_array('country', ($vars->shown_contact_fields ?? [])) || in_array('country', ($vars->required_contact_fields ?? [])), in_array('country', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'country', in_array('country', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_state');?></td>
+                                    <td>
+                                        <?php $this->Form->fieldCheckbox('required_contact_fields[]', 'state', in_array('state', ($vars->required_contact_fields ?? [])), ['id' => 'state']);?>
+                                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.state');?></div></span>
+                                    </td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'state', in_array('state', ($vars->shown_contact_fields ?? [])) || in_array('state', ($vars->required_contact_fields ?? [])), in_array('state', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'state', in_array('state', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr class="odd_row">
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_zip');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'zip', in_array('zip', ($vars->required_contact_fields ?? [])), ['id' => 'zip']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'zip', in_array('zip', ($vars->shown_contact_fields ?? [])) || in_array('zip', ($vars->required_contact_fields ?? [])), in_array('zip', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'zip', in_array('zip', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_email');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'email', true, ['id' => 'email', 'disabled' => 'disabled', 'class' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'email', true, ['disabled' => 'disabled', 'class' => 'disabled']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'email', in_array('email', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr class="odd_row">
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_phone');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'phone', in_array('phone', ($vars->required_contact_fields ?? [])), ['id' => 'phone']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'phone', in_array('phone', ($vars->shown_contact_fields ?? [])) || in_array('phone', ($vars->required_contact_fields ?? [])), in_array('phone', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'phone', in_array('phone', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                                <tr>
+                                    <td><?php $this->_('AdminCompanyClientOptions.requiredfields.field_fax');?></td>
+                                    <td><?php $this->Form->fieldCheckbox('required_contact_fields[]', 'fax', in_array('fax', ($vars->required_contact_fields ?? [])), ['id' => 'fax']);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('shown_contact_fields[]', 'fax', in_array('fax', ($vars->shown_contact_fields ?? [])) || in_array('fax', ($vars->required_contact_fields ?? [])), in_array('fax', ($vars->required_contact_fields ?? [])) ? ['class' => 'disabled', 'disabled' => 'disabled'] : []);?></td>
+                                    <td><?php $this->Form->fieldCheckbox('read_only_contact_fields[]', 'fax', in_array('fax', ($vars->read_only_contact_fields ?? [])));?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('input[name=\"required_contact_fields[]\"]').change(function () {
+        if ($(this).is(':checked')) {
+            $(this).parent().parent().find('input[name=\"shown_contact_fields[]\"]').prop('checked', true).prop('disabled', true);
+        } else {
+            $(this).parent().parent().find('input[name=\"shown_contact_fields[]\"]').prop('disabled', false);
+        }
+    });
+
+    $('#use_company_settings').change(function () {
+        $('input.disabled').prop('disabled', true);
+    });
+});
+");

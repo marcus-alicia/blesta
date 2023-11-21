@@ -1,0 +1,23 @@
+{
+    "version": "2.6.1",
+    "name": "Multicraft.name",
+    "description": "Provision Minecraft servers through Multicraft.",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+    "service": {
+        "name_key": "multicraft_socket"
+    },
+    "module": {
+        "row": "Multicraft.module_row.name",
+        "rows": "Multicraft.module_rows.name",
+        "group": "",
+        "row_key": "server_name"
+    },
+    "package": {
+        "name_key": ""
+    }
+}

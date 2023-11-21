@@ -1,0 +1,35 @@
+{
+    "version": "1.1.3",
+    "type": "registrar",
+    "name": "Internetbs.name",
+    "description": "Internetbs.description",
+    "authors": [
+        {
+            "name": "Phillips Data, Inc.",
+            "url": "https://blesta.com/"
+        }
+    ],
+    "module": {
+        "row": "Internetbs.module_row",
+        "rows": "Internetbs.module_row_plural",
+        "group": "Internetbs.module_group",
+        "row_key": "api_key"
+    },
+    "package": {
+        "name_key": "domain"
+    },
+    "service": {
+        "name_key": "domain"
+    },
+    "email_tags": {
+        "module": [],
+        "package": [],
+        "service": ["domain"]
+    },
+    "features": {
+        "dns_management": 1,
+        "email_forwarding": 1,
+        "id_protection": 1,
+        "epp_code": 1
+    }
+}

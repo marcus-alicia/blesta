@@ -1,0 +1,96 @@
+
+    <div class="title_row first">
+        <h3><?php $this->_('Interworx.tab_stats.info_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Interworx.tab_stats.info_heading.field');?></td>
+                    <td class="last"><?php $this->_('Interworx.tab_stats.info_heading.value');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $i = 0;
+                foreach ($account_info as $key => $info) {
+                       $i++;
+                    ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i%2 == 1) ? ' class="odd_row"' : '', '');?>>
+                        <td><?php $this->_('Interworx.tab_stats.info.' . $key);?></td>
+                        <td><?php echo $info;?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Interworx.tab_stats.bandwidth_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Interworx.tab_stats.bandwidth_heading.used');?></td>
+                    <td class="last"><?php $this->_('Interworx.tab_stats.bandwidth_heading.limit');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php $this->_('Interworx.tab_stats.bandwidth_value', false, (isset($bandwidth_usage['used']) ? $bandwidth_usage['used'] : null));?></td>
+                    <td><?php $this->_(((isset($bandwidth_usage['limit']) ? $bandwidth_usage['limit'] : null) === 'bandwidth_unlimited' ? 'Interworx.tab_stats.bandwidth_unlimited' : 'Interworx.tab_stats.bandwidth_value'), false, (isset($bandwidth_usage['limit']) ? $bandwidth_usage['limit'] : null));?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Interworx.tab_stats.disk_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Interworx.tab_stats.disk_heading.used');?></td>
+                    <td class="last"><?php $this->_('Interworx.tab_stats.disk_heading.limit');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php $this->_('Interworx.tab_stats.disk_value', false, (isset($disk_usage['used']) ? $disk_usage['used'] : null));?></td>
+                    <td><?php $this->_(((isset($disk_usage['limit']) ? $disk_usage['limit'] : null) === 'disk_unlimited' ? 'Interworx.tab_stats.disk_unlimited' : 'Interworx.tab_stats.disk_value'), false, (isset($disk_usage['limit']) ? $disk_usage['limit'] : null));?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="title_row">
+        <h3><?php $this->_('Interworx.tab_stats.package_title');?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <thead>
+                <tr class="heading_row">
+                    <td style="width: 50%;"><?php $this->_('Interworx.tab_stats.info_heading.field');?></td>
+                    <td class="last"><?php $this->_('Interworx.tab_stats.info_heading.value');?></td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $i = 0;
+                foreach ($package_info as $key => $info) {
+                       $i++;
+                    ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i%2 == 1) ? ' class="odd_row"' : '', '');?>>
+                        <td><?php $this->_('Interworx.tab_stats.package_info.' . strtolower(str_replace('RSL_', '', $key)));?></td>
+                        <td><?php echo ($info === 'opt_unlimited' ? $this->_('Interworx.tab_stats.package_info.opt_unlimited', true) : $info);?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>

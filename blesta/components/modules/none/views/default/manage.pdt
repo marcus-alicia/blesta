@@ -1,0 +1,12 @@
+        <?php
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminCompanyModules.manage.boxtitle_manage', true, $this->Html->_($module->name, true)), ['id' => 'manage_none']);
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('None.manage.text');?>
+            </div>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

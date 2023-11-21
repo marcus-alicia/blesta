@@ -1,0 +1,49 @@
+        <div class="inner">
+            <?php
+            if (!empty($events)) {
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+            ?>
+            <div class="pad">
+                <p><?php $this->_('AdminCompanyPlugins.settings.events_description');?></p>
+            <?php
+            }
+
+            foreach ((isset($events) ? $events : []) as $event) {
+                $key = (isset($event->event) ? $event->event : null);
+            ?>
+                <section class="fieldset">
+                    <h1><?php (print (isset($event->event) ? $this->Html->safe($event->event) : null));?></h1>
+                    <p><?php $this->_('AdminCompanyPlugins.settings.event.' . strtolower((isset($event->event) ? $this->Html->safe($event->event) : null)));?></p>
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->fieldCheckbox('enabled[' . $key . ']', '1', ((isset($event->enabled) ? $event->enabled : null) == '1'), ['id' => 'enabled[' . $key . ']']);
+                            $this->Form->label($this->_('AdminCompanyPlugins.settings.field_enabled', true), 'enabled[' . $key . ']', ['class' => 'inline']);
+                            ?>
+                        </li>
+                    </ul>
+                </section>
+            <?php
+            }
+
+            if (!empty($events)) {
+            ?>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminCompanyPlugins.settings.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+            <?php
+                $this->Form->end();
+            } else {
+            ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminCompanyPlugins.settings.events_no_results');?>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+        </div>

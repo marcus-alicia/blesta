@@ -1,0 +1,127 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $link_buttons = [
+                    [
+                        'icon' => 'fas fa-plus',
+                        'name' => '',
+                        'attributes' => [
+                            'title' => $this->_('AdminCompanyBilling.coupons.categorylink_addcoupon', true),
+                            'href' => $this->base_uri . 'settings/company/billing/addcoupon/'
+                        ]
+                    ]
+                ];
+
+                $this->Widget->clear();
+                $this->Widget->setLinkButtons($link_buttons);
+                $this->Widget->create($this->_('AdminCompanyBilling.coupons.boxtitle_coupons', true), ['id' => 'admin_company_billing_coupons'], (isset($render_section) ? $render_section : null));
+
+                if ((isset($coupons) ? $coupons : false) && ($num_coupons = count($coupons)) > 0) {
+                ?>
+                    <table class="table" id="coupons">
+                        <tr class="heading_row">
+                            <td>&nbsp;</td>
+                            <td><span><?php $this->_('AdminCompanyBilling.coupons.text_code');?></span></td>
+                            <td><span><?php $this->_('AdminCompanyBilling.coupons.text_discount');?></span></td>
+                            <td><span><?php $this->_('AdminCompanyBilling.coupons.text_used');?></span></td>
+                            <td><span><?php $this->_('AdminCompanyBilling.coupons.text_max');?></span></td>
+                            <td><span><?php $this->_('AdminCompanyBilling.coupons.text_start_date');?></span></td>
+                            <td><span><?php $this->_('AdminCompanyBilling.coupons.text_end_date');?></span></td>
+                            <td class="last"><span><?php $this->_('AdminCompanyBilling.coupons.text_options');?></span></td>
+                        </tr>
+                        <?php
+                        // Loop through each coupon
+                        for ($i = 0; $i < $num_coupons; $i++) {
+                            $icon = ((isset($coupons[$i]->status) ? $this->Html->safe($coupons[$i]->status) : null) == 'active') ? 'check' : 'ban';
+                        ?>
+                        <tr class="expand<?php echo ($i % 2 == 1 ) ? ' odd_row' : '';?>">
+                            <td class="icon"><i class="fas fa-<?php (print (isset($icon) ? $this->Html->safe($icon) : null));?>"></i></td>
+                            <td><?php (print (isset($coupons[$i]->code) ? $this->Html->safe($coupons[$i]->code) : null));?></td>
+                            <?php
+                            $multiple = count($coupons[$i]->discounts) > 1;
+
+                            // Set discount amounts to the first available
+                            $amount = $coupons[$i]->discounts[0]->amount;
+                            $type = $coupons[$i]->discounts[0]->type;
+                            $currency = $coupons[$i]->discounts[0]->currency;
+                            ?>
+                            <td><?php echo $multiple ? $this->_('AdminCompanyBilling.coupons.text_multiple', true) : (($type == 'percent') ? $this->Html->concat('', $amount, '%') : $this->CurrencyFormat->format($amount, $currency, ['html_code' => true]));?></td>
+                            <td><?php (print (isset($coupons[$i]->used_qty) ? $this->Html->safe($coupons[$i]->used_qty) : null));?></td>
+                            <td><?php (print (isset($coupons[$i]->max_qty) ? $this->Html->safe($coupons[$i]->max_qty) : null));?></td>
+                            <td><?php echo $this->Date->cast($coupons[$i]->start_date);?></td>
+                            <td><?php echo $this->Date->cast($coupons[$i]->end_date);?></td>
+                            <td class="last">
+                                <a href="<?php echo $this->base_uri . 'settings/company/billing/editcoupon/' . (isset($coupons[$i]->id) ? $this->Html->safe($coupons[$i]->id) : null) . '/';?>"><?php $this->_('AdminCompanyBilling.coupons.option_edit');?></a>,
+                                <?php
+                                $this->Form->create($this->base_uri . 'settings/company/billing/deletecoupon/');
+                                $this->Form->fieldHidden('id', (isset($coupons[$i]->id) ? $this->Html->safe($coupons[$i]->id) : null));
+                                ?>
+                                <a href="<?php echo $this->base_uri . 'settings/company/billing/deletecoupon/' . (isset($coupons[$i]->id) ? $this->Html->safe($coupons[$i]->id) : null) . '/';?>" class="manage" rel="<?php echo $this->Html->safe($this->_('AdminCompanyBilling.coupons.confirm_delete', true));?>"><?php $this->_('AdminCompanyBilling.coupons.option_delete');?></a>
+                                <?php
+                                $this->Form->end();
+                                ?>
+                            </td>
+                        </tr>
+                        <tr class="expand_details">
+                            <td colspan="9" class="subtable">
+                                <table class="table">
+                                    <tr class="heading_row">
+                                        <td><?php $this->_('AdminCompanyBilling.coupons.text_currency');?></td>
+                                        <td class="last"><?php $this->_('AdminCompanyBilling.coupons.text_discount');?></td>
+                                    </tr>
+                                <?php
+                                // Display all discounts
+                                for ($j = 0, $num_currencies = count($coupons[$i]->discounts); $j < $num_currencies; $j++) {
+                                    $coupon = $coupons[$i]->discounts[$j];
+                                ?>
+                                    <tr<?php echo (($j % 2 == 1) ? ' class="odd_row"' : '');?>>
+                                        <td><?php (print (isset($coupon->currency) ? $this->Html->safe($coupon->currency) : null));?></td>
+                                        <td><?php echo ($coupon->type == 'percent') ? $this->Html->safe($this->Html->concat('', $coupon->amount, '%')) : $this->CurrencyFormat->format($this->Html->safe($coupon->amount), $this->Html->safe($coupon->currency), ['html_code' => true]);?></td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                                </table>
+                            </td>
+                        </tr>
+                            <?php
+                        }
+                        ?>
+                    </table>
+                    <?php
+                    $this->Pagination->build();
+                } else {
+                ?>
+                <div class="empty_section">
+                    <div class="empty_box">
+                        <?php $this->_('AdminCompanyBilling.coupons.no_results');?>
+                    </div>
+                </div>
+                <?php
+                }
+
+                $this->Widget->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Handle confirmation
+                $('#coupons a.manage[rel]').blestaModalConfirm({base_url: '<?php echo $this->base_uri;?>', close: '<?php $this->_('AppController.modal.text_close');?>', submit: true});
+            });
+        </script>

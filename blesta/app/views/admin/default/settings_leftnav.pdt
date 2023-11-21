@@ -1,0 +1,72 @@
+        <aside id="left_container">
+            <div class="btn-group btn-group-justified settings_main_nav_button_group" role="group" aria-label="...">
+                <div class="btn-group settings_main_nav_button_container" role="group">
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/company/');?>"><button type="button" class="btn btn-default settings_main_nav_button_left">Company</button></a>
+                </div>
+                <div class="btn-group settings_main_nav_button_container" role="group">
+                    <a href="<?php echo $this->Html->safe($this->base_uri . 'settings/system/');?>"><button type="button" class="btn btn-default settings_main_nav_button_right">System</button></a>
+                </div>
+            </div>
+            <section class="settings_detail_box">
+                <div class="settings_detail_box_inner">
+                <?php
+                if ((isset($nav) ? $nav : false) && ($num_nav = count($nav)) > 0) {
+                    for ($i = 0; $i < $num_nav; $i++) {
+                        $name = (isset($nav[$i]['name']) ? $this->Html->safe($nav[$i]['name']) : null);
+                        $attributes = isset($nav[$i]['attributes']) ? $nav[$i]['attributes'] : [];
+                        $attributes = array_merge($attributes, ['href' => (isset($nav[$i]['uri']) ? $nav[$i]['uri'] : null),'class' => (isset($nav[$i]['class']) ? $nav[$i]['class'] : null)]);
+                        $icon = (isset($nav[$i]['icon']) ? $nav[$i]['icon'] : null);
+                ?>
+                    <ul>
+                        <li class="<?php echo ($i == 0) ? 'heading' : 'parent'; ?><?php echo substr_compare((isset($nav[$i]['uri']) ? $nav[$i]['uri'] : null), $_SERVER['REQUEST_URI'], 0, strlen(rtrim((isset($nav[$i]['uri']) ? $nav[$i]['uri'] : null), '/')), true) === 0 ? ' current' : '';?>">
+                            <a<?php echo $this->Html->buildAttributes($attributes);?>>
+                                <?php
+                                if (!empty($icon)) {
+                                ?>
+                                <i class="fas fa-<?php (print (isset($icon) ? $this->Html->safe($icon) : null));?> fa-fw"></i>
+                                <?php
+                                }
+                                ?>
+                                <?php echo $name;?>
+                            </a>
+                        </li>
+                    </ul>
+                        <?php
+                        if ((isset($nav[$i]['children']) ? $nav[$i]['children'] : false) && ($num_children = count($nav[$i]['children'])) > 0) {
+                        ?>
+                        <ul class="children">
+                            <?php
+                            $sub_nav = $nav[$i]['children'];
+                            for ($j = 0; $j < $num_children; $j++) {
+                                $name = (isset($sub_nav[$j]['name']) ? $this->Html->safe($sub_nav[$j]['name']) : null);
+                                $attributes = isset($sub_nav[$j]['attributes']) ? $sub_nav[$j]['attributes'] : [];
+                                $attributes = array_merge($attributes, ['href' => (isset($sub_nav[$j]['uri']) ? $sub_nav[$j]['uri'] : null)]);
+
+                                $is_index = false;
+                                if (basename((isset($sub_nav[$j]['uri']) ? $sub_nav[$j]['uri'] : null)) == 'index' && strcasecmp((isset($nav[$i]['uri']) ? $nav[$i]['uri'] : null), $_SERVER['REQUEST_URI']) === 0) {
+                                    $is_index = true;
+                                }
+                            ?>
+                            <li<?php echo substr_compare((isset($sub_nav[$j]['uri']) ? $sub_nav[$j]['uri'] : null), $_SERVER['REQUEST_URI'], 0, strlen(rtrim((isset($sub_nav[$j]['uri']) ? $sub_nav[$j]['uri'] : null), '/')), true) === 0 || $is_index ? ' class="current"' : '';?>><a<?php echo $this->Html->buildAttributes($attributes);?>><?php echo $name;?></a></li>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                        <?php
+                        }
+                    }
+                }
+                ?>
+                </div>
+                <div class="shadow"></div>
+            </section>
+        </aside>
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+
+        // Handle confirmation on delete action
+        $(\"#left_container a[rel='modal']\").blestaModal({close: '" . $this->_('AppController.modal.text_close', true) . "'});
+    });
+");
+?>

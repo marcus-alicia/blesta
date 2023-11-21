@@ -1,0 +1,9 @@
+{
+    "id":"id",
+    "id_code":"id_code",
+    "status":"status",
+    "currency":"currency",
+    "date_billed":"date_billed",
+    "date_due":"date_due",
+    "meta":"meta"
+}

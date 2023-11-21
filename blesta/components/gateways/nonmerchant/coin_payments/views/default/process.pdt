@@ -1,0 +1,18 @@
+
+    <?php
+    // Disable CSRF for this form
+    $this->Form->setCsrfOptions(['set_on_create' => false]);
+    $this->Form->create($post_to);
+    if ((isset($fields) ? $fields : null)) {
+        foreach ($fields as $key => $value) {
+            $this->Form->fieldHidden($key, $value);
+        }
+    }
+
+    $this->Form->fieldImage(
+        'submit',
+        $this->_('CoinPayments.buildprocess.submit', true),
+        ['src' => 'https://www.coinpayments.net/images/pub/buynow-wide-yellow.png']
+    );
+
+    $this->Form->end();

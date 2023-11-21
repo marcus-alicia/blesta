@@ -1,0 +1,14 @@
+<ul>
+    <li>
+        <?php
+            $this->Form->label($this->_('Hubtel.client_id', true), 'client_id');
+            $this->Form->fieldText('client_id', (isset($meta['client_id']) ? $meta['client_id'] : null), ['id' => 'client_id']);
+        ?>
+    </li>
+    <li>
+        <?php
+            $this->Form->label($this->_('Hubtel.client_secret', true), 'client_secret');
+            $this->Form->fieldText('client_secret', (isset($meta['client_secret']) ? $meta['client_secret'] : null), ['id' => 'client_secret']);
+        ?>
+    </li>
+</ul>

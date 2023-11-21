@@ -1,0 +1,138 @@
+
+        <?php
+        $tabs = [];
+        foreach ((isset($link_tabs) ? $link_tabs : []) as $tab) {
+            $tabs[] = [
+                'name' => $tab['name'],
+                'current' => ($tab['uri'] == 'email'),
+                'attributes' => [
+                    'href' => $this->base_uri . 'tools/logs/' . $tab['uri'] . '/',
+                    'class' => 'ajax'
+                ]
+            ];
+        }
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->create($this->_('AdminTools.logs.boxtitle_logs', true), ['id' => 'admin_tools_logemail'], (isset($render_section) ? $render_section : null));
+        ?>
+        <div class="inner">
+            <?php
+            if ((isset($email_logs) ? $email_logs : false) && ($num_logs = count($email_logs)) > 0) {
+            ?>
+            <table class="table">
+                <tr class="heading_row">
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/logs/email/?sort=date_sent&order=' . ($sort == 'date_sent' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_sent' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.logemail.text_date');?></a></span></td>
+                    <td><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/logs/email/?sort=subject&order=' . ($sort == 'subject' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'subject' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.logemail.text_subject');?></a></span></td>
+                    <td><span><?php $this->_('AdminTools.logemail.text_summary');?></span></td>
+                    <td class="last"><span><a href="<?php echo $this->Html->safe($this->base_uri . 'tools/logs/email/?sort=sent&order=' . ($sort == 'sent' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'sent' ? ' ' . $order : '');?>"><?php $this->_('AdminTools.logemail.text_status');?></a></span></td>
+                </tr>
+                <?php
+                for ($i = 0; $i < $num_logs; $i++) {
+                    $sent = (isset($email_logs[$i]->sent) ? $this->Html->safe($email_logs[$i]->sent) : null);
+                    $icon = ($sent ? 'check' : 'ban');
+                ?>
+                <tr class="<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? 'odd_row' : '', 'expand');?>">
+                    <td><?php echo $this->Date->cast((isset($email_logs[$i]->date_sent) ? $this->Html->safe($email_logs[$i]->date_sent) : null), 'date_time');?></td>
+                    <td><?php (print (isset($email_logs[$i]->subject) ? $this->Html->safe($email_logs[$i]->subject) : null));?></td>
+                    <?php
+                    // Limit length of summary
+                    $summary = (isset($email_logs[$i]->body_text) ? $email_logs[$i]->body_text : null);
+                    if (strlen($summary) > 40) {
+                        if (function_exists('mb_strimwidth')) {
+                            $summary = mb_strimwidth($summary, 0, 40) . '...';
+                        } else {
+                            $summary = substr($summary, 0, 40) . '...';
+                        }
+                    }
+                    ?>
+                    <td><?php (print (isset($summary) ? $this->Html->safe($summary) : null));?></td>
+                    <td>
+                        <i class="fas fa-<?php (print (isset($icon) ? $this->Html->safe($icon) : null));?>"></i>
+                        <?php echo ($sent) ? $this->_('AdminTools.logemail.text_sent', true) : $this->_('AdminTools.logemail.text_unsent', true);?>
+                    </td>
+                </tr>
+                <tr class="expand_details">
+                    <td class="subtable" colspan="4">
+                        <table class="table multi_heading">
+                            <tr class="header">
+                                <td class="heading"><?php $this->_('AdminTools.logemail.text_to');?></td>
+                                <td>
+                                    <a href="mailto:<?php (print (isset($email_logs[$i]->to_address) ? $this->Html->safe($email_logs[$i]->to_address) : null));?>"><?php (print (isset($email_logs[$i]->to_address) ? $this->Html->safe($email_logs[$i]->to_address) : null));?></a>
+                                </td>
+                            </tr>
+                            <?php
+                            // Show CC addresses
+                            if (!empty($email_logs[$i]->cc_address)) {
+                            ?>
+                            <tr class="header">
+                                <td class="heading"><?php $this->_('AdminTools.logemail.text_cc');?></td>
+                                <td>
+                                    <?php
+                                    $j = 0;
+                                    foreach ($email_logs[$i]->cc_address as $cc_address) {
+                                    ?><?php echo $j++ > 0 ? ', ' : '';?>
+                                    <a href="mailto:<?php (print (isset($cc_address) ? $this->Html->safe($cc_address) : null));?>"><?php (print (isset($cc_address) ? $this->Html->safe($cc_address) : null));?></a><?php
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <?php
+                            }
+                            ?>
+                            <tr class="header bottom">
+                                <td class="heading"><?php $this->_('AdminTools.logemail.text_from');?></td>
+                                <td>
+                                    <a href="mailto:<?php (print (isset($email_logs[$i]->from_address) ? $this->Html->safe($email_logs[$i]->from_address) : null));?>"><?php (print (isset($email_logs[$i]->from_name) ? $this->Html->safe($email_logs[$i]->from_name) : null));?></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"<?php echo !empty($email_logs[$i]->to_client_id) ? ' class="body"' : '';?>><?php echo nl2br($this->Html->hyperlink((isset($email_logs[$i]->body_text) ? $this->Html->safe($email_logs[$i]->body_text) : null)));?></td>
+                            </tr>
+                            <?php
+                            // Cannot resend to a client if no client exists
+                            if (!empty($email_logs[$i]->to_client_id)) {
+                            ?>
+                            <tr>
+                                <td colspan="2">
+                                    <i class="fas fa-share fa-flip-vertical"></i>
+                                    <a href="<?php echo $this->base_uri . 'clients/email/' . (isset($email_logs[$i]->to_client_id) ? $this->Html->safe($email_logs[$i]->to_client_id) : null) . '/' . (isset($email_logs[$i]->id) ? $this->Html->safe($email_logs[$i]->id) : null) . '/';?>">
+                                        <?php $this->_('AdminTools.logemail.text_resend');?>
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                            }
+
+                            $error = (isset($email_logs[$i]->error) ? $this->Html->safe($email_logs[$i]->error) : null);
+                            if (!empty($error)) {
+                            ?>
+                            <tr>
+                                <td colspan="2" class="error"><?php echo $error;?></td>
+                            </tr>
+                            <?php
+                            }
+                            ?>
+                        </table>
+                    </td>
+                </tr>
+                <?php
+                }
+                ?>
+            </table>
+            <?php
+                $this->Pagination->build();
+            } else {
+            ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminTools.logemail.no_results');?>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>

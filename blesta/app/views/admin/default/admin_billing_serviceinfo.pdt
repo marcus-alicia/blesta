@@ -1,0 +1,19 @@
+        <?php
+        if ((isset($service->cancellation_reason) ? $service->cancellation_reason : null)) {
+        ?>
+        <div class="empty_section">
+            <div class="error_box"><?php $this->_('AdminBilling.serviceinfo.cancellation_reason', false, $service->cancellation_reason);?></div>
+        </div>
+        <?php
+        }
+
+        if ((isset($content) ? $content : null)) {
+            echo $content;
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box"><?php $this->_('AdminBilling.serviceinfo.no_results');?></div>
+        </div>
+        <?php
+        }
+        ?>

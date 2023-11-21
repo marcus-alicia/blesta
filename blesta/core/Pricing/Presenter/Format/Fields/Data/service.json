@@ -1,0 +1,14 @@
+{
+    "id":"id",
+    "name":"name",
+    "qty":"qty",
+    "price":["override_price", "price"],
+    "override_price":"override_price",
+    "price_renews":"price_renews",
+    "price_transfer":"price_transfer",
+    "currency":["override_currency", "currency"],
+    "coupon_id":"coupon_id",
+    "date_added":"date_added",
+    "date_renews":"date_renews",
+    "date_last_renewed":"date_last_renewed"
+}

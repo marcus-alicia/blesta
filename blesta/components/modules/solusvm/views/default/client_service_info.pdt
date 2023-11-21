@@ -1,0 +1,16 @@
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-share fa-flip-vertical"></i></th>
+                    <th><?php $this->_('Solusvm.service_info.solusvm_main_ip_address');?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><?php echo (isset($service_fields->solusvm_main_ip_address) ? $this->Html->safe($service_fields->solusvm_main_ip_address) : null);?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

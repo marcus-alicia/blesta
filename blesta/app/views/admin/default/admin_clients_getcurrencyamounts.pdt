@@ -1,0 +1,32 @@
+
+    <div class="currencies">
+        <?php
+        foreach ((isset($currencies) ? $currencies : []) as $currency) {
+        ?>
+        <span>
+            <a id="<?php (print (isset($currency) ? $this->Html->safe($currency) : null));?>"<?php echo ($currency == (isset($selected_currency) ? $selected_currency : null)) ? ' class="current"' : '';?> href="<?php echo $this->Html->safe($this->base_uri . 'clients/getcurrencyamounts/' . (isset($currency) ? $currency : null) . '/');?>"><?php (print (isset($currency) ? $this->Html->safe($currency) : null));?></a>
+        </span>
+        <?php
+        }
+        ?>
+    </div>
+    <div class="amounts">
+        <?php
+        if (!empty($amounts)) {
+        ?>
+        <ul>
+            <?php
+            foreach ($amounts as $type => $item) {
+            ?>
+            <li class="<?php (print (isset($type) ? $this->Html->safe($type) : null));?>">
+                <p><?php (print (isset($item['lang']) ? $this->Html->safe($item['lang']) : null));?></p>
+                <span class="currency_value"><?php (print (isset($item['amount']) ? $this->Html->safe($item['amount']) : null));?></span>
+            </li>
+            <?php
+            }
+            ?>
+        </ul>
+        <?php
+        }
+        ?>
+    </div>

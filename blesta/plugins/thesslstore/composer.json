@@ -1,0 +1,9 @@
+{
+    "name": "blesta/thesslstore",
+    "description": "TheSSLStore plugin",
+    "license": "MIT",
+    "type": "blesta-plugin",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

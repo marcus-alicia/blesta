@@ -1,0 +1,39 @@
+    <table class="table">
+        <tr class="heading_row">
+            <td class="fixed_small center border_none"><i class="fas fa-level-up-alt fa-rotate-90"></i></td>
+            <td class="border_left last"><?php $this->_('Multicraft.service_info.options');?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <?php
+                $have_login = (!empty($service_fields->multicraft_login_username) && !empty($service_fields->multicraft_login_password));
+                $panel_url = rtrim((isset($module_row->meta->panel_url) ? $module_row->meta->panel_url : null), '/');
+                $href = $panel_url . '/index.php?r=site/login';
+                if ($have_login) {
+                    $this->Form->create((isset($href) ? $href : null), ['target' => '_blank']);
+                    $this->Form->fieldHidden('LoginForm[name]', (isset($service_fields->multicraft_login_username) ? $service_fields->multicraft_login_username : null));
+                    $this->Form->fieldHidden('LoginForm[password]', (isset($service_fields->multicraft_login_password) ? $service_fields->multicraft_login_password : null));
+                    $href = '#';
+                }
+                ?>
+                <a id="multicraft_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>" href="<?php echo (isset($href) ? $this->Html->safe($href) : null);?>"<?php echo !$have_login ? ' class="redirect"' : '';?> target="_blank"><?php $this->_('Multicraft.service_info.option_login');?></a>
+                <?php
+                if ($have_login) {
+                    $this->Form->end();
+                }
+                ?>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#multicraft_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>').click(function(e) {
+                if (!$(this).hasClass('redirect')) {
+                    e.preventDefault();
+
+                    $(this).closest('form').submit();
+                }
+            });
+        });
+    </script>

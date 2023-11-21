@@ -1,0 +1,42 @@
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-share fa-flip-vertical"></i></th>
+                    <th><?php $this->_('Centoswebpanel.service_info.username'); ?></th>
+                    <th><?php $this->_('Centoswebpanel.service_info.password'); ?></th>
+                    <th><?php $this->_('Centoswebpanel.service_info.server'); ?></th>
+                    <th><?php $this->_('Centoswebpanel.service_info.options'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td><?php echo (isset($service_fields->centoswebpanel_username) ? $this->Html->safe($service_fields->centoswebpanel_username) : null); ?></td>
+                    <td><?php echo (isset($service_fields->centoswebpanel_password) ? $this->Html->safe($service_fields->centoswebpanel_password) : null); ?></td>
+                    <td><?php echo (isset($module_row->meta->host_name) ? $this->Html->safe($module_row->meta->host_name) : null); ?></td>
+                    <td>
+                        <?php
+                            $this->Form->create($this->Html->safe('https://' . (isset($module_row->meta->host_name) ? $module_row->meta->host_name : null) . ':' . (isset($module_row->meta->login_port) ? $module_row->meta->login_port : $this->_('Centoswebpanel.row_meta.default_login_port', true)) . '/login/index.php'), ['target' => '_blank']);
+                            $this->Form->fieldHidden('username', (isset($service_fields->centoswebpanel_username) ? $service_fields->centoswebpanel_username : null));
+                            $this->Form->fieldHidden('password', (isset($service_fields->centoswebpanel_password) ? $service_fields->centoswebpanel_password : null));
+                            $this->Form->fieldHidden('commit', 'Login');
+                        ?>
+                        <a id="centoswebpanel_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null); ?>" href="#"><?php $this->_('Centoswebpanel.service_info.option_login'); ?></a>
+                        <?php
+                            $this->Form->end();
+                        ?>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#centoswebpanel_login<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null); ?>').click(function(e) {
+                e.preventDefault();
+
+                $(this).closest('form').submit();
+            });
+        });
+    </script>

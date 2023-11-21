@@ -1,0 +1,67 @@
+body {
+	background-color: #f9f9f9;
+}
+
+div.wrapper {
+	background-color: #fff;
+	font: .75em Arial, Verdana;
+	color: #222 !important;
+	margin: 20px;
+	border: 1px solid #e1e1e1;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	/*border-left: none;
+	border-right: none;
+	width: 910px;*/
+	-moz-box-shadow: 0 1px 5px #d8d8d8;
+	-webkit-box-shadow:  0 1px 5px #d8d8d8;
+	box-shadow: 0 1px 5px #d8d8d8;
+}
+
+div.wrapper h3 {
+	border-bottom: 1px solid #e1e1e1;
+	margin-top: .5em;
+	padding: 0 0 .5em .5em;
+	font-size: 1.5em;
+}
+
+div.wrapper p {
+	margin: 4px 0;
+}
+
+div.wrapper .contents {
+	margin: 0.5em;
+}
+
+div.wrapper code {
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 0.8em;
+	border: 1px solid #ebec80;
+	padding: 8px;
+	background-color: #fffed9;
+	display: block;
+	margin-bottom: 1.5em;
+	margin-top: 1.5em;
+}
+
+div.error {
+	border: 1px solid #eb8481;
+	padding: 8px;
+	background-color: #ffd9d9;
+	display: block;
+	margin-bottom: 1.5em;
+	margin-top: 1.5em;
+}
+
+div.warning {
+	border: 1px solid #ebec80;
+	padding: 8px;
+	background-color: #fffed9;
+	display: block;
+	margin-bottom: 1.5em;
+	margin-top: 1.5em;
+}
+
+label { display: block;}
+
+div.input {margin-top: 8px;}

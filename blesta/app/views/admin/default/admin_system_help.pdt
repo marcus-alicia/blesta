@@ -1,0 +1,34 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemHelp.boxtitle_help', true));
+                ?>
+                <div class="settings">
+                    <div class="section user_manual icon-line fa-2x">
+                        <i class="fas fa-book-open fa-fw"></i>
+                        <h1><a href="https://docs.blesta.com/display/user/Overview" target="_blank"><?php $this->_('AdminSystemHelp.index.heading_user_manual');?></a></h1>
+                        <p><?php $this->_('AdminSystemHelp.index.text_user_manual');?></p>
+                    </div>
+                    <div class="section dev_manual icon-line fa-2x">
+                        <i class="fas fa-code fa-fw"></i>
+                        <h1><a href="https://docs.blesta.com/display/dev/Overview" target="_blank"><?php $this->_('AdminSystemHelp.index.heading_dev_manual');?></a></h1>
+                        <p><?php $this->_('AdminSystemHelp.index.text_dev_manual');?></p>
+                    </div>
+                    <div class="section forums icon-line fa-2x">
+                        <i class="fas fa-comments fa-fw"></i>
+                        <h1><a href="https://www.blesta.com/forums/" target="_blank"><?php $this->_('AdminSystemHelp.index.heading_forums');?></a></h1>
+                        <p><?php $this->_('AdminSystemHelp.index.text_forums');?></p>
+                    </div>
+                    <div class="section discord icon-line fa-2x">
+                        <i class="fab fa-discord fa-fw"></i>
+                        <h1><a href="https://discord.gg/XCq34pU" target="_blank"><?php $this->_('AdminSystemHelp.index.heading_discord');?></a></h1>
+                        <p><?php $this->_('AdminSystemHelp.index.text_discord');?></p>
+                    </div>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>

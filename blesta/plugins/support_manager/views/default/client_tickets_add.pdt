@@ -1,0 +1,145 @@
+
+            <?php
+            // Don't show this container when only rendering the widget section
+            if (!(isset($render_section) ? $render_section : null)) {
+            ?>
+        <div class="col-md-12">
+            <?php
+            }
+            echo (isset($message) ? $message : null);
+
+            $this->WidgetClient->clear();
+            $this->WidgetClient->setStyleSheet($this->view_dir . 'css/dropzone.css', ['id' => 'support_manager_dropzone_styles']);
+            $this->WidgetClient->setStyleSheet($this->view_dir . 'css/styles.css', ['id' => 'support_manager_styles']);
+            $this->WidgetClient->create($this->_('ClientTickets.add.boxtitle_add', true));
+            $this->WidgetClient->startBody();
+
+            $this->Form->create(null, ['id'=>'create_ticket', 'enctype' => 'multipart/form-data', 'class' => 'disable-on-submit']);
+
+            // Require email address for those not logged in
+            if (!(isset($logged_in) ? $logged_in : false)) {
+            ?>
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('ClientTickets.add.field_email', true), 'email');
+                $this->Form->fieldText('email', (isset($vars->email) ? $vars->email : null), ['id' => 'email', 'class' => 'form-control', 'placeholder' => $this->_('ClientTickets.add.field_email', true)]);
+                ?>
+            </div>
+            <?php
+            }
+            ?>
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('ClientTickets.add.field_summary', true), 'summary');
+                $this->Form->fieldText('summary', (isset($vars->summary) ? $vars->summary : null), ['id' => 'summary', 'class' => 'form-control', 'placeholder' => $this->_('ClientTickets.add.placeholder_summary', true)]);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('ClientTickets.add.field_priority', true), 'priority');
+                $this->Form->fieldSelect('priority', (isset($priorities) ? $priorities : null), (isset($vars->priority) ? $vars->priority : null), ['id' => 'priority', 'class' => 'form-control']);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('ClientTickets.add.field_details', true), 'details');
+                $this->Form->fieldTextarea('details', (isset($vars->details) ? $vars->details : null), ['id' => 'details', 'rows' => 5, 'class' => 'form-control', 'data-markdown-editor' => '', 'placeholder' => $this->_('ClientTickets.add.placeholder_details', true)]);
+                ?>
+            </div>
+
+            <div class="form-group">
+                <?php
+                $this->Form->label($this->_('ClientTickets.add.field_attachments', true), 'attachment[]');
+                ?>
+                <div class="dz-message"><i class="fas fa-upload"></i> <?php $this->_('ClientTickets.add.dropzone_drop_files_here');?></div>
+                <div class="fallback">
+                    <div id="file_attachment">
+                        <?php
+                        $this->Form->fieldFile('attachment[]', ['class' => 'martop5']);
+                        ?>
+                    </div>
+                    <a id="add_attachment_field" href="#"><i class="fas fa-plus-circle"></i> <?php $this->_('ClientTickets.add.text_add_attachment');?></a>
+                </div>
+                <div class="dropzone-previews"></div>
+                <div class="custom_fields mt-4"><?php echo $department_fields ?? '';?></div>
+            </div>
+
+            <?php
+            if ((isset($captcha) ? $captcha : null)) {
+            ?>
+            <div class="col-md-12">
+                <?php echo $captcha;?>
+            </div>
+            <?php
+            }
+            ?>
+
+            <button type="submit" class="btn btn-light float-right">
+                <i class="fas fa-plus-circle"></i> <?php $this->_('ClientTickets.add.field_addsubmit');?>
+            </button>
+            <?php
+            $this->Form->end();
+            $this->WidgetClient->endBody();
+            $this->WidgetClient->end();
+
+            // Don't show this container when only rendering the widget section
+            if (!(isset($render_section) ? $render_section : null)) {
+            ?>
+        </div>
+            <?php
+            }
+            $this->Javascript->setInline("
+                $(document).ready(function() {
+                    // Initialize dropzone
+                    $('#create_ticket').dropzone({
+                        paramName: 'dropzone[]',
+                        clickable: '.dz-message',
+                        addRemoveLinks: true,
+                        dictRemoveFile: '" . $this->_('ClientTickets.add.dropzone_remove_file', true) . "',
+                        complete: function(file) {
+                            var fields = ['name', 'type', 'size'];
+
+                            fields.forEach(function(field, index) {
+                                $('<input>', {
+                                    type: 'hidden',
+                                    name: 'dropzone[' + field + '][' + file.name + ']',
+                                    value: file[field]
+                                }).appendTo('.dropzone');
+                            });
+
+                            $('.dz-progress').hide();
+                        },
+                        removedfile: function(file) {
+                            var fields = ['name', 'type', 'size'];
+
+                            fields.forEach(function(field, index) {
+                                $('input[name=\"dropzone[' + field + '][' + file.name + ']\"]').remove();
+                            });
+
+                            $(file.previewElement).remove();
+                        },
+                        previewsContainer: '.dropzone-previews'
+                    });
+                    $('#create_ticket').addClass('dropzone');
+
+                    $('#add_attachment_field').click(function() {
+                        var attachment = $('#file_attachment input:first').clone();
+                        $(attachment).val('');
+                        $(attachment).insertAfter($('#file_attachment input:last'));
+                        return false;
+                    });
+
+                    // Format form
+                    $('#create_ticket').submit(function() {
+                        // Submit unchecked checkboxes
+                        $('#create_ticket input[type=\"checkbox\"]:not(:checked)').each(function() {
+                            $(this).prop('disabled', true);
+                            $('<input>', {
+                                type: 'hidden',
+                                name: $(this).attr('name'),
+                                value: '0'
+                            }).appendTo($(this).parent());
+                        });
+                    });
+                });
+            ");

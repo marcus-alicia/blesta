@@ -1,0 +1,16 @@
+    <table class="table">
+        <tr class="heading_row">
+            <td class="fixed_small center border_none"><i class="fas fa-level-up-alt fa-rotate-90"></i></td>
+            <td class="border_left"><?php $this->_('DirectAdmin.service_info.username');?></td>
+            <td><?php $this->_('DirectAdmin.service_info.password');?></td>
+            <td><?php $this->_('DirectAdmin.service_info.server');?></td>
+            <td class="last"><?php $this->_('DirectAdmin.service_info.options');?></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><?php echo (isset($service_fields->direct_admin_username) ? $this->Html->safe($service_fields->direct_admin_username) : null);?></td>
+            <td><?php echo (isset($service_fields->direct_admin_password) ? $this->Html->safe($service_fields->direct_admin_password) : null);?></td>
+            <td><?php echo (isset($module_row->meta->host_name) ? $this->Html->safe($module_row->meta->host_name) : null);?></td>
+            <td><a href="<?php echo $this->Html->safe('http://' . (isset($module_row->meta->host_name) ? $module_row->meta->host_name : null) . ':' . (isset($module_row->meta->port) ? $module_row->meta->port : null));?>" target="_blank"><?php $this->_('DirectAdmin.service_info.option_login');?></a></td>
+        </tr>
+    </table>

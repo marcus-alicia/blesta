@@ -1,0 +1,126 @@
+
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+            echo (isset($left_nav) ? $left_nav : null);
+        ?>
+        <div id="right_outer">
+            <?php
+            if (!(isset($render_section) ? $render_section : null)) {
+                echo (isset($message) ? $message : null);
+            }
+            ?>
+            <section id="right_container">
+        <?php
+        }
+        ?>
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSettings.settings.boxtitle_settings', true), ['id'=>'admin_settings'], (isset($render_section) ? $render_section : null));
+
+                $this->Form->create($this->Html->safe($this->base_uri) . 'plugin/order/admin_settings/update/', ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_order_frequency', true), 'order_frequency', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminSettings.settings.tooltip_order_frequency', true));?></div></span>
+                                <?php
+                                $this->Form->fieldSelect('order_frequency', (isset($order_frequencies) ? $order_frequencies : []), (isset($vars['order_frequency']) ? $vars['order_frequency'] : null), ['id' => 'order_frequency', 'class' => 'block']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('order_recurring', 'true', (isset($vars['order_recurring']) ? $vars['order_recurring'] : 'false') == 'true', ['id' => 'order_recurring']);
+                                $this->Form->label($this->_('AdminSettings.settings.field_order_recurring', true), 'order_recurring', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminSettings.settings.tooltip_order_recurring', true));?></div></span>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_maturity_days', true), 'maturity_days', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminSettings.settings.tooltip_maturity_days', true));?></div></span>
+                                <?php
+                                $this->Form->fieldText('maturity_days', (isset($vars['maturity_days']) ? $vars['maturity_days'] : null), ['id' => 'maturity_days', 'class' => 'block']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_cookie_tld', true), 'cookie_tld', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminSettings.settings.tooltip_cookie_tld', true));?></div></span>
+                                <?php
+                                $this->Form->fieldText('cookie_tld', (isset($vars['cookie_tld']) ? $vars['cookie_tld'] : null), ['id' => 'cookie_tld', 'class' => 'block']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_commission_type', true), 'commission_type', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminSettings.settings.tooltip_commission_type', true));?></div></span>
+                                <?php
+                                $this->Form->fieldSelect('commission_type', (isset($commission_types) ? $commission_types : []), (isset($vars['commission_type']) ? $vars['commission_type'] : null), ['id' => 'commission_type', 'class' => 'block']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_commission_amount', true), 'commission_amount', ['class' => 'inline']);
+                                $this->Form->fieldText('commission_amount', (isset($vars['commission_amount']) ? $vars['commission_amount'] : null), ['id' => 'commission_amount', 'class' => 'block']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_min_withdrawal_amount', true), 'min_withdrawal_amount');
+                                $this->Form->fieldText('min_withdrawal_amount', (isset($vars['min_withdrawal_amount']) ? $vars['min_withdrawal_amount'] : null), ['id' => 'min_withdrawal_amount']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_max_withdrawal_amount', true), 'max_withdrawal_amount');
+                                $this->Form->fieldText('max_withdrawal_amount', (isset($vars['max_withdrawal_amount']) ? $vars['max_withdrawal_amount'] : null), ['id' => 'max_withdrawal_amount']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_withdrawal_currency', true), 'withdrawal_currency');
+                                $this->Form->fieldSelect('withdrawal_currency', (isset($currencies) ? $currencies : []), (isset($vars['withdrawal_currency']) ? $vars['withdrawal_currency'] : null), ['id' => 'withdrawal_currency']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSettings.settings.field_signup_content', true), 'signup_content', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('AdminSettings.settings.tooltip_signup_content', true));?></div></span>
+                                <?php
+                                $this->Form->fieldTextarea('signup_content', (isset($vars['signup_content']) ? $vars['signup_content'] : null), ['id' => 'signup_content', 'class' => 'block wysiwyg']);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSettings.settings.submit_settings', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                        <a class="btn btn-default pull-right ajax" href="<?php echo $this->Html->safe($this->base_uri);?>widget/order/admin_settings/"><?php $this->_('AdminSettings.settings.submit_cancel');?></a>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                ?>
+        <?php
+        if (!(isset($is_ajax) ? $is_ajax : false)) {
+        ?>
+            </section>
+        </div>
+        <?php
+        }
+        ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.wysiwyg').blestaBindWysiwygEditor({language: '<?php echo substr(Configure::get('Blesta.language'), 0, 2);?>'});
+    });
+</script>

@@ -1,0 +1,64 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create('Reports', ['id' => 'admin_billing_reports'], (isset($render_section) ? $render_section : null));
+        $this->Form->create(null, ['id' => 'report_form', 'class' => 'disable-on-submit']);
+        ?>
+
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminBilling.reports.field_format', true), 'format');
+                        $this->Form->fieldSelect('format', (isset($formats) ? $formats : null), (isset($vars->format) ? $vars->format : null), ['id' => 'format']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminBilling.reports.field_report_type', true), 'type');
+                        $this->Form->fieldSelect('type', (isset($types) ? $types : null), (isset($vars->type) ? $vars->type : null), ['id' => 'type']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div id="report_options">
+                <?php echo (isset($report_fields) ? $report_fields : null);?>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminBilling.reports.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+
+        $this->Javascript->setInline("
+        $(document).ready(function() {
+            $('#type').change(function() {
+                getReportFields();
+                return false;
+            });
+        });
+
+        function getReportFields() {
+            if ($('#type').val() != '') {
+                $(this).blestaRequest(
+                    'get',
+                    '" .  $this->Html->safe($this->base_uri . 'billing/getreportfields/') . "',
+                    $('#report_form').serialize(),
+                    function(data) {
+                        if (data.fields)
+                            $('#report_options').html(data.fields);
+                    },
+                    function(data) { },
+                    {dataType:'json'}
+                );
+            }
+        }
+        ");
+?>

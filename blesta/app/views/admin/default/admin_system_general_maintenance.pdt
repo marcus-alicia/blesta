@@ -1,0 +1,37 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemGeneral.maintenance.boxtitle_maintenance', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('maintenance_mode', 'true', ((isset($vars['maintenance_mode']) ? $vars['maintenance_mode'] : null) == 'true'), ['id' => 'maintenance_mode']);?>
+                                <?php $this->Form->label($this->_('AdminSystemGeneral.maintenance.field.maintenance_mode', true), 'maintenance_mode', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemGeneral.!tooltip.maintenance_mode');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemGeneral.maintenance.field.maintenance_reason', true), 'maintenance_reason', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminSystemGeneral.!tooltip.maintenance_reason');?></div></span>
+                                <?php $this->Form->fieldTextarea('maintenance_reason', (isset($vars['maintenance_reason']) ? $vars['maintenance_reason'] : null), ['id' => 'maintenance_reason', 'data-markdown-editor' => '']);?>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemGeneral.maintenance.field.maintenancesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>

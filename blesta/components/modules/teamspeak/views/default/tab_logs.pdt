@@ -1,0 +1,54 @@
+    <div class="title_row first">
+        <h3><?php $this->_('Teamspeak.tab_logs.heading_log'); ?></h3>
+    </div>
+    <div class="pad">
+        <table class="table">
+            <tbody>
+                <tr class="heading_row">
+                    <td><span><?php $this->_('Teamspeak.tab_logs.log_heading.date'); ?></span></td>
+                    <td><span><?php $this->_('Teamspeak.tab_logs.log_heading.type'); ?></span></td>
+                    <td><span><?php $this->_('Teamspeak.tab_logs.log_heading.function'); ?></span></td>
+                    <td><span><?php $this->_('Teamspeak.tab_logs.log_heading.server_id'); ?></span></td>
+                    <td class="last"><span><?php $this->_('Teamspeak.tab_logs.log_heading.description'); ?></span></td>
+                </tr>
+
+                <?php
+                if (!empty($log->log)) {
+                    $i = 0;
+                    foreach ($log->log as $log) {
+                        ?>
+                    <tr<?php echo $this->Html->concat(' ', ($i % 2 == 1) ? ' class="odd_row"' : '', ''); ?>>
+                        <td><?php echo (isset($log->date) ? $this->Html->safe($log->date) : null); ?></td>
+                        <td>
+                            <?php
+                            if ($log->type == 'WARNING') {
+                                $status_class = 'warning';
+                            } elseif ($log->type == 'INFO') {
+                                $status_class = 'info';
+                            } elseif ($log->type == 'DANGER') {
+                                $status_class = 'danger';
+                            } else {
+                                $status_class = 'success';
+                            } ?>
+                            <span class="badge badge-<?php echo (isset($status_class) ? $this->Html->safe($status_class) : null); ?>">
+                                <?php $this->_('Teamspeak.tab_logs.type_' . (isset($log->type) ? $this->Html->safe($log->type) : null)); ?>
+                            </span>
+                        </td>
+                        <td><?php echo (isset($log->function) ? $this->Html->safe($log->function) : null); ?></td>
+                        <td><?php echo (isset($log->server_id) ? $this->Html->safe($log->server_id) : null); ?></td>
+                        <td><?php echo (isset($log->description) ? $this->Html->safe($log->description) : null); ?></td>
+                    </tr>
+                <?php
+                        $i++;
+                    }
+                } else {
+                ?>
+                    <tr>
+                        <td colspan="5"><?php $this->_('Teamspeak.tab_logs.text_no_logs'); ?></td>
+                    </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>

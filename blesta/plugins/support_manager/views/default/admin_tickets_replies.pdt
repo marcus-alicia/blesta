@@ -1,0 +1,151 @@
+                    <?php
+                    $this->Form->create($this->base_uri . 'plugin/support_manager/admin_tickets/replyaction/' . (isset($ticket->id) ? $ticket->id : null) . '/', ['id' => 'ticket_replies']);
+
+                    foreach ((isset($ticket->replies) ? $ticket->replies : []) as $reply) {
+                        if ((isset($reply->staff_id) ? $reply->staff_id : null) != '') {
+                            $first_name = (isset($reply->first_name) ? $reply->first_name : $this->_('AdminTickets.reply.system', true));
+                            $last_name = (isset($reply->last_name) ? $reply->last_name : null);
+                        } else {
+                            $first_name = (isset($reply->first_name) ? $reply->first_name : null);
+                            if ($reply->first_name == '') {
+                                $first_name = (isset($ticket->email) ? $ticket->email : null);
+                            }
+
+                            $last_name = (isset($reply->last_name) ? $reply->last_name : null);
+                        }
+                        $first_name = $this->Html->safe($first_name);
+                        $last_name = $this->Html->safe($last_name);
+                    ?>
+                    <div class="<?php echo (isset($reply->type) ? $this->Html->safe($reply->type) : null) . ((isset($reply->type) ? $this->Html->safe($reply->type) : null) == 'note' ? ' reply' : '');?>">
+                        <?php
+                        if ((isset($reply->type) ? $reply->type : null) == 'reply' || (isset($reply->type) ? $reply->type : null) == 'note') {
+                        ?>
+                        <div class="topbar<?php echo ((isset($reply->staff_id) ? $reply->staff_id : null) != '' ? ' staff' : '');?>">
+                            <div class="reply-by">
+                                <p>
+                                <?php
+                                $this->_('AdminTickets.reply.reply_date', false, $this->Date->cast((isset($reply->date_added) ? $reply->date_added : null), Configure::get('SupportManager.reply_date_format')), $first_name, $last_name);
+                                ?>
+                                </p>
+                            </div>
+                            <div class="options">
+                                <?php
+                                $this->Form->fieldCheckbox('replies[]', (isset($reply->id) ? $reply->id : null), false, ['class'=>'replies']);
+                                ?>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="left">
+                            <div>
+                                <img src="//www.gravatar.com/avatar/<?php echo md5(strtolower(trim((isset($reply->email) ? $this->Html->safe($reply->email) : ''))));?>" />
+                            </div>
+                            <p class="name">
+                            <?php
+                            if ((isset($reply->staff_id) ? $reply->staff_id : null) == '' && $ticket->client_id) {
+                            ?>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . $ticket->client_id);?>"><?php echo $this->Html->concat(' ', $first_name, $last_name);?></a>
+                            <?php
+                            } else {
+                                echo $this->Html->concat(' ', $first_name, $last_name);
+                            }
+                            ?>
+                            </p>
+                            <?php
+                            if ((isset($reply->staff_id) ? $reply->staff_id : null) != '' && (isset($reply->staff_id) ? $reply->staff_id : null) != 0) {
+                                $staff_title = $this->_('AdminTickets.reply.staff_title', true);
+                                if ((isset($staff_settings[$reply->staff_id]) ? $staff_settings[$reply->staff_id] : false) && !empty($staff_settings[$reply->staff_id]['title'])) {
+                                    $staff_title = $this->Html->safe($staff_settings[$reply->staff_id]['title']);
+                                }
+                            ?>
+                            <p class="title"><?php echo $staff_title;?></p>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                        <div class="right">
+                            <?php
+                            // Show attachments
+                            if (!empty($reply->attachments)) {
+                            ?>
+                            <div class="attachments">
+                                <p>
+                                    <?php
+                                    foreach ($reply->attachments as $attachment) {
+                                    ?>
+                                    <span>
+                                        <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getattachment/' . (isset($attachment->id) ? $attachment->id : null) . '/');?>">
+                                            <i class="fas fa-paperclip"></i>
+                                            <?php echo (isset($attachment->name) ? $this->Html->safe($attachment->name) : null);?>
+                                        </a>
+                                    </span>
+                                    <?php
+                                    }
+                                    ?>
+                                </p>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                            <div class="response">
+                                <?php echo $this->TextParser->encode('markdown', (isset($reply->details) ? $reply->details : null));?>
+                            </div>
+                            <?php
+                            // Show attachments
+                            if ((isset($reply->images) ? $reply->images : null)) {
+                            ?>
+                            <div class="image-attachments">
+                                <div class="row equal">
+                                    <?php
+                                    $index = 0;
+                                    $columns = max(1, (int)(isset($thumbnails_per_row) ? $thumbnails_per_row : 0));
+                                    foreach ($reply->images as $id => $name) {
+                                        if ($index % $columns == 0 && $index != 0) {
+                                        ?>
+                                </div>
+                                <div class="row equal">
+                                        <?php
+                                        }
+                                        ?>
+                                        <div class="col-md-2 col-xs-4">
+                                            <img src="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_tickets/getattachment/' . $id . '/');?>" data-slide="<?php echo $index;?>" alt="<?php echo $this->Html->safe($name);?>" title="<?php echo $this->Html->safe($name);?>" style="max-width: 100%;">
+                                        </div>
+                                        <?php
+                                        $index++;
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                        <div class="clear"></div>
+                        <?php
+                        } elseif ((isset($reply->type) ? $reply->type : null) == 'log') {
+                        ?>
+                        <div class="icon-line fa-2x">
+                            <i class="fas fa-info-circle"></i>
+                            <p>
+                                <?php echo (isset($reply->details) ? $this->Html->safe($reply->details) : null);?>
+                                <em><?php $this->_('AdminTickets.reply.log_date', false, $this->Date->cast((isset($reply->date_added) ? $reply->date_added : null), Configure::get('SupportManager.reply_date_format')), $first_name, $last_name);?></em>
+                            </p>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                    <div id="ticket_actions" style="display:none;">
+                        <div class="left">
+                            <span><?php $this->_('AdminTickets.reply.text_with_selected');?></span>
+                            <?php $this->Form->fieldSelect('action', (isset($ticket_actions) ? $ticket_actions : null), '', ['id' => 'reply_action']);?>
+                        </div>
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminTickets.reply.field_actionsubmit', true), ['class' => 'btn btn-primary float-right']);
+                        ?>
+                    </div>
+                    <?php
+                    $this->Form->end();
+                    ?>

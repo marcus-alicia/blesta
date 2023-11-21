@@ -1,0 +1,42 @@
+
+            <div class="pad_side">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('TransactionsApplied.options.field_start_date', true), 'start_date');
+                        $this->Form->fieldText('start_date', (isset($vars->start_date) ? $vars->start_date : null), ['id' => 'start_date', 'class' => 'date']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('TransactionsApplied.options.field_end_date', true), 'end_date');
+                        $this->Form->fieldText('end_date', (isset($vars->end_date) ? $vars->end_date : null), ['id' => 'end_date', 'class' => 'date']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('TransactionsApplied.options.field_gateway', true), 'gateway');
+                        $this->Form->fieldSelect('gateway', (isset($gateways) ? $gateways : null), (isset($vars->gateway) ? $vars->gateway : null), ['id' => 'gateway']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('TransactionsApplied.options.field_status', true), 'status');
+                        $this->Form->fieldSelect('status', (isset($statuses) ? $statuses : null), (isset($vars->status) ? $vars->status : null), ['id' => 'status']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('TransactionsApplied.options.field_payment_type', true), 'payment_type');
+                        $this->Form->fieldSelect('payment_type', (isset($payment_types) ? $payment_types : null), (isset($vars->payment_type) ? $vars->payment_type : null), ['id' => 'payment_type']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('input.date').datePicker({
+            startDate:'1996-01-01'
+        });
+    });
+</script>

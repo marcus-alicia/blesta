@@ -1,0 +1,126 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminCompanyBilling.deliverymethods.boxtitle_deliverymethods', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminCompanyBilling.deliverymethods.heading_basic');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyBilling.deliverymethods.field_delivery_methods', true));
+                                foreach ($delivery_methods as $method => $name) {
+                                    $disable = $method == 'email';
+                                    $options = ['id' => 'delivery_method_' . $method];
+                                    if ($disable) {
+                                        $options['disabled'] = 'disabled';
+                                    }
+                                    $this->Form->fieldCheckbox('delivery_methods[]', $method, (isset($vars[$method]) ? $vars[$method] : $disable), $options);
+                                    $this->Form->label($name, 'delivery_method_' . $method, ['class' => 'inline']);
+                                }
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyBilling.deliverymethods.heading_interfax');?></h3>
+                    </div>
+                    <div class="pad">
+                        <p><?php $this->_('AdminCompanyBilling.deliverymethods.interfax_desc');?></p>
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyBilling.deliverymethods.field_interfax_username', true), 'interfax_username');
+                                $this->Form->fieldText('interfax_username', (isset($vars['interfax_username']) ? $vars['interfax_username'] : null), ['id' => 'interfax_username']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyBilling.deliverymethods.field_interfax_password', true), 'interfax_password');
+                                $this->Form->fieldPassword('interfax_password', ['id' => 'interfax_password', 'value' => (isset($vars['interfax_password']) ? $vars['interfax_password'] : null)]);
+                                ?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyBilling.deliverymethods.heading_postalmethods');?></h3>
+                    </div>
+                    <div class="pad">
+                        <p><?php $this->_('AdminCompanyBilling.deliverymethods.postalmethods_desc');?></p>
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminCompanyBilling.deliverymethods.field_postalmethods_apikey', true), 'postalmethods_apikey', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.deliverymethods.note_apikey');?></div></span>
+                                <?php
+                                $this->Form->fieldText('postalmethods_apikey', (isset($vars['postalmethods_apikey']) ? $vars['postalmethods_apikey'] : null), ['id' => 'postalmethods_apikey', 'class' => 'block']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('postalmethods_doublesided', 'true', (isset($vars['postalmethods_doublesided']) ? $vars['postalmethods_doublesided'] : null) == 'true', ['id' => 'postalmethods_doublesided']);
+                                $this->Form->label($this->_('AdminCompanyBilling.deliverymethods.field_postalmethods_doublesided', true), 'postalmethods_doublesided', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.deliverymethods.note_doublesided');?></div></span>
+                            </li>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox('postalmethods_colored', 'true', (isset($vars['postalmethods_colored']) ? $vars['postalmethods_colored'] : null) == 'true', ['id' => 'postalmethods_colored']);
+                                $this->Form->label($this->_('AdminCompanyBilling.deliverymethods.field_postalmethods_colored', true), 'postalmethods_colored', ['class' => 'inline']);
+                                ?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyBilling.deliverymethods.note_colored');?></div></span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminCompanyBilling.deliverymethods.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#postalmethods_replyenvelope').change(function () {
+            if ($(this).is(':checked')) {
+                $('.postalmethods_return').show();
+            } else {
+                $('.postalmethods_return').hide();
+            }
+        });
+        $('#postalmethods_replyenvelope').change();
+
+        $("#postalmethods_return_country").change(function() {
+            $(this).blestaRequest("get", "<?php echo $this->Html->safe($this->base_uri . 'settings/company/taxes/getstates/');?>" + $(this).val(), null, function(data) {
+                    // Remove all existing items
+                    $("option", "#postalmethods_return_state").remove();
+
+                    // Append all new items
+                    $.each($(this).blestaSortObject(data), function(index, item) {
+                        $("#postalmethods_return_state").append( new Option(item.value, item.key));
+                    });
+                },
+                null,
+                {dataType: "json"}
+            );
+        });
+    });
+</script>

@@ -1,0 +1,106 @@
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->WidgetClient->clear();
+        $this->WidgetClient->create($this->_('Orders.index.boxtitle_orders', true), ['id' => 'client_orders', 'class' => 'w-100'], (isset($render_section) ? $render_section : null));
+        $this->WidgetClient->startBody();
+
+        if ((isset($orders) ? $orders : false) && ($num_orders = count($orders)) > 0) {
+        ?>
+        <div class="table-responsive">
+            <table class="table table-curved table-striped" id="orders">
+                <thead>
+                    <tr>
+                        <th>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/index/?sort=order_number&order=' . ($sort == 'order_number' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'order_number' ? ' ' . $order : '');?>"><?php $this->_('Orders.index.heading_order_number');?></a>
+                        </th>
+                        <th>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/index/?sort=status&order=' . ($sort == 'status' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'status' ? ' ' . $order : '');?>"><?php $this->_('Orders.index.heading_status');?></a>
+                        </th>
+                        <th>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/index/?sort=invoice_id_code&order=' . ($sort == 'invoice_id_code' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'invoice_id_code' ? ' ' . $order : '');?>"><?php $this->_('Orders.index.heading_invoice_number');?></a>
+                        </th>
+                        <th>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/index/?sort=total&order=' . ($sort == 'total' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'total' ? ' ' . $order : '');?>"><?php $this->_('Orders.index.heading_total');?></a>
+                        </th>
+                        <th>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/index/?sort=paid&order=' . ($sort == 'paid' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'paid' ? ' ' . $order : '');?>"><?php $this->_('Orders.index.heading_paid');?></a>
+                        </th>
+                        <th>
+                            <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/index/?sort=date_added&order=' . ($sort == 'date_added' ? $negate_order : $order));?>" class="ajax<?php echo $this->Html->safe($sort == 'date_added' ? ' ' . $order : '');?>"><?php $this->_('Orders.index.heading_date_ordered');?></a>
+                        </th>
+                        <th>
+                            <span><?php $this->_('Orders.index.heading_options');?></span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Display all order
+                    foreach ($orders as $order) {
+                    ?>
+                    <tr>
+                        <td><?php echo (isset($order->order_number) ? $this->Html->safe($order->order_number) : null);?></td>
+                        <td><?php echo (isset($statuses[$order->status]) ? $this->Html->safe($statuses[$order->status]) : null);?></td>
+                        <td><?php echo (isset($order->invoice_id_code) ? $this->Html->safe($order->invoice_id_code) : null);?></td>
+                        <td>
+                            <?php
+                            echo $this->CurrencyFormat->format(
+                                (isset($order->total) ? $order->total : 0),
+                                (isset($order->currency) ? $order->currency : 'USD'),
+                                ['html_code' => true]
+                            );
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            echo $this->CurrencyFormat->format(
+                                (isset($order->paid) ? $order->paid : 0),
+                                (isset($order->currency) ? $order->currency : 'USD'),
+                                ['html_code' => true]
+                            );
+                            ?>
+                        </td>
+                        <td><?php echo $this->Date->cast((isset($order->date_added) ? $this->Html->safe($order->date_added) : null), 'date_time');?></td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/view/' . $order->id . '/');?>" class="btn btn-xs btn-light">
+                                    <i class="fas fa-eye fa-fw"></i> <?php $this->_('Orders.index.option_view');?>
+                                </a>
+                                <?php
+                                if ($order->paid == 0 && $order->status !== 'canceled') {
+                                ?>
+                                <a href="<?php echo $this->Html->safe($this->base_uri . 'order/orders/cancel/' . $order->id . '/');?>" class="btn btn-xs btn-danger">
+                                    <i class="fas fa-ban fa-fw"></i> <?php $this->_('Orders.index.option_cancel');?>
+                                </a>
+                                <?php
+                                }
+                                ?>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        } else {
+        ?>
+        <div class="alert alert-info">
+            <p>
+                <?php $this->_('Orders.index.no_results');?>
+            </p>
+        </div>
+        <?php
+        }
+
+        $this->WidgetClient->endBody();
+        if ($this->Pagination->hasPages()) {
+            $this->WidgetClient->startFooter();
+            $this->Pagination->build();
+            $this->WidgetClient->endFooter();
+        }
+        $this->WidgetClient->end();
+        ?>

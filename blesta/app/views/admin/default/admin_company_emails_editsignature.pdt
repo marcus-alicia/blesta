@@ -1,0 +1,57 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminCompanyEmails.editsignature.boxtitle_editsignature', true));
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyEmails.editsignature.field_name', true), 'name');?>
+                                <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id' => 'name']);?>
+                            </li>
+                            <li>
+                                <div class="tab_content">
+                                    <ul class="tabs">
+                                        <li class="current">
+                                            <a href="#"><?php $this->Form->label($this->_('AdminCompanyEmails.editsignature.field_html', true), 'html');?></a>
+                                        </li>
+                                        <li>
+                                            <a href="#"><?php $this->Form->label($this->_('AdminCompanyEmails.editsignature.field_text', true), 'text');?></a>
+                                        </li>
+                                    </ul>
+                                    <div class="inner_content">
+                                        <div><?php $this->Form->fieldTextarea('html', (isset($vars->html) ? $vars->html : null), ['id' => 'html']);?></div>
+                                        <div><?php $this->Form->fieldTextarea('text', (isset($vars->text) ? $vars->text : null), ['id' => 'text']);?></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminCompanyEmails.editsignature.field_editsignaturesubmit', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                            <a class="btn btn-default pull-right" href="<?php echo $this->base_uri;?>settings/company/emails/signatures/"><?php $this->_('AdminCompanyEmails.!cancel.field.cancel');?></a>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('#html').blestaBindWysiwygEditor({language: '" . substr(Configure::get('Blesta.language'), 0, 2) . "'});
+    $('div.tab_content').blestaTabbedContent();
+});
+");
+?>

@@ -1,0 +1,174 @@
+
+                <aside id="dashboard_left">
+                    <div class="calendar_box">
+                        <div class="calendar_inner">
+                            <div class="calendar_section"></div>
+                        </div>
+                        <div class="shadow"></div>
+                    </div>
+
+                    <ul class="dash_link_box">
+                        <li class="manage_widgets">
+                            <i class="fas fa-cogs fa-fw"></i>
+                            <a href="<?php echo $this->base_uri . 'main/managewidgets/';?>">
+                                <?php $this->_('AdminMain.index.manage_widgets');?>
+                            </a>
+                        </li>
+                        <li class="customize_dashboard">
+                            <i class="fas fa-columns fa-fw"></i>
+                            <a href="<?php echo $this->base_uri . 'main/updatedashboard/';?>">
+                                <?php $this->_('AdminMain.index.customize_dashboard');?>
+                            </a>
+                        </li>
+                    </ul>
+                    <section class="quick_links">
+                        <h3><?php $this->_('AdminMain.index.heading_quicklinks');?></h3>
+                        <ul>
+                        <?php
+                        if (!empty($quicklinks)) {
+                            foreach ($quicklinks as $quicklink) {
+                        ?>
+                            <li>
+                                <div class="quick_link">
+                                    <a href="<?php (print (isset($quicklink->uri) ? $this->Html->safe($quicklink->uri) : null));?>"><?php (print (isset($quicklink->title) ? $this->Html->safe($quicklink->title) : null));?></a>
+                                </div>
+                                <i class="fas fa-pencil-alt pull-right"></i>
+                            </li>
+                        <?php
+                            }
+                        } else {
+                        ?>
+                            <li><?php $this->_('AdminMain.index.no_quicklinks');?></li>
+                        <?php
+                        }
+                        ?>
+                        </ul>
+                    </section>
+                </aside>
+                <div id="dashboard_right">
+                    <?php echo (isset($message) ? $message : null);?>
+                    <?php echo (isset($content) ? $content : null);?>
+                </div>
+<?php
+$this->Javascript->setInline("
+$(document).ready(function() {
+    $('.column').blestaLoadWidgets({
+        fetch_uri: '" . $this->Html->safe($this->base_uri . 'main/getwidgets/') . "',
+        update_uri: '" . $this->Html->safe($this->base_uri . 'main/reorderwidgets/') . "',
+        toggle_uri: '" . $this->Html->safe($this->base_uri . 'main/togglewidget/') . "'
+    });
+
+    // Hover on quicklink
+    $('.quick_links ul li').hover(
+        function() {
+            $(this).find('i').addClass('edit');
+        },
+        function() {
+            $(this).find('i').removeClass('edit');
+        }
+    );
+    // Edit quicklink
+    $(document).on('click', '.quick_links i.edit', function() {
+        // Replace quicklink with input
+        var quicklink = $(this).parent().find('.quick_link');
+        $(quicklink).find('a').hide();
+
+        // Add input field
+        $(quicklink).find('a').after('<input type=\"text\" value=\"' + $(this).parent().find('.quick_link a').text() + '\" />');
+        quicklink_input = $(quicklink).find('input');
+        $(quicklink_input).focus();
+        $(quicklink_input).select();
+
+        $(quicklink_input).bind('keyup', function(event) {
+            if (event.keyCode == 13)
+                $(this).blur();
+        });
+        $(quicklink_input).bind('blur', function() {
+            var input = $(this);
+            var title = $(this).val();
+
+            // Update quicklink title
+            if ($(this).val() != $(quicklink).find('a').text()) {
+                var params = {
+                    action:'add',
+                    uri:$(quicklink).find('a').attr('href'),
+                    title:title
+                };
+
+                $(this).blestaRequest('post', '" . $this->base_uri . "main/updatequicklink/', params, function() {
+                    $(quicklink).find('a').text($(input).val());
+                }),
+                null,
+                {dataType: 'json'}
+            }
+
+            $(quicklink).find('a').show();
+            $(this).remove();
+        });
+    });
+
+    $('.manage_widgets a').blestaModal({close: '" . $this->_('AppController.modal.text_close', true) . "', min_width: 800, max_width: 800, onHide: function() { window.location.reload(); } });
+    $('.customize_dashboard a').blestaModal({close: '" . $this->_('AppController.modal.text_close', true) . "'});
+
+    // Set calendar
+    Date.firstDayOfWeek =" . (isset($calendar_start_day) ? $calendar_start_day : null) . ';
+    Date.abbrDayNames = ' . (isset($calendar_abbr_days) ? $calendar_abbr_days : null) . ';
+    Date.dayNames = ' . (isset($calendar_days) ? $calendar_days : null) . ';
+    Date.monthNames = ' . (isset($calendar_months) ? $calendar_months : null) . ';
+    Date.abbrMonthNames = ' . (isset($calendar_abbr_months) ? $calendar_abbr_months : null) . ";
+    Date.format = 'yyyy-mm-dd';
+    var current_date = '" . (isset($calendar_start_year) ? $this->Html->safe($calendar_start_year) : null) . '-' . str_pad((isset($calendar_start_month) ? $this->Html->safe($calendar_start_month) : null) + 1, 2, '0', STR_PAD_LEFT) . "';
+    $('.calendar_section').datePicker({
+        month:'" . (isset($calendar_start_month) ? $this->Html->safe($calendar_start_month) : null) . "',
+        year:'" . (isset($calendar_start_year) ? $this->Html->safe($calendar_start_year) : null) . "',
+        inline:true,
+        startDate:'1996-01-01' // Allow dates in past
+    }).bind('dateSelected', function(e, date) {
+        window.location = '" . $this->Html->safe($this->base_uri . 'main/calendar/day/') . "' + date.asString();
+    }).bind('dpMonthChanged', function(e, month, year) {
+        current_date = year + '-' + (month < 9 ? '0' : '') + (month + 1); // Change range of month to [1,12]
+
+        var start_date = Date.fromString(current_date + '-01').asString();
+        var end_date = Date.fromString(start_date).addMonths(1).asString();
+
+        updateCalendarBadges(start_date, end_date);
+    });
+
+    // Set the calendar badges on load
+    var start_date = Date.fromString(current_date + '-01').asString();
+    var end_date = Date.fromString(start_date).addMonths(1).asString();
+    updateCalendarBadges(start_date, end_date);
+
+
+
+    /**
+     * Updates the calendar badge counts
+     */
+    function updateCalendarBadges(start_date, end_date) {
+        $(this).blestaRequest('GET', '" . $this->Html->safe($this->base_uri . 'main/geteventcounts/') . "', {start_date: start_date, end_date: end_date},
+            // on success
+            function(badges) {
+                for (day in badges) {
+
+                    if (Date.fromString(day).getMonth() != Date.fromString(start_date).getMonth())
+                        continue;
+
+                    var day_num = Date.fromString(day).getDate();
+
+                    $('.calendar_section tbody td.current-month').filter(function() {
+                        return $(this).text() == day_num;
+                    }).html('<div>' + day_num + '<span class=\"badge badge-danger\">' + badges[day] + '</span></div>');
+                }
+            },
+            // on error
+            null, {dataType:'json'}
+        );
+    }
+
+    // Month heading
+    $('.calendar_section h2').bind('click', function() {
+        window.location = '" . $this->Html->safe($this->base_uri . 'main/calendar/month/') . "' + current_date;
+    });
+});
+");
+?>

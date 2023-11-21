@@ -1,0 +1,102 @@
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            echo (isset($search_bar) ? $search_bar : null);
+                            echo (isset($bread_crumbs) ? $bread_crumbs : null);
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                    // Always show categories when viewing the home category, but only show subcategories when some exist
+                    if ((isset($current_category) ? $current_category : null) === null || ((isset($current_category) ? $current_category : null) !== null && !empty($categories))) {
+                    ?>
+                    <div class="section-title">
+                        <h3>
+                            <i class="fas fa-folder-open"></i>
+                            <?php
+                            if ((isset($current_category) ? $current_category : null)) {
+                                $this->_('Knowledgebase.index.heading_subcategories');
+                            } else {
+                                $this->_('Knowledgebase.index.heading_categories');
+                            }
+                            ?>
+                        </h3>
+                        <p><?php $this->_('Knowledgebase.index.categories_description');?></p>
+                    </div>
+                    <div class="categories">
+                        <?php
+                        if (!empty($categories)) {
+                        ?>
+                        <div class="row">
+                            <?php
+                            foreach ($categories as $category) {
+                            ?>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="bg-light p-3 rounded">
+                                    <i class="fas fa-folder"></i>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/knowledgebase/index/' . (isset($category->id) ? $category->id : null) . '/');?>"><?php echo (isset($category->name) ? $this->Html->safe($category->name) : null);?></a>
+                                    <?php
+                                    $this->_('Knowledgebase.index.category_items', false, (isset($category->total_items) ? $this->Html->safe($category->total_items) : null));
+                                    echo $this->TextParser->encode('markdown', (isset($category->description) ? $category->description : null));
+                                    ?>
+                                </div>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                        <?php
+                        } else {
+                        ?>
+                        <div class="alert alert-info w-100">
+                            <p><?php $this->_('Knowledgebase.index.categories_no_results');?></p>
+                        </div>
+                        <?php
+                        }
+                        ?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php
+                    }
+
+                    // Show popular articles and articles
+                    $article_types = ['popular_articles', 'articles'];
+                    foreach ($article_types as $type) {
+                        $popular = ($type == 'popular_articles');
+                        $article_list = ($popular ? (isset($popular_articles) ? $popular_articles : []) : (isset($articles) ? $articles : []));
+                        if (empty($article_list)) {
+                            continue;
+                        }
+                    ?>
+                    <div class="section-title">
+                        <h3>
+                            <i class="fas <?php echo ($popular ? 'fa-thumbs-up' : 'fa-file-alt');?>"></i>
+                            <?php echo ($popular ? $this->_('Knowledgebase.index.heading_popular', true) : $this->_('Knowledgebase.index.heading_articles', true));?>
+                        </h3>
+                        <p><?php echo ($popular ? $this->_('Knowledgebase.index.popular_description', true) : $this->_('Knowledgebase.index.articles_description', true, (isset($current_category->name) ? $this->Html->safe($current_category->name) : null)));?></p>
+                    </div>
+                    <div class="categories">
+                        <div class="row">
+                            <?php
+                            foreach ($article_list as $article) {
+                            ?>
+                            <div class="col-md-12">
+                                <div class="bg-light py-2 px-3 rounded">
+                                    <i class="fas fa-file"></i>
+                                    <a href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/knowledgebase/view/' . (isset($article->id) ? $article->id : null) . '/' . (isset($article->uri_title) ? $article->uri_title : null) . '/' . ((isset($current_category) ? $current_category : null) ? (isset($current_category->id) ? $current_category->id : null) . '/' : ''));?>">
+                                        <?php echo (isset($article->title) ? $this->Html->safe($article->title) : null);?>
+                                    </a>
+                                </div>
+                            </div>
+                            <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <?php
+                    }
+                    ?>
+                </div>

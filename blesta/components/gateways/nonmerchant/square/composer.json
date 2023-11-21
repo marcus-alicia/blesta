@@ -1,0 +1,9 @@
+{
+    "name": "blesta/square",
+    "description": "Square",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

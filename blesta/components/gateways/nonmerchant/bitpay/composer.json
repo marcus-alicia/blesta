@@ -1,0 +1,10 @@
+{
+    "name": "blesta/bitpay",
+    "description": "Bitpay",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0",
+        "bitpay/sdk": "~5.0"
+    }
+}

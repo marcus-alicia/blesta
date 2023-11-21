@@ -1,0 +1,55 @@
+#authorizenet-cc-form {
+    width: 260px;
+    border: 1px solid #eeeeee;
+    padding: 15px;
+    border-radius: 5px;
+    background: #fafafa;
+}
+
+#authorizenet-cc-form .form-group {
+    margin-bottom: 0px;
+}
+
+#authorizenet-cc-form .form-group input {
+    margin-bottom: 15px;
+}
+
+#authorizenet-cc-form .form-group select {
+    margin-bottom: 5px;
+}
+
+#authorizenet-cc-form .form-group label {
+    display: block;
+}
+
+#authorizenet-cc-form input, #authorizenet-cc-form select {
+    height: 42px;
+    width: calc(100% - 1px);
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    border: 1px solid #ced4da;
+    padding: 10px 15px;
+    border-radius: 5px;
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    transition: border-color .25s ease-in-out, box-shadow .25s ease-in-out;
+}
+
+#authorizenet-cc-form input:focus, #authorizenet-cc-form select:focus {
+    border-color: #337AB7;
+}
+
+#authorizenet-cc-form select {
+    display: inline-block;
+    width: calc(50% - 2px) !important;
+    padding-right: 20px;
+    border-radius: 5px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAh0lEQVQ4T93TMQrCUAzG8V9x8QziiYSuXdzFC7h4AcELOPQAdXYovZCHEATlgQV5GFTe1ozJlz/kS1IpjKqw3wQBVyy++JI0y1GTe7DCBbMAckeNIQKk/BanALBB+16LtnDELoMcsM/BESDlz2heDR3WePwKSLo5eoxz3z6NNcFD+vu3ij14Aqz/DxGbKB7CAAAAAElFTkSuQmCC');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 5px) 50%;
+}

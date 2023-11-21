@@ -1,0 +1,242 @@
+
+        <?php echo ($left_nav ?? null);?>
+        <div id="right_outer">
+            <?php echo ($message ?? null);?>
+            <div id="configuration_warning" style="display:none;">
+                <?php echo ($configuration_warning ?? null);?>
+            </div>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+
+                $this->Widget->create($this->_('AdminCompanyClientOptions.addcustomfield.boxtitle_add', true));
+                $this->Form->create(null, ['id' => 'add-custom-field', 'class' => 'disable-on-submit']);
+                ?>
+                <div class="inner">
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.client_group_id', true), 'client_group_id', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.client_group_id');?></div></span>
+                                <?php $this->Form->fieldSelect('client_group_id', ($groups ?? null), ($vars->client_group_id ?? null), ['id' => 'client_group_id', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.type', true), 'type', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.type');?></div></span>
+                                <?php $this->Form->fieldSelect('type', ($types ?? null), ($vars->type ?? null), ['id' => 'type', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.name', true), 'name', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.name');?></div></span>
+                                <?php $this->Form->fieldText('name', ($vars->name ?? null), ['id' => 'name', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('is_lang', '1', (($vars->is_lang ?? null) == '1'), ['id' => 'is_lang']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.is_lang', true), 'is_lang', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.is_lang');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.link', true), 'link', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.link');?></div></span>
+                                <?php $this->Form->fieldText('link', ($vars->link ?? null), ['id' => 'link', 'class' => 'block']);?>
+                            </li>
+                            <li class="text-type" style="display:none;">
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.default_text', true), 'default-text', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.default_text');?></div></span>
+                                <?php $this->Form->fieldText('default_text', ($vars->default_text ?? null), ['id' => 'default-text', 'class' => 'block']);?>
+                            </li>
+                            <li class="textarea-type" style="display:none;">
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.default_text', true), 'default-textarea', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.default_text');?></div></span>
+                                <?php $this->Form->fieldTextarea('default_textarea', ($vars->default_textarea ?? null), ['id' => 'default-textarea']);?>
+                            </li>
+                            <li class="checkbox-type" style="display:none;">
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.checkbox_value', true), 'checkbox_value', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.checkbox_value');?></div></span>
+                                <?php $this->Form->fieldText('checkbox_value', ($vars->checkbox_value ?? null), ['id' => 'checkbox_value', 'class' => 'block']);?>
+                            </li>
+                            <li class="checkbox-type" style="display:none;">
+                                <?php $this->Form->fieldCheckbox('default_checkbox', '1', ($vars->default_checkbox ?? null), ['id' => 'default-checkbox']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.default_checkbox', true), 'default-checkbox', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.default_checkbox');?></div></span>
+                            </li>
+                            <li class="select-type" style="display:none;">
+                                <div class="links_row">
+                                    <a class="btn btn-default pull-right btn-sm select_row_add" href="#"><i class="fas fa-plus"></i> <span><?php $this->_('AdminCompanyClientOptions.editcustomfield.categorylink_select');?></span></a>
+                                </div>
+                                <table class="table clear">
+                                    <thead>
+                                        <tr class="heading_row">
+                                            <td><?php $this->_('AdminCompanyClientOptions.addcustomfield.heading_select_value');?></td>
+                                            <td><?php $this->_('AdminCompanyClientOptions.addcustomfield.heading_select_option');?></td>
+                                            <td><?php $this->_('AdminCompanyClientOptions.addcustomfield.heading_select_default');?><span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.select_default');?></div></span></td>
+                                            <td class="last"></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    // Display each select option
+                                    $num_options = max(1, count(($vars->select['value'] ?? [])));
+                                    $set_default = ($num_options === 1);
+                                    for ($i = 0; $i < $num_options; $i++) {
+                                    ?>
+                                        <tr class="select_row">
+                                            <td><?php $this->Form->fieldText('select[value][]', ($vars->select['value'][$i] ?? null));?></td>
+                                            <td><?php $this->Form->fieldText('select[option][]', ($vars->select['option'][$i] ?? null));?></td>
+                                            <td><?php $this->Form->fieldRadio('select[default][]', '1', ($vars->select['default'][$i] ?? $set_default));?></td>
+                                            <td><a href="#" class="manage select_row_remove"><?php $this->_('AdminCompanyClientOptions.addcustomfield.text_remove');?></a></td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('show_client', '1', (($vars->show_client ?? null) == '1'), ['id' => 'show_client']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.show_client', true), 'show_client', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.show_client');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('read_only', '1', (($vars->read_only ?? null) == '1'), ['id' => 'read_only']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.read_only', true), 'read_only', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.read_only_field');?></div></span>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.required', true), 'required', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.required');?></div></span>
+                                <?php $this->Form->fieldSelect('required', ($required_types ?? null), ($vars->required ?? null), ['id' => 'required', 'class' => 'block']);?>
+                            </li>
+                            <li class="regex_enabled">
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.regex', true), 'regex', ['class' => 'inline']);?>
+                                <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.regex');?></div></span>
+                                <?php $this->Form->fieldText('regex', ($vars->regex ?? null), ['id' => 'regex', 'class' => 'block']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->fieldCheckbox('encrypted', '1', (($vars->encrypted ?? null) == '1'), ['id' => 'encrypted']);?>
+                                <?php $this->Form->label($this->_('AdminCompanyClientOptions.addcustomfield.field.encrypted', true), 'encrypted', ['class' => 'inline']);?>
+                                <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminCompanyClientOptions.!tooltip.encrypted');?></div></span>
+                            </li>
+                        </ul>
+                        <div class="button_row">
+                            <?php
+                            $this->Form->fieldSubmit('save', $this->_('AdminCompanyClientOptions.addcustomfield.field.addsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                $this->Form->end();
+                $this->Widget->end();
+                ?>
+            </section>
+        </div>
+
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        // Update form fields before submission
+        $('#add-custom-field').on('submit', function() {
+            updateFieldOrder();
+        });
+
+        // Show/hide custom regex field
+        if ($('#required').val() != 'regex')
+            $('.regex_enabled').hide();
+
+        showType($('#type').val());
+        updateRows();
+
+        $('#required').change(function() {
+            if ($(this).val() == 'regex')
+                $('.regex_enabled').show();
+            else
+                $('.regex_enabled').hide();
+        });
+
+        $('#type').change(function() {
+            hideAllTypes();
+
+            showType($(this).val());
+        });
+
+        // Display warning message when the field is marked as both required and not visible
+        $('#required, #show_client').change(function () {
+            if ($('#required').val() != '' && !$('#show_client').is(':checked')) {
+                $('#configuration_warning').show();
+            } else {
+                $('#configuration_warning').hide();
+            }
+        });
+        $('#required').change();
+
+        $('.select_row_add').click(function() {
+            var fields = $('tr.select_row:first').clone(true);
+            // Remove input text data and uncheck the default option if selected
+            fields.find('input[type=text]').val('');
+            fields.find('input[type=radio]').prop('checked', false);
+
+            // Add the new row
+            $('tr.select_row:last').after(fields);
+            updateRows();
+            return false;
+        });
+
+        $('.select_row_remove').click(function() {
+            if ($('tr.select_row').length > 1) {
+                $(this).closest('tr').remove();
+                updateRows();
+            }
+            return false;
+        });
+    });
+
+    // Show the selected type
+    function showType(value) {
+        switch (value) {
+            case 'checkbox':
+                $('.checkbox-type').show();
+                break;
+            case 'select':
+                $('.select-type').show();
+                break;
+            case 'text':
+                $('.text-type').show();
+                break;
+            case 'textarea':
+                $('.textarea-type').show();
+                break;
+        }
+    }
+
+    // Hides all custom field types
+    function hideAllTypes() {
+        $('.checkbox-type, .select-type, .text-type, .textarea-type').hide();
+    }
+
+    // Update the Select rows
+    function updateRows() {
+        var i = 0;
+        $('.select-type table tr.select_row').each(function() {
+            if (i++%2 == 1)
+                $(this).addClass('odd_row');
+            else
+                $(this).removeClass('odd_row');
+        });
+    }
+
+    // Set option indices for each row
+    function updateFieldOrder() {
+        // Set proper indices
+        var row = 0;
+        $('#add-custom-field table tr.select_row').each(function() {
+            var input = $(this).find('input');
+
+            $(input).each(function() {
+                $(this).prop('name', $(this).prop('name').replace('[]', '[' + row + ']'));
+            });
+
+            row++;
+        });
+    }
+");

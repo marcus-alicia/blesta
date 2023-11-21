@@ -1,0 +1,55 @@
+
+        <div class="title_row">
+            <h3><?php $this->_('AdminSearch.invoices.heading');?></h3>
+        </div>
+        <?php
+        if ((isset($invoices) ? $invoices : false) && ($num_invoices = count($invoices)) > 0) {
+        ?>
+        <table class="table">
+            <tr class="heading_row">
+                <td><span><?php $this->_('AdminSearch.invoice.heading_invoice');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_client_id');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_amount');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_paid');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_due');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_date_closed');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_date_billed');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_date_due');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_sent');?></span></td>
+                <td><span><?php $this->_('AdminSearch.invoice.heading_status');?></span></td>
+                <td class="last"><span><?php $this->_('AdminSearch.invoice.heading_options');?></span></td>
+            </tr>
+            <?php
+            for ($i = 0; $i < $num_invoices; $i++) {
+            ?>
+            <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : '';?>>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/editinvoice/' . (isset($invoices[$i]->client_id) ? $invoices[$i]->client_id : null) . '/' . (isset($invoices[$i]->id) ? $invoices[$i]->id : null));?>"><?php (print (isset($invoices[$i]->id_code) ? $this->Html->safe($invoices[$i]->id_code) : null));?></a></td>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/view/' . (isset($invoices[$i]->client_id) ? $this->Html->safe($invoices[$i]->client_id) : null) . '/');?>"><?php (print (isset($invoices[$i]->client_id_code) ? $this->Html->safe($invoices[$i]->client_id_code) : null));?></a></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($invoices[$i]->total) ? $this->Html->safe($invoices[$i]->total) : null), (isset($invoices[$i]->currency) ? $this->Html->safe($invoices[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($invoices[$i]->paid) ? $this->Html->safe($invoices[$i]->paid) : null), (isset($invoices[$i]->currency) ? $this->Html->safe($invoices[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php echo $this->CurrencyFormat->format((isset($invoices[$i]->due) ? $this->Html->safe($invoices[$i]->due) : null), (isset($invoices[$i]->currency) ? $this->Html->safe($invoices[$i]->currency) : null), ['html_code' => true]);?></td>
+                <td><?php echo $this->Date->cast((isset($invoices[$i]->date_closed) ? $this->Html->safe($invoices[$i]->date_closed) : null));?></td>
+                <td><?php echo $this->Date->cast((isset($invoices[$i]->date_billed) ? $this->Html->safe($invoices[$i]->date_billed) : null));?></td>
+                <td><?php echo $this->Date->cast((isset($invoices[$i]->date_due) ? $this->Html->safe($invoices[$i]->date_due) : null));?></td>
+                <td><?php echo empty($invoices[$i]->delivery_date_sent) ? $this->_('AdminSearch.invoices.status_unsent', true) : $this->_('AdminSearch.invoices.status_sent', true);?></td>
+                <td><?php $this->_('AdminSearch.invoices.status_' . (isset($invoices[$i]->status) ? $this->Html->safe($invoices[$i]->status) : null));?></td>
+                <td><a href="<?php echo $this->Html->safe($this->base_uri . 'clients/viewinvoice/' . (isset($invoices[$i]->client_id) ? $invoices[$i]->client_id : null) . '/' . (isset($invoices[$i]->id) ? $invoices[$i]->id : null) . '/');?>"><?php $this->_('AdminSearch.invoice.option_view');?></a></td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
+            <?php
+            if (isset($this->Pagination)) {
+                $this->Pagination->build();
+            }
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box">
+                <?php $this->_('AdminSearch.invoice.no_results');?>
+            </div>
+        </div>
+        <?php
+        }
+        ?>

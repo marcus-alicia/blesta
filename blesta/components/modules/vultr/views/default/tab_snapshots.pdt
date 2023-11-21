@@ -1,0 +1,89 @@
+    <div class="title_row first">
+        <h3><?php $this->_('Vultr.tab_snapshots.snapshots'); ?></h3>
+    </div>
+    <div class="pad">
+        <?php
+        if (!empty($snapshots)) {
+            $this->Form->create();
+            $this->Form->fieldHidden('snapshotid', '', ['id' => 'snapshotid']);
+            $this->Form->fieldHidden('action', '', ['id' => 'action']);
+            ?>
+        <table class="table">
+            <tbody>
+                <tr class="heading_row">
+                    <td><span><?php $this->_('Vultr.tab_snapshots.heading_row_snapshot_id'); ?></span></td>
+                    <td><span><?php $this->_('Vultr.tab_snapshots.heading_row_description'); ?></span></td>
+                    <td><span><?php $this->_('Vultr.tab_snapshots.heading_row_status'); ?></span></td>
+                    <td class="last"><span><?php $this->_('Vultr.tab_snapshots.heading_row_options'); ?></span></td>
+                </tr>
+                <?php
+                $i = 0;
+                foreach ($snapshots as $snapshot) {
+                ?>
+                <tr<?php echo ($i % 2 == 1) ? ' class="odd_row"' : ''; ?>>
+                    <td><strong><?php echo (isset($snapshot->id) ? $this->Html->safe($snapshot->id) : null); ?></strong></td>
+                    <td><?php echo (isset($snapshot->description) ? $this->Html->safe($snapshot->description) : null); ?></td>
+                    <td><?php echo ucwords($this->Html->safe($snapshot->status)); ?></td>
+                    <td>
+                        <a class="restore-snapshot submit restore-snapshot" href="#" data-id="<?php echo (isset($snapshot->id) ? $this->Html->safe($snapshot->id) : null); ?>"><?php $this->_('Vultr.tab_snapshots.restore_snapshot'); ?></a>,
+                        <a class="manage submit remove-snapshot" href="#" data-id="<?php echo (isset($snapshot->id) ? $this->Html->safe($snapshot->id) : null); ?>"><?php $this->_('Vultr.tab_snapshots.remove_snapshot'); ?></a>
+                    </td>
+                </tr>
+                    <?php
+                    $i++;
+                }
+                ?>
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('a.restore-snapshot').on('click', function() {
+                    $('#snapshotid').val($(this).attr('data-id'));
+                    $('#action').val('restore');
+                });
+
+                $('a.remove-snapshot').on('click', function() {
+                    $('#snapshotid').val($(this).attr('data-id'));
+                    $('#action').val('remove');
+                });
+            });
+        </script>
+            <?php
+            $this->Form->end();
+        } else {
+        ?>
+        <div class="empty_section">
+            <div class="empty_box"><?php $this->_('Vultr.tab_snapshots.no_snapshots'); ?></div>
+        </div>
+        <?php
+        }
+        ?>
+    </div>
+
+    <?php
+    $this->Form->create();
+    $this->Form->fieldHidden('action', 'create');
+    ?>
+    <div class="title_row">
+        <h3><?php $this->_('Vultr.tab_snapshots.heading_create'); ?></h3>
+    </div>
+    <div class="pad">
+        <ul>
+            <li>
+                <?php
+                $this->Form->label($this->_('Vultr.tab_snapshots.field_description', true), 'description');
+                $this->Form->fieldText('description', (isset($vars->description) ? $vars->description : null), ['id' => 'description', 'class' => 'form-control', 'placeholder' => $this->_('Vultr.tab_snapshots.field_description', true)]);
+                ?>
+            </li>
+        </ul>
+    </div>
+
+    <div class="pad">
+        <div class="links_row">
+            <a class="btn btn-primary submit pull-right" href="#"><span><?php $this->_('Vultr.tab_snapshots.field_create_submit'); ?></span></a>
+        </div>
+    </div>
+    <?php
+    $this->Form->end();
+    ?>

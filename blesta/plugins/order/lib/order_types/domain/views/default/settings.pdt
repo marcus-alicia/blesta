@@ -1,0 +1,142 @@
+            <div class="title_row first">
+                <h3><?php $this->_("OrderTypeDomain.settings.domain_group_title");?></h3>
+            </div>
+
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldSelect("meta[domain_group]", ($package_groups ?? null), ($vars->meta['domain_group'] ?? null));
+                        ?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="title_row first">
+                <h3><?php $this->_("OrderTypeDomain.settings.free_domain_title");?></h3>
+            </div>
+
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->fieldCheckbox('meta[free_domain]', '1', ($vars->meta['free_domain'] ?? null) == '1', ['id' => 'free_domain']);
+                        $this->Form->label($this->_('OrderTypeDomain.settings.field_free_domain', true), 'free_domain', ['class' => 'inline']);
+                        ?>
+                        <span class="tooltip block"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('OrderTypeDomain.settings.tooltip_free_domain', true));?></div></span>
+                    </li>
+                    <li id="free_domain_tlds" style="display: none;">
+                        <table>
+                            <tr>
+                                <td><?php $this->Form->label($this->_('OrderTypeDomain.settings.text_assigned_tlds', true));?></td>
+                                <td></td>
+                                <td><?php $this->Form->label($this->_('OrderTypeDomain.settings.text_available_tlds', true));?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('meta[tlds][]', ($vars->meta['tlds'] ?? null), [], ['class' => 'assigned']);?>
+                                </td>
+                                <td><a href="#" class="move_left">&nbsp;</a> &nbsp; <a href="#" class="move_right">&nbsp;</a></td>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect(null, ($tlds ?? null), [], ['class' => 'available']);?>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li id="free_domain_packages" style="display: none;">
+                        <table>
+                            <tr>
+                                <td><?php $this->Form->label($this->_('OrderTypeDomain.settings.text_assigned_package_groups', true));?></td>
+                                <td></td>
+                                <td><?php $this->Form->label($this->_('OrderTypeDomain.settings.text_available_package_groups', true));?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('meta[package_groups][]', ($vars->meta['package_groups'] ?? null), [], ['class' => 'assigned']);?>
+                                </td>
+                                <td><a href="#" class="move_left">&nbsp;</a> &nbsp; <a href="#" class="move_right">&nbsp;</a></td>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect(null, ($eligible_package_groups ?? null), [], ['class' => 'available']);?>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li id="free_domain_term" style="display: none;">
+                        <?php $this->Form->label($this->_('OrderTypeDomain.settings.text_term', true));?>
+                        <table class="table mt-1" style="max-width: 545px;">
+                            <tr class="heading_row">
+                                <td><?php $this->Form->label($this->_('OrderTypeDomain.settings.heading_term', true), 'term');?></td>
+                                <td><?php $this->Form->label($this->_('OrderTypeDomain.settings.heading_period', true), 'period');?></td>
+                                <td class="last"><?php $this->Form->label($this->_('OrderTypeDomain.settings.heading_options', true), 'period');?></td>
+                            </tr>
+                            <tr>
+                                <td class="small"><?php $this->Form->fieldText('meta[term]', ($vars->meta['term'] ?? '1'), ['id' => 'term', 'class' => 'stretch']);?></td>
+                                <td class="small"><?php $this->Form->fieldSelect('meta[period]', ($pricing_periods ?? null), ($vars->meta['period'] ?? 'year'), ['id' => 'period']);?></td>
+                                <td class="last medium">
+                                    <?php
+                                    $this->Form->fieldCheckbox('meta[limit_term]', '1', ($vars->meta['limit_term'] ?? null) == '1', ['id' => 'limit_term']);
+                                    $this->Form->label($this->_('OrderTypeDomain.settings.field_limit_term', true), 'limit_term', ['class' => 'inline']);
+                                    ?>
+                                    <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php echo nl2br($this->_('OrderTypeDomain.settings.tooltip_limit_term', true));?></div></span>
+
+                                    <br>
+                                    <?php
+                                    $this->Form->fieldCheckbox('meta[first_term]', '1', ($vars->meta['first_term'] ?? null) == '1', ['id' => 'first_term']);
+                                    $this->Form->label($this->_('OrderTypeDomain.settings.field_first_term', true), 'first_term', ['class' => 'inline']);
+                                    ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+            </div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var initialized = false;
+        // Toggle free domain options
+        function toggleFreeDomain() {
+            if ($('#free_domain').is(':checked')) {
+                $('#free_domain_tlds').show();
+                $('#free_domain_packages').show();
+                $('#free_domain_term').show();
+                if (initialized) {
+                    $('#limit_term').prop('checked', true);
+                }
+            } else {
+                $('#free_domain_tlds').hide();
+                $('#free_domain_packages').hide();
+                $('#free_domain_term').hide();
+                if (initialized) {
+                    $('#limit_term').prop('checked', false);
+                }
+            }
+        }
+        toggleFreeDomain();
+        initialized = true;
+        $(document).on('change','#free_domain', toggleFreeDomain);
+
+        // Move packages from right to left
+        $('.move_left').click(function() {
+            $(this).parent().parent().find('select.available option:selected').appendTo(
+                $(this).parent().parent().find('select.assigned')
+            );
+
+            return false;
+        });
+
+        // Move packages from left to right
+        $('.move_right').click(function() {
+            $(this).parent().parent().find('select.assigned option:selected').appendTo(
+                $(this).parent().parent().find('select.available')
+            );
+
+            return false;
+        });
+
+        // Submit assigned TLDS
+        $('#order_form').submit(function() {
+            $('select.assigned option').prop('selected', true);
+        });
+    });
+</script>

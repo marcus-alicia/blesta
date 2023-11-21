@@ -1,0 +1,176 @@
+<?php
+if ($use_central_api != true ) {
+    $this->Form->create($this->base_uri . "services/manage/" . (isset($service_id) ? $service_id : null) . "/tabClientReissueCert/");
+    $this->Form->fieldHidden("thesslstore_reissue_step", $step);
+    ?>
+    <div class="row panel-fix">
+        <div class="col-md-12">
+            <?php
+            //start step 1
+            if ($step == 1) {
+            ?>
+                <h4><?php $this->_("ThesslstoreModule.tab_reissue_cert.heading");?></h4>
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_("ThesslstoreModule.service_field.thesslstore_csr", true).'*', "thesslstore_csr");
+                    $this->Form->fieldTextArea("thesslstore_csr", (isset($thesslstore_csr) ? $thesslstore_csr : null), array('id' => "thesslstore_csr", 'class'=>"form-control", 'rows'=>8));
+                    ?>
+                </div>
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_("ThesslstoreModule.service_field.thesslstore_webserver_type", true).'*', "thesslstore_webserver_type");
+                    $this->Form->fieldSelect("thesslstore_webserver_type", (isset($thesslstore_webserver_types) ? $thesslstore_webserver_types : null), (isset($thesslstore_webserver_type) ? $thesslstore_webserver_type : null), array('id' => "thesslstore_webserver_type", 'class'=>"form-control"));
+                    ?>
+                </div>
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($this->_("ThesslstoreModule.service_field.thesslstore_signature_algorithm", true).'*', "thesslstore_signature_algorithm");
+                    $this->Form->fieldSelect("thesslstore_signature_algorithm", (isset($thesslstore_signature_algorithms) ? $thesslstore_signature_algorithms : null), (isset($thesslstore_signature_algorithm) ? $thesslstore_signature_algorithm : null), array('id' => "thesslstore_signature_algorithm", 'class'=>"form-control"));
+                    ?>
+                </div>
+
+                <?php
+                if ($san_count > 0) {
+                ?>
+                    <?php
+                    for ($i = 1; $i <= $san_count; $i++) {
+                    ?>
+                        <div class="form-group">
+                            <?php
+                            $this->Form->label($this->_("ThesslstoreModule.service_field.thesslstore_additional_san", true).$i, "thesslstore_additional_san".$i);
+                            $this->Form->fieldText("thesslstore_additional_san[]", (isset($thesslstore_additional_san[$i - 1]) ? $thesslstore_additional_san[$i - 1] : null), array('id' => "thesslstore_additional_san".$i, 'class'=>"form-control"));
+                            ?>
+                        </div>
+                    <?php
+                    }
+                    ?>
+                <?php
+                }
+
+                //auth type
+                if ($vendor_name == 'COMODO') {
+                ?>
+                    <h4><?php $this->_("ThesslstoreModule.tab_generate_cert.heading_auth_method");?>*</h4>
+                    <?php
+                    $this->Form->fieldRadio("thesslstore_auth_method", "EMAIL", ($thesslstore_auth_method == 'EMAIL'), array('id' => "auth_email") );
+                    $this->Form->label("E-Mail", "auth_email");
+
+                    $this->Form->fieldRadio("thesslstore_auth_method", "HTTP", ($thesslstore_auth_method == 'HTTP'), array('id' => "auth_http") );
+                    $this->Form->label("HTTP File Based", "auth_http");
+
+                    $this->Form->fieldRadio("thesslstore_auth_method", "HTTPS", ($thesslstore_auth_method == 'HTTPS'), array('id' => "auth_https") );
+                    $this->Form->label("HTTPS File Based", "auth_https");
+                    ?>
+                <?php
+                } else {
+                    $this->Form->fieldHidden("thesslstore_auth_method", $thesslstore_auth_method);
+                }
+                ?>
+                <?php
+                //end step 1
+                ?>
+            <?php
+            } elseif ($step == 2) {
+            ?>
+                <?php
+                //start step 2
+
+                $this->Form->fieldHidden("thesslstore_csr", $thesslstore_csr);
+                $this->Form->fieldHidden("thesslstore_webserver_type", $thesslstore_webserver_type);
+                $this->Form->fieldHidden("thesslstore_signature_algorithm", $thesslstore_signature_algorithm);
+                $this->Form->fieldHidden("thesslstore_auth_method", $thesslstore_auth_method);
+
+                //Additional SAN
+                if (isset($thesslstore_additional_san)) {
+                    foreach($thesslstore_additional_san as $additional_san) {
+                        $this->Form->fieldHidden("thesslstore_additional_san[]", $additional_san);
+                    }
+                }
+                ?>
+                <h4><?php $this->_("ThesslstoreModule.tab_generate_cert.heading_approver_email");?></h4>
+                <?php
+                foreach($approver_email_list as $dm => $email_list) {
+                ?>
+                    <?php
+                    $selected = isset($selected_emails[$dm]) ? $selected_emails[$dm] : "";
+                    ?>
+                    <div class="form-group">
+                        <?php
+                        $this->Form->label($dm.'*', "for_".$dm);
+                        $this->Form->fieldSelect("thesslstore_approver_emails[]", (isset($email_list) ? $email_list : null), $selected, array('id' => "for_".$dm, 'class'=>"form-control"));
+                        ?>
+                    </div>
+                <?php
+                }
+                //end step 2
+                ?>
+            <?php
+            } elseif ($step == 3) {
+            ?>
+                <h4><?php $this->_("ThesslstoreModule.tab_generate_cert.heading_step3");?></h4>
+                <?php
+                if ($auth_file_name == '') {?>
+                    <p>
+                        Your SSL certificate reissue process has now been completed and sent to the
+                        Certificate Authority for validation. You should receive an email from them shortly to approve it.
+                    </p>
+                <?php
+                } else {
+                ?>
+                    <p>
+                        For File Based Authentication, please create a folder structure "/.well-known/pki-validation/" under root directory and create file using following details or download the Authentication file by clicking the "Download Auth File" button and place it in the "/.well-known/pki-validation/" of the HTTP server, like so: http://www.example.com/.well-known/pki-validation/<?php echo (isset($auth_file_name) ? $this->Html->safe($auth_file_name) : null); ?>. It may take some time for file to be automatically validated and cert to be issued by Certificate Authority.
+                    </p>
+                    <p>
+                        File Name: <?php echo (isset($auth_file_name) ? $this->Html->safe($auth_file_name) : null); ?>
+                    </p>
+                    <p>
+                        File Content: <?php echo (isset($auth_file_content) ? $this->Html->safe($auth_file_content) : null); ?>
+                    </p>
+                    <p>
+                        <a href="<?php echo (isset($download_auth_file_link) ? $this->Html->safe($download_auth_file_link) : null); ?>" class="btn btn-light btn-xs" type="button">
+                            <?php $this->_("ThesslstoreModule.tab_DownloadAuthFile");?>
+                        </a>
+                    </p>
+                <?php
+                }
+            }
+            ?>
+        </div>
+    </div>
+    <?php if ($step != 3 ) { ?>
+        <button name="thesslstore_reissue_submit" class="btn btn-light float-right submit" type="submit">
+            <?php $this->_("ThesslstoreModule.tab_reissue_cert.submit");?>
+        </button>
+    <?php
+    }
+
+    $this->Form->end();
+    ?>
+    <script type="text/javascript">
+    	$(document).ready(function() {
+    	    //hide success meassage on step 2
+    	    var step = <?php echo $step; ?> ;
+    	    if (step == 2) {
+    	        $('div.alert-success').remove();
+    	    }
+
+    		//Replace default success message
+    		$('div.alert-success p').text('<?php $this->_("ThesslstoreModule.success.reissue_cert");?>');
+    	});
+    </script>
+<?php
+} else {
+?>
+    <?php
+    //for central api link
+    ?>
+    <div class="row panel-fix">
+        <div class="col-md-12">
+            <h4><?php $this->_("ThesslstoreModule.tab_reissue_cert.heading");?></h4>
+            <a target="_blank" href="<?php echo (isset($central_api_link) ? $this->Html->safe($central_api_link) : null); ?>" class="btn btn-light" type="button"><?php $this->_("ThesslstoreModule.tab_reissue_cert.submit"); ?></a>
+        </div>
+    </div>
+    <?php
+}
+?>
+

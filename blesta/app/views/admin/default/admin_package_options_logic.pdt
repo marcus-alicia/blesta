@@ -1,0 +1,368 @@
+        <?php
+        echo ($message ?? null);
+
+        $tabs = [];
+        foreach (($group_options ?? []) as $id => $name) {
+            $tabs[] = [
+                'name' => $name,
+                'current' => ($id == ($option->id ?? null)),
+                'attributes' => [
+                    'href' => $this->base_uri . 'package_options/logic/' . ($group->id ?? null) . '/' . $id . '/',
+                    'class' => 'ajax'
+                ]
+            ];
+        }
+
+        $this->Widget->clear();
+        $this->Widget->setTabs($tabs);
+        $this->Widget->setWidgetButton(['href' => $this->base_uri . 'package_options/logicsettings/' . ($group->id ?? null), 'class' => 'setting']);
+        $this->Widget->create($this->_('AdminPackageOptions.logic.boxtitle', true), ['id' => 'admin_option_group_dependencies'], ($render_section ?? null));
+        ?>
+        <div class="inner">
+            <?php
+            $this->Form->create();
+            ?>
+            <p class="error_box alert"><?php $this->_('AdminPackageOptions.logic.text_description', false, $option->label);?></p>
+            <div class="title_row"><h3><?php $this->_('AdminPackageOptions.logic.title_condition_sets');?></h3></div>
+            <div class="pad">
+                <div>
+                    <?php
+                    $condition_sets = (!empty($vars->condition_sets) ? $vars->condition_sets : [(object)[]]);
+                    for ($i = 0; $i < count($condition_sets); $i++) {
+                        $condition_set = $condition_sets[$i];
+                    ?>
+                    <div class="condition_set_row" data-row_index="<?php echo $i;?>">
+                        <h3 class="text_condition_or mt-3 mb-3 text-center"><?php $this->_('AdminPackageOptions.logic.text_or');?></h3>
+                        <div class="well p-2">
+                            <p class="mb-0">
+                            <?php
+                            if (isset($condition_set->id)) {
+                                $this->Form->fieldHidden('condition_sets[' . $i . '][id]', $condition_set->id, ['class' => 'id_field']);
+                            }
+
+                            $this->Form->fieldHidden('condition_sets[' . $i . '][option_id]', ($option->id ?? null));
+                            $this->Form->fieldHidden('condition_sets[' . $i . '][option_group_id]', ($group->id ?? null));
+                            if (($option->type ?? null) == 'radio' || ($option->type ?? null) == 'select') {
+                                $this->Form->label($this->_('AdminPackageOptions.logic.field_option_value_id', true), null, ['class' => 'mr-1 font-weight-bold']);
+                                $option_values = $this->Form->collapseObjectArray(($option->values ?? []), 'name', 'id');
+                                $this->Form->fieldMultiSelect('condition_sets[' . $i . '][option_value_ids][]', $option_values, ($condition_set->option_value_ids ?? null), ['class' => 'h-25 w-100']);
+                            } else {
+                                $this->Form->fieldHidden('condition_sets[' . $i . '][option_value_ids][]', ($option->values[0]->id ?? null));
+                            }
+                            ?>
+                            </p>
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr class="heading_row">
+                                        <td><?php $this->_('AdminPackageOptions.logic.text_if');?></td>
+                                        <td><?php $this->_('AdminPackageOptions.logic.heading_trigger_option_id');?><span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPackageOptions.logic.tooltip_trigger_option_id');?></div></span></td>
+                                        <td><?php $this->_('AdminPackageOptions.logic.heading_operator');?></td>
+                                        <td><?php $this->_('AdminPackageOptions.logic.heading_value');?><span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminPackageOptions.logic.tooltip_value');?></div></span></td>
+                                        <td class="last"><?php $this->_('AdminPackageOptions.logic.heading_options');?></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $conditions = ($condition_set->conditions ?? [(object)[]]);
+                                    for ($j = 0; $j < count($conditions); $j++) {
+                                        $condition = $conditions[$j];
+                                        $name_prefix = 'condition_sets[' . $i . '][conditions][' . $j .']';
+                                        $type = ($condition->triggering_option->type ?? null);
+                                    ?>
+                                    <tr class="condition_row" data-row_index="<?php echo $j;?>">
+                                        <td><span class="text_condition_and"><?php $this->_('AdminPackageOptions.logic.text_and');?></span></td>
+                                        <td>
+                                            <?php
+                                            if (isset($condition->id)) {
+                                                $this->Form->fieldHidden($name_prefix . '[id]', $condition->id, ['class' => 'id_field']);
+                                            }
+
+                                            $this->Form->fieldSelect($name_prefix . '[trigger_option_id]', ($package_options ?? []), ($condition->trigger_option_id ?? null), ['class' => 'trigger_option_id']);
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $this->Form->fieldSelect($name_prefix . '[operator]', ($operators ?? []), ($condition->operator ?? null), ['class' => 'comparison_operator']);
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            // Get the trigger value
+                                            $trigger_value_id = isset($condition->triggering_option->values[0]->id)
+                                                ? ($condition->triggering_option->values[0]->id)
+                                                : null;
+                                            // Get the select values
+                                            $select_values = $this->Form->collapseObjectArray(($condition->triggering_option->values ?? []), 'name', 'id');
+                                            $selected_value = isset($condition->value_id)
+                                                ? (is_array($condition->value_id) ? $condition->value_id[0] : $condition->value_id)
+                                                : null;
+                                            $selected_values = isset($condition->value_id)
+                                                ? (is_array($condition->value_id) ? $condition->value_id : [$condition->value_id])
+                                                : [];
+
+                                            // Add aliases
+                                            $disabled_options = ['disabled' => 'disabled', 'style' => 'display:none;'];
+
+                                            $this->Form->fieldHidden($name_prefix . '[value_id]', $trigger_value_id, array_merge(['class' => 'value_text value_id'], (!in_array($type, ['radio', 'select', 'checkbox', 'quantity']) ? [] : $disabled_options)));
+                                            $this->Form->fieldText($name_prefix . '[value]', ($condition->value ?? null), array_merge(['class' => 'value_text'], (!in_array($type, ['radio', 'select', 'checkbox', 'quantity']) ? [] : $disabled_options)));
+
+                                            $this->Form->fieldHidden($name_prefix . '[value_id]', $trigger_value_id, array_merge(['class' => 'value_quantity value_id'], ($type === 'quantity' ? [] : $disabled_options)));
+                                            $this->Form->fieldText($name_prefix . '[value]', ($condition->value ?? null), array_merge(['class' => 'value_quantity', 'type' => 'number'], ($type === 'quantity' ? [] : $disabled_options)));
+
+                                            $this->Form->fieldSelect($name_prefix . '[value_id]', $select_values, $selected_value, array_merge(['class' => 'value_select'], (in_array($type, ['radio', 'select']) && !in_array($condition->operator, ['in', 'notin']) ? [] : $disabled_options)));
+                                            $this->Form->fieldMultiSelect($name_prefix . '[value_id][]', $select_values, $selected_values, array_merge(['class' => 'value_multiselect'], (in_array($type, ['radio', 'select']) && in_array($condition->operator, ['in', 'notin']) ? [] : $disabled_options)));
+
+                                            $this->Form->fieldHidden($name_prefix . '[value_id]', $trigger_value_id, array_merge(['class' => 'value_checkbox value_id'], (!in_array($type, ['radio', 'select', 'checkbox']) ? [] : $disabled_options)));
+                                            $this->Form->fieldHidden($name_prefix . '[value]', null, array_merge(['class' => 'value_checkbox value'], ($type == 'checkbox' ? [] : $disabled_options)));
+                                            $this->Form->fieldCheckbox(null, $trigger_value_id, true, array_merge(['class' => 'value_checkbox disabled', 'disabled' => 'disabled'], ($type == 'checkbox' ? [] : $disabled_options)));
+                                            ?>
+                                        </td>
+                                        <td><a class="condition_row_add" href="#"><?php $this->_('AdminPackageOptions.logic.option_add');?></a>, <a href="#" class="manage condition_row_remove"><?php $this->_('AdminPackageOptions.logic.option_remove');?></a></td>
+                                    </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                            <div class="mt-1"><a href="#" class="manage condition_set_remove"><?php $this->_('AdminPackageOptions.logic.option_remove_set');?></a></div>
+                        </div>
+                    </div>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <div class="links_row mt-2">
+                    <a class="btn btn-default btn-sm condition_set_add" href="#"><span><?php $this->_('AdminPackageOptions.logic.option_add_set');?></span></a>
+                    <?php $this->Form->fieldSubmit('submit', $this->_('AdminPackageOptions.logic.field_submit', true), ['class' => 'btn btn-primary btn-sm pull-right']);?>
+                </div>
+            </div>
+            <?php
+            $this->Form->end();
+            ?>
+        </div>
+        <?php
+        $this->Widget->end();
+        ?>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // Handle condition set add/remove events
+        $('.inner .pad').on('click', '.condition_set_add', cloneSetRow);
+        $('.inner .pad').on('click', '.condition_set_remove', removeSetRow);
+
+        // Handle condition add/row events
+        $('.inner .pad').on('click', '.condition_row_add', cloneConditionRow);
+        $('.inner .pad').on('click', '.condition_row_remove', removeConditionRow);
+
+        // Handle value field update when the trigger option is changed
+        $('.inner .pad').on('change', '.trigger_option_id', handleTriggerOptionChange);
+    });
+
+    function cloneSetRow() {
+        // Clone the condition set
+        var new_set = $('.condition_set_row').last().clone(true);
+
+        // Remove all condition rows but the first
+        var first_condition = new_set.find('.condition_row').first();
+        new_set.find('.condition_row').not(first_condition).remove();
+
+        // Remove ID fields
+        new_set.find('.id_field').remove();
+
+        // Remove the input data
+        new_set.find(".condition_row input:not([type='checkbox']):not([type='radio']),select,textarea").val('');
+        new_set.find(".condition_row input[type='checkbox']").prop('checked', true);
+        new_set.find(".condition_row input[type='radio']").prop('checked', false);
+
+        // Update the field names
+        var set_index = new_set.data('row_index');
+        new_set.find("input,select,textarea").each(function () {
+            var field_name = $(this).attr('name');
+            $(this).attr(
+                'name',
+                field_name.replace(set_index, set_index + 1)
+            );
+        });
+        // Update set index
+        new_set.data('row_index', set_index + 1);
+
+        // Show the text value field
+        manageValueOperatorFields(new_set, 'text');
+
+        // Append to the end of the set list
+        $('.condition_set_row').last().after(new_set);
+    }
+
+    function removeSetRow() {
+        $(this).parents('.condition_set_row').remove();
+    }
+
+    function cloneConditionRow() {
+        // Clone the value row
+        var condition_set = $(this).parents('.condition_set_row');
+        var new_condition = condition_set.find('.condition_row').last().clone(true);
+
+        // Remove ID fields
+        new_condition.find('.id_field').remove();
+
+        // Remove the input data
+        new_condition.find("input:not([type='checkbox']):not([type='radio']),select,textarea").val('');
+        new_condition.find("input[type='checkbox']").prop('checked', true);
+        new_condition.find("input[type='radio']").prop('checked', false);
+
+        // Re-index the condition fields for this row
+        var set_index = condition_set.data('row_index');
+        var condition_index = new_condition.data('row_index');
+        new_condition.find("input,select,textarea").each(function () {
+            // Update the field names
+            var condition_field_name = $(this).attr('name');
+            $(this).attr(
+                'name',
+                condition_field_name
+                    .replace(set_index, 'index')
+                    .replace(condition_index, condition_index + 1)
+                    .replace('index', set_index)
+            );
+        });
+        new_condition.data('row_index', condition_index + 1);
+
+        // Show the text value field
+        manageValueOperatorFields(new_condition, 'text');
+
+        // Append to the end of the condition list
+        condition_set.find('tbody').append(new_condition);
+    }
+
+    function removeConditionRow() {
+        // Only allow removal if there will be at least one value after
+        if ($(this).parents('.condition_set_row').find('.condition_row').length > 1) {
+            $(this).parents('.condition_row').remove();
+        }
+    }
+
+    function handleTriggerOptionChange()
+    {
+        var row = $(this).parents('.condition_row');
+
+        // Fetch the trigger package option via ajax
+        $(this).blestaRequest('GET', '<?php echo $this->Html->safe($this->base_uri . 'package_options/getoption/');?>' + $(this).val(), null,
+            function (data) {
+                if (data) {
+                    row.off('change', '.comparison_operator', handleMultiSelectTrigger);
+                    if (data.type === 'select' || data.type === 'radio') {
+                        // Show only the select value field
+                        manageValueOperatorFields(row, 'select');
+
+                        // Remove any existing select options
+                        var selected_values = [];
+                        row.find('.value_select :selected,.value_multiselect  :selected').each(function () {
+                            selected_values[selected_values.length] = $(this).val();
+                        });
+                        row.find('.value_select option,.value_multiselect option').remove();
+
+                        // Add a new select option for each of the trigger option's values
+                        data.values.forEach(function (value) {
+                            var o = new Option(value.name, value.id);
+                            $(o).html(value.name);
+
+                            if (selected_values.includes(value.id)) {
+                                $(o).prop('selected', true);
+                            }
+
+                            row.find('.value_select,.value_multiselect').append(o);
+                        });
+                        row.on('change', '.comparison_operator', handleMultiSelectTrigger);
+                        row.find('.comparison_operator').change();
+                        return;
+                    } else if (data.type === 'checkbox') {
+                        // Show only the checkbox value field
+                        manageValueOperatorFields(row, 'checkbox');
+
+                        // Set the checkbox option value ID
+                        row.find('.value_checkbox.value_id').val(data.values[0].id);
+                        // Set the checkbox value
+                        row.find('.value_checkbox.value').val(data.values[0].value);
+                        row.find("input[type='checkbox']").prop('checked', true);
+                    } else if (data.type === 'quantity') {
+                        // Show only the quantity value field
+                        manageValueOperatorFields(row, 'quantity');
+
+                        // Set the quantity value to the option value ID
+                        row.find('.value_quantity.value_id').val(data.values[0].id);
+                    } else {
+                        // Show only the text value field
+                        manageValueOperatorFields(row, 'text');
+
+                        // Set the text value to the option value ID
+                        row.find('.value_text.value_id').val(data.values[0].id);
+                    }
+                }
+
+            }
+        );
+    }
+
+    function handleMultiSelectTrigger (e) {
+        row = $(this).parents('.condition_row');
+        handleMuliSelect(row);
+    }
+
+    function manageValueOperatorFields(row, show_field)
+    {
+        var value_types = ['text', 'checkbox', 'quantity', 'select', 'multiselect'];
+
+        value_types.forEach(function (type) {
+            if (type === show_field) {
+                if (show_field === 'multiselect') {
+                    handleMuliSelect(row);
+                } else {
+                    row.find('.value_' + type + ':not([type=checkbox])').prop('disabled', false);
+                    row.find('.value_' + type).show();
+                }
+            } else {
+                row.find('.value_' + type).prop('disabled', 'disabled');
+                row.find('.value_' + type).hide();
+            }
+        });
+
+
+        // Disable/enable the comparison operator
+        var current_operator = row.find('.comparison_operator').val();
+        row.find('.comparison_operator option').prop('disabled', 'disabled').hide();
+
+        var type_operators = {
+            'text':['=', '!=', 'in', 'notin'],
+            'select': ['=', '!=', 'in', 'notin'],
+            'quantity': ['>', '<', '=', '!='],
+            'checkbox': ['=', '!=']
+        };
+
+        var operators = type_operators[show_field];
+
+        if (operators.indexOf(current_operator) === -1)
+        {
+            row.find('.comparison_operator').val('=');
+        }
+        operators.forEach(function (operator) {
+            row.find('.comparison_operator option[value="' + operator + '"]').prop('disabled', false).show();
+        });
+    }
+
+
+    function handleMuliSelect(row)
+    {
+        if (row.find('.comparison_operator').val() === 'in' || row.find('.comparison_operator').val() === 'notin') {
+            row.find('.value_select').prop('disabled', 'disabled');
+            row.find('.value_select').hide();
+            row.find('.value_multiselect').prop('disabled', false);
+            row.find('.value_multiselect').show();
+        } else {
+            row.find('.value_select').prop('disabled', false);
+            row.find('.value_select').show();
+            row.find('.value_multiselect').prop('disabled', 'disabled');
+            row.find('.value_multiselect').hide();
+        }
+    }
+</script>

@@ -1,0 +1,76 @@
+
+<div id="credits_container">
+    <div id="credits_contents" style="position: relative; top:0px; left:0px;">
+        <div id="credits_logobox">
+            <img src="<?php echo $this->view_dir;?>images/logo.png" alt="Blesta" />
+            <p>
+                Copyright &copy; 2007-<?php echo $this->Date->format('Y');?> Phillips Data, Inc.<br />
+                Version <?php echo BLESTA_VERSION;?>
+            </p>
+        </div>
+        <h4>Phillips Data Staff</h4>
+        <p>
+            <strong>Project Manager</strong><br />
+            Paul Phillips
+        </p>
+        <p>
+            <strong>Lead Developer</strong><br />
+            Tyson Phillips
+        </p>
+        <p>
+            <strong>Programming</strong><br />
+            Tyson Phillips, Paul Phillips, Jonathan Reissmueller
+        </p>
+        <p>
+            <strong>Database Design</strong><br />
+            Tyson Phillips
+        </p>
+        <p>
+            <strong>Unit Testing</strong><br />
+            Tyson Phillips, Jonathan Reissmueller
+        </p>
+        <p>
+            <strong>User Interface Design</strong><br />
+            Paul Phillips
+        </p>
+        <p>
+            <strong>User Interface Development</strong><br />
+            Tyson Phillips, Jonathan Reissmueller
+        </p>
+        <p>
+            <strong>User Experience Coordinator</strong><br />
+            Paul Phillips
+        </p>
+        <p>
+            <strong>User Experience Design</strong><br />
+            Tyson Phillips, Paul Phillips
+        </p>
+        <p>
+            <strong>Sales and Marketing</strong><br />
+            Paul Phillips
+        </p>
+        <p>
+            <strong>Documentation</strong><br />
+            Tyson Phillips, Jonathan Reissmueller, Paul Phillips
+        </p>
+        <p>
+            <strong>Video Tutorials</strong><br />
+            Paul Phillips, Tyson Phillips
+        </p>
+        <p>
+            <strong>Resource Coordinator</strong><br />
+            Paul Phillips
+        </p>
+        <p>
+            <strong>Billing and Human Resources</strong><br />
+            Patricia Phillips
+        </p>
+        <p>
+            <em>Soli deo Gloria</em>
+        </p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() { $(this).blestaScrollDom("credits_contents", "credits_container", 3000, 5000, 10000); });
+</script>

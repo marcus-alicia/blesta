@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Date: Wed, 22 Jun 2022 15:22:01 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.2k-fips PHP/7.4.5
+X-Powered-By: PHP/7.4.5
+Set-Cookie: INTBSSEID=f45ef422bb2adbf0a1122a3f8cf42903; path=/; domain=.sandbox.internet.bs; HttpOnly
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Transfer-Encoding: chunked
+Content-Type: text/javascript; charset=utf-8
+
+{"transactid":"1542c06388d8e03e14613788ca6bd914","status":"SUCCESS","domain":"example.com","expirationdate":"2019\/03\/05","registrationdate":"2014\/03\/05","registrarlock":"DISABLED","privatewhois":"DISABLED","autorenew":"YES","domainstatus":"REGISTERED","contacts":{"registrant":{"firstname":"Test","lastname":"Api","email":"abc@test.com","phonenumber":"+33.146361234","organization":"","city":"Bahamas","street":"Bahamas","street2":"","stree3":"","postalcode":"123456","countrycode":"BS","country":"BAHAMAS"},"technical":{"firstname":"Test","lastname":"Api","email":"testapi@internet.bs","phonenumber":"+33.146361234","organization":"","city":"Bahamas","street":"Bahamas","street2":"","stree3":"","postalcode":"123456","countrycode":"BS","country":"BAHAMAS"},"admin":{"firstname":"Test","lastname":"Api","email":"testapi@internet.bs","phonenumber":"+33.146361234","organization":"","city":"Bahamas","street":"Bahamas","street2":"","stree3":"","postalcode":"123456","countrycode":"BS","country":"BAHAMAS"},"billing":{"firstname":"Test","lastname":"Api","email":"testapi@internet.bs","phonenumber":"+33.146361234","organization":"","city":"Bahamas","street":"Bahamas","street2":"","stree3":"","postalcode":"123456","countrycode":"BS","country":"BAHAMAS"}},"transferauthinfo":"testauthinfo"}

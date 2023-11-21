@@ -1,0 +1,93 @@
+
+    <h4><?php $this->_('Teamspeak.tab_client_tokens.heading_tokens'); ?></h4>
+    <div class="table-responsive">
+        <table class="table table-curved table-striped">
+            <thead>
+                <tr>
+                    <th><?php $this->_('Teamspeak.tab_client_tokens.tokens_heading.date'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_tokens.tokens_heading.token'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_tokens.tokens_heading.description'); ?></th>
+                    <th><?php $this->_('Teamspeak.tab_client_tokens.tokens_heading.options'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php
+            if (!empty($tokens->tokens)) {
+                foreach ($tokens->tokens as $token) {
+                    $date = date('M d, Y', $token->token_created); ?>
+                <tr>
+                    <td><?php echo (isset($date) ? $this->Html->safe($date) : null); ?></td>
+                    <td><?php echo (isset($token->token) ? $this->Html->safe($token->token) : null); ?></td>
+                    <td><?php echo (isset($token->token_description) ? $this->Html->safe($token->token_description) : null); ?></td>
+                    <td>
+                        <?php
+                            $this->Form->create();
+                        $this->Form->fieldHidden('action', 'delete_token');
+                        $this->Form->fieldHidden('token', $token->token); ?>
+                            <button class="btn btn-light btn-sm btn-danger">
+                                <i class="fas fa-trash"></i> <?php $this->_('Teamspeak.tab_client_tokens.action_delete_token'); ?>
+                            </button>
+                        <?php
+                            $this->Form->end(); ?>
+                    </td>
+                </tr>
+            <?php
+                }
+            } else {
+            ?>
+                <tr>
+                    <td colspan="4"><?php $this->_('Teamspeak.tab_client_tokens.text_no_tokens'); ?></td>
+                </tr>
+            <?php
+            }
+            ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row options">
+        <div class="col-md-12">
+            <a href="#" class="token btn btn-light float-right" style="margin-top: 5px;">
+                <i class="fas fa-plus"></i> <?php $this->_('Teamspeak.tab_client_tokens.action_token'); ?>
+            </a>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <div id="create_token" style="display:none;">
+        <hr />
+        <h4><?php $this->_('Teamspeak.tab_client_tokens.heading_create_token'); ?></h4>
+
+        <?php
+            $this->Form->create($this->base_uri . 'services/manage/' . (isset($service_id) ? $service_id : null) . '/tabClientTokens/');
+        ?>
+        <div class="w-100">
+            <div class="form-group">
+                <?php
+                    $this->Form->label($this->_('Teamspeak.tab_client_tokens.field_sgid', true), 'sgid');
+                    $this->Form->fieldSelect('sgid', $server_groups_options, (isset($vars->sgid) ? $vars->sgid : null), ['id' => 'sgid', 'class' => 'form-control']);
+                ?>
+            </div>
+            <div class="form-group">
+                <?php
+                    $this->Form->label($this->_('Teamspeak.tab_client_tokens.field_description', true), 'description');
+                    $this->Form->fieldText('description', (isset($vars->token) ? $vars->token : null), ['id' => 'description', 'class' => 'form-control', 'placeholder' => $this->_('Teamspeak.tab_client_tokens.field_description', true)]);
+                    $this->Form->fieldHidden('action', 'create_token');
+                ?>
+            </div>
+        </div>
+        <button class="btn btn-light float-right">
+            <i class="fas fa-plus"></i> <?php $this->_('Teamspeak.tab_client_tokens.field_token_submit'); ?>
+        </button>
+        <?php
+            $this->Form->end();
+        ?>
+    </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.options a.token').click(function() {
+        $('#create_token').toggle();
+    });
+});
+</script>

@@ -1,0 +1,42 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminTools.convertcurrency.boxtitle_currency', true));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminTools.convertcurrency.field_amount', true), 'amount');
+                        $this->Form->fieldText('amount', (isset($vars->amount) ? $vars->amount : null), ['id' => 'amount', 'class' => 'small']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminTools.convertcurrency.field_from', true), 'from_currency');
+                        $this->Form->fieldSelect('from_currency', (isset($currencies) ? $currencies : null), (isset($vars->from_currency) ? $vars->from_currency : null), ['id' => 'from_currency']);
+                        ?>
+                    </li>
+                    <li>
+                        <?php
+                        $this->Form->label($this->_('AdminTools.convertcurrency.field_to', true), 'to_currency');
+                        $this->Form->fieldSelect('to_currency', (isset($currencies) ? $currencies : null), (isset($vars->to_currency) ? $vars->to_currency : null), ['id' => 'to_currency']);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminTools.convertcurrency.field_currencysubmit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

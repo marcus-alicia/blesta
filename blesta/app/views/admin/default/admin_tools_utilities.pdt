@@ -1,0 +1,48 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminTools.utilities.boxtitle_utilities', true), ['id' => 'admin_tools_utilities'], (isset($render_section) ? $render_section : null));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="heading_row">
+                        <td><span><?php $this->_('AdminTools.utilities.heading_utility');?></span></td>
+                        <td><span><?php $this->_('AdminTools.utilities.heading_description');?></span></td>
+                        <td class="last"><span><?php $this->_('AdminTools.utilities.heading_options');?></span></td>
+                    </tr>
+                </thead>
+            <?php
+            $utf8mb4_postfix = '';
+            if ((isset($all_tables_utf8mb4) ? $all_tables_utf8mb4 : null)) {
+                $utf8mb4_postfix = $config_charset_mb4 ? '_supported' : '_config';
+            } elseif (!(isset($utf8mb4_requirements_met) ? $utf8mb4_requirements_met : true)) {
+                $utf8mb4_postfix = '_requirements';
+            }
+            $disabled = empty($utf8mb4_postfix) ? [] : ['disabled' => 'disabled'];
+            ?>
+                <tbody>
+                    <tr>
+                        <td>
+                            <?php $this->_('AdminTools.utilities.update_collation');?>
+                        </td>
+                        <td>
+                            <?php $this->_('AdminTools.utilities.text_update_to_utf8mb4' . $utf8mb4_postfix);?>
+                        </td>
+                        <td>
+                            <?php
+                            $this->Form->fieldSubmit('update_to_utf8mb4', $this->_('AdminTools.utilities.field_update_to_utf8mb4', true), array_merge(['class' => 'btn btn-sm btn-primary pull-left mr-2 ' . (!empty($disabled) ? ' disabled' : '')], $disabled));
+                            ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();
+        ?>

@@ -1,0 +1,42 @@
+
+        <?php
+        echo (isset($message) ? $message : null);
+
+        $this->Widget->clear();
+        $this->Widget->create($this->_('AdminKnowledgebase.editcategory.boxtitle_editcategory', true));
+
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        ?>
+        <div class="inner">
+            <div class="pad">
+                <ul>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminKnowledgebase.editcategory.field_name', true));?>
+                        <?php $this->Form->fieldText('name', (isset($vars->name) ? $vars->name : null), ['id'=>'name']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminKnowledgebase.editcategory.field_parent_id', true));?>
+                        <?php $this->Form->fieldSelect('parent_id', (isset($categories) ? $categories : null), (isset($vars->parent_id) ? $vars->parent_id : null), ['id'=>'parent_id']);?>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminKnowledgebase.editcategory.field_access', true));?>
+                        <?php $this->Form->fieldSelect('access', (isset($access_types) ? $access_types : null), (isset($vars->access) ? $vars->access : null), ['id'=>'access', 'class'=>'small']);?>
+                        <span class="tooltip"><?php $this->_('AppController.tooltip.text');?><div><?php $this->_('AdminKnowledgebase.!tooltip.access_category');?></div></span>
+                    </li>
+                    <li>
+                        <?php $this->Form->label($this->_('AdminKnowledgebase.editcategory.field_description', true));?>
+                        <?php $this->Form->fieldTextarea('description', (isset($vars->description) ? $vars->description : null), ['id'=>'description', 'class'=>'small', 'data-markdown-editor' => '']);?>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminKnowledgebase.editcategory.submit_edit', true), ['class' => 'btn btn-primary float-right']);
+                ?>
+                <a class="btn btn-default float-right" href="<?php echo $this->Html->safe($this->base_uri . 'plugin/support_manager/admin_knowledgebase/index/' . ((isset($category) ? $category : null) ? (isset($category->parent_id) ? $category->parent_id : null) . '/' : ''));?>"><?php $this->_('AdminKnowledgebase.editcategory.submit_cancel');?></a>
+            </div>
+        </div>
+        <?php
+        $this->Form->end();
+        $this->Widget->end();

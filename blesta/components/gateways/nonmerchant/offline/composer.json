@@ -1,0 +1,9 @@
+{
+    "name": "blesta/offline",
+    "description": "Offline",
+    "license": "proprietary",
+    "type": "blesta-gateway-nonmerchant",
+    "require": {
+        "blesta/composer-installer": "~1.0"
+    }
+}

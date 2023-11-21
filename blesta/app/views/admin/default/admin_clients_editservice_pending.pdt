@@ -1,0 +1,67 @@
+
+        <?php echo (isset($form) ? $form : null);?>
+
+        <?php
+        $this->Form->create(null, ['class' => 'disable-on-submit']);
+        $this->Form->fieldHidden('status', (isset($service->status) ? $service->status : null) == 'in_review' ? 'in_review' : 'active');
+
+        if (isset($input_html) && ($module_field_html = $input_html->generate(null, $this->view))) {
+        ?>
+            <div class="title_row">
+                <h3><?php $this->_('AdminClients.addservice_addon.module_heading', false, (isset($module_name) ? $module_name : null));?></h3>
+            </div>
+            <div class="pad">
+            <?php
+            echo $module_field_html;
+            ?>
+            </div>
+        <?php
+        }
+        ?>
+        <div class="package_options"></div>
+
+
+        <div class="pad">
+            <ul>
+                <li>
+                    <?php
+                    $this->Form->fieldCheckbox('notify_order', 'true', (isset($vars->notify_order) ? $vars->notify_order : 'true') == 'true', ['id' => 'notify_order']);
+                    $this->Form->label($this->_('AdminClients.editservice.field_notify_order', true), 'notify_order', ['class' => 'inline']);
+                    ?>
+                </li>
+                <li>
+                    <?php
+                    $this->Form->fieldCheckbox('use_module', 'true', ((isset($vars->use_module) ? $vars->use_module : 'true') == 'true' || (isset($service->status) ? $service->status : null) == 'pending'), array_merge(['id' => 'use_module_module'], ((isset($service->status) ? $service->status : null) == 'in_review' ? ['disabled' => 'disabled'] : [])));
+                    $this->Form->label($this->_('AdminClients.editservice.field_use_module', true), 'use_module_module', ['class' => 'inline']);
+                    ?>
+                </li>
+            </ul>
+        </div>
+        <div class="button_row">
+            <?php
+            $submit_lang = 'AdminClients.editservice.field_module_' . ((isset($service->status) ? $service->status : null) == 'in_review' ? 'save' : 'activate');
+            $this->Form->fieldSubmit('save', $this->_($submit_lang, true), ['class' => 'btn btn-primary pull-right']);
+            ?>
+        </div>
+        <?php
+        $this->Form->end();
+        ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Fetch package options
+        packageOptions();
+
+        function packageOptions() {
+            var pricing_id = '<?php echo (isset($service->pricing_id) ? $this->Html->safe($service->pricing_id) : null);?>';
+            if (pricing_id) {
+                var params = 'service_id=<?php echo (isset($service->id) ? $this->Html->safe($service->id) : null);?>&' + $('[name^="configoptions"]', $('.package_options').closest('form')).serialize();
+                $(this).blestaRequest('GET', '<?php echo $this->Html->safe($this->base_uri . 'clients/packageoptions/');?>' + pricing_id, params, function(data) {
+                    $('.package_options').html(data);
+                    $('.package_options').blestaBindToolTips();
+                },
+                null,
+                {dataType: 'json'});
+            }
+        }
+    });
+</script>

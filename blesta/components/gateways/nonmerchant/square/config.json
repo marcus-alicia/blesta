@@ -1,0 +1,13 @@
+{
+	"version": "1.5.0",
+	"name": "Square.name",
+	"description": "Square.description",
+	"authors": [
+		{
+			"name": "Phillips Data, Inc.",
+			"url": "http://www.blesta.com"
+		}
+	],
+	"currencies": ["CAD", "GBP", "USD"],
+	"signup_url": "https://squareup.com/signup"
+}

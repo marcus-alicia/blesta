@@ -1,0 +1,15 @@
+	<ul>
+		<li>
+			<?php
+                $this->Form->label($this->_('Perfectmoney.payee_account', true), 'payee_account');
+                $this->Form->fieldText('payee_account', (isset($meta['payee_account']) ? $meta['payee_account'] : null), ['id' => 'payee_account']);
+            ?>
+        </li>
+        <li>
+            <?php
+                $this->Form->label($this->_('Perfectmoney.passphrase', true), 'passphrase');
+                $this->Form->fieldText('passphrase', (isset($meta['passphrase']) ? $meta['passphrase'] : null), ['id' => 'passphrase']);
+            ?>
+            <span class="tooltip"><?php $this->_('AppController.tooltip.text'); ?><div><?php $this->_('Perfectmoney.passphrase_note'); ?></div></span>
+        </li>
+    </ul>

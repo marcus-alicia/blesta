@@ -1,0 +1,64 @@
+<div class="title_row first">
+		<h3><?php $this->_("ThesslstoreModule.tab_select_approver_email");?></h3>
+</div>
+<div class="pad">
+<?php
+	$this->Form->create();
+?>
+                <ul>
+                    <li><h3><?php echo $domainName; ?></h3></li>
+                    <?php
+                    $this->Form-> fieldHidden("domains[0]", $domainName );
+                    $this->Form-> fieldHidden("approverEmail[0]", $approverEmail);
+                    foreach($approverEmailsListArray as $value=>$key){
+                    ?>
+                    <li>
+                    <?php
+                        $checked = false;
+                        if(isset($key) && $key==$approverEmail)
+                        $checked = true;
+                        $this->Form->fieldRadio("email[0]", $key, $checked, array('id' => $domainName.$key) );
+                        $this->Form->label($key,$domainName.$key,array('class' => "inline"));
+                    ?>
+                    </li>
+                    <?php
+                    }
+                    ?>
+            	</ul>
+            <?php
+            $domainsCount=count($domainNames);
+            for($i=0;$i<$domainsCount;$i++)
+            {
+            	$j=$i+1;
+            ?>
+               	<ul>
+            	    <li><h3><?php echo $domainNames[$i]; ?></h3></li>
+                	<?php
+                    $this->Form-> fieldHidden("domains[$j]", $domainNames[$i] );
+                    $this->Form-> fieldHidden("approverEmail[$j]", $approverEmails[$i]);
+                    foreach($approverEmailsListArrays[$i] as $values=>$keys){
+                    ?>
+                    <li>
+                    <?php
+                        $checked = false;
+                        if(isset($keys) && $keys==$approverEmails[$i])
+                        $checked = true;
+                        $this->Form->fieldRadio("email[$j]", $keys, $checked, array('id' => $domainNames[$i].$keys) );
+                        $this->Form->label($keys,$domainNames[$i].$keys,array('class' => "inline"));
+                    ?>
+                    </li>
+                   	<?php
+                    }
+                    ?>
+                </ul>
+            <?php
+            }
+            ?>
+            <div class="button_row">
+            <button class="btn btn-default float-left" type="submit" name="save">
+                		<?php $this->_("ThesslstoreModule.change_approver_email.save_btn");?>
+            </button>
+        <?php
+        $this->Form->end();
+        ?>
+</div>

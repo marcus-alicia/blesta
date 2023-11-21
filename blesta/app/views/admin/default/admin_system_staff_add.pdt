@@ -1,0 +1,156 @@
+
+        <?php echo (isset($left_nav) ? $left_nav : null);?>
+        <div id="right_outer">
+            <?php echo (isset($message) ? $message : null);?>
+            <section id="right_container">
+                <?php
+                $this->Widget->clear();
+                $this->Widget->create($this->_('AdminSystemStaff.add.boxtitle_addstaff', true));
+                ?>
+                <div class="inner">
+                    <?php $this->Form->create(null, ['id' => 'staff', 'class' => 'disable-on-submit']);?>
+                    <div class="title_row first">
+                        <h3><?php $this->_('AdminSystemStaff.add.heading_contact');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_firstname', true), 'first_name');?>
+                                <?php $this->Form->fieldText('first_name', (isset($vars->first_name) ? $vars->first_name : null), ['id' => 'first_name']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_lastname', true), 'last_name');?>
+                                <?php $this->Form->fieldText('last_name', (isset($vars->last_name) ? $vars->last_name : null), ['id' => 'last_name']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_email', true), 'email');?>
+                                <?php $this->Form->fieldText('email', (isset($vars->email) ? $vars->email : null), ['id' => 'email']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_numbermobile', true), 'number_mobile');?>
+                                <?php $this->Form->fieldText('number_mobile', (isset($vars->number_mobile) ? $vars->number_mobile : null), ['id' => 'number_mobile']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminSystemStaff.add.heading_authentication');?></h3>
+                    </div>
+                    <div class="pad">
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->label($this->_('AdminSystemStaff.add.field_username', true), 'user_email');
+                                $this->Form->fieldRadio('username_type', 'email', ((isset($vars->username_type) ? $vars->username_type : true) == 'email'), ['id' => 'user_email']);
+                                $this->Form->label($this->_('AdminSystemStaff.add.field_username_email', true), 'user_email', ['class' => 'inline']);
+                                $this->Form->fieldRadio('username_type', 'user', ((isset($vars->username_type) ? $vars->username_type : false) == 'user'), ['id' => 'username_type']);
+                                $this->Form->label($this->_('AdminSystemStaff.add.field_username_username', true), 'username', ['class' => 'inline']);
+                                $this->Form->fieldText('username', (isset($vars->username) ? $vars->username : null), ['id' => 'username']);
+                                ?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_password', true), 'new_password');?>
+                                <?php $this->Form->fieldPassword('new_password', ['id' => 'last_name']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_confirmpass', true), 'confirm_password');?>
+                                <?php $this->Form->fieldPassword('confirm_password', ['id' => 'confirm_password']);?>
+                            </li>
+                            <li>
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_twofactormode', true), 'two_factor_mode');?>
+                                <?php $this->Form->fieldSelect('two_factor_mode', (isset($two_factor_modes) ? $two_factor_modes : null), (isset($vars->two_factor_mode) ? $vars->two_factor_mode : null), ['id' => 'two_factor_mode']);?>
+                            </li>
+                            <li id="factor_key">
+                                <img id="two_factor_qr" src="//chart.googleapis.com/chart?chs=200x200&cht=qr&chl=<?php echo $this->Html->safe('otpauth://totp/' . urlencode((isset($vars->username) ? $vars->username : 'user@' . Configure::get('Blesta.company')->hostname)) . '?secret=' . (isset($vars->two_factor_key_base32) ? $vars->two_factor_key_base32 : null) . '&issuer=Blesta');?>" alt="" />
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_twofactorkey', true), 'two_factor_key');?>
+                                <?php $this->Form->fieldText('two_factor_key', (isset($vars->two_factor_key) ? $vars->two_factor_key : null), ['id' => 'two_factor_key']);?>
+                            </li>
+                            <li id="factor_pin">
+                                <?php $this->Form->label($this->_('AdminSystemStaff.add.field_twofactorpin', true), 'two_factor_pin');?>
+                                <?php $this->Form->fieldText('two_factor_pin', (isset($vars->two_factor_pin) ? $vars->two_factor_pin : null), ['id' => 'two_factor_pin']);?>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminSystemStaff.add.heading_groups');?></h3>
+                    </div>
+                    <div class="pad">
+                        <table>
+                            <tr>
+                                <td><?php $this->_('AdminSystemStaff.add.text_membergroups');?></td>
+                                <td></td>
+                                <td><?php $this->_('AdminSystemStaff.add.text_availablegroups');?></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('groups[]', (isset($vars->groups) ? $vars->groups : null), [], ['id' => 'assigned', 'class' => 'groups']);?>
+                                </td>
+                                <td><a href="#" class="move_left">&nbsp;</a> &nbsp; <a href="#" class="move_right">&nbsp;</a></td>
+                                <td>
+                                    <?php $this->Form->fieldMultiSelect('available[]', (isset($groups) ? $groups : null), [], ['id' => 'available', 'class' => 'groups']);?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="button_row">
+                        <?php
+                        $this->Form->fieldSubmit('save', $this->_('AdminSystemStaff.add.field_addsubmit', true), ['class' => 'btn btn-primary pull-right']);
+                        ?>
+                    </div>
+                    <?php $this->Form->end();?>
+                </div>
+                <?php $this->Widget->end();?>
+            </section>
+        </div>
+
+<?php
+$this->Javascript->setInline("
+    $(document).ready(function() {
+        // Check username box on focus
+        $('#username').focus(function() {
+            $('#username_type').prop('checked', true);
+        });
+
+        // Select all assigned groups on submit
+        $('#staff').submit(function() {
+            $('#assigned option').prop('selected', true);
+        });
+
+        // Move staff from right to left
+        $('.move_left').click(function() {
+            $('#available option:selected').appendTo($('#assigned'));
+            return false;
+        });
+        // Move staff from left to right
+        $('.move_right').click(function() {
+            $('#assigned option:selected').appendTo($('#available'));
+            return false;
+        });
+
+        hideTwoFactorModes();
+        $('#two_factor_mode').change(function() {
+            hideTwoFactorModes();
+        });
+    });
+
+    function hideTwoFactorModes() {
+        switch($('#two_factor_mode').val()) {
+            case 'motp':
+                $('#factor_pin').show();
+                $('#factor_key').show();
+                break;
+            case 'totp':
+                $('#factor_key').show();
+                $('#factor_pin').hide();
+                break;
+            case 'none':
+            default:
+                $('#factor_key').hide();
+                $('#factor_pin').hide();
+                break;
+        }
+    }
+");
+?>

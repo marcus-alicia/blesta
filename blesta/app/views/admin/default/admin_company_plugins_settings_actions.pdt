@@ -1,0 +1,117 @@
+        <div class="inner">
+            <?php
+            if (!empty($actions)) {
+                $this->Form->create(null, ['class' => 'disable-on-submit']);
+            ?>
+            <p><?php $this->_('AdminCompanyPlugins.settings.actions_description');?></p>
+            <?php
+            }
+
+            $i = 0;
+            foreach ((isset($location_descriptions) ? $location_descriptions : []) as $location => $description) {
+                if (array_key_exists($location, (array)$actions)) {
+            ?>
+            <div class="title_row<?php echo $i++ === 0 ? ' first' : '';?>">
+                <h3><?php echo $this->Html->safe((isset($description) ? $description : null));?></h3>
+            </div>
+            <div class="pad">
+                <?php
+                foreach ((isset($actions[$location]) ? $actions[$location] : []) as $action) {
+                    $key = (isset($location) ? $location : null) . '-' . (isset($action->url) ? $action->url : null);
+                ?>
+                <div class="clear"></div>
+                <section class="fieldset">
+                    <h1><?php (print (isset($action->name) ? $this->Html->safe($action->name) : null));?></h1>
+                    <p><?php $this->_('AdminCompanyPlugins.settings.actions_uri', false, $this->Html->safe($action->full_uri));?></p>
+                    <ul>
+                        <li>
+                            <?php
+                            $this->Form->fieldCheckbox('enabled[' . $key . ']', '1', ((isset($action->enabled) ? $action->enabled : null) == '1'), ['id' => 'enabled[' . $key . ']']);
+                            $this->Form->label($this->_('AdminCompanyPlugins.settings.field_enabled', true), 'enabled[' . $key . ']', ['class' => 'inline']);
+                            ?>
+                        </li>
+                    </ul>
+                    <?php
+                    if (!empty($action->sub)) {
+                    ?>
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyPlugins.settings.actions_heading_sub');?></h3>
+                    </div>
+                    <div class="clear"></div>
+                        <?php
+                        foreach ((isset($action->sub) ? $action->sub : []) as $index => $sub) {
+                            $field_name = $key . '[sub][enabled][' . $index . ']';
+                        ?>
+                    <section class="fieldset">
+                        <h1><?php (print (isset($sub['name']) ? $this->Html->safe($sub['name']) : null));?></h1>
+                        <p><?php $this->_('AdminCompanyPlugins.settings.actions_uri', false, $this->Html->safe($sub['full_uri']));?></p>
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox($field_name, '1', ((isset($sub['enabled']) ? $sub['enabled'] : '1') == '1'), ['id' => $field_name]);
+                                $this->Form->label($this->_('AdminCompanyPlugins.settings.field_enabled', true), $field_name, ['class' => 'inline']);
+                                ?>
+                            </li>
+                        </ul>
+                    </section>
+                        <?php
+                        }
+                    }
+
+                    if (!empty($action->secondary)) {
+                    ?>
+                    <div class="title_row">
+                        <h3><?php $this->_('AdminCompanyPlugins.settings.actions_heading_secondary');?></h3>
+                    </div>
+                    <div class="clear"></div>
+                        <?php
+                        foreach ((isset($action->secondary) ? $action->secondary : []) as $index => $secondary) {
+                            $field_name = $key . '[secondary][enabled][' . $index . ']';
+                        ?>
+                    <section class="fieldset">
+                        <h1><?php (print (isset($secondary['name']) ? $this->Html->safe($secondary['name']) : null));?></h1>
+                        <p><?php $this->_('AdminCompanyPlugins.settings.actions_uri', false, $this->Html->safe($secondary['full_uri']));?></p>
+                        <ul>
+                            <li>
+                                <?php
+                                $this->Form->fieldCheckbox($field_name, '1', ((isset($secondary['enabled']) ? $secondary['enabled'] : '1') == '1'), ['id' => $field_name]);
+                                $this->Form->label($this->_('AdminCompanyPlugins.settings.field_enabled', true), $field_name, ['class' => 'inline']);
+                                ?>
+                            </li>
+                        </ul>
+                    </section>
+                        <?php
+                        }
+                    }
+                    ?>
+                </section>
+                <?php
+                }
+                ?>
+            </div>
+            <?php
+                }
+            }
+            ?>
+
+        <?php
+        if (!empty($actions)) {
+        ?>
+            <div class="button_row">
+                <?php
+                $this->Form->fieldSubmit('save', $this->_('AdminCompanyPlugins.settings.field_submit', true), ['class' => 'btn btn-primary pull-right']);
+                ?>
+            </div>
+        <?php
+            $this->Form->end();
+        } else {
+        ?>
+            <div class="empty_section">
+                <div class="empty_box">
+                    <?php $this->_('AdminCompanyPlugins.settings.actions_no_results');?>
+                </div>
+            </div>
+        <?php
+        }
+        ?>
+    </div>

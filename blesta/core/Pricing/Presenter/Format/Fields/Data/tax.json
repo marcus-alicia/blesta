@@ -1,0 +1,8 @@
+{
+    "id":"id",
+    "name":"name",
+    "level":"level",
+    "tax":"amount",
+    "type":"type",
+    "status":"status"
+}

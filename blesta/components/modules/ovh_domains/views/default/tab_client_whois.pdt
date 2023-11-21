@@ -1,0 +1,41 @@
+    <div class="pad">
+        <h4><?php $this->_('OvhDomains.tab_client_whois.heading');?></h4>
+
+        <?php
+        $this->Form->create();
+        ?>
+        <div class="row panel-fix">
+            <div class="col-md-12">
+                <?php
+                foreach ($whois_fields ?? [] as $name => $field) {
+                ?>
+                <div class="form-group">
+                    <?php
+                    $this->Form->label($field['label'], $name);
+
+                    if ($field['type'] == 'select') {
+                        $options = [];
+                        if (!is_array($field['options'])) {
+                            $options = ${$field['options']} ?? [];
+                        } else {
+                            $options = $field['options'] ?? [];
+                        }
+
+                        $this->Form->fieldSelect($name, $options, ($vars->{$name} ?? ''), ['id' => $name, 'class'=>'form-control']);
+                    } else {
+                        $this->Form->fieldText($name, ($vars->{$name} ?? ''), ['id' => $name, 'class'=>'form-control', 'placeholder' => $field['label']]);
+                    }
+                    ?>
+                </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+        <button class="btn btn-light float-right" type="submit">
+            <i class="fas fa-edit"></i> <?php $this->_('OvhDomains.tab_client_whois.field_submit');?>
+        </button>
+        <?php
+        $this->Form->end();
+        ?>
+    </div>

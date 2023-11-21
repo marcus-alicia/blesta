@@ -1,0 +1,8 @@
+{
+    "id":"id",
+    "service_id":"service_id",
+    "description":"description",
+    "qty":"qty",
+    "price":"amount",
+    "taxes":"taxes"
+}
