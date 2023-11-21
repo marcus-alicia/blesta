@@ -84,9 +84,7 @@ class License extends AppModel
                 $this->fetchKey();
             }
             $license_data = $this->getLicenseData();
-            throw new Exception($license_data);
             if ($license_data != "") {
-                echo($license_data);
                 $this->Settings->setSetting("license_data", $license_data);
             }
             return $license_data;
