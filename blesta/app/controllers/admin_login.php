@@ -465,7 +465,7 @@ class AdminLogin extends AppController
 
         $license_key = $this->Settings->getSetting('license_key');
 
-        if ($this->Staff->getListCount() > 0 ) {
+        if ($this->Staff->getListCount() > 0 && ($license_key && $license_key->value != '')) {
             return true;
         }
         return false;
