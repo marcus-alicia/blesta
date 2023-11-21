@@ -1,7 +1,24 @@
-# Blesta #
+# Blesta, now with 100% less ion-cube:
 
-Blesta is a well-written, security-focused, user and developer-friendly client
-management, billing, and support application.
+## Readme SoonTM!
+
+
+### 🗣️Contribute:
+- [Click me](https://discord.gg/free-tools)
+<br><br>
+
+### Some useful links:
+
+- Forum: [Click me](https://www.blesta.com/forums/)
+- Docs: [Click me](https://docs.blesta.com/#all-updates)
+- Dev Updates: [Click me](https://dev.blesta.com/secure/RapidBoard.jspa?rapidView=1&projectKey=CORE)
+- Blog: [Click me](https://blesta.com/blog/)
+<br><br>
+
+-----
+
+<details>
+  <summary><h3>Original Readme:</h3></summary>
 
 ## Minimum Requirements ##
 
@@ -51,4 +68,13 @@ and access ~/admin/upgrade in your browser.
 For more detailed instructions, please see the
 [documentation](http://docs.blesta.com/display/user/Upgrading+Blesta#UpgradingBlesta-Patchinganexistinginstall)
 for patching Blesta.
+-----
 
+<br><br>
+</details>
+
+### My wallet is crying now. Please give this repo a star to cheer me up
+![Pricing](https://i.imgur.com/WIW2GuE.png)
+
+----- 
+<p align="center"><a href="https://discord.gg/free-tools">Join the Discord and help us!</a></p>
