@@ -47,7 +47,7 @@ $lang['AdminLogin.confirmreset.link_login'] = 'Cancel, Log In';
 // Setup
 $lang['AdminLogin.setup.page_title'] = 'Initial Setup';
 $lang['AdminLogin.setup.title_adminarea'] = 'Initial Setup'; // %1$s is the company name
-$lang['AdminLogin.setup.field_license_key'] = 'License Key';
+$lang['AdminLogin.setup.field_license_key'] = 'Your desired License Key';
 $lang['AdminLogin.setup.trial_newsletter'] = 'By signing up for a trial, you agree to receive emails from us during your trial. You can opt-out at any time.';
 $lang['AdminLogin.setup.field_newsletter'] = 'Sign-up for our newsletter. You can opt-out at any time.';
 $lang['AdminLogin.setup.heading_create_account'] = 'Create your Staff account';
@@ -57,8 +57,6 @@ $lang['AdminLogin.setup.field_username'] = 'Username';
 $lang['AdminLogin.setup.field_email'] = 'Email Address';
 $lang['AdminLogin.setup.field_password'] = 'Password';
 $lang['AdminLogin.setup.field_confirm_password'] = 'Confirm Password';
-$lang['AdminLogin.setup.field_enter_key_true'] = 'I have a license key to enter';
-$lang['AdminLogin.setup.field_enter_key_false'] = 'I want to start a 30-day free trial';
 $lang['AdminLogin.setup.field_submit'] = 'Finish';
 
 

@@ -10,40 +10,6 @@
                         echo (isset($message) ? $message : null);
                         $this->Form->create(null, ['class' => 'disable-on-submit']);
                         ?>
-                            <div class="radio">
-                                <label>
-                                    <?php
-                                    $this->Form->fieldRadio(
-                                        'enter_key',
-                                        'false',
-                                        (isset($vars['enter_key']) ? $vars['enter_key'] : null) == 'false',
-                                        [
-                                            'id' => 'enter_key_false',
-                                            'class' => 'license_type',
-                                            'tabindex' => 1
-                                        ]
-                                    );
-                                    ?>
-                                    <?php $this->_('AdminLogin.setup.field_enter_key_false');?>
-                                </label>
-                            </div>
-                            <div class="radio">
-                                <label>
-                                    <?php
-                                    $this->Form->fieldRadio(
-                                        'enter_key',
-                                        'true',
-                                        (isset($vars['enter_key']) ? $vars['enter_key'] : 'true') == 'true',
-                                        [
-                                            'id' => 'enter_key_true',
-                                            'class' => 'license_type',
-                                            'tabindex' => 2
-                                        ]
-                                    );
-                                    ?>
-                                    <?php $this->_('AdminLogin.setup.field_enter_key_true');?>
-                                </label>
-                            </div>
                             <div class="form-group">
                                 <?php
                                 $this->Form->fieldText(
@@ -59,22 +25,7 @@
                                 );
                                 ?>
                             </div>
-                            <div id="newsletter-option" class="checkbox">
-                                <label>
-                                    <?php
-                                    $this->Form->fieldCheckbox(
-                                        'newsletter',
-                                        'true',
-                                        (isset($vars['newsletter']) ? $vars['newsletter'] : 'true') == 'true',
-                                        ['id' => 'newsletter']
-                                    );
-                                    ?>
-                                    <span><?php $this->_('AdminLogin.setup.field_newsletter');?></span>
-                                </label>
-                            </div>
-                            <span id="text-trial-newsletter" style="display:none;"><?php $this->_('AdminLogin.setup.trial_newsletter');?></span>
-
-                            <hr />
+                        <hr />
 
                             <p><?php $this->_('AdminLogin.setup.heading_create_account');?></p>
 
@@ -180,31 +131,9 @@
 $this->Javascript->setInline('
     $(document).ready(function() {
         showLicenseKey();
-        showNewsletterField();
-        $(".license_type").on("change", function() {
-            showLicenseKey();
-            showNewsletterField();
-        });
-
-        $("#license_key").on("change", function() {
-            showNewsletterField();
-        });
 
         function showLicenseKey() {
-            if ($("#enter_key_true").is(":checked")) {
                 $("#license_key").show();
-            } else {
-                $("#license_key").hide();
-            }
-        }
-
-        function showNewsletterField() {
-            if (isTrialKey()) {
-                $("#newsletter-option").hide();
-                $("#text-trial-newsletter").show();
-            } else {
-                $("#text-trial-newsletter").hide();
-                $("#newsletter-option").show();
             }
         }
 
