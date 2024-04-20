@@ -4,7 +4,7 @@
 
 
 ### 🗣️Contribute:
-- [Click me](https://discord.gg/free-tools)
+- [Click me](https://free-tools.club/discord)
 <br><br>
 
 ### Some useful links:
@@ -77,4 +77,4 @@ for patching Blesta.
 ![Pricing](https://i.imgur.com/WIW2GuE.png)
 
 ----- 
-<p align="center"><a href="https://discord.gg/free-tools">Join the Discord and help us!</a></p>
+<p align="center"><a href="https://free-tools.club/discord">Join the Discord and help us!</a></p>
